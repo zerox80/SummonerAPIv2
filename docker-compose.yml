@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: summoner_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  db-init:
+    image: postgres:16
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: postgres
+    entrypoint: ["bash", "-lc"]
+    command: >
+      "psql -h db -U postgres -tc \"SELECT 1 FROM pg_database WHERE datname='summoner_db'\" | grep -q 1 
+      || psql -h db -U postgres -c \"CREATE DATABASE summoner_db\""
+    restart: "no"
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
+    environment:
+      RIOT_API_KEY: ${RIOT_API_KEY}
+      RIOT_API_REGION: ${RIOT_API_REGION:-euw1}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/summoner_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-60}
+      # Flyway: baseline existing non-empty schema and then run migrations > baseline version
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+      SPRING_FLYWAY_BASELINE_VERSION: "0"
+      # Use Flyway for schema management; let Hibernate validate instead of auto-updating
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+    ports:
+      - "${APP_HTTP_PORT:-8080}:8080"
+    restart: unless-stopped
+
+volumes:
+  db_data:
