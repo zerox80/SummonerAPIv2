@@ -82,6 +82,29 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return false;
     }
 
+    private String extractIp(String val) {
+        if (val == null) {
+            return null;
+        }
+        String v = val.trim();
+        if (v.startsWith("\"") && v.endsWith("\"") && v.length() > 1) {
+            v = v.substring(1, v.length() - 1);
+        }
+        if (v.startsWith("[")) {
+            int end = v.indexOf(']');
+            if (end > 0) {
+                return v.substring(1, end);
+            }
+            return v;
+        }
+        long colonCount = v.chars().filter(ch -> ch == ':').count();
+        if (colonCount == 1 && v.contains(".")) {
+            int colonIdx = v.indexOf(':');
+            return v.substring(0, colonIdx);
+        }
+        return v;
+    }
+
     private String clientIp(HttpServletRequest request) {
         if (!properties.isTrustProxy()) {
             return request.getRemoteAddr();
@@ -98,22 +121,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
                     for (String kv : kvs) {
                         String[] pair = kv.trim().split("=", 2);
                         if (pair.length == 2 && pair[0].trim().equalsIgnoreCase("for")) {
-                            String val = pair[1].trim();
-                            // Strip quotes and brackets
-                            if (val.startsWith("\"") && val.endsWith("\"")) {
-                                val = val.substring(1, val.length() - 1);
-                            }
-                            if (val.startsWith("[")) {
-                                int end = val.indexOf(']');
-                                if (end > 0) {
-                                    return val.substring(1, end);
-                                }
-                            }
-                            int colonIdx = val.indexOf(':');
-                            if (colonIdx > 0) {
-                                return val.substring(0, colonIdx);
-                            }
-                            return val;
+                            return extractIp(pair[1]);
                         }
                     }
                 }
@@ -125,9 +133,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         if (xff != null && !xff.isBlank()) {
             int comma = xff.indexOf(',');
             String first = (comma > 0 ? xff.substring(0, comma) : xff).trim();
-            // If contains port, strip it
-            int colonIdx = first.indexOf(':');
-            return colonIdx > 0 ? first.substring(0, colonIdx) : first;
+            return extractIp(first);
         }
 
         return request.getRemoteAddr();
