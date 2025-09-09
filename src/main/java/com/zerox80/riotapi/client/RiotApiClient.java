@@ -224,11 +224,18 @@ public class RiotApiClient {
     }
 
     private CompletableFuture<Void> acquirePermitAsync() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        retryAcquire(future);
+        return future;
+    }
+
+    private void retryAcquire(CompletableFuture<Void> future) {
         if (outboundLimiter.tryAcquire()) {
-            return CompletableFuture.completedFuture(null);
+            future.complete(null);
+        } else {
+            CompletableFuture.delayedExecutor(25, TimeUnit.MILLISECONDS)
+                    .execute(() -> retryAcquire(future));
         }
-        // Small wait and retry to avoid busy-waiting
-        return delayed(Duration.ofMillis(25)).thenCompose(v -> acquirePermitAsync());
     }
 
     private Optional<Long> parseRetryAfterSeconds(HttpResponse<String> response) {
