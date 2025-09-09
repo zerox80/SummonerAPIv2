@@ -68,7 +68,7 @@ public class RiotApiClient {
     @Autowired
     public RiotApiClient(@Value("${riot.api.key}") String apiKey,
                          @Value("${riot.api.region}") String platformRegion,
-                         @Value("${riot.api.community-dragon.url}") String communityDragonUrl,
+                         @Value("${riot.api.community-dragon.url:https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons}") String communityDragonUrl,
                          ObjectMapper objectMapper,
                          MeterRegistry meterRegistry,
                          HttpClient httpClient,
