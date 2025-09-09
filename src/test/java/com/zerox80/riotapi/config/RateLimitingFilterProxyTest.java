@@ -67,4 +67,40 @@ class RateLimitingFilterProxyTest {
                 .andExpect(status().isTooManyRequests()).andReturn();
         assertThat(r3.getResponse().getHeader("Retry-After")).isNotBlank();
     }
+
+    @Test
+    void shouldRespectXForwardedForIPv6_whenTrustProxyEnabled() throws Exception {
+        var r1 = mockMvc.perform(get("/api/summoner-suggestions").param("query", "i")
+                        .header("X-Forwarded-For", "2001:db8:cafe::17"))
+                .andExpect(status().isOk()).andReturn();
+        assertThat(r1.getResponse().getHeader("X-RateLimit-Limit")).isEqualTo("2");
+
+        var r2 = mockMvc.perform(get("/api/summoner-suggestions").param("query", "j")
+                        .header("X-Forwarded-For", "2001:db8:cafe::17"))
+                .andExpect(status().isOk()).andReturn();
+        assertThat(r2.getResponse().getHeader("X-RateLimit-Remaining")).isNotBlank();
+
+        var r3 = mockMvc.perform(get("/api/summoner-suggestions").param("query", "k")
+                        .header("X-Forwarded-For", "2001:db8:cafe::17"))
+                .andExpect(status().isTooManyRequests()).andReturn();
+        assertThat(r3.getResponse().getHeader("Retry-After")).isNotBlank();
+    }
+
+    @Test
+    void shouldParseForwardedHeaderIPv6_whenTrustProxyEnabled() throws Exception {
+        var r1 = mockMvc.perform(get("/api/summoner-suggestions").param("query", "m")
+                        .header("Forwarded", "for=\"[2001:db8:cafe::17]:4711\""))
+                .andExpect(status().isOk()).andReturn();
+        assertThat(r1.getResponse().getHeader("X-RateLimit-Limit")).isEqualTo("2");
+
+        var r2 = mockMvc.perform(get("/api/summoner-suggestions").param("query", "n")
+                        .header("Forwarded", "for=\"[2001:db8:cafe::17]:4711\""))
+                .andExpect(status().isOk()).andReturn();
+        assertThat(r2.getResponse().getHeader("X-RateLimit-Remaining")).isNotBlank();
+
+        var r3 = mockMvc.perform(get("/api/summoner-suggestions").param("query", "o")
+                        .header("Forwarded", "for=\"[2001:db8:cafe::17]:4711\""))
+                .andExpect(status().isTooManyRequests()).andReturn();
+        assertThat(r3.getResponse().getHeader("Retry-After")).isNotBlank();
+    }
 }
