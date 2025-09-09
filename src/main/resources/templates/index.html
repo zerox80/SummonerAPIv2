@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="SummonerAPI - Search League of Legends summoners, view ranks, recent matches and champion stats.">
+    <meta name="theme-color" id="themeColor" content="#0b1018">
+    <title>SummonerAPI - League Stats</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Preconnects for faster CDN fetches -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <!-- Bootswatch Theme (default to dark; JS may swap href) -->
+    <link id="themeStylesheet" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7/darkly/bootstrap.min.css" integrity="sha512-p5mHOC7N2BAy1SdoU/f2XD4t7EM05/5b1QowPXdyvqrSFsWQl3HVqY60hvvnOcMVBXBwr3ysopvGgxqbaovv/Q==" crossorigin="anonymous">
+    <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7/darkly/bootstrap.min.css" integrity="sha512-p5mHOC7N2BAy1SdoU/f2XD4t7EM05/5b1QowPXdyvqrSFsWQl3HVqY60hvvnOcMVBXBwr3ysopvGgxqbaovv/Q==" crossorigin="anonymous">
+    </noscript>
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous">
+    <!-- App Styles -->
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-body">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top glass-nav border-bottom border-secondary-subtle">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-semibold" href="/"><i class="fas fa-chart-line" aria-hidden="true"></i> SummonerAPI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarDefault">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+            </ul>
+            <span class="navbar-text me-3">
+                Currently only EUW is supported.
+            </span>
+            <button id="themeToggle" class="btn btn-sm btn-outline-secondary" type="button" title="Toggle theme" aria-label="Switch to light mode" aria-pressed="false">
+                <i class="fa-regular fa-moon" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<main class="container mt-5">
+    <!-- Hero/Search -->
+    <section class="hero glass-card rounded-4 p-4 p-md-5 mb-4 shadow-lg position-relative overflow-hidden">
+        <div class="position-absolute gradient-orb orb-1"></div>
+        <div class="position-absolute gradient-orb orb-2"></div>
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold mb-2">Summoner Profile Search</h1>
+            <p class="text-secondary mb-0">Check ranks, recent matches, and champions at a glance.</p>
+        </div>
+        <form th:action="@{/search}" method="get" class="position-relative">
+            <div class="input-group input-group-lg search-group shadow-sm rounded-3 overflow-hidden">
+                <span class="input-group-text bg-transparent border-0 ps-3"><i class="fas fa-user-tag text-secondary" aria-hidden="true"></i></span>
+                <label for="riotId" class="visually-hidden">Riot ID</label>
+                <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" />
+                <button class="btn btn-primary px-4" type="submit"><i class="fas fa-search me-1" aria-hidden="true"></i> Search</button>
+            </div>
+            <div id="suggestions-container" class="list-group suggestions-dropdown w-100" role="listbox" aria-label="Suggestions"></div>
+            
+        </form>
+    </section>
+
+    <!-- Two-column layout when a summoner is present -->
+    <div th:if="${summoner}" class="row g-4">
+        <!-- Left sidebar -->
+        <div class="col-12 col-lg-4 sidebar-sticky">
+        <div class="card section-card glass-card shadow-sm">
+        <div class="card-header section-header d-flex align-items-center gap-2">
+            <i class="fa-solid fa-user-astronaut text-primary" aria-hidden="true"></i>
+            Summoner Information
+        </div>
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+                <img th:if="${profileIconUrl}" th:src="${profileIconUrl}"
+                     alt="Profile Icon" class="rounded-circle me-3 profile-avatar" width="112" height="112" loading="lazy"/>
+                <div>
+                    <h5 class="mb-0" th:text="${not #strings.isEmpty(summoner.name) ? summoner.name : 'N/A'}">N/A</h5>
+                    <small class="text-muted">Level <span th:text="${summoner.summonerLevel}">N/A</span></small>
+                </div>
+            </div>
+            <!-- PUUID Removed as per request -->
+            <!-- <p class="mb-0"><strong>PUUID:</strong> <small th:text="${summoner.puuid}" class="text-muted">N/A</small></p> -->
+        </div>
+
+        <!-- Display League Entries -->
+        <div th:if="${leagueEntries != null && !leagueEntries.isEmpty()}" class="card section-card glass-card shadow-sm">
+        <div class="card-header section-header d-flex align-items-center gap-2">
+            <a data-bs-toggle="collapse" href="#rankedInfoCollapse" role="button" aria-expanded="true" aria-controls="rankedInfoCollapse"
+               class="d-flex align-items-center gap-2 text-decoration-none text-reset w-100">
+                <i class="fa-solid fa-trophy text-warning" aria-hidden="true"></i>
+                <span class="flex-grow-1">Ranked Information</span>
+                <i class="fas fa-chevron-down fa-xs chev" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div id="rankedInfoCollapse" class="collapse show">
+            <div class="list-group list-group-flush">
+                <div th:each="entry : ${leagueEntries}" class="list-group-item league-entry">
+                    <div class="d-flex w-100 justify-content-between mb-2">
+                        <h4 class="mb-1">
+                            <th:block th:switch="${entry.tier}">
+                                <img th:case="'CHALLENGER'" th:src="@{/ui/images/tiers/challenger.png}" alt="Challenger Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'GRANDMASTER'" th:src="@{/ui/images/tiers/grandmaster.png}" alt="Grandmaster Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'MASTER'" th:src="@{/ui/images/tiers/master.png}" alt="Master Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'DIAMOND'" th:src="@{/ui/images/tiers/diamond.png}" alt="Diamond Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'EMERALD'" th:src="@{/ui/images/tiers/emerald.png}" alt="Emerald Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'PLATINUM'" th:src="@{/ui/images/tiers/platin.png}" alt="Platinum Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'GOLD'" th:src="@{/ui/images/tiers/gold.png}" alt="Gold Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'SILVER'" th:src="@{/ui/images/tiers/silver.png}" alt="Silver Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'BRONZE'" th:src="@{/ui/images/tiers/bronze.png}" alt="Bronze Tier" class="tier-icon" loading="lazy"/>
+                                <img th:case="'IRON'" th:src="@{/ui/images/tiers/iron.png}" alt="Iron Tier" class="tier-icon" loading="lazy"/>
+                                <!-- Fallback: use Iron as default to avoid missing asset -->
+                                <img th:case="*" th:src="@{/ui/images/tiers/iron.png}" alt="Unranked or unknown tier" class="tier-icon" loading="lazy"/>
+                            </th:block>
+                            <span th:text="${entry.queueType != null ? entry.queueType.replace('_', ' ').toLowerCase() : 'N/A'}" class="text-capitalize">Queue</span>
+                        </h4>
+                        <small th:text="${(entry.tier != null ? entry.tier.toLowerCase() : 'Unranked') + ' ' + (entry.rank != null ? entry.rank : '-')}" class="text-capitalize">Tier Rank</small>
+                    </div>
+                    <div class="mb-1 d-flex flex-wrap gap-2">
+                        <span class="badge rounded-pill bg-secondary-subtle text-light-emphasis" th:text="${entry.leaguePoints + ' LP'}">0 LP</span>
+                        <span class="badge rounded-pill bg-success-subtle text-success-emphasis" th:text="${'W ' + entry.wins}">W 0</span>
+                        <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis" th:text="${'L ' + entry.losses}">L 0</span>
+                        <span class="badge rounded-pill bg-info-subtle text-info-emphasis" th:if="${entry.wins + entry.losses > 0}" th:text="${'WR ' + T(java.lang.Math).round((entry.wins * 1.0 / (entry.wins + entry.losses)) * 100.0) + '%'}">WR 0%</span>
+                    </div>
+                    <small th:if="${entry.wins + entry.losses > 0}">
+                        Winrate: <span th:text="${T(java.lang.Math).round( (entry.wins * 1.0 / (entry.wins + entry.losses)) * 100.0 )}">0</span>%
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- Recently Played (own collapsible card) -->
+    <div th:if="${summoner != null}" class="card section-card glass-card shadow-sm">
+        <div class="card-header section-header d-flex align-items-center gap-2">
+            <a data-bs-toggle="collapse" href="#recentlyCollapse" role="button" aria-expanded="true" aria-controls="recentlyCollapse"
+               class="d-flex align-items-center gap-2 text-decoration-none text-reset w-100">
+                <i class="fa-solid fa-clock-rotate-left text-info" aria-hidden="true"></i>
+                <span class="flex-grow-1">Recently Played Champions (Last <span th:text="${matchHistory != null ? matchHistory.size() : 0}"></span> Games)</span>
+                <i class="fas fa-chevron-down fa-xs chev" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div id="recentlyCollapse" class="collapse show">
+            <div class="card-body py-3">
+                <div th:if="${championPlayCounts != null && !championPlayCounts.isEmpty()}">
+                    <ul class="list-unstyled mb-0">
+                        <li th:each="champEntry, iterStat : ${championPlayCounts.entrySet()}" th:if="${iterStat.count <= 5}" class="d-flex align-items-center mb-2">
+                            <img th:src="@{'/ui/champions/' + ${champEntry.key} + '.png'}"
+                                 th:alt="${champEntry.key}"
+                                 class="me-2 rounded js-champ-fallback recent-champ-icon"
+                                  loading="lazy"/>
+                            <span th:text="${champEntry.key}" class="fw-medium">ChampionName</span>
+                            <span class="text-muted mx-2">&bull;</span>
+                            <span th:text="${champEntry.value}">0</span>
+                            <span class="ms-1 text-muted">games</span>
+                        </li>
+                    </ul>
+                </div>
+                <div th:if="${championPlayCounts != null && championPlayCounts.isEmpty() && matchHistory != null && !matchHistory.isEmpty()}" class="mt-1">
+                    <p class="text-muted mb-0">No champion data from recent matches to display.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LP Progression Chart (collapsible) -->
+    <div th:if="${
+            summoner != null && (
+                (leagueEntries != null && !leagueEntries.isEmpty())
+                or (matchHistory != null && !#lists.isEmpty(matchHistory.?[info.queueId == 420 or info.queueId == 440]))
+            )
+        }" class="card section-card glass-card shadow-sm">
+        <div class="card-header section-header d-flex align-items-center gap-2">
+            <a data-bs-toggle="collapse" href="#lpCollapse" role="button" aria-expanded="true" aria-controls="lpCollapse"
+               class="d-flex align-items-center gap-2 text-decoration-none text-reset w-100">
+                <i class="fa-solid fa-chart-line text-primary" aria-hidden="true"></i>
+                <span class="flex-grow-1">LP Progression (last matches)</span>
+                <i class="fas fa-chevron-down fa-xs chev" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div id="lpCollapse" class="collapse show">
+            <div class="card-body">
+                <canvas id="lpChart" class="chart-canvas" height="120"></canvas>
+                <small class="text-muted d-block mt-2">If absolute LP is unavailable, the chart shows relative LP change.</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- LP Progression: No data message -->
+    <div th:if="${
+            summoner != null && (
+                (leagueEntries == null || leagueEntries.isEmpty())
+                and (matchHistory == null || #lists.isEmpty(matchHistory.?[info.queueId == 420 or info.queueId == 440]))
+            )
+        }" class="card section-card glass-card shadow-sm">
+        <div class="card-header section-header d-flex align-items-center gap-2">
+            <i class="fa-solid fa-chart-line text-secondary" aria-hidden="true"></i>
+            LP Progression (last matches)
+        </div>
+        <div class="card-body">
+            <p class="mb-0 text-muted">No ranked LP data to display yet. Play some ranked Solo/Duo or Flex matches to fill this chart.</p>
+        </div>
+    </div>
+
+    <!-- Champion Distribution Chart (collapsible) -->
+    <div th:if="${championPlayCounts != null && !championPlayCounts.isEmpty()}" class="card section-card glass-card shadow-sm">
+        <div class="card-header section-header d-flex align-items-center gap-2">
+            <a data-bs-toggle="collapse" href="#championCollapse" role="button" aria-expanded="true" aria-controls="championCollapse"
+               class="d-flex align-items-center gap-2 text-decoration-none text-reset w-100">
+            <i class="fa-solid fa-chart-pie text-warning" aria-hidden="true"></i>
+                <span class="flex-grow-1">Champion Distribution (recent matches)</span>
+                <i class="fas fa-chevron-down fa-xs chev" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div id="championCollapse" class="collapse show">
+            <div class="card-body">
+                <canvas id="championChart" class="chart-canvas chart-doughnut" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div th:if="${leagueEntries != null && leagueEntries.isEmpty() && summoner != null && leagueError == null}" class="alert alert-info info-message glass-card" role="alert">
+        No ranked data found for this summoner (possibly unranked in all queues).
+    </div>
+    <div th:if="${leagueError}" class="alert alert-danger error-message glass-card" role="alert">
+        <strong th:text="${leagueError}">Error loading league data.</strong>
+    </div>
+
+        </div> <!-- /col (left) -->
+
+        <!-- Center content: Match History -->
+        <div class="col-12 col-lg-8">
+    <!-- Match History Section -->
+    <div th:if="${summoner != null && matchHistory != null}" class="card section-card glass-card shadow-sm">
+        <div class="card-header section-header compact d-flex align-items-center">
+            <a data-bs-toggle="collapse" href="#matchHistoryCollapse" role="button" aria-expanded="true" aria-controls="matchHistoryCollapse"
+               class="d-flex align-items-center gap-2 text-decoration-none text-reset w-100">
+                <i class="fa-solid fa-scroll text-info" aria-hidden="true"></i>
+                <span class="flex-grow-1">Match History <small class="text-muted" th:text="${matchHistory != null ? '(' + matchHistory.size() + ')' : ''}"></small></span>
+                <i class="fas fa-chevron-down fa-xs chev" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="px-3 py-2 d-flex align-items-center gap-2 flex-wrap history-controls">
+            <ul class="nav nav-pills" id="historyFilters" role="tablist">
+                <li class="nav-item" role="presentation"><button id="filterAll" class="nav-link active" data-filter="all" type="button">All</button></li>
+                <li class="nav-item" role="presentation"><button id="filterRanked" class="nav-link" data-filter="ranked" type="button">Ranked</button></li>
+                
+            </ul>
+            <div class='dropdown ms-1'>
+                <button class='btn btn-sm btn-secondary dropdown-toggle shadow-sm' type='button' data-bs-toggle='dropdown' data-bs-display='static' aria-expanded='false' id='queueToggle'>All queues</button>
+                <ul class='dropdown-menu dropdown-menu-dark' id='queueDropdown' aria-labelledby='queueToggle'></ul>
+            </div>
+
+            <div class="ms-auto">
+                <div class="input-group input-group-sm match-search-group">
+                    <span class="input-group-text bg-transparent border-0"><i class="fas fa-search"></i></span>
+                    <input type="search" id="matchSearch" class="form-control" placeholder="Search champion or player" aria-label="Search matches">
+                </div>
+            </div>
+        </div>
+        <div class="px-3 py-2 history-summary text-secondary small">
+            <span id="summaryWR">WR: -</span>
+            <span class="mx-2">&bull;</span>
+            <span id="summaryKDA">KDA: -</span>
+            <span class="mx-2">&bull;</span>
+            <span id="summaryCount">Last 20 games</span>
+        </div>
+        <div class="collapse show" id="matchHistoryCollapse">
+            <div th:if="${matchHistory.isEmpty()}" class="card-body">
+                <p th:if="${matchHistoryInfo}" th:text="${matchHistoryInfo}">No recent matches found.</p>
+                <p th:unless="${matchHistoryInfo}">No recent matches found or an error occurred.</p>
+            </div>
+            <div th:if="${matchHistoryError}" class="alert alert-warning m-3" role="alert" th:text="${matchHistoryError}">
+                Error loading match history.
+            </div>
+
+            <!-- Empty-state message for when filters/search hide all rows -->
+            <div id="noMatchesMsg" class="text-muted small px-3 py-2">
+                No matches match your current filters or search.
+            </div>
+
+            <div class="list-group list-group-flush" th:unless="${matchHistory.isEmpty()}">
+                <th:block th:each="match, iterStat : ${matchHistory}">
+                    <!-- Render only if we have basic match info -->
+                    <th:block th:if="${match != null and match.info != null}">
+                    <div th:with="meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}"
+                         class="list-group-item match-row"
+                         th:classappend="${me != null && me.win ? ' win' : ' loss'}"
+                         th:attr="data-q=${match.info.queueId}, data-k=${me != null ? me.kills : 0}, data-d=${me != null ? me.deaths : 0}, data-a=${me != null ? me.assists : 0}, data-win=${me != null ? me.win : false}">
+                        <span class="d-none search-index">
+                            <th:block th:with="meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}">
+                                <span th:text="${me != null ? me.championName : ''}"></span>
+                            </th:block>
+                            <th:block th:if="${match.info.participants != null}" th:each="p : ${match.info.participants}">
+                                <span th:text="${(p.riotIdGameName != null && p.riotIdTagline != null) ? p.riotIdGameName + '#' + p.riotIdTagline : ''}"></span>
+                            </th:block>
+                        </span>
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1" th:with="q=${match.info.queueId}, gd=${match.info.gameDuration != null ? match.info.gameDuration : 0}, min=${gd / 60}, sec=${gd % 60}">
+                                <span th:switch="${q}">
+                                    <span th:case="'420'">Ranked Solo/Duo</span>
+                                    <span th:case="'440'">Ranked Flex</span>
+                                    <span th:case="'400'">Normal Draft</span>
+                                    <span th:case="'430'">Normal Blind</span>
+                                    <span th:case="'450'">ARAM</span>
+                                    <span th:case="'700'">Clash</span>
+                                    <span th:case="'1700'">Arena</span>
+                                    <span th:case="*" th:text="${match.info.gameMode != null ? #strings.replace(match.info.gameMode,'_',' ') : ('Queue ' + q)}">Match</span>
+                                </span>
+                                <span th:text="${' (' + min + 'm ' + sec + 's)'}">(0m 0s)</span>
+                            </h5>
+                            <div class="d-flex align-items-center">
+                                <th:block th:with="meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}">
+                                    <span class="badge rounded-pill px-3 py-2 fw-semibold"
+                                          th:text="${me != null && me.win ? 'Victory' : 'Defeat'}"
+                                          th:classappend="${me != null && me.win ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis'}"></span>
+                                    <span th:if="${match.info.lpChange != null}"
+                                          th:text="${(match.info.lpChange > 0 ? '+' : '') + match.info.lpChange + ' LP'}"
+                                          th:classappend="${match.info.lpChange > 0 ? 'lp-badge gain ms-2' : (match.info.lpChange < 0 ? 'lp-badge loss ms-2' : 'lp-badge neutral ms-2')}">
+                                    </span>
+                                </th:block>
+                            </div>
+                        </div>
+                        <p class="mb-2 match-details-summary">
+                            <small th:text="${'Match ID: ' + (match != null && match.metadata != null ? match.metadata.matchId : 'N/A')}">Match ID: N/A</small> &bull;
+                            <small th:text="${match.info.gameEndTimestamp != null ? #dates.format(new java.util.Date(match.info.gameEndTimestamp), 'dd MMM yyyy HH:mm') : '--'}"></small>
+                        </p>
+
+                        <!-- Searched Summoner's Performance -->
+                        <th:block th:if="${match.info.participants != null}">
+                            <div th:each="p : ${match.info.participants}" th:if="${p.puuid == #vars.summoner.puuid}" class="mb-3 p-2 player-performance">
+                                <strong>Your Performance:</strong>
+                                <img th:src="@{'/ui/champions/' + ${p.championName} + '.png'}" th:alt="${p.championName}" width="32" height="32" class="me-1 align-middle rounded" loading="lazy" />
+                                <span th:text="${p.championName}" class="fw-medium">Champ</span> -
+                                KDA: <span th:text="${p.kda}" class="fw-bold">K/D/A</span>
+                            </div>
+                        </th:block>
+
+                        <!-- Participants Table -->
+                        <details class="mt-2" th:if="${match.info.participants != null}">
+                            <summary class="btn btn-sm btn-participants">Show All Participants <i class="fas fa-users fa-xs" aria-hidden="true"></i></summary>
+
+                        <!-- Blue Team Table -->
+                        <h6 class="mt-3 text-primary">Blue Team</h6>
+                        <div class="table-responsive">
+                        <table class="table table-sm table-hover mt-2 match-table team-blue-table table-borderless align-middle">
+                            <thead>
+                            <tr>
+                                <th scope="col">Champion</th>
+                                <th scope="col">Player</th>
+                                <th scope="col">KDA</th>
+                            </tr>
+                            </thead>
+                            <tbody th:with="searchedPuuid=${#vars.summoner.puuid}">
+                            <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 100}"
+                                th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
+                                <td>
+                                    <img th:src="@{'/ui/champions/' + ${p.championName} + '.png'}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy"
+                                         />
+                                    <span th:text="${p.championName}">Champion</span>
+                                </td>
+                                <td>
+                                    <a class="text-break" th:if="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
+                                       th:href="@{/search(riotId=${p.riotIdGameName + '#' + p.riotIdTagline})}"
+                                       th:text="${p.riotIdGameName + '#' + p.riotIdTagline}"
+                                       title="Search this player">Player Name</a>
+                                    <span class="text-break" th:unless="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
+                                          th:text="${p.summonerName} ?: 'Unknown Player'">Player Name</span>
+                                </td>
+                                <td th:text="${p.kda}" class="fw-medium">K/D/A</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+
+                        <!-- Red Team Table -->
+                        <h6 class="mt-3 text-danger">Red Team</h6>
+                        <div class="table-responsive">
+                        <table class="table table-sm table-hover mt-2 match-table team-red-table table-borderless align-middle">
+                            <thead>
+                            <tr>
+                                <th scope="col">Champion</th>
+                                <th scope="col">Player</th>
+                                <th scope="col">KDA</th>
+                            </tr>
+                            </thead>
+                            <tbody th:with="searchedPuuid=${#vars.summoner.puuid}">
+                            <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 200}"
+                                th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
+                                <td>
+                                    <img th:src="@{'/ui/champions/' + ${p.championName} + '.png'}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy"
+                                         />
+                                    <span th:text="${p.championName}">Champion</span>
+                                </td>
+                                <td>
+                                    <a th:if="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
+                                       th:href="@{/search(riotId=${p.riotIdGameName + '#' + p.riotIdTagline})}"
+                                       th:text="${p.riotIdGameName + '#' + p.riotIdTagline}"
+                                       title="Search this player">Player Name</a>
+                                    <span class="text-break" th:unless="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
+                                          th:text="${p.summonerName} ?: 'Unknown Player'">Player Name</span>
+                                </td>
+                                <td th:text="${p.kda}" class="fw-medium">K/D/A</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </details>
+                    </div>
+                    </div>
+                    </th:block>
+                    <!-- Fallback row if match.info is missing (won't break page) -->
+                    <th:block th:if="${match == null or match.info == null}">
+                    <div class="list-group-item match-row" th:attr="data-q=0, data-k=0, data-d=0, data-a=0, data-win=false">
+                        <div class="small">
+                            <strong th:text="${'Match ID: ' + (match != null && match.metadata != null ? match.metadata.matchId : 'N/A')}">Match ID: N/A</strong>
+                            <span class="text-muted ms-2">Unsupported match data</span>
+                        </div>
+                    </div>
+                    </th:block>
+                </th:block>
+            </div>
+        </div>
+    </div>
+    <!-- End Match History Section -->
+
+    <!-- Debug: Show match IDs and info presence when debug=1 is set in URL -->
+    <div th:if="${param.debug != null and param.debug[0] == '1'}" class="text-muted small px-3 py-2">
+        <div>Debug: matches = <span th:text="${matchHistory != null ? matchHistory.size() : 0}">0</span></div>
+        <ul class="mb-0">
+            <li th:each="mm : ${matchHistory}"
+                th:text="${(mm != null && mm.metadata != null ? mm.metadata.matchId : 'N/A') + ' | info=' + (mm != null && mm.info != null)}">-</li>
+        </ul>
+    </div>
+
+        </div> <!-- /col (right) -->
+    </div> <!-- /row -->
+
+    <div th:if="${error}" class="alert alert-danger error-message mt-4" role="alert">
+        <strong th:text="${error}">An error occurred.</strong>
+    </div>
+</main>
+
+<footer class="footer mt-auto py-3 bg-dark">
+    <div class="container text-center">
+        <span class="text-muted">SummonerAPI by <a href="/mavi.html" class="link-light text-decoration-underline">Mavi</a>. This project is not affiliated with or endorsed by Riot Games.</span>
+    </div>
+</footer>
+
+<!-- Bootstrap JS Bundle (Popper.js included) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- Chart.js for charts (with SRI) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:inline="javascript" th:attr="nonce=${cspNonce}">
+    document.addEventListener('DOMContentLoaded', function () {
+        const riotIdInput = document.getElementById('riotId');
+        const suggestionsContainer = document.getElementById('suggestions-container');
+        let debounceTimer;
+
+        // ===== Local history fallback (in addition to cookie-backed API) =====
+        const LS_KEY = 'searchHistory';
+        function loadLocalHistory(){
+            try {
+                const raw = localStorage.getItem(LS_KEY);
+                if (!raw) return [];
+                const arr = JSON.parse(raw);
+                return Array.isArray(arr) ? arr : [];
+            } catch { return []; }
+        }
+        function saveLocalHistory(riotId){
+            const v = (riotId || '').trim();
+            if (!v || !v.includes('#')) return;
+            const maxSize = 10;
+            const list = loadLocalHistory().filter(x=>x.toLowerCase() !== v.toLowerCase());
+            list.push(v);
+            while(list.length > maxSize) list.shift();
+            try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
+        }
+        function renderLocalHistory(filterTerm){
+            const list = loadLocalHistory().slice().reverse(); // newest last -> newest first
+            const filtered = (filterTerm ? list.filter(x=>x.toLowerCase().startsWith(filterTerm.toLowerCase())) : list).slice(0,10);
+            suggestionsContainer.innerHTML = '';
+            let idx = 0;
+            filtered.forEach(riotId => {
+                const item = document.createElement('a');
+                item.href = '#';
+                item.classList.add('list-group-item','list-group-item-action','d-flex','align-items-center');
+                item.setAttribute('role','option');
+                const optId = `ls-suggestion-${idx++}`;
+                item.id = optId;
+                item.setAttribute('aria-selected','false');
+                const icon = document.createElement('i');
+                icon.classList.add('fas','fa-history','me-2','text-secondary');
+                icon.setAttribute('aria-hidden','true');
+                item.appendChild(icon);
+                const text = document.createElement('span');
+                text.textContent = riotId;
+                item.appendChild(text);
+                item.addEventListener('click', (e)=>{
+                    e.preventDefault();
+                    riotIdInput.value = riotId;
+                    suggestionsContainer.innerHTML = '';
+                    suggestionsContainer.style.display = 'none';
+                    riotIdInput.setAttribute('aria-expanded','false');
+                    riotIdInput.removeAttribute('aria-activedescendant');
+                });
+                suggestionsContainer.appendChild(item);
+            });
+            if (filtered.length){
+                suggestionsContainer.style.display = 'block';
+                riotIdInput.setAttribute('aria-expanded','true');
+            } else {
+                suggestionsContainer.style.display = 'none';
+                riotIdInput.setAttribute('aria-expanded','false');
+                riotIdInput.removeAttribute('aria-activedescendant');
+            }
+        }
+
+        function fetchAndDisplaySuggestions(query) {
+            clearTimeout(debounceTimer);
+            if (query.length === 1) { // Hide for single character, show full history if empty
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                riotIdInput.setAttribute('aria-expanded', 'false');
+                return;
+            }
+
+            debounceTimer = setTimeout(() => {
+                fetch(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(suggestions => {
+                        suggestionsContainer.innerHTML = '';
+                        activeIndex = -1;
+                        if (suggestions.length > 0) {
+                            let idx = 0;
+                            suggestions.forEach(suggestion => {
+                                const item = document.createElement('a');
+                                item.href = '#';
+                                item.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center');
+                                item.setAttribute('role','option');
+                                const optId = `suggestion-opt-${idx++}`;
+                                item.id = optId;
+                                item.setAttribute('aria-selected','false');
+
+                                // Profile Icon
+                                const img = document.createElement('img');
+                                img.src = suggestion.profileIconUrl;
+                                img.alt = 'Icon';
+                                img.classList.add('rounded-circle', 'me-2');
+                                img.style.width = '30px';
+                                img.style.height = '30px';
+                                img.onerror = function() { // Fallback if image fails to load
+                                    this.style.display = 'none';
+                                };
+                                item.appendChild(img);
+
+                                // Riot ID and Level
+                                const textContainer = document.createElement('div');
+                                const riotIdSpan = document.createElement('span');
+                                riotIdSpan.textContent = suggestion.riotId;
+                                textContainer.appendChild(riotIdSpan);
+
+                                if (suggestion.summonerLevel) {
+                                    const levelSpan = document.createElement('span');
+                                    levelSpan.textContent = ` (Lvl: ${suggestion.summonerLevel})`;
+                                    levelSpan.classList.add('text-muted', 'ms-1', 'small');
+                                    textContainer.appendChild(levelSpan);
+                                }
+                                item.appendChild(textContainer);
+
+                                item.addEventListener('click', function (e) {
+                                    e.preventDefault();
+                                    riotIdInput.value = suggestion.riotId; // Use suggestion.riotId here
+                                    suggestionsContainer.innerHTML = '';
+                                    suggestionsContainer.style.display = 'none';
+                                    riotIdInput.setAttribute('aria-expanded', 'false');
+                                    riotIdInput.removeAttribute('aria-activedescendant');
+                                });
+
+        // Save to local history on form submit
+        const searchForm = riotIdInput?.closest('form');
+        searchForm?.addEventListener('submit', (e)=>{
+            const q = riotIdInput?.value || '';
+            saveLocalHistory(q);
+        });
+                                suggestionsContainer.appendChild(item);
+                            });
+                            suggestionsContainer.style.display = 'block';
+                            riotIdInput.setAttribute('aria-expanded', 'true');
+                        } else {
+                            // Fallback to local history if API returns no items
+                            renderLocalHistory(query);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching suggestions:', error);
+                        // On error, fallback to local history
+                        renderLocalHistory(query);
+                    });
+            }, query === '' ? 0 : 300); // No debounce if query is empty (e.g. on focus)
+        }
+
+        riotIdInput && riotIdInput.addEventListener('input', function () {
+            const query = riotIdInput.value;
+            fetchAndDisplaySuggestions(query);
+        });
+
+        riotIdInput && riotIdInput.addEventListener('focus', function () {
+            if (riotIdInput.value === '') {
+                // Immediately show local history, then fetch cookie-backed suggestions
+                renderLocalHistory('');
+                fetchAndDisplaySuggestions('');
+            }
+        });
+
+        // Keyboard navigation for suggestions
+        let activeIndex = -1;
+        function updateActive(toIndex) {
+            const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
+            items.forEach((el,i) => {
+                if (i === toIndex) {
+                    el.classList.add('active');
+                    el.setAttribute('aria-selected','true');
+                    riotIdInput.setAttribute('aria-activedescendant', el.id);
+                } else {
+                    el.classList.remove('active');
+                    el.setAttribute('aria-selected','false');
+                }
+            });
+        }
+
+        riotIdInput && riotIdInput.addEventListener('keydown', function(e){
+            const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
+            if (!items.length) return;
+            if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = (activeIndex + 1) % items.length; updateActive(activeIndex); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = (activeIndex - 1 + items.length) % items.length; updateActive(activeIndex); }
+            else if (e.key === 'Enter') {
+                if (activeIndex >= 0 && items[activeIndex]) { e.preventDefault(); items[activeIndex].click(); }
+            } else if (e.key === 'Escape') {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                riotIdInput.setAttribute('aria-expanded','false');
+                riotIdInput.removeAttribute('aria-activedescendant');
+                activeIndex = -1;
+            }
+        });
+
+        // Install image error fallbacks for champion images
+        (function installImageFallbacks(){
+            // =====================
+                // Match filtering + summary widget
+        // =====================
+        (function(){
+            const rows = Array.from(document.querySelectorAll('.match-row'));
+            const filters = document.getElementById('historyFilters');
+            const searchInput = document.getElementById('matchSearch');
+            const elWR = document.getElementById('summaryWR');
+            const elKDA = document.getElementById('summaryKDA');
+            const elCount = document.getElementById('summaryCount');
+            const queueToggle = document.getElementById('queueToggle');
+            const queueDropdown = document.getElementById('queueDropdown');
+            const noMsg = document.getElementById('noMatchesMsg');
+            if (!rows.length && noMsg) { noMsg.style.display = ''; }
+
+            const QUEUE_NAMES = {
+                420: 'Ranked Solo/Duo',
+                440: 'Ranked Flex',
+                400: 'Normal Draft',
+                430: 'Normal Blind',
+                450: 'ARAM',
+                700: 'Clash',
+                1700: 'Arena',
+                1900: 'URF',
+                900: 'URF (old)',
+                0: 'Custom',
+                1100: 'TFT Ranked',
+                1090: 'TFT Normal',
+                1130: 'TFT Double Up',
+                1160: 'TFT Hyper Roll'
+            };
+            function isRankedQ(q){ return q === 420 || q === 440 || q === 1100; }
+            const RANKED_SENTINEL = 'ranked';
+
+            // Populate dropdown with present queues
+            (function buildQueueMenu(){
+                if (!queueDropdown) return;
+                const present = Array.from(new Set(rows.map(r => Number(r.getAttribute('data-q'))).filter(q => !Number.isNaN(q))));
+                const items = present.length ? present : Object.keys(QUEUE_NAMES).map(Number);
+                const uniqueSorted = Array.from(new Set(items)).sort((a,b)=>a-b);
+                queueDropdown.innerHTML = '';
+                const allItem = document.createElement('li');
+                allItem.innerHTML = '<button class="dropdown-item" data-q="">All queues</button>';
+                queueDropdown.appendChild(allItem);
+                const rankedAny = document.createElement('li');
+                rankedAny.innerHTML = '<button class="dropdown-item" data-q="ranked">Ranked (any)</button>';
+                queueDropdown.appendChild(rankedAny);
+                const divider = document.createElement('li'); divider.innerHTML = '<hr class="dropdown-divider">'; queueDropdown.appendChild(divider);
+                uniqueSorted.forEach(q=>{
+                    const li = document.createElement('li');
+                    const label = QUEUE_NAMES[q] || ('Queue ' + q);
+                    li.innerHTML = `<button class="dropdown-item" data-q="${q}">${label}</button>`;
+                    queueDropdown.appendChild(li);
+                });
+                if (queueToggle) queueToggle.textContent = 'All queues';
+            })();
+
+            let selectedQueue = null; // null = none
+            let forcedFilter = 'all'; // explicit filter state: 'all' | 'ranked'
+
+            function currentFilter(){
+                return forcedFilter;
+            }
+
+            function matchesFilter(row){
+                const q = Number(row.getAttribute('data-q')) || 0;
+                if (selectedQueue === RANKED_SENTINEL) return isRankedQ(q);
+                if (selectedQueue !== null && typeof selectedQueue === 'number') return q === selectedQueue;
+                const f = currentFilter();
+                if (f === 'all') return true;
+                if (f === 'ranked') return isRankedQ(q);
+                return true;
+            }
+
+            function matchesSearch(row, term){
+                if (!term) return true;
+                const hay = (row.querySelector('.search-index')?.innerText || '').toLowerCase();
+                return hay.includes(term.toLowerCase());
+            }
+
+            function apply(){
+                const term = searchInput?.value?.trim().toLowerCase() || '';
+                rows.forEach(r => {
+                    const show = matchesFilter(r) && matchesSearch(r, term);
+                    r.style.display = show ? '' : 'none';
+                });
+                updateSummary();
+                // Toggle empty-state message based on visible rows
+                const anyVisible = rows.some(r => r.style.display !== 'none');
+                if (noMsg) noMsg.style.display = anyVisible ? 'none' : '';
+            }
+
+            function updateSummary(){
+                const vis = rows.filter(r => r.style.display !== 'none');
+                let wins=0, k=0, d=0, a=0;
+                vis.forEach(r => {
+                    if (String(r.getAttribute('data-win')) === 'true') wins++;
+                    k += Number(r.getAttribute('data-k'))||0;
+                    d += Number(r.getAttribute('data-d'))||0;
+                    a += Number(r.getAttribute('data-a'))||0;
+                });
+                const games = vis.length;
+                const wr = games ? Math.round((wins/games)*100) : 0;
+                const kda = (d>0) ? (((k+a)/d).toFixed(2)) : (k+a).toFixed(2);
+                if (elWR) elWR.textContent = 'WR: ' + (games ? (wr + '%') : '-');
+                if (elKDA) elKDA.textContent = 'KDA: ' + (games ? kda : '-');
+                if (elCount) elCount.textContent = `Last ${games} game${games===1?'':'s'}`;
+            }
+
+            // Provide a robust global switcher (used by onclick attributes)
+            window.setHistoryFilter = function(name){
+                if (!filters) return;
+                const target = (name === 'ranked') ? document.getElementById('filterRanked') : document.getElementById('filterAll');
+                filters.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+                target && target.classList.add('active');
+                forcedFilter = (name === 'ranked') ? 'ranked' : 'all';
+                selectedQueue = (name === 'ranked') ? RANKED_SENTINEL : null;
+                if (queueToggle) queueToggle.textContent = (selectedQueue === RANKED_SENTINEL ? 'Ranked (any)' : 'All queues');
+                apply();
+            };
+
+            // Filter tab clicks (All/Ranked) via delegation (backup)
+            filters?.addEventListener('click', (e)=>{
+                const btn = e.target.closest('button[data-filter]');
+                if (!btn) return;
+                e.preventDefault();
+                const which = btn.getAttribute('data-filter') === 'ranked' ? 'ranked' : 'all';
+                window.setHistoryFilter(which);
+            });
+
+            // Also install direct listeners as a fallback (some browsers/extensions may swallow delegation)
+            document.getElementById('filterAll')?.addEventListener('click', (e)=>{
+                e.preventDefault();
+                window.setHistoryFilter('all');
+            });
+            document.getElementById('filterRanked')?.addEventListener('click', (e)=>{
+                e.preventDefault();
+                window.setHistoryFilter('ranked');
+            });
+
+            // Capture-phase safety: ensure clicks on the pills always switch the filter
+            document.addEventListener('click', function(e){
+                const pill = e.target.closest('#filterAll, #filterRanked');
+                if (!pill) return;
+                e.preventDefault();
+                window.setHistoryFilter(pill.id === 'filterRanked' ? 'ranked' : 'all');
+            }, true);
+
+            // Also handle pointerdown early to win against any blocking listeners
+            document.addEventListener('pointerdown', function(e){
+                const pill = e.target.closest('#filterAll, #filterRanked');
+                if (!pill) return;
+                e.preventDefault();
+                window.setHistoryFilter(pill.id === 'filterRanked' ? 'ranked' : 'all');
+            }, true);
+
+            // Queue dropdown
+            queueDropdown?.addEventListener('click', (e)=>{
+                const item = e.target.closest('button[data-q]');
+                if (!item) return;
+                e.preventDefault();
+                const v = item.getAttribute('data-q');
+                selectedQueue = (v === '' ? null : (v === 'ranked' ? RANKED_SENTINEL : Number(v)));
+                if (queueToggle) {
+                    if (selectedQueue === null) queueToggle.textContent = 'All queues';
+                    else if (selectedQueue === RANKED_SENTINEL) queueToggle.textContent = 'Ranked (any)';
+                    else queueToggle.textContent = (QUEUE_NAMES[selectedQueue] || ('Queue ' + selectedQueue));
+                }
+                // Reset pills to All to make state predictable
+                if (filters) {
+                    filters.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+                    const allBtn = filters.querySelector('[data-filter="all"]');
+                    if (allBtn) allBtn.classList.add('active');
+                }
+                apply();
+            });
+
+            // Search
+            let t; searchInput?.addEventListener('input', ()=>{ clearTimeout(t); t=setTimeout(apply, 200); });
+            apply();
+        })();        try {
+                document.querySelectorAll('img[src*="/ui/champions/"]').forEach(img => {
+                    img.addEventListener('error', function(){
+                        this.style.display = 'none';
+                        const s = this.nextElementSibling;
+                        if (s) { s.textContent = this.alt; s.classList.add('text-muted','small'); }
+                    }, { once: true });
+                });
+            } catch (_) { /* no-op */ }
+        })();
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!riotIdInput.contains(event.target) && !suggestionsContainer.contains(event.target)) {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                riotIdInput.setAttribute('aria-expanded','false');
+                riotIdInput.removeAttribute('aria-activedescendant');
+                activeIndex = -1;
+            }
+        });
+
+        // =====================
+        // Theme toggle + Charts
+        // =====================
+        const themeStylesheet = document.getElementById('themeStylesheet');
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const bodyEl = document.body;
+        const THEMES = { dark: 'darkly', light: 'flatly' };
+        const BOOTSWATCH_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7';
+        const BOOTSWATCH_SRI = {
+            darkly: 'sha512-p5mHOC7N2BAy1SdoU/f2XD4t7EM05/5b1QowPXdyvqrSFsWQl3HVqY60hvvnOcMVBXBwr3ysopvGgxqbaovv/Q=='
+        };
+
+        function applyTheme(theme) {
+            const themeName = THEMES[theme] || THEMES.dark;
+            const href = `${BOOTSWATCH_BASE}/${themeName}/bootstrap.min.css`;
+            const sri = BOOTSWATCH_SRI[themeName];
+            themeStylesheet.href = href;
+            if (sri && href.includes('/darkly/')) {
+                themeStylesheet.setAttribute('integrity', sri);
+                themeStylesheet.setAttribute('crossorigin', 'anonymous');
+            } else {
+                themeStylesheet.removeAttribute('integrity');
+                themeStylesheet.setAttribute('crossorigin', 'anonymous');
+            }
+            bodyEl.classList.remove('theme-dark', 'theme-light');
+            bodyEl.classList.add(theme === 'light' ? 'theme-light' : 'theme-dark');
+            // Sync navbar and input text colors to theme
+            const navEl = document.querySelector('nav.navbar');
+            if (navEl) {
+                navEl.classList.remove('navbar-dark','bg-dark','navbar-light','bg-light');
+                if (theme === 'light') { navEl.classList.add('navbar-light','bg-light'); } else { navEl.classList.add('navbar-dark','bg-dark'); }
+            }
+            if (typeof riotIdInput !== 'undefined' && riotIdInput) {
+                riotIdInput.classList.toggle('text-light', theme !== 'light');
+                riotIdInput.classList.toggle('text-dark', theme === 'light');
+            }
+            if (themeToggleBtn) {
+                themeToggleBtn.innerHTML = theme === 'light' ? '<i class="fa-regular fa-moon" aria-hidden="true"></i>' : '<i class="fa-regular fa-sun" aria-hidden="true"></i>';
+                themeToggleBtn.setAttribute('aria-label', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+                themeToggleBtn.setAttribute('aria-pressed', theme === 'light' ? 'false' : 'true');
+            }
+            const themeMeta = document.getElementById('themeColor');
+            if (themeMeta) themeMeta.setAttribute('content', theme === 'light' ? '#f7f7fb' : '#0b1018');
+            localStorage.setItem('theme', theme);
+            setTimeout(() => {
+                const colors = chartColors();
+                charts.forEach(ch => {
+                    if (!ch) return;
+                    try {
+                        if (ch.options?.scales?.x?.ticks) ch.options.scales.x.ticks.color = colors.text;
+                        if (ch.options?.scales?.x?.grid) ch.options.scales.x.grid.color = colors.grid;
+                        if (ch.options?.scales?.y?.ticks) ch.options.scales.y.ticks.color = colors.text;
+                        if (ch.options?.scales?.y?.grid) ch.options.scales.y.grid.color = colors.grid;
+                        if (ch.options?.plugins?.legend?.labels) ch.options.plugins.legend.labels.color = colors.text;
+                        ch.update();
+                    } catch (_) {
+                        ch.resize();
+                    }
+                });
+            }, 100);
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
+        themeToggleBtn && themeToggleBtn.addEventListener('click', () => {
+            const nextTheme = bodyEl.classList.contains('theme-light') ? 'dark' : 'light';
+            applyTheme(nextTheme);
+        });
+
+        // Chart helpers
+        const charts = [];
+        const isDark = () => bodyEl.classList.contains('theme-dark');
+        const chartColors = () => ({
+            text: isDark() ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)',
+            grid: isDark() ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+        });
+        const fmt = (ts) => {
+            try {
+                const d = new Date(ts);
+                return d.toLocaleString(undefined, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+            } catch { return String(ts); }
+        };
+
+        // Pull minimal data from Thymeleaf for charts
+        /*<![CDATA[*/
+        const leagueEntries = [];
+        /*[# th:each="e : ${leagueEntries}"]*/
+        /*[# th:if="${e != null}"]*/
+        leagueEntries.push({ queueType: /*[[${e?.queueType}]]*/'', lp: /*[[${e?.leaguePoints}]]*/0 });
+        /*[/]*/
+        /*[/]*/
+
+        const matches = [];
+        /*[# th:each="m : ${matchHistory}"]*/
+        /*[# th:if="${m != null}"]*/
+        matches.push({ t: /*[[${m?.info?.gameEndTimestamp}]]*/0, q: /*[[${m?.info?.queueId}]]*/0, d: /*[[${m?.info?.lpChange}]]*/null });
+        /*[/]*/
+        /*[/]*/
+
+        const champLabels = [];
+        const champValues = [];
+        /*[# th:each="e : ${championPlayCounts.entrySet()} "]*/
+        /*[# th:if="${e != null}"]*/
+        champLabels.push(/*[[${e?.key}]]*/'');
+        champValues.push(/*[[${e?.value}]]*/0);
+        /*[/]*/
+        /*[/]*/
+        /*]]>*/
+
+        function buildLpSeries(queueId, queueTypeKey) {
+            const filtered = matches
+                .filter(m => m.q === queueId && m.d !== null && typeof m.t === 'number')
+                .sort((a,b) => a.t - b.t); // oldest -> newest
+            if (filtered.length === 0) return null;
+
+            const currentEntry = leagueEntries.find(e => e.queueType === queueTypeKey);
+            const deltas = filtered.map(m => m.d);
+            const times = filtered.map(m => m.t);
+
+            if (currentEntry && typeof currentEntry.lp === 'number') {
+                let cur = currentEntry.lp;
+                const abs = new Array(deltas.length);
+                for (let i = deltas.length - 1; i >= 0; i--) { abs[i] = cur; cur -= (deltas[i] ?? 0); }
+                return { times, values: abs };
+            } else {
+                let sum = 0; const rel = deltas.map(d => (sum += (d ?? 0)));
+                return { times, values: rel };
+            }
+        }
+
+        const solo = buildLpSeries(420, 'RANKED_SOLO_5x5');
+        const flex = buildLpSeries(440, 'RANKED_FLEX_SR');
+        const lpCtx = document.getElementById('lpChart');
+        if (lpCtx && (solo || flex)) {
+            const colors = chartColors();
+            const allTimes = Array.from(new Set([...(solo?.times||[]), ...(flex?.times||[])])).sort((a,b)=>a-b);
+            const labels = allTimes.map(fmt);
+            function align(series) {
+                if (!series) return new Array(allTimes.length).fill(null);
+                return allTimes.map(t => {
+                    const idx = series.times.indexOf(t);
+                    return idx >= 0 ? series.values[idx] : null;
+                });
+            }
+            const ds = [];
+            if (solo) ds.push({ label: 'Solo/Duo', data: align(solo), borderColor: '#C8AA6E', backgroundColor: 'rgba(200,170,110,0.2)', tension: .25, spanGaps: true });
+            if (flex) ds.push({ label: 'Flex', data: align(flex), borderColor: '#0AC8B9', backgroundColor: 'rgba(10,200,185,0.2)', tension: .25, spanGaps: true });
+
+            const lpChart = new Chart(lpCtx, {
+                type: 'line',
+                data: { labels, datasets: ds },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: colors.text }, grid: { color: colors.grid } },
+                        y: { ticks: { color: colors.text }, grid: { color: colors.grid } }
+                    },
+                    plugins: { legend: { labels: { color: colors.text } } }
+                }
+            });
+            charts.push(lpChart);
+        }
+
+        const champCtx = document.getElementById('championChart');
+        if (champCtx && champLabels.length > 0) {
+            const colors = chartColors();
+            const combined = champLabels.map((l,i)=>({ label:l, value: champValues[i]||0 }));
+            combined.sort((a,b)=>b.value-a.value);
+            const top = combined.slice(0,8);
+            const otherTotal = combined.slice(8).reduce((s,c)=>s+c.value,0);
+            if (otherTotal>0) top.push({ label:'Other', value: otherTotal });
+            const palette = ['#C8AA6E','#0AC8B9','#1E90FF','#A78BFA','#34D399','#F59E0B','#F472B6','#60A5FA','#FFD166','#06D6A0'];
+            const champChart = new Chart(champCtx, {
+                type: 'doughnut',
+                data: { labels: top.map(x=>x.label), datasets: [{ data: top.map(x=>x.value), backgroundColor: top.map((_,i)=>palette[i%palette.length]) }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    radius: '80%',      // shrink overall donut size
+                    cutout: '65%',      // thinner ring for readability
+                    layout: { padding: 8 },
+                    plugins: { legend: { labels: { color: colors.text } } }
+                }
+            });
+            charts.push(champChart);
+        }
+
+        // Resize charts when a collapsible section is shown (Bootstrap event)
+        try {
+            document.querySelectorAll('.collapse').forEach(el => {
+                el.addEventListener('shown.bs.collapse', () => {
+                    setTimeout(() => charts.forEach(ch => ch && ch.resize && ch.resize()), 60);
+                });
+            });
+        } catch (_) { /* no-op if Bootstrap JS is unavailable */ }
+    });
+</script>
+</body>
+</html>
