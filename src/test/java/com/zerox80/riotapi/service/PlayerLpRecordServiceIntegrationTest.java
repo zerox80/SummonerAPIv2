@@ -1,7 +1,11 @@
 package com.zerox80.riotapi.service;
 
+import com.zerox80.riotapi.model.InfoDto;
 import com.zerox80.riotapi.model.LeagueEntryDTO;
+import com.zerox80.riotapi.model.MatchV5Dto;
+import com.zerox80.riotapi.model.MetadataDto;
 import com.zerox80.riotapi.model.PlayerLpRecord;
+import com.zerox80.riotapi.model.Summoner;
 import com.zerox80.riotapi.repository.PlayerLpRecordRepository;
 import org.junit.jupiter.api.Test;
 import com.zerox80.riotapi.client.RiotApiClient;
@@ -103,5 +107,32 @@ class PlayerLpRecordServiceIntegrationTest {
         // Assert
         List<PlayerLpRecord> savedRecords = playerLpRecordRepository.findByPuuid(puuid);
         assertThat(savedRecords).isEmpty();
+    }
+
+    @Test
+    void testCalculateAndSetLpChanges_handlesNullTierAndRank() {
+        String puuid = "null-tier-rank-puuid";
+        Instant beforeTime = Instant.now();
+        Instant afterTime = beforeTime.plusSeconds(120);
+        Instant matchEnd = beforeTime.plusSeconds(60);
+
+        PlayerLpRecord recordBefore = new PlayerLpRecord(puuid, "RANKED_SOLO_5x5", beforeTime, 100, null, null);
+        PlayerLpRecord recordAfter = new PlayerLpRecord(puuid, "RANKED_SOLO_5x5", afterTime, 110, null, null);
+        playerLpRecordRepository.save(recordBefore);
+        playerLpRecordRepository.save(recordAfter);
+
+        Summoner summoner = new Summoner();
+        summoner.setPuuid(puuid);
+
+        InfoDto info = new InfoDto();
+        info.setQueueId(420);
+        info.setGameEndTimestamp(matchEnd.toEpochMilli());
+        MatchV5Dto match = new MatchV5Dto();
+        match.setInfo(info);
+        match.setMetadata(new MetadataDto());
+
+        playerLpRecordService.calculateAndSetLpChangesForMatches(summoner, List.of(match));
+
+        assertThat(match.getInfo().getLpChange()).isEqualTo(10);
     }
 }

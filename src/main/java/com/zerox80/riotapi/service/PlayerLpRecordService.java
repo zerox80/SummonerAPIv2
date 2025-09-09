@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -95,7 +96,7 @@ public class PlayerLpRecordService {
                     int lpAfter = recordAfter.getLeaguePoints();
                     int lpChange = lpAfter - lpBefore;
 
-                    if (!recordBefore.getTier().equals(recordAfter.getTier()) || !recordBefore.getRank().equals(recordAfter.getRank())) {
+                    if (!Objects.equals(recordBefore.getTier(), recordAfter.getTier()) || !Objects.equals(recordBefore.getRank(), recordAfter.getRank())) {
                         logger.warn("Tier/Rank changed for match {}. PUUID: {}. Before: {} {} {} LP, After: {} {} {} LP. LP Change calculation might be inaccurate or represent promotion/demotion.",
                                 safeMatchId(match), maskPuuid(summoner.getPuuid()),
                                 recordBefore.getTier(), recordBefore.getRank(), recordBefore.getLeaguePoints(),
