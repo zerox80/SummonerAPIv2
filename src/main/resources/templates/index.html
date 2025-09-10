@@ -482,12 +482,12 @@
             if (!v || !v.includes('#')) return;
             const maxSize = 10;
             const list = loadLocalHistory().filter(x=>x.toLowerCase() !== v.toLowerCase());
-            list.push(v);
-            while(list.length > maxSize) list.shift();
+            list.unshift(v);
+            while(list.length > maxSize) list.pop();
             try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
         }
         function renderLocalHistory(filterTerm){
-            const list = loadLocalHistory().slice().reverse(); // newest last -> newest first
+            const list = loadLocalHistory();
             const filtered = (filterTerm ? list.filter(x=>x.toLowerCase().startsWith(filterTerm.toLowerCase())) : list).slice(0,10);
             suggestionsContainer.innerHTML = '';
             let idx = 0;
@@ -528,12 +528,16 @@
 
         function fetchAndDisplaySuggestions(query) {
             clearTimeout(debounceTimer);
+            activeIndex = -1;
             if (query.length === 1) { // Hide for single character, show full history if empty
                 suggestionsContainer.innerHTML = '';
                 suggestionsContainer.style.display = 'none';
                 riotIdInput.setAttribute('aria-expanded', 'false');
                 return;
             }
+
+            // Render local history first
+            renderLocalHistory(query);
 
             debounceTimer = setTimeout(() => {
                 fetch(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`)
@@ -544,10 +548,8 @@
                         return response.json();
                     })
                     .then(suggestions => {
-                        suggestionsContainer.innerHTML = '';
-                        activeIndex = -1;
                         if (suggestions.length > 0) {
-                            let idx = 0;
+                            let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
                             suggestions.forEach(suggestion => {
                                 const item = document.createElement('a');
                                 item.href = '#';
@@ -564,9 +566,7 @@
                                 img.classList.add('rounded-circle', 'me-2');
                                 img.style.width = '30px';
                                 img.style.height = '30px';
-                                img.onerror = function() { // Fallback if image fails to load
-                                    this.style.display = 'none';
-                                };
+                                img.onerror = function() { this.style.display = 'none'; };
                                 item.appendChild(img);
 
                                 // Riot ID and Level
@@ -592,28 +592,24 @@
                                     riotIdInput.removeAttribute('aria-activedescendant');
                                 });
 
-        // Save to local history on form submit
+                                suggestionsContainer.appendChild(item);
+                            });
+                            suggestionsContainer.style.display = 'block';
+                            riotIdInput.setAttribute('aria-expanded', 'true');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching suggestions:', error);
+                        // Local history already rendered
+                    });
+            }, query === '' ? 0 : 300); // No debounce if query is empty (e.g. on focus)
+        }
+
         const searchForm = riotIdInput?.closest('form');
         searchForm?.addEventListener('submit', (e)=>{
             const q = riotIdInput?.value || '';
             saveLocalHistory(q);
         });
-                                suggestionsContainer.appendChild(item);
-                            });
-                            suggestionsContainer.style.display = 'block';
-                            riotIdInput.setAttribute('aria-expanded', 'true');
-                        } else {
-                            // Fallback to local history if API returns no items
-                            renderLocalHistory(query);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching suggestions:', error);
-                        // On error, fallback to local history
-                        renderLocalHistory(query);
-                    });
-            }, query === '' ? 0 : 300); // No debounce if query is empty (e.g. on focus)
-        }
 
         riotIdInput && riotIdInput.addEventListener('input', function () {
             const query = riotIdInput.value;
@@ -622,8 +618,6 @@
 
         riotIdInput && riotIdInput.addEventListener('focus', function () {
             if (riotIdInput.value === '') {
-                // Immediately show local history, then fetch cookie-backed suggestions
-                renderLocalHistory('');
                 fetchAndDisplaySuggestions('');
             }
         });
