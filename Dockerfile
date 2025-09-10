@@ -1,12 +1,16 @@
+# syntax=docker/dockerfile:1.7
 # ===== Stage 1: Build =====
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
+# Use BuildKit cache for Maven repo to accelerate builds across runs
 COPY pom.xml .
-RUN mvn -q -e -DskipTests dependency:go-offline
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn -q -T 5 -e -DskipTests dependency:go-offline
 
 COPY src ./src
-RUN mvn -q -DskipTests clean package
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn -q -T 5 -DskipTests clean package
 
 # ===== Stage 2: Runtime =====
 FROM eclipse-temurin:21-jre

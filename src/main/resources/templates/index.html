@@ -65,8 +65,8 @@
                 <label for="riotId" class="visually-hidden">Riot ID</label>
                 <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" />
                 <button class="btn btn-primary px-4" type="submit"><i class="fas fa-search me-1" aria-hidden="true"></i> Search</button>
+                <div id="suggestions-container" class="list-group suggestions-dropdown w-100" role="listbox" aria-label="Suggestions"></div>
             </div>
-            <div id="suggestions-container" class="list-group suggestions-dropdown w-100" role="listbox" aria-label="Suggestions"></div>
             
         </form>
     </section>
@@ -469,18 +469,14 @@
         const riotIdInput = document.getElementById('riotId');
         const suggestionsContainer = document.getElementById('suggestions-container');
         let debounceTimer;
-        // Position dropdown as a viewport-fixed overlay aligned to the input group
+        // Ensure dropdown uses CSS absolute positioning directly under the input
         function positionDropdown(){
-            try{
-                const group = riotIdInput?.closest('.search-group');
-                if (!group || !suggestionsContainer) return;
-                const rect = group.getBoundingClientRect();
-                suggestionsContainer.style.position = 'fixed';
-                suggestionsContainer.style.left = rect.left + 'px';
-                suggestionsContainer.style.top = (rect.bottom + 6) + 'px';
-                suggestionsContainer.style.width = rect.width + 'px';
-                suggestionsContainer.style.maxWidth = rect.width + 'px';
-            } catch(_) {}
+            if (!suggestionsContainer) return;
+            suggestionsContainer.style.position = 'absolute';
+            suggestionsContainer.style.left = '';
+            suggestionsContainer.style.top = '';
+            suggestionsContainer.style.width = '';
+            suggestionsContainer.style.maxWidth = '';
         }
 
         // ===== Local history fallback (in addition to cookie-backed API) =====
@@ -888,9 +884,7 @@
             }
         });
 
-        // Reposition on resize/scroll
-        window.addEventListener('resize', positionDropdown);
-        window.addEventListener('scroll', positionDropdown, true);
+        // No viewport pinning; CSS handles placement under the input
 
         // =====================
         // Theme toggle + Charts

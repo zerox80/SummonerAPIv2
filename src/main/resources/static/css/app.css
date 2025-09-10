@@ -102,6 +102,8 @@ html, body {
 .search-group .form-control::placeholder { color: rgba(255,255,255,.6); }
 .theme-light .search-group .form-control::placeholder { color: rgba(0,0,0,.45); }
 .search-group .form-control:focus { box-shadow: none; }
+/* Ensure the suggestions dropdown anchors to the input group, not the whole form */
+.search-group { position: relative; }
 
 /* Suggestions dropdown */
 .suggestions-dropdown {
