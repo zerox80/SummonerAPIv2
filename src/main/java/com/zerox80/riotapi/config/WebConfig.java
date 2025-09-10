@@ -2,7 +2,7 @@ package com.zerox80.riotapi.config;
 
 import jakarta.servlet.Filter;
 import org.springframework.boot.web.server.Compression;
-import org.springframework.boot.web.server.ConfigurableServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
