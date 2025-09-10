@@ -95,7 +95,9 @@ public class ChampionsController {
             List<ChampionSummary> champions = dataDragonService.getChampionSummaries(locale);
             return ResponseEntity.ok(champions);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            log.warn("/api/champions failed: {}", e.toString());
+            // Degrade gracefully: return empty list to callers
+            return ResponseEntity.ok(Collections.emptyList());
         }
     }
 
