@@ -115,26 +115,41 @@ html, body {
   background: #1a1f2e; /* Solid fallback background for dark theme */
 }
 .theme-dark .suggestions-dropdown .list-group-item, .suggestions-dropdown .list-group-item { 
-  background: #1a1f2e !important; /* Completely solid dark background */
-  border-color: rgba(255,255,255,.15); 
+  background: #1a1f2e !important; /* Solid background in dark */
+  border-color: rgba(255,255,255,.12);
   color: #f0f6fc !important;
+  padding: .5rem .75rem;
+  gap: .5rem;
 }
-.theme-dark .suggestions-dropdown .list-group-item:hover, .suggestions-dropdown .list-group-item:hover { 
-  background: #2d3748 !important; /* Solid hover background */
+.theme-dark .suggestions-dropdown .list-group-item:hover,
+.theme-dark .suggestions-dropdown .list-group-item.active,
+.suggestions-dropdown .list-group-item:hover,
+.suggestions-dropdown .list-group-item.active { 
+  background: #2d3748 !important; /* Solid hover/active */
   color: #ffffff !important;
 }
 .theme-light .suggestions-dropdown { 
   background: #ffffff; /* Solid fallback background for light theme */
 }
 .theme-light .suggestions-dropdown .list-group-item { 
-  background: #ffffff !important; /* Completely solid white background */
-  border-color: rgba(0,0,0,.1); 
+  background: #ffffff !important; /* Solid background in light */
+  border-color: rgba(0,0,0,.08); 
   color: #24292f !important;
+  padding: .5rem .75rem;
+  gap: .5rem;
 }
 .theme-light .suggestions-dropdown .list-group-item:hover { 
   background: #f6f8fa !important; /* Solid hover background */
   color: #0969da !important;
 }
+
+/* Suggestion helpers */
+.suggestion-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.suggestion-text { display: flex; align-items: baseline; gap: .35rem; }
+.suggestion-text .level { opacity: .8; }
+.suggestion-section { font-size: .75rem; font-weight: 600; opacity: .75; padding: .35rem .75rem; margin-top: .25rem; }
+.theme-dark .suggestion-section { color: #cbd5e1; }
+.theme-light .suggestion-section { color: #475569; }
 
 /* Media and tables */
 .tier-icon { width: 64px; height: 64px; margin-right: 1rem; }

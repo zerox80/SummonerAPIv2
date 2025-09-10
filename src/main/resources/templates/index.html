@@ -494,6 +494,12 @@
             const filtered = (filterTerm ? list.filter(x=>x.toLowerCase().startsWith(filterTerm.toLowerCase())) : list).slice(0,10);
             suggestionsContainer.innerHTML = '';
             let idx = 0;
+            if (filtered.length) {
+                const hdr = document.createElement('div');
+                hdr.className = 'suggestion-section';
+                hdr.textContent = 'Recent searches';
+                suggestionsContainer.appendChild(hdr);
+            }
             filtered.forEach(riotId => {
                 const item = document.createElement('a');
                 item.href = '#';
@@ -507,6 +513,7 @@
                 icon.setAttribute('aria-hidden','true');
                 item.appendChild(icon);
                 const text = document.createElement('span');
+                text.className = 'suggestion-text';
                 text.textContent = riotId;
                 item.appendChild(text);
                 item.addEventListener('click', (e)=>{
@@ -553,6 +560,11 @@
                     .then(suggestions => {
                         if (suggestions.length > 0) {
                             let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
+                            // Add a section header if there are already local items or if suggestions exist alone
+                            const hdr = document.createElement('div');
+                            hdr.className = 'suggestion-section';
+                            hdr.textContent = 'Suggestions';
+                            suggestionsContainer.appendChild(hdr);
                             suggestions.forEach(suggestion => {
                                 const item = document.createElement('a');
                                 item.href = '#';
@@ -566,22 +578,21 @@
                                 const img = document.createElement('img');
                                 img.src = suggestion.profileIconUrl;
                                 img.alt = 'Icon';
-                                img.classList.add('rounded-circle', 'me-2');
-                                img.style.width = '30px';
-                                img.style.height = '30px';
+                                img.classList.add('suggestion-avatar','me-2');
                                 img.onerror = function() { this.style.display = 'none'; };
                                 item.appendChild(img);
 
                                 // Riot ID and Level
                                 const textContainer = document.createElement('div');
+                                textContainer.className = 'suggestion-text';
                                 const riotIdSpan = document.createElement('span');
                                 riotIdSpan.textContent = suggestion.riotId;
                                 textContainer.appendChild(riotIdSpan);
 
                                 if (suggestion.summonerLevel) {
                                     const levelSpan = document.createElement('span');
-                                    levelSpan.textContent = ` (Lvl: ${suggestion.summonerLevel})`;
-                                    levelSpan.classList.add('text-muted', 'ms-1', 'small');
+                                    levelSpan.textContent = `(Lvl: ${suggestion.summonerLevel})`;
+                                    levelSpan.classList.add('level','text-muted','small');
                                     textContainer.appendChild(levelSpan);
                                 }
                                 item.appendChild(textContainer);
