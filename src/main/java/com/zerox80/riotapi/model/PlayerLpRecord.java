@@ -5,7 +5,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "player_lp_records", indexes = {
-    @Index(name = "idx_puuid_queuetype_timestamp", columnList = "puuid, queue_type, timestamp DESC")
+    @Index(name = "idx_puuid_queuetype_timestamp", columnList = "puuid, queue_type, lp_timestamp DESC")
 })
 public class PlayerLpRecord {
 
@@ -19,7 +19,7 @@ public class PlayerLpRecord {
     @Column(nullable = false)
     private String queueType;
 
-    @Column(nullable = false)
+    @Column(name = "lp_timestamp", nullable = false)
     private Instant timestamp;
 
     @Column(nullable = false)

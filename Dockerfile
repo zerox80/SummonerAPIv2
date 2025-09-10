@@ -12,9 +12,9 @@ RUN mvn -q -DskipTests clean package
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-ENV JAVA_OPTS=""
+ENV JAVA_TOOL_OPTIONS=""
 
-COPY --from=build /app/target/riot-api-spring-2.0.jar app.jar
+COPY --from=build /app/target/riot-api-spring*.jar app.jar
 
 # Create non-root user and adjust ownership
 RUN useradd -u 10001 -r -g root -s /usr/sbin/nologin app \
@@ -23,4 +23,4 @@ RUN useradd -u 10001 -r -g root -s /usr/sbin/nologin app \
 USER app
 
 EXPOSE 8080
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

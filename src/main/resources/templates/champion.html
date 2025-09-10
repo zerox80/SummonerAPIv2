@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" th:content="${champion != null ? 'Champion details for ' + champion.name : 'Champion details'}">
+    <meta name="theme-color" id="themeColor" content="#0b1018">
+    <title th:text="${champion != null ? champion.name + ' - SummonerAPI' : 'Champion - SummonerAPI'}">Champion - SummonerAPI</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link id="themeStylesheet" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7/darkly/bootstrap.min.css" integrity="sha512-p5mHOC7N2BAy1SdoU/f2XD4t7EM05/5b1QowPXdyvqrSFsWQl3HVqY60hvvnOcMVBXBwr3ysopvGgxqbaovv/Q==" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-body">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top glass-nav border-bottom border-secondary-subtle">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-semibold" href="/"><i class="fas fa-chart-line" aria-hidden="true"></i> SummonerAPI</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarDefault">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/champions">Champions</a></li>
+            </ul>
+            <span class="navbar-text me-3">Currently only EUW is supported.</span>
+            <button id="themeToggle" class="btn btn-sm btn-outline-secondary" type="button" title="Toggle theme" aria-label="Switch theme" aria-pressed="false">
+                <i class="fa-regular fa-moon" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<main class="container mt-5">
+    <div class="splash-hero glass-card shadow-lg mb-4" th:if="${champion != null}">
+        <img class="splash-bg" th:src="${bases.splash + champion.id + '_0.jpg'}" alt="Splash" loading="lazy"/>
+        <div class="splash-fg p-4">
+            <div class="d-flex align-items-center gap-3">
+                <img class="champ-portrait" th:src="${bases.champSquare + champion.imageFull}" th:alt="${champion.name}"/>
+                <div>
+                    <h1 class="h3 mb-1" th:text="${champion.name}">Champion</h1>
+                    <div class="text-secondary" th:text="${champion.title}">Title</div>
+                    <div class="mt-2">
+                        <span class="badge rounded-pill bg-secondary-subtle text-light-emphasis me-1" th:each="t : ${champion.tags}" th:text="${t}">Role</span>
+                    </div>
+                </div>
+                <div class="ms-auto text-end">
+                    <a class="btn btn-outline-secondary btn-sm" href="/champions"><i class="fa-solid fa-arrow-left me-1"></i> Back to list</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger"><span th:text="${error}">Failed to load champion.</span></div>
+
+    <div th:if="${champion != null}" class="row g-4">
+        <div class="col-12 col-lg-8">
+            <div class="card glass-card">
+                <div class="card-header section-header d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-book-open text-primary"></i>
+                    Lore
+                </div>
+                <div class="card-body">
+                    <p class="mb-0" th:text="${champion.lore}">Lore text...</p>
+                </div>
+            </div>
+
+            <div class="card glass-card">
+                <div class="card-header section-header d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-bolt text-warning"></i>
+                    Abilities
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-start gap-3 mb-3" th:if="${champion.passive != null}">
+                        <img class="passive-icon" th:src="${bases.passive + champion.passive.imageFull}" alt="Passive" loading="lazy"/>
+                        <div>
+                            <div class="fw-semibold">Passive — <span th:text="${champion.passive.name}">Passive</span></div>
+                            <div class="text-secondary small" th:utext="${champion.passive.description}">Passive description</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3 mb-3" th:each="s,iter : ${champion.spells}">
+                        <img class="spell-icon" th:src="${bases.spell + s.imageFull}" th:alt="${s.name}" loading="lazy"/>
+                        <div>
+                            <div class="fw-semibold"><span th:text="${iter.index == 0 ? 'Q' : (iter.index == 1 ? 'W' : (iter.index == 2 ? 'E' : 'R'))}">Q</span> — <span th:text="${s.name}">Spell</span></div>
+                            <div class="text-secondary small" th:utext="${s.tooltip}">Tooltip</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="card glass-card">
+                <div class="card-header section-header d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-info"></i>
+                    Recommended Runes (beta)
+                </div>
+                <div class="card-body runes">
+                    <div th:if="${build == null || build.runes == null || #lists.isEmpty(build.runes)}" class="build-placeholder small">Coming soon: aggregated popular runes based on recent matches.</div>
+                    <div th:if="${build != null && build.runes != null && !#lists.isEmpty(build.runes)}" class="d-flex flex-column gap-3">
+                        <div class="d-flex align-items-center justify-content-between small text-secondary">
+                            <div>Patch <span th:text="${build.patch}">x.y</span> • Queue <span th:text="${build.queueId}">420</span></div>
+                        </div>
+                        <div th:each="r,iter : ${build.runes}" th:if="${iter.index < 6}" class="d-flex align-items-center gap-3 p-2 rounded-3 bg-soft-glass">
+                            <img th:if="${r.keystoneIconUrl}" th:src="${r.keystoneIconUrl}" alt="Keystone" width="36" height="36" class="rounded" loading="lazy"/>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold" th:text="${r.keystoneName}">Keystone</div>
+                                <div class="text-secondary small">
+                                    <span th:text="${r.primaryStyleName}">Primary</span> + <span th:text="${r.subStyleName}">Secondary</span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-semibold" th:text="${#numbers.formatInteger(r.count, 0)}">0</div>
+                                <div class="text-secondary small">
+                                    <span th:text="${#numbers.formatDecimal((r.wins * 100.0) / (r.count == 0 ? 1 : r.count), 0, 0)}">0</span>% WR
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card glass-card">
+                <div class="card-header section-header d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-sack-xmark text-warning"></i>
+                    Popular Item Builds (beta)
+                </div>
+                <div class="card-body">
+                    <div th:if="${build == null || build.items == null || #lists.isEmpty(build.items)}" class="build-placeholder small">Coming soon: item builds aggregated from match-v5.</div>
+                    <div th:if="${build != null && build.items != null && !#lists.isEmpty(build.items)}" class="row g-2">
+                        <div class="col-6 d-flex align-items-center gap-2" th:each="it,iter : ${build.items}" th:if="${iter.index < 8}">
+                            <img th:if="${it.imageUrl}" th:src="${it.imageUrl}" th:alt="${it.name}" width="36" height="36" class="rounded" loading="lazy"/>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold small" th:text="${it.name}">Item</div>
+                                <div class="text-secondary small">
+                                    <span th:text="${#numbers.formatInteger(it.count, 0)}">0</span> • <span th:text="${#numbers.formatDecimal((it.wins * 100.0) / (it.count == 0 ? 1 : it.count), 0, 0)}">0</span>% WR
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card glass-card">
+                <div class="card-header section-header d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-hat-wizard text-success"></i>
+                    Summoner Spells (beta)
+                </div>
+                <div class="card-body summoner-spells">
+                    <div th:if="${build == null || build.spells == null || #lists.isEmpty(build.spells)}" class="build-placeholder small">Coming soon: common summoner spells by role and rank.</div>
+                    <div th:if="${build != null && build.spells != null && !#lists.isEmpty(build.spells)}" class="d-flex flex-column gap-2">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded-3 bg-soft-glass" th:each="sp,iter : ${build.spells}" th:if="${iter.index < 6}">
+                            <div class="d-flex align-items-center gap-1">
+                                <img th:if="${sp.spell1IconUrl}" th:src="${sp.spell1IconUrl}" th:alt="${sp.spell1Name}" width="32" height="32" class="rounded" loading="lazy"/>
+                                <span class="text-secondary small">+</span>
+                                <img th:if="${sp.spell2IconUrl}" th:src="${sp.spell2IconUrl}" th:alt="${sp.spell2Name}" width="32" height="32" class="rounded" loading="lazy"/>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold small"><span th:text="${sp.spell1Name}">Spell1</span> + <span th:text="${sp.spell2Name}">Spell2</span></div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fw-semibold" th:text="${#numbers.formatInteger(sp.count, 0)}">0</div>
+                                <div class="text-secondary small"><span th:text="${#numbers.formatDecimal((sp.wins * 100.0) / (sp.count == 0 ? 1 : sp.count), 0, 0)}">0</span>% WR</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer mt-auto py-3 bg-dark">
+    <div class="container text-center">
+        <span class="text-muted">SummonerAPI by <a href="/mavi.html" class="link-light text-decoration-underline">Mavi</a>. This project is not affiliated with or endorsed by Riot Games.</span>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

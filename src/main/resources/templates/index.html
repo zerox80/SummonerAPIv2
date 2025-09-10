@@ -36,6 +36,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/champions">Champions</a>
+                </li>
             </ul>
             <span class="navbar-text me-3">
                 Currently only EUW is supported.
@@ -332,7 +335,7 @@
                         </div>
                         <p class="mb-2 match-details-summary">
                             <small th:text="${'Match ID: ' + (match != null && match.metadata != null ? match.metadata.matchId : 'N/A')}">Match ID: N/A</small> &bull;
-                            <small th:text="${match.info.gameEndTimestamp != null ? #dates.format(new java.util.Date(match.info.gameEndTimestamp), 'dd MMM yyyy HH:mm') : '--'}"></small>
+                            <small th:text="${match.info.gameEndTimestamp > 0 ? #dates.format(new java.util.Date(match.info.gameEndTimestamp), 'dd MMM yyyy HH:mm') : '--'}"></small>
                         </p>
 
                         <!-- Searched Summoner's Performance -->

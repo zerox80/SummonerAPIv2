@@ -8,6 +8,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.HeaderWriterFilter;
 import org.springframework.web.filter.ForwardedHeaderFilter;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -22,10 +27,26 @@ public class SecurityConfig {
             // CSRF-Schutz aktivieren; Cookie ist HttpOnly
             .csrf(csrf -> csrf
                 .csrfTokenRepository(csrfRepo)
+                // API: Aggregations-Endpoint gezielt von CSRF ausnehmen (Dokumentiert in README)
+                .ignoringRequestMatchers(new AntPathRequestMatcher("/api/champions/*/aggregate", "POST"))
             )
             // Dynamische CSP via Filter (setzt einen Nonce pro Request und schreibt den Header)
             .addFilterBefore(rateLimitingFilter, HeaderWriterFilter.class)
             .addFilterBefore(new CspNonceFilter(), HeaderWriterFilter.class)
+            // Zusätzliche Security-Header auch ohne NGINX setzen
+            .headers(headers -> headers
+                .contentTypeOptions(Customizer.withDefaults()) // X-Content-Type-Options: nosniff
+                .frameOptions(frame -> frame.sameOrigin())
+                .referrerPolicy(ref -> ref.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                // HSTS wird vom Browser nur bei HTTPS-Verbindungen beachtet; bei HTTP ignoriert
+                .httpStrictTransportSecurity(hsts -> hsts
+                    .includeSubDomains(true)
+                    .preload(false)
+                    .maxAgeInSeconds(15552000)
+                )
+                .addHeaderWriter(new StaticHeadersWriter("Permissions-Policy",
+                    "geolocation=(), microphone=(), camera=(), payment=()"))
+            )
             .authorizeHttpRequests(auth -> auth
                 // Actuator-Härtung: health/info erlauben, Rest verweigern
                 .requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()

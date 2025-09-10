@@ -51,6 +51,15 @@ services:
       SPRING_FLYWAY_BASELINE_VERSION: "0"
       # Use Flyway for schema management; let Hibernate validate instead of auto-updating
       SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+      # Build aggregation (scheduler + manual trigger)
+      BUILD_AGG_ENABLED: ${BUILD_AGG_ENABLED:-false}
+      BUILD_AGG_QUEUE_ID: ${BUILD_AGG_QUEUE_ID:-420}
+      BUILD_AGG_PAGES: ${BUILD_AGG_PAGES:-1}
+      BUILD_AGG_MATCHES_PER_SUMMONER: ${BUILD_AGG_MATCHES_PER_SUMMONER:-6}
+      BUILD_AGG_MAX_SUMMONERS: ${BUILD_AGG_MAX_SUMMONERS:-50}
+      BUILD_AGG_CHAMPIONS: ${BUILD_AGG_CHAMPIONS:-}
+      BUILD_AGG_CRON: ${BUILD_AGG_CRON:-0 15 3 * * *}
+      BUILD_AGG_TRIGGER_ENABLED: ${BUILD_AGG_TRIGGER_ENABLED:-false}
     ports:
       - "${APP_HTTP_PORT:-8080}:8080"
     restart: unless-stopped

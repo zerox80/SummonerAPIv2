@@ -15,6 +15,42 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (e) { /* safe no-op */ }
 });
 
+// Global image error fallbacks to avoid broken icons when local assets are missing
+document.addEventListener('DOMContentLoaded', function(){
+    try {
+        // 1x1 transparent PNG (data URI) to replace broken images if we prefer not to hide
+        const TRANSPARENT_PNG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2NkYGBgAAAABQABhU1aWQAAAABJRU5ErkJggg==';
+
+        function attachImgFallback(selector, mode){
+            document.querySelectorAll(selector).forEach(function(img){
+                // Guard: avoid adding multiple listeners
+                if (img.__fallbackBound) return;
+                img.__fallbackBound = true;
+                img.addEventListener('error', function(){
+                    if (mode === 'hide') {
+                        img.style.display = 'none';
+                    } else if (mode === 'transparent') {
+                        // Replace src with transparent pixel only once to avoid infinite loop
+                        if (img.getAttribute('data-fallback-applied') !== '1'){
+                            img.setAttribute('data-fallback-applied','1');
+                            img.src = TRANSPARENT_PNG;
+                        } else {
+                            img.style.display = 'none';
+                        }
+                    }
+                }, { once: false });
+            });
+        }
+
+        // Local tier emblem icons may be missing; use non-breaking fallback
+        attachImgFallback('.tier-icon', 'transparent');
+        // Locally referenced champion icons (e.g., /ui/champions/Name.png) may be missing; hide gracefully
+        attachImgFallback('.js-champ-fallback', 'hide');
+    } catch (e) {
+        // no-op; never break UI
+    }
+});
+
 // Optional: Improve collapse icon for match history
 const matchHistoryCollapse = document.getElementById('matchHistoryCollapse');
 if (matchHistoryCollapse) {

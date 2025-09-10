@@ -110,6 +110,14 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             return request.getRemoteAddr();
         }
 
+        // If an allowlist is configured, only honor proxy headers when the remote address is trusted
+        String remoteAddr = request.getRemoteAddr();
+        if (properties.getAllowedProxies() != null && !properties.getAllowedProxies().isEmpty()) {
+            if (!isAllowedProxy(remoteAddr)) {
+                return remoteAddr;
+            }
+        }
+
         // Try RFC 7239 Forwarded: e.g. Forwarded: for=192.0.2.43, for="[2001:db8:cafe::17]"
         String fwd = request.getHeader("Forwarded");
         if (fwd != null && !fwd.isBlank()) {
@@ -137,6 +145,17 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         }
 
         return request.getRemoteAddr();
+    }
+
+    private boolean isAllowedProxy(String remoteAddr) {
+        try {
+            for (String allowed : properties.getAllowedProxies()) {
+                if (allowed != null && !allowed.isBlank() && remoteAddr.equals(allowed.trim())) {
+                    return true;
+                }
+            }
+        } catch (Exception ignored) {}
+        return false;
     }
 
     @Override

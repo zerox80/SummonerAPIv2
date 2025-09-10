@@ -6,14 +6,41 @@ SummonerAPI is a Spring Boot web app that uses the Riot Games API to fetch and d
 
 ---
 
+## Table of Contents
+
+- Features
+- Tech Stack
+- Getting Started
+  - Requirements
+  - Configure (properties, environment, .env)
+  - Build and Run
+- Configuration Reference
+- API Docs (Swagger UI)
+- HTTP API (Endpoints & Examples)
+- Actuator & Observability
+- Docker
+- Security
+- Rate Limiting
+- Caching & Concurrency
+- Project Structure
+- NGINX Reverse Proxy (Optional)
+- Troubleshooting
+- Contributing
+- License
+- Attribution
+- Privacy
+- Notes
+
 ## Features
 
 - Summoner lookup by Riot ID (e.g., `YourName#EUW`)
-- Profile overview (level, icon)
+- Profile overview (level, icon, profile icon from CommunityDragon)
 - Ranked stats (tier, rank, wins/losses)
 - Match history (recent games)
-- LP history (optional via PostgreSQL)
-- Lightweight UI with Thymeleaf
+- Champions directory and detail pages with images and localized text
+- Optional LP history via PostgreSQL (with Flyway support)
+- Basic champion build aggregation API (sampling recent ranked matches)
+- Lightweight UI with Thymeleaf and Bootstrap 5
 
 ---
 
@@ -47,7 +74,16 @@ Option A — properties file:
 Option B — environment variables (recommended):
 - `RIOT_API_KEY`, `RIOT_API_REGION`, `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`
 
-### 3) Build and Run
+Option C — .env file (for Docker Compose):
+- Copy `.env.example` to `.env` and fill in values. `docker-compose.yml` will pick these up.
+
+### Get a Riot API Key
+
+1. Create a developer account and register an application at https://developer.riotgames.com/
+2. Use your temporary development key for testing. Note: dev keys expire frequently and are rate limited.
+3. Never commit your API key to version control. Prefer environment variables or a local `application.properties`.
+
+### 3) Build and Run (Local)
 
 ```bash
 mvn clean package
@@ -56,9 +92,91 @@ java -jar target/riot-api-spring-2.0.jar
 
 Open http://localhost:8080
 
+Alternative (dev):
+
+```bash
+mvn spring-boot:run
+```
+
 ---
 
-## Actuator
+## Configuration Reference
+
+- Riot API
+  - `riot.api.key` — your Riot API key (or env `RIOT_API_KEY`)
+  - `riot.api.region` — platform region (e.g., `euw1`, `na1`, `kr`). Used for platform routes and to derive the regional route for Match V5.
+  - `riot.api.community-dragon.url` — base for profile icons (default points to CommunityDragon)
+  - `riot.api.max-concurrent` — max concurrent outbound requests to Riot API (default 15)
+
+- Database
+  - `spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password`
+  - JPA: `spring.jpa.hibernate.ddl-auto` (e.g., `update` for local dev; prefer `validate` with Flyway in prod)
+
+- Champion Build Aggregation
+  - `build.agg.enabled`, `build.agg.queue-id`, `build.agg.pages`, `build.agg.matches-per-summoner`, `build.agg.max-summoners`, `build.agg.champions`, `build.agg.cron`, `build.agg.trigger-enabled`
+
+- Rate Limiting
+  - See the dedicated section below for `rate.limit.*` keys
+
+### Minimal application.properties (example)
+
+```properties
+# Riot API
+riot.api.key=REPLACE_WITH_YOUR_RIOT_API_KEY
+riot.api.region=euw1
+
+# Server
+server.port=8080
+
+# Optional: Database (for LP history)
+spring.datasource.url=jdbc:postgresql://localhost:5432/summoner_db
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+
+# Caching
+spring.cache.type=caffeine
+
+# Actuator
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.health.probes.enabled=true
+
+# Rate limiting
+rate.limit.enabled=true
+rate.limit.window-ms=60000
+rate.limit.max-requests=60
+rate.limit.paths=/api/**,/search
+```
+
+### Environment variables mapping
+
+- `RIOT_API_KEY` → `riot.api.key`
+- `RIOT_API_REGION` → `riot.api.region`
+- `RIOT_API_COMMUNITY_DRAGON_URL` → `riot.api.community-dragon.url`
+- `SPRING_DATASOURCE_URL` → `spring.datasource.url`
+- `SPRING_DATASOURCE_USERNAME` → `spring.datasource.username`
+- `SPRING_DATASOURCE_PASSWORD` → `spring.datasource.password`
+- `SPRING_FLYWAY_BASELINE_ON_MIGRATE` → `spring.flyway.baselineOnMigrate`
+- `SPRING_FLYWAY_BASELINE_VERSION` → `spring.flyway.baselineVersion`
+- `SPRING_JPA_HIBERNATE_DDL_AUTO` → `spring.jpa.hibernate.ddl-auto`
+- `BUILD_AGG_*` → `build.agg.*`
+- `RATE_LIMIT_*` → `rate.limit.*`
+
+### Supported platform regions and regional routing (Match V5)
+
+Match V5 uses a regional route derived from your platform region:
+
+```
+Platform → Regional Route
+- euw1, eun1, tr1, ru, me1 → europe
+- na1, br1, la1, la2, oc1   → americas
+- kr, jp1                   → asia
+- vn2, ph2, sg2, th2, tw2, id1 → sea
+```
+If an unknown platform is used, the client will default to using the platform as-is.
+
+---
+
+## Actuator & Observability
 
 Actuator is enabled. Exposed endpoints:
 - `/actuator/health`
@@ -83,6 +201,43 @@ Actuator is enabled. Exposed endpoints:
 
 ---
 
+## HTTP API (Endpoints & Examples)
+
+- GET `/` — Home page
+- GET or POST `/search?riotId=GameName#TAG` — Render profile, ranked, and recent matches
+- GET `/api/summoner-suggestions?query=<text>` — Suggestions from local history and service
+  - Example:
+    ```bash
+    curl 'http://localhost:8080/api/summoner-suggestions?query=ahri'
+    ```
+- GET `/api/me` — Resolve the current summoner via RSO Bearer token
+  - Requires `Authorization: Bearer <token>` header
+    ```bash
+    curl -H 'Authorization: Bearer YOUR_RSO_TOKEN' http://localhost:8080/api/me
+    ```
+- GET `/champions` — Champions listing page (HTML)
+- GET `/champions/{id}` — Champion detail page (HTML)
+- GET `/api/champions` — Champions list (JSON)
+  ```bash
+  curl http://localhost:8080/api/champions
+  ```
+- GET `/api/champions/{id}` — Champion detail (JSON)
+  ```bash
+  curl http://localhost:8080/api/champions/Ahri
+  ```
+- GET `/api/champions/{id}/build` — Aggregated build for a champion
+  - Optional params: `queueId` (e.g., 420), `role` (e.g., MID)
+  ```bash
+  curl 'http://localhost:8080/api/champions/Ahri/build?queueId=420&role=MID'
+  ```
+- POST `/api/champions/{id}/aggregate` — Trigger aggregation (requires `build.agg.trigger-enabled=true`)
+  - Optional params: `queueId`, `pages`, `matchesPerSummoner`, `maxSummoners`
+  ```bash
+  curl -X POST 'http://localhost:8080/api/champions/Ahri/aggregate?queueId=420&pages=1&matchesPerSummoner=8&maxSummoners=75'
+  ```
+
+---
+
 ## Docker (Optional)
 
 Build and run with Docker Compose:
@@ -92,6 +247,52 @@ docker compose up --build
 ```
 
 This starts PostgreSQL and the app. Override environment variables in `docker-compose.yml` as needed.
+
+Tip: You can adjust the host port via `.env` using `APP_HTTP_PORT`, e.g., `APP_HTTP_PORT=8081`.
+
+Runtime notes:
+- The container now uses exec-form ENTRYPOINT (`["java","-jar","app.jar"]`). Prefer passing JVM options via `JAVA_TOOL_OPTIONS` instead of shell-expanding `JAVA_OPTS`.
+
+Run with plain Docker (without Compose):
+
+```bash
+docker build -t summonerapi:local .
+docker run --rm \
+  -p 8080:8080 \
+  -e RIOT_API_KEY=YOUR_RIOT_API_KEY \
+  -e RIOT_API_REGION=euw1 \
+  summonerapi:local
+```
+
+---
+
+## Security
+
+- CSRF protection enabled via cookie-based token (`CookieCsrfTokenRepository`).
+- Dynamic Content Security Policy (CSP) nonce is added per request to harden inline scripts.
+- Actuator hardening: only `/actuator/health` and `/actuator/info` are permitted; everything else under `/actuator/**` is denied by web security.
+- A lightweight IP-based rate limiter protects `/api/**` and `/search` (see Rate Limiting below).
+- CSRF exemption for Aggregation: The mutating endpoint `POST /api/champions/{id}/aggregate` is exempt from CSRF to allow non-browser clients (curl/Swagger). Other mutating endpoints (if added) require sending the CSRF token header `X-XSRF-TOKEN`.
+
+Behind a reverse proxy (NGINX/Ingress):
+
+- Set `rate.limit.trust-proxy=true` (or env `RATE_LIMIT_TRUST_PROXY=true`) so client IP is resolved from `Forwarded`/`X-Forwarded-For`.
+- `ForwardedHeaderFilter` is registered to apply forwarded headers to requests.
+
+### Error Handling & Request Correlation
+
+- API-Fehler folgen dem RFC 7807 "Problem Details"-Format (`ProblemDetail`). Zusätzliche Felder:
+  - `requestId` – eindeutige Korrelations-ID (auch als Response-Header `X-Request-Id` gesetzt und in Logs enthalten)
+  - `path` – angefragter Pfad
+- Upstream-Fehler der Riot API werden als `502/5xx` o.ä. mit Kontext gemeldet.
+- Referenz: [Spring MVC ProblemDetails](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html)
+
+### Produktionsprofil
+
+- `application-prod.properties` deaktiviert die API-Dokumentation in Prod:
+  - `springdoc.api-docs.enabled=false`
+  - `springdoc.swagger-ui.enabled=false`
+- Aktivieren via: `--spring.profiles.active=prod`
 
 ---
 
@@ -106,6 +307,26 @@ This starts PostgreSQL and the app. Override environment variables in `docker-co
 - Environment variable equivalents (see `.env.example`):
   - `RATE_LIMIT_ENABLED`, `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX_REQUESTS`
   - You can also set `RATE_LIMIT_PATHS` if you prefer env vars for path patterns
+  - Additional options:
+    - `RATE_LIMIT_TRUST_PROXY` — trust `Forwarded`/`X-Forwarded-For` for client IP (behind NGINX/Ingress)
+    - `RATE_LIMIT_INCLUDE_HEADERS` — include `X-RateLimit-*` headers in responses (default true)
+    - `RATE_LIMIT_CACHE_MAX_IPS` — cap distinct client windows kept in memory (default 100000)
+    - `RATE_LIMIT_ALLOWED_PROXIES` — comma-separated IP allowlist; only when the incoming remote address is in this list are proxy headers trusted
+
+---
+
+## Caching & Concurrency
+
+- Caching
+  - In-memory caches backed by Caffeine via Spring Cache (`spring.cache.type=caffeine`).
+  - Cached domains include: `accounts`, `summoners`, `leagueEntries`, `matchIds`, `matchDetails` (see `RiotApiClient`).
+  - Keys are derived from method parameters (e.g., PUUID, matchId). This reduces upstream calls and accelerates page loads.
+
+- In-flight request coalescing
+  - `RiotApiClient` coalesces identical concurrent requests to avoid duplicate upstream calls on cache misses.
+
+- Outbound concurrency limit
+  - Controlled by `riot.api.max-concurrent` (default 15). A semaphore limits concurrent HTTP requests to Riot and helps respect rate limits.
 
 ---
 
@@ -120,6 +341,26 @@ This starts PostgreSQL and the app. Override environment variables in `docker-co
 - `templates/` — Thymeleaf pages
 
 ---
+
+## NGINX Reverse Proxy (Optional)
+
+- A production-ready sample config is provided at `nginx/summonerapi.conf.example`.
+- It handles HTTP→HTTPS redirect, ACME challenges, TLS, basic security headers, and proxy forwarding.
+- After adapting the domain and port, test and reload NGINX:
+  ```bash
+  sudo nginx -t && sudo systemctl reload nginx
+  ```
+
+---
+
+## Troubleshooting
+
+- Build fails due to Java version: Ensure JDK 21+ is installed and `JAVA_HOME` points to it.
+- 401 on `/api/me`: Make sure you are sending a valid RSO bearer token: `Authorization: Bearer <token>`.
+- 429 responses from Riot API: The client auto-retries with backoff. Consider lowering `riot.api.max-concurrent` or spacing requests.
+- Postgres connection errors: Verify `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`. With Docker Compose, the defaults should work.
+- Actuator metrics not visible: They are exposed by management but denied by web security by default. Temporarily permit in `SecurityConfig` for local debugging.
+- IDE build/Lombok: Install the Lombok plugin in your IDE and enable "Annotation Processing" (IntelliJ IDEA: Settings > Build, Execution, Deployment > Compiler > Annotation Processors).
 
 ## Contributing
 
@@ -159,3 +400,8 @@ GPL v3 — see `LICENSE`.
 
 - Secrets are never logged. Configure via env vars or `application.properties`.
 - The Riot API has strict rate limits. The client includes basic retry/backoff for 429/5xx.
+
+Dependency updates (Sept 2025):
+- Spring Boot parent: 3.2.14
+- springdoc-openapi-starter-webmvc-ui: 2.6.0
+- PostgreSQL JDBC driver: 42.7.7

@@ -30,6 +30,9 @@ public class RateLimitProperties {
     /** Whether to include X-RateLimit-* headers in responses */
     private boolean includeHeaders = true;
 
+    /** Optional: Only honor Forwarded/X-Forwarded-* when request.remoteAddr is in this allowlist */
+    private List<String> allowedProxies = new ArrayList<>();
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -84,5 +87,13 @@ public class RateLimitProperties {
 
     public void setIncludeHeaders(boolean includeHeaders) {
         this.includeHeaders = includeHeaders;
+    }
+
+    public List<String> getAllowedProxies() {
+        return allowedProxies;
+    }
+
+    public void setAllowedProxies(List<String> allowedProxies) {
+        this.allowedProxies = (allowedProxies != null ? allowedProxies : new ArrayList<>());
     }
 }

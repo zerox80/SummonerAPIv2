@@ -48,7 +48,37 @@ public class CacheConfig {
                 .expireAfterAccess(30, TimeUnit.MINUTES)
                 .maximumSize(2000)
                 .buildAsync());
+        // Static data (Data Dragon): cache generously, these change only per patch
+        cacheManager.registerCustomCache("ddragonVersions",
+            Caffeine.newBuilder()
+                .expireAfterWrite(12, TimeUnit.HOURS)
+                .maximumSize(10)
+                .buildAsync());
+        cacheManager.registerCustomCache("ddragonChampionList",
+            Caffeine.newBuilder()
+                .expireAfterWrite(12, TimeUnit.HOURS)
+                .maximumSize(2)
+                .buildAsync());
+        cacheManager.registerCustomCache("ddragonChampionDetail",
+            Caffeine.newBuilder()
+                .expireAfterWrite(12, TimeUnit.HOURS)
+                .maximumSize(300)
+                .buildAsync());
+        cacheManager.registerCustomCache("ddragonItems",
+            Caffeine.newBuilder()
+                .expireAfterWrite(12, TimeUnit.HOURS)
+                .maximumSize(2)
+                .buildAsync());
+        cacheManager.registerCustomCache("ddragonRunes",
+            Caffeine.newBuilder()
+                .expireAfterWrite(12, TimeUnit.HOURS)
+                .maximumSize(2)
+                .buildAsync());
+        cacheManager.registerCustomCache("ddragonSummonerSpells",
+            Caffeine.newBuilder()
+                .expireAfterWrite(12, TimeUnit.HOURS)
+                .maximumSize(2)
+                .buildAsync());
         return cacheManager;
     }
 }
- 

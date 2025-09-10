@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.http.ResponseCookie;
 
 import java.util.List;
 import java.util.Collections;
@@ -39,19 +40,21 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
+import java.time.Duration;
 
 @Controller
 public class SummonerController {
 
     private static final Logger logger = LoggerFactory.getLogger(SummonerController.class);
     private final RiotApiService riotApiService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
     private static final String SEARCH_HISTORY_COOKIE = "searchHistory";
     private static final int MAX_HISTORY_SIZE = 10;
 
     @Autowired
-    public SummonerController(RiotApiService riotApiService) {
+    public SummonerController(RiotApiService riotApiService, ObjectMapper objectMapper) {
         this.riotApiService = riotApiService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping("/")
@@ -204,18 +207,14 @@ public class SummonerController {
         try {
             String jsonHistory = objectMapper.writeValueAsString(history);
             String encodedValue = URLEncoder.encode(jsonHistory, StandardCharsets.UTF_8.name());
-            int maxAge = 30 * 24 * 60 * 60;
-            StringBuilder cookieHeader = new StringBuilder();
-            cookieHeader.append(SEARCH_HISTORY_COOKIE).append("=").append(encodedValue)
-                    .append("; Max-Age=").append(maxAge)
-                    .append("; Path=/")
-                    .append("; HttpOnly")
-                    .append("; SameSite=Lax");
-            // Set Secure only when the request is HTTPS to avoid dropping the cookie in local HTTP dev
-            if (request.isSecure()) {
-                cookieHeader.append("; Secure");
-            }
-            response.addHeader("Set-Cookie", cookieHeader.toString());
+            ResponseCookie cookie = ResponseCookie.from(SEARCH_HISTORY_COOKIE, encodedValue)
+                    .httpOnly(true)
+                    .secure(request.isSecure())
+                    .path("/")
+                    .sameSite("Lax")
+                    .maxAge(Duration.ofDays(30))
+                    .build();
+            response.addHeader("Set-Cookie", cookie.toString());
         } catch (IOException e) {
             logger.error("Error writing search history cookie: " + e.getMessage(), e);
         }

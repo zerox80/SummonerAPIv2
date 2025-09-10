@@ -66,8 +66,8 @@ public class RiotApiClient {
     private static final TypeReference<List<String>> MATCH_ID_LIST_TYPE = new TypeReference<>() {};
 
     @Autowired
-    public RiotApiClient(@Value("${riot.api.key}") String apiKey,
-                         @Value("${riot.api.region}") String platformRegion,
+    public RiotApiClient(@Value("${riot.api.key:}") String apiKey,
+                         @Value("${riot.api.region:euw1}") String platformRegion,
                          @Value("${riot.api.community-dragon.url:https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons}") String communityDragonUrl,
                          ObjectMapper objectMapper,
                          MeterRegistry meterRegistry,
@@ -272,8 +272,9 @@ public class RiotApiClient {
             logger.warn("API Request ({}) to URL '{}' returned 404 Not Found.", requestType, url);
             return null;
         } else {
-            logger.error("API Request Failed ({}): {} - {} for URL: {}", requestType, response.statusCode(), response.body(), url);
-            throw new RiotApiRequestException("API request (" + requestType + ") failed with status code: " + response.statusCode() + "; Body: " + response.body());
+            String snippet = abbreviate(response.body(), 500);
+            logger.error("API Request Failed ({}): status={} url={} bodySnippet={}", requestType, response.statusCode(), url, snippet);
+            throw new RiotApiRequestException("API request (" + requestType + ") failed with status code: " + response.statusCode());
         }
     }
 
@@ -288,8 +289,9 @@ public class RiotApiClient {
             logger.warn("API Request ({}) to URL '{}' returned 404 Not Found.", requestType, url);
             return null;
         } else {
-            logger.error("API Request Failed ({}): {} - {} for URL: {}", requestType, response.statusCode(), response.body(), url);
-            throw new RiotApiRequestException("API request (" + requestType + ") failed with status code: " + response.statusCode() + "; Body: " + response.body());
+            String snippet = abbreviate(response.body(), 500);
+            logger.error("API Request Failed ({}): status={} url={} bodySnippet={}", requestType, response.statusCode(), url, snippet);
+            throw new RiotApiRequestException("API request (" + requestType + ") failed with status code: " + response.statusCode());
         }
     }
 
@@ -331,7 +333,8 @@ public class RiotApiClient {
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (LeagueEntries): Requesting URL: [{}]", url);
         return coalesce(leagueBySummonerIdInFlight, summonerId,
-                () -> sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntries"));
+                () -> sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntries")
+                        .thenApply(list -> list != null ? list : List.of()));
     }
 
     /**
@@ -345,7 +348,8 @@ public class RiotApiClient {
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (LeagueEntries PUUID): Requesting by PUUID [{}]", maskPuuid(puuid));
         return coalesce(leagueByPuuidInFlight, puuid,
-                () -> sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntriesByPuuid"));
+                () -> sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntriesByPuuid")
+                        .thenApply(list -> list != null ? list : List.of()));
     }
 
     /**
@@ -369,7 +373,8 @@ public class RiotApiClient {
         logger.debug(">>> RiotApiClient (MatchIds): Requesting by PUUID [{}], count {}", maskPuuid(puuid), count);
         String key = puuid + "-" + count;
         return coalesce(matchIdsInFlight, key,
-                () -> sendApiRequestAsync(url, MATCH_ID_LIST_TYPE, "MatchIds"));
+                () -> sendApiRequestAsync(url, MATCH_ID_LIST_TYPE, "MatchIds")
+                        .thenApply(list -> list != null ? list : List.of()));
     }
 
     @Cacheable(value = "matchDetails", key = "#matchId")
@@ -380,6 +385,37 @@ public class RiotApiClient {
         logger.debug(">>> RiotApiClient (MatchDetails): Requesting URL: [{}]", url);
         return coalesce(matchDetailsInFlight, matchId,
                 () -> sendApiRequestAsync(url, MatchV5Dto.class, "MatchDetails"));
+    }
+
+    /**
+     * Fetch league entries by queue/tier/division (paginated).
+     * Example queue: RANKED_SOLO_5x5, tier: DIAMOND, division: I, page: 1
+     * Official endpoint: /lol/league/v4/entries/{queue}/{tier}/{division}?page={page}
+     */
+    @Cacheable(value = "leagueEntries", key = "#queue + '|' + #tier + '|' + #division + '|' + #page")
+    public CompletableFuture<List<LeagueEntryDTO>> getEntriesByQueueTierDivision(String queue, String tier, String division, int page) {
+        String host = this.platformRegion + ".api.riotgames.com";
+        String path = "/lol/league/v4/entries/" + urlEncode(queue) + "/" + urlEncode(tier) + "/" + urlEncode(division) + "?page=" + page;
+        String url = "https://" + host + path;
+        logger.debug(">>> RiotApiClient (Entries {} {} {} p{}): {}", queue, tier, division, page, url);
+        return sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntriesByTier");
+    }
+
+    private String urlEncode(String s) {
+        return URLEncoder.encode(s, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Fetch Summoner by encrypted Summoner ID.
+     * Official endpoint: /lol/summoner/v4/summoners/{encryptedSummonerId}
+     */
+    @Cacheable(value = "summoners", key = "#summonerId")
+    public CompletableFuture<Summoner> getSummonerById(String summonerId) {
+        String host = this.platformRegion + ".api.riotgames.com";
+        String path = "/lol/summoner/v4/summoners/" + summonerId;
+        String url = "https://" + host + path;
+        logger.debug(">>> RiotApiClient (Summoner by ID): Requesting ID [{}]", maskPuuid(summonerId));
+        return sendApiRequestAsync(url, Summoner.class, "SummonerById");
     }
 
     public String getPlatformRegion() {
@@ -396,5 +432,11 @@ public class RiotApiClient {
         int len = puuid.length();
         if (len <= 10) return "***";
         return puuid.substring(0, 6) + "..." + puuid.substring(len - 4);
+    }
+
+    private String abbreviate(String s, int max) {
+        if (s == null) return null;
+        if (s.length() <= max) return s;
+        return s.substring(0, max) + "…";
     }
 }

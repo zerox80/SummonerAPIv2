@@ -262,3 +262,22 @@ img, svg { max-width: 100%; height: auto; }
   border-left: 3px solid #0d6efd;
 }
 
+/* Champions list tweaks moved from inline <style> to comply with CSP */
+.champ-card{ transition: transform .15s ease, box-shadow .15s ease; }
+.champ-card:hover{ transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.2); }
+.champ-img{ width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
+.tag-badge{ font-size: .75rem; }
+.search-group .form-control{ background: transparent; }
+
+/* Champion details (moved from inline <style>) */
+.splash-hero { position: relative; border-radius: 1rem; overflow: hidden; min-height: 240px; background: rgba(255,255,255,.02); }
+.splash-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(4px) saturate(1.05); opacity: .35; }
+.splash-fg { position: relative; z-index: 1; }
+.champ-portrait { width: 96px; height: 96px; border-radius: 16px; object-fit: cover; }
+.spell-icon { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; }
+.passive-icon { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.runes, .summoner-spells { min-height: 120px; }
+.build-placeholder { color: #94a3b8; }
+
+/* Utility background to replace inline styles */
+.bg-soft-glass { background: rgba(255,255,255,.03); }
