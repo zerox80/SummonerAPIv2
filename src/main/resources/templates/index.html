@@ -60,7 +60,7 @@
             <p class="text-secondary mb-0">Check ranks, recent matches, and champions at a glance.</p>
         </div>
         <form th:action="@{/search}" method="get" class="position-relative">
-            <div class="input-group input-group-lg search-group shadow-sm rounded-3 overflow-hidden">
+            <div class="input-group input-group-lg search-group shadow-sm rounded-3">
                 <span class="input-group-text bg-transparent border-0 ps-3"><i class="fas fa-user-tag text-secondary" aria-hidden="true"></i></span>
                 <label for="riotId" class="visually-hidden">Riot ID</label>
                 <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" />
@@ -535,26 +535,21 @@
                 });
                 suggestionsContainer.appendChild(item);
             });
-            if (filtered.length){
-                suggestionsContainer.style.display = 'block';
-                riotIdInput.setAttribute('aria-expanded','true');
-                positionDropdown();
-            } else {
-                suggestionsContainer.style.display = 'none';
-                riotIdInput.setAttribute('aria-expanded','false');
-                riotIdInput.removeAttribute('aria-activedescendant');
+            // Always show the dropdown, even if no items (show a placeholder)
+            if (!filtered.length) {
+                const empty = document.createElement('div');
+                empty.className = 'suggestion-section';
+                empty.textContent = 'Keine Einträge';
+                suggestionsContainer.appendChild(empty);
             }
+            suggestionsContainer.style.display = 'block';
+            riotIdInput.setAttribute('aria-expanded','true');
         }
 
         function fetchAndDisplaySuggestions(query) {
             clearTimeout(debounceTimer);
             activeIndex = -1;
-            if (query.length === 1) { // Hide for single character, show full history if empty
-                suggestionsContainer.innerHTML = '';
-                suggestionsContainer.style.display = 'none';
-                riotIdInput.setAttribute('aria-expanded', 'false');
-                return;
-            }
+            // Do not hide on single character; allow showing history/suggestions
 
             // Render local history first
             renderLocalHistory(query);
@@ -568,7 +563,7 @@
                         return response.json();
                     })
                     .then(suggestions => {
-                        if (suggestions.length > 0) {
+                        if (Array.isArray(suggestions) && suggestions.length > 0) {
                             let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
                             // Add a section header if there are already local items or if suggestions exist alone
                             const hdr = document.createElement('div');
@@ -618,9 +613,15 @@
 
                                 suggestionsContainer.appendChild(item);
                             });
+                            // Always show the dropdown, even if no items (show a placeholder)
+                            if (!suggestions.length) {
+                                const empty = document.createElement('div');
+                                empty.className = 'suggestion-section';
+                                empty.textContent = 'Keine Einträge';
+                                suggestionsContainer.appendChild(empty);
+                            }
                             suggestionsContainer.style.display = 'block';
                             riotIdInput.setAttribute('aria-expanded', 'true');
-                            positionDropdown();
                         }
                     })
                     .catch(error => {
