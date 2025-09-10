@@ -103,7 +103,7 @@ html, body {
 .theme-light .search-group .form-control::placeholder { color: rgba(0,0,0,.45); }
 .search-group .form-control:focus { box-shadow: none; }
 /* Ensure the suggestions dropdown anchors to the input group, not the whole form */
-.search-group { position: relative; }
+.search-group { position: relative; overflow: visible !important; }
 
 /* Suggestions dropdown */
 .suggestions-dropdown {
