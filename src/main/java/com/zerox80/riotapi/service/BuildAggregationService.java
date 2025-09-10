@@ -66,23 +66,27 @@ public class BuildAggregationService {
                 ? spellRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, roleUse, patch, q)
                 : spellRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, q);
 
-        Map<Integer, ItemSummary> itemLookup;
-        Map<Integer, SummonerSpellInfo> spellLookup;
-        Map<Integer, RunePerkInfo> runePerkLookup;
-        Map<Integer, String> styleNames;
+        Map<Integer, ItemSummary> itemLookupTmp;
+        Map<Integer, SummonerSpellInfo> spellLookupTmp;
+        Map<Integer, RunePerkInfo> runePerkLookupTmp;
+        Map<Integer, String> styleNamesTmp;
         try {
-            itemLookup = dd.getItems(locale);
-            spellLookup = dd.getSummonerSpells(locale);
-            runePerkLookup = dd.getRunePerkLookup(locale);
-            styleNames = dd.getRuneStyleNames(locale);
+            itemLookupTmp = dd.getItems(locale);
+            spellLookupTmp = dd.getSummonerSpells(locale);
+            runePerkLookupTmp = dd.getRunePerkLookup(locale);
+            styleNamesTmp = dd.getRuneStyleNames(locale);
         } catch (Exception e) {
             log.warn("DDragon lookups failed: {}", e.toString());
-            itemLookup = Collections.emptyMap();
-            spellLookup = Collections.emptyMap();
-            runePerkLookup = Collections.emptyMap();
-            styleNames = Collections.emptyMap();
+            itemLookupTmp = Collections.emptyMap();
+            spellLookupTmp = Collections.emptyMap();
+            runePerkLookupTmp = Collections.emptyMap();
+            styleNamesTmp = Collections.emptyMap();
         }
-        Map<String,String> bases = dd.getImageBases(null);
+        final Map<Integer, ItemSummary> itemLookup = itemLookupTmp;
+        final Map<Integer, SummonerSpellInfo> spellLookup = spellLookupTmp;
+        final Map<Integer, RunePerkInfo> runePerkLookup = runePerkLookupTmp;
+        final Map<Integer, String> styleNames = styleNamesTmp;
+        final Map<String,String> bases = dd.getImageBases(null);
 
         List<ItemStatDto> itemDtos = items.stream().map(s -> {
             ItemSummary info = itemLookup.get(s.getItemId());
