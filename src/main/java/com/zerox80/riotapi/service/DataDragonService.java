@@ -76,7 +76,7 @@ public class DataDragonService {
         return v;
     }
 
-    private String resolveLocale(Locale locale) {
+    public String resolveLocale(Locale locale) {
         if (locale == null) return DEFAULT_LOCALE;
         String lang = locale.toLanguageTag();
         // Map common language tags to DDragon format

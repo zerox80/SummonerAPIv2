@@ -44,6 +44,7 @@ public class ChampionsController {
             model.addAttribute("champions", champions);
             model.addAttribute("bases", bases);
             model.addAttribute("version", bases.get("version"));
+            model.addAttribute("activePage", "champions");
             return "champions";
         } catch (Exception e) {
             log.error("Error rendering /champions page: {}", e.getMessage(), e);
@@ -53,7 +54,9 @@ public class ChampionsController {
             model.addAttribute("bases", bases);
             model.addAttribute("version", bases.get("version"));
             model.addAttribute("champions", Collections.emptyList());
-            return "champions";
+            model.addAttribute("activePage", "champions");
+            // Absolute safety: render a minimal fallback page to avoid any template error propagation
+            return "champions_fallback";
         }
     }
 
@@ -69,6 +72,7 @@ public class ChampionsController {
             model.addAttribute("champion", detail);
             model.addAttribute("bases", bases);
             model.addAttribute("version", bases.get("version"));
+            model.addAttribute("activePage", "champions");
             // Load aggregated build data if available
             try {
                 ChampionBuildDto build = buildAggregationService.loadBuild(id, null, "ALL", locale);
@@ -83,6 +87,7 @@ public class ChampionsController {
             model.addAttribute("bases", bases);
             model.addAttribute("version", bases.get("version"));
             model.addAttribute("champion", null);
+            model.addAttribute("activePage", "champions");
             return "champion";
         }
     }
