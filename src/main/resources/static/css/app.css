@@ -108,19 +108,19 @@ html, body {
   position: absolute; top: calc(100% + .25rem); left: 0;
   z-index: 1050; /* sit above surrounding content */
   max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
-  border-radius: .75rem; border: 1px solid rgba(255,255,255,.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);
+  /* Fully opaque backgrounds (no blur/alpha) */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  background: #1a1f2e; /* Solid fallback background for dark theme */
+  background: #1a1f2e !important; /* Solid background for dark theme */
 }
 .theme-dark .suggestions-dropdown .list-group-item, .suggestions-dropdown .list-group-item { 
   background: #1a1f2e !important; /* Solid background in dark */
-  border-color: rgba(255,255,255,.12);
+  border: 0;
   color: #f0f6fc !important;
   padding: .5rem .75rem;
   gap: .5rem;
 }
+.theme-dark .suggestions-dropdown .list-group-item + .list-group-item { border-top: 1px solid rgba(255,255,255,.08); }
 .theme-dark .suggestions-dropdown .list-group-item:hover,
 .theme-dark .suggestions-dropdown .list-group-item.active,
 .suggestions-dropdown .list-group-item:hover,
@@ -129,15 +129,16 @@ html, body {
   color: #ffffff !important;
 }
 .theme-light .suggestions-dropdown { 
-  background: #ffffff; /* Solid fallback background for light theme */
+  background: #ffffff !important; /* Solid fallback background for light theme */
 }
 .theme-light .suggestions-dropdown .list-group-item { 
   background: #ffffff !important; /* Solid background in light */
-  border-color: rgba(0,0,0,.08); 
+  border: 0;
   color: #24292f !important;
   padding: .5rem .75rem;
   gap: .5rem;
 }
+.theme-light .suggestions-dropdown .list-group-item + .list-group-item { border-top: 1px solid rgba(0,0,0,.06); }
 .theme-light .suggestions-dropdown .list-group-item:hover { 
   background: #f6f8fa !important; /* Solid hover background */
   color: #0969da !important;
@@ -147,9 +148,12 @@ html, body {
 .suggestion-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 .suggestion-text { display: flex; align-items: baseline; gap: .35rem; }
 .suggestion-text .level { opacity: .8; }
-.suggestion-section { font-size: .75rem; font-weight: 600; opacity: .75; padding: .35rem .75rem; margin-top: .25rem; }
+.suggestion-section { font-size: .75rem; font-weight: 600; padding: .35rem .75rem; margin-top: .25rem; }
 .theme-dark .suggestion-section { color: #cbd5e1; }
 .theme-light .suggestion-section { color: #475569; }
+/* Make section header background fully opaque to avoid any bleed-through */
+.theme-dark .suggestion-section { background: #1a1f2e !important; border-bottom: 1px solid rgba(255,255,255,.08); }
+.theme-light .suggestion-section { background: #ffffff !important; border-bottom: 1px solid rgba(0,0,0,.06); }
 
 /* Media and tables */
 .tier-icon { width: 64px; height: 64px; margin-right: 1rem; }
