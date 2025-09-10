@@ -72,7 +72,7 @@
 
     <div th:if="${error}" class="alert alert-danger"> <span th:text="${error}">Failed to load champions.</span> </div>
 
-    <div class="row g-3" id="champList" th:if="${champions} != null">
+    <div class="row g-3" id="champList" th:if="${champions != null}">
         <div class="col-12 col-sm-6 col-md-4 col-lg-3" th:each="c : ${champions}" th:attr="data-name=${c.name}, data-title=${c.title}, data-tags=${c.tags}">
             <a class="text-decoration-none text-reset" th:href="@{'/champions/' + ${c.id}}" title="View details">
                 <div class="card champ-card glass-card h-100">

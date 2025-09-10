@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -25,6 +27,7 @@ public class ChampionsController {
 
     private final DataDragonService dataDragonService;
     private final BuildAggregationService buildAggregationService;
+    private static final Logger log = LoggerFactory.getLogger(ChampionsController.class);
 
     public ChampionsController(DataDragonService dataDragonService,
                                BuildAggregationService buildAggregationService) {
@@ -43,8 +46,10 @@ public class ChampionsController {
             model.addAttribute("version", bases.get("version"));
             return "champions";
         } catch (Exception e) {
+            log.error("Error rendering /champions page: {}", e.getMessage(), e);
             model.addAttribute("error", "Failed to load champions: " + e.getMessage());
-            Map<String, String> bases = dataDragonService.getImageBases(null);
+            // Avoid HTTP calls here: pass a static version so getImageBases does not fetch versions
+            Map<String, String> bases = dataDragonService.getImageBases("latest");
             model.addAttribute("bases", bases);
             model.addAttribute("version", bases.get("version"));
             model.addAttribute("champions", Collections.emptyList());
@@ -71,8 +76,10 @@ public class ChampionsController {
             } catch (Exception ignore) {}
             return "champion";
         } catch (Exception e) {
+            log.error("Error rendering /champions/{} page: {}", id, e.getMessage(), e);
             model.addAttribute("error", "Failed to load champion: " + e.getMessage());
-            Map<String, String> bases = dataDragonService.getImageBases(null);
+            // Avoid HTTP calls here as well
+            Map<String, String> bases = dataDragonService.getImageBases("latest");
             model.addAttribute("bases", bases);
             model.addAttribute("version", bases.get("version"));
             model.addAttribute("champion", null);

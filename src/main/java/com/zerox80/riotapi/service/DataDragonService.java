@@ -208,12 +208,28 @@ public class DataDragonService {
                 .timeout(Duration.ofSeconds(20))
                 .GET()
                 .header("Accept", "application/json")
+                .header("User-Agent", "SummonerAPI/1.0 (+https://stats.rujbin.eu)")
                 .build();
-        HttpResponse<String> res = httpClient.send(req, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-        if (res.statusCode() / 100 != 2) {
-            throw new IOException("HTTP " + res.statusCode() + " from " + url);
+
+        try {
+            HttpResponse<String> res = httpClient.send(req, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            if (res.statusCode() / 100 == 2) {
+                return mapper.readTree(res.body());
+            }
+        } catch (IOException e) {
+            // fall through to fallback client
         }
-        return mapper.readTree(res.body());
+
+        // Fallback: retry once with a simple HTTP/1.1 client (helps in rare ALPN/HTTP2 issues)
+        HttpClient fallback = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+        HttpResponse<String> res2 = fallback.send(req, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        if (res2.statusCode() / 100 != 2) {
+            throw new IOException("HTTP " + res2.statusCode() + " from " + url);
+        }
+        return mapper.readTree(res2.body());
     }
 
     public Map<String, String> getImageBases(String version) {
