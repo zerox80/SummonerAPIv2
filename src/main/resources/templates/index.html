@@ -469,6 +469,19 @@
         const riotIdInput = document.getElementById('riotId');
         const suggestionsContainer = document.getElementById('suggestions-container');
         let debounceTimer;
+        // Position dropdown as a viewport-fixed overlay aligned to the input group
+        function positionDropdown(){
+            try{
+                const group = riotIdInput?.closest('.search-group');
+                if (!group || !suggestionsContainer) return;
+                const rect = group.getBoundingClientRect();
+                suggestionsContainer.style.position = 'fixed';
+                suggestionsContainer.style.left = rect.left + 'px';
+                suggestionsContainer.style.top = (rect.bottom + 6) + 'px';
+                suggestionsContainer.style.width = rect.width + 'px';
+                suggestionsContainer.style.maxWidth = rect.width + 'px';
+            } catch(_) {}
+        }
 
         // ===== Local history fallback (in addition to cookie-backed API) =====
         const LS_KEY = 'searchHistory';
@@ -529,6 +542,7 @@
             if (filtered.length){
                 suggestionsContainer.style.display = 'block';
                 riotIdInput.setAttribute('aria-expanded','true');
+                positionDropdown();
             } else {
                 suggestionsContainer.style.display = 'none';
                 riotIdInput.setAttribute('aria-expanded','false');
@@ -610,6 +624,7 @@
                             });
                             suggestionsContainer.style.display = 'block';
                             riotIdInput.setAttribute('aria-expanded', 'true');
+                            positionDropdown();
                         }
                     })
                     .catch(error => {
@@ -634,6 +649,7 @@
             if (riotIdInput.value === '') {
                 fetchAndDisplaySuggestions('');
             }
+            positionDropdown();
         });
 
         // Keyboard navigation for suggestions
@@ -871,6 +887,10 @@
                 activeIndex = -1;
             }
         });
+
+        // Reposition on resize/scroll
+        window.addEventListener('resize', positionDropdown);
+        window.addEventListener('scroll', positionDropdown, true);
 
         // =====================
         // Theme toggle + Charts

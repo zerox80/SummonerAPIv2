@@ -106,7 +106,7 @@ html, body {
 /* Suggestions dropdown */
 .suggestions-dropdown {
   position: absolute; top: calc(100% + .25rem); left: 0;
-  z-index: 3000; /* sit above surrounding content incl. nav/footer */
+  z-index: 100000; /* sit above absolutely everything (footer/nav etc.) */
   max-height: 320px; overflow: hidden; display: none; /* JS toggles to block */
   border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);
   /* Fully opaque backgrounds (no blur/alpha) */
@@ -129,7 +129,7 @@ html, body {
   background: inherit !important; opacity: 1 !important;
   z-index: 0;
 }
-.suggestions-dropdown > * { position: relative; z-index: 1; }
+.suggestions-dropdown > * { position: relative; z-index: 100001; }
 /* Disable any backdrop/filter effects inside dropdown fully */
 .suggestions-dropdown, .suggestions-dropdown * {
   backdrop-filter: none !important;
