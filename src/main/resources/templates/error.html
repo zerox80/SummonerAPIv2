@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error - SummonerAPI</title>
+    <link id="themeStylesheet" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7/darkly/bootstrap.min.css" crossorigin="anonymous">
+</head>
+<body class="bg-dark text-light">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card glass-card border-0 shadow-lg">
+                <div class="card-body p-4">
+                    <h1 class="h4 mb-3">Something went wrong</h1>
+                    <p class="text-secondary mb-4">An unexpected error occurred while processing your request.</p>
+                    <div class="alert alert-danger" th:if="${message}">
+                        <span th:text="${message}">Unexpected error.</span>
+                    </div>
+                    <a href="/" class="btn btn-outline-secondary">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -46,7 +46,7 @@
         <div class="text-center mb-3">
             <h1 class="display-6 fw-bold mb-2">Champions</h1>
             <p class="text-secondary mb-0">Browse all champions. Click to view details and builds.</p>
-            <small class="text-muted">Patch <span th:text="${version}">latest</span> • Data from Riot's Data Dragon</small>
+            <small class="text-muted">Patch <span th:text="${version} == null ? 'latest' : version">latest</span> • Data from Riot's Data Dragon</small>
         </div>
         <div class="row g-3 align-items-center">
             <div class="col-12 col-lg-6 mx-auto">
@@ -72,16 +72,16 @@
 
     <div th:if="${error}" class="alert alert-danger"> <span th:text="${error}">Failed to load champions.</span> </div>
 
-    <div class="row g-3" id="champList">
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3" th:each="c : ${champions}" th:attr="data-name=${c.name}, data-title=${c.title}, data-tags=${#strings.arrayJoin(c.tags, ',')}">
+    <div class="row g-3" id="champList" th:if="${champions} != null">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3" th:each="c : ${champions}" th:attr="data-name=${c.name}, data-title=${c.title}, data-tags=${c.tags}">
             <a class="text-decoration-none text-reset" th:href="@{'/champions/' + ${c.id}}" title="View details">
                 <div class="card champ-card glass-card h-100">
                     <div class="card-body d-flex align-items-center gap-3">
-                        <img class="champ-img" th:src="${bases.champSquare + c.imageFull}" th:alt="${c.name}" loading="lazy"/>
+                        <img class="champ-img" th:src="${(bases != null and bases.champSquare != null) ? bases.champSquare + c.imageFull : ''}" th:alt="${c.name}" loading="lazy"/>
                         <div class="flex-grow-1">
                             <div class="fw-semibold" th:text="${c.name}">Champion</div>
                             <div class="text-muted small" th:text="${c.title}">Title</div>
-                            <div class="mt-2">
+                            <div class="mt-2" th:if="${c.tags} != null">
                                 <span class="badge rounded-pill bg-secondary-subtle text-light-emphasis me-1 tag-badge" th:each="t : ${c.tags}" th:text="${t}">Role</span>
                             </div>
                         </div>
