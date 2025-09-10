@@ -5,7 +5,11 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "champion_spell_pair_stats",
        uniqueConstraints = @UniqueConstraint(name = "uk_spellkey", columnNames = {"champion_id","role","patch","queue_id","spell1_id","spell2_id"}),
-       indexes = { @Index(name = "idx_spell_champ_patch", columnList = "champion_id,patch") })
+       indexes = {
+           @Index(name = "idx_spell_champ_patch", columnList = "champion_id,patch"),
+           @Index(name = "idx_spell_champ_patch_queue", columnList = "champion_id,patch,queue_id"),
+           @Index(name = "idx_spell_champ_role_patch_queue", columnList = "champion_id,role,patch,queue_id")
+       })
 public class ChampionSpellPairStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

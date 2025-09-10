@@ -79,6 +79,11 @@ public class CacheConfig {
                 .expireAfterWrite(12, TimeUnit.HOURS)
                 .maximumSize(2)
                 .buildAsync());
+        cacheManager.registerCustomCache("ddragonImageBases",
+            Caffeine.newBuilder()
+                .expireAfterWrite(12, TimeUnit.HOURS)
+                .maximumSize(5)
+                .buildAsync());
         return cacheManager;
     }
 }

@@ -7,7 +7,9 @@ import jakarta.persistence.*;
        uniqueConstraints = @UniqueConstraint(name = "uk_itemkey", columnNames = {"champion_id","role","patch","queue_id","item_id"}),
        indexes = {
            @Index(name = "idx_item_champ_patch", columnList = "champion_id,patch"),
-           @Index(name = "idx_item_champ_role_patch", columnList = "champion_id,role,patch")
+           @Index(name = "idx_item_champ_patch_queue", columnList = "champion_id,patch,queue_id"),
+           @Index(name = "idx_item_champ_role_patch", columnList = "champion_id,role,patch"),
+           @Index(name = "idx_item_champ_role_patch_queue", columnList = "champion_id,role,patch,queue_id")
        })
 public class ChampionItemStat {
     @Id

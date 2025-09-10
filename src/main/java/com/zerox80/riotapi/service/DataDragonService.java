@@ -232,6 +232,7 @@ public class DataDragonService {
         return mapper.readTree(res2.body());
     }
 
+    @Cacheable(cacheNames = "ddragonImageBases", key = "#version == null || #version.isBlank() ? 'latest' : #version")
     public Map<String, String> getImageBases(String version) {
         String ver = (version == null || version.isBlank()) ? getLatestVersion() : version;
         Map<String,String> map = new LinkedHashMap<>();

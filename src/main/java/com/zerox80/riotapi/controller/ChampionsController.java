@@ -5,6 +5,7 @@ import com.zerox80.riotapi.model.ChampionSummary;
 import com.zerox80.riotapi.service.DataDragonService;
 import com.zerox80.riotapi.service.BuildAggregationService;
 import com.zerox80.riotapi.dto.ChampionBuildDto;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.time.Duration;
 
 @Controller
 @RequestMapping
@@ -98,11 +100,12 @@ public class ChampionsController {
     public ResponseEntity<List<ChampionSummary>> apiChampions(Locale locale) {
         try {
             List<ChampionSummary> champions = dataDragonService.getChampionSummaries(locale);
-            return ResponseEntity.ok(champions);
+            CacheControl cc = CacheControl.maxAge(Duration.ofMinutes(30)).cachePublic();
+            return ResponseEntity.ok().cacheControl(cc).body(champions);
         } catch (Exception e) {
             log.warn("/api/champions failed: {}", e.toString());
             // Degrade gracefully: return empty list to callers
-            return ResponseEntity.ok(Collections.emptyList());
+            return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(Collections.emptyList());
         }
     }
 
@@ -113,9 +116,10 @@ public class ChampionsController {
         try {
             ChampionDetail detail = dataDragonService.getChampionDetail(id, locale);
             if (detail == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            return ResponseEntity.ok(detail);
+            CacheControl cc = CacheControl.maxAge(Duration.ofMinutes(30)).cachePublic();
+            return ResponseEntity.ok().cacheControl(cc).body(detail);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).cacheControl(CacheControl.noStore()).build();
         }
     }
 }
