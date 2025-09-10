@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -43,6 +44,10 @@ public class ChampionsController {
             return "champions";
         } catch (Exception e) {
             model.addAttribute("error", "Failed to load champions: " + e.getMessage());
+            Map<String, String> bases = dataDragonService.getImageBases(null);
+            model.addAttribute("bases", bases);
+            model.addAttribute("version", bases.get("version"));
+            model.addAttribute("champions", Collections.emptyList());
             return "champions";
         }
     }
@@ -67,6 +72,10 @@ public class ChampionsController {
             return "champion";
         } catch (Exception e) {
             model.addAttribute("error", "Failed to load champion: " + e.getMessage());
+            Map<String, String> bases = dataDragonService.getImageBases(null);
+            model.addAttribute("bases", bases);
+            model.addAttribute("version", bases.get("version"));
+            model.addAttribute("champion", null);
             return "champion";
         }
     }
