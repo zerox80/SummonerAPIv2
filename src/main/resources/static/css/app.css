@@ -108,28 +108,32 @@ html, body {
   position: absolute; top: calc(100% + .25rem); left: 0;
   z-index: 1050; /* sit above surrounding content */
   max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
-  border-radius: .75rem; border: 1px solid rgba(255,255,255,.15);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border-radius: .75rem; border: 1px solid rgba(255,255,255,.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  background: #1a1f2e; /* Solid fallback background for dark theme */
 }
 .theme-dark .suggestions-dropdown .list-group-item, .suggestions-dropdown .list-group-item { 
-  background: rgba(13, 17, 23, 0.95); 
-  border-color: rgba(255,255,255,.1); 
-  color: #e6edf3;
+  background: #1a1f2e !important; /* Completely solid dark background */
+  border-color: rgba(255,255,255,.15); 
+  color: #f0f6fc !important;
 }
 .theme-dark .suggestions-dropdown .list-group-item:hover, .suggestions-dropdown .list-group-item:hover { 
-  background: rgba(33, 38, 45, 0.95); 
-  color: #ffffff;
+  background: #2d3748 !important; /* Solid hover background */
+  color: #ffffff !important;
+}
+.theme-light .suggestions-dropdown { 
+  background: #ffffff; /* Solid fallback background for light theme */
 }
 .theme-light .suggestions-dropdown .list-group-item { 
-  background: rgba(255,255,255,0.98); 
-  border-color: rgba(0,0,0,.08); 
-  color: #24292f;
+  background: #ffffff !important; /* Completely solid white background */
+  border-color: rgba(0,0,0,.1); 
+  color: #24292f !important;
 }
 .theme-light .suggestions-dropdown .list-group-item:hover { 
-  background: rgba(246, 248, 250, 0.98);
-  color: #0969da;
+  background: #f6f8fa !important; /* Solid hover background */
+  color: #0969da !important;
 }
 
 /* Media and tables */
