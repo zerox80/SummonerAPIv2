@@ -106,12 +106,35 @@ html, body {
 /* Suggestions dropdown */
 .suggestions-dropdown {
   position: absolute; top: calc(100% + .25rem); left: 0;
-  z-index: 1050; /* sit above surrounding content */
-  max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
+  z-index: 3000; /* sit above surrounding content incl. nav/footer */
+  max-height: 320px; overflow: hidden; display: none; /* JS toggles to block */
   border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);
   /* Fully opaque backgrounds (no blur/alpha) */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   background: #1a1f2e !important; /* Solid background for dark theme */
+  position: absolute;
+  isolation: isolate; /* new stacking context */
+  background-clip: padding-box;
+}
+/* Hard underlay to block any bleed-through from glass backgrounds */
+.suggestions-dropdown::before {
+  content: "";
+  position: sticky; /* stays at top when scrolling */
+  top: 0; left: 0; right: 0; height: 0; /* create stacking context */
+}
+.suggestions-dropdown { position: relative; }
+.suggestions-dropdown::after {
+  content: "";
+  position: absolute; inset: 0; border-radius: inherit;
+  background: inherit !important; opacity: 1 !important;
+  z-index: 0;
+}
+.suggestions-dropdown > * { position: relative; z-index: 1; }
+/* Disable any backdrop/filter effects inside dropdown fully */
+.suggestions-dropdown, .suggestions-dropdown * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mix-blend-mode: normal !important;
 }
 .theme-dark .suggestions-dropdown .list-group-item, .suggestions-dropdown .list-group-item { 
   background: #1a1f2e !important; /* Solid background in dark */
@@ -119,6 +142,8 @@ html, body {
   color: #f0f6fc !important;
   padding: .5rem .75rem;
   gap: .5rem;
+  width: 100%;
+  background-clip: padding-box;
 }
 .theme-dark .suggestions-dropdown .list-group-item + .list-group-item { border-top: 1px solid rgba(255,255,255,.08); }
 .theme-dark .suggestions-dropdown .list-group-item:hover,
@@ -128,15 +153,14 @@ html, body {
   background: #2d3748 !important; /* Solid hover/active */
   color: #ffffff !important;
 }
-.theme-light .suggestions-dropdown { 
-  background: #ffffff !important; /* Solid fallback background for light theme */
-}
+.theme-light .suggestions-dropdown { background: #ffffff !important; }
 .theme-light .suggestions-dropdown .list-group-item { 
   background: #ffffff !important; /* Solid background in light */
   border: 0;
   color: #24292f !important;
   padding: .5rem .75rem;
   gap: .5rem;
+  background-clip: padding-box;
 }
 .theme-light .suggestions-dropdown .list-group-item + .list-group-item { border-top: 1px solid rgba(0,0,0,.06); }
 .theme-light .suggestions-dropdown .list-group-item:hover { 

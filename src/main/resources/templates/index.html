@@ -22,7 +22,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous">
     <!-- App Styles -->
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/app.css?v=2">
 </head>
 <body class="app-body">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top glass-nav border-bottom border-secondary-subtle">
@@ -497,7 +497,7 @@
             if (filtered.length) {
                 const hdr = document.createElement('div');
                 hdr.className = 'suggestion-section';
-                hdr.textContent = 'Recent searches';
+                hdr.textContent = 'Zuletzt gesucht';
                 suggestionsContainer.appendChild(hdr);
             }
             filtered.forEach(riotId => {
@@ -563,7 +563,7 @@
                             // Add a section header if there are already local items or if suggestions exist alone
                             const hdr = document.createElement('div');
                             hdr.className = 'suggestion-section';
-                            hdr.textContent = 'Suggestions';
+                            hdr.textContent = 'Vorschläge';
                             suggestionsContainer.appendChild(hdr);
                             suggestions.forEach(suggestion => {
                                 const item = document.createElement('a');
