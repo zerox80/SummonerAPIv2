@@ -4,3 +4,8 @@ target
 .git
 **/*.iml
 node_modules
+# Unused assets and folders (exclude from image)
+/mavi.jpg
+/riot api/
+/src/main/resources/static/mavi.*
+/src/main/resources/static/ui/**

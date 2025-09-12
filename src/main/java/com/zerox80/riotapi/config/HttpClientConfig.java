@@ -7,6 +7,7 @@ import java.net.http.HttpClient;
 import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 
 @Configuration
 public class HttpClientConfig {
@@ -17,12 +18,18 @@ public class HttpClientConfig {
         return Executors.newVirtualThreadPerTaskExecutor();
     }
 
+    // Wrap executor to propagate MDC (requestId) to virtual threads and async tasks
     @Bean
-    public HttpClient riotApiHttpClient(ExecutorService riotApiExecutorService) {
+    public Executor riotApiMdcExecutor(ExecutorService riotApiExecutorService) {
+        return new MdcPropagatingExecutor(riotApiExecutorService);
+    }
+
+    @Bean
+    public HttpClient riotApiHttpClient(Executor riotApiMdcExecutor) {
         return HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(10))
-                .executor(riotApiExecutorService)
+                .executor(riotApiMdcExecutor)
                 .build();
     }
 }

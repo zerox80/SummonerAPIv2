@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+  <!-- Minimal, non-intrusive ruleset to generate a report without failing builds -->
+  <property name="severity" value="warning"/>
+  <module name="TreeWalker">
+    <!-- Add rules gradually as the codebase evolves -->
+  </module>
+</module>

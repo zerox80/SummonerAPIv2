@@ -3,6 +3,9 @@
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
+# Allow toggling tests during build (default: skip tests)
+ARG SKIP_TESTS=true
+
 # Use BuildKit cache for Maven repo to accelerate builds across runs
 COPY pom.xml .
 RUN --mount=type=cache,target=/root/.m2 \
@@ -10,7 +13,7 @@ RUN --mount=type=cache,target=/root/.m2 \
 
 COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 \
-    mvn -q -T 5 -DskipTests clean package
+    mvn -q -T 5 -DskipTests=${SKIP_TESTS} clean package
 
 # ===== Stage 2: Runtime =====
 FROM eclipse-temurin:21-jre
@@ -27,4 +30,6 @@ RUN useradd -u 10001 -r -g root -s /usr/sbin/nologin app \
 USER app
 
 EXPOSE 8080
+# Optional: HEALTHCHECK to probe app liveness via Actuator (uncomment and ensure wget/curl is available)
+# HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 CMD wget -qO- http://127.0.0.1:8080/actuator/health | grep -q '"status":"UP"' || exit 1
 ENTRYPOINT ["java", "-jar", "app.jar"]

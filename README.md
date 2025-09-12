@@ -6,6 +6,23 @@ SummonerAPI is a Spring Boot web app that uses the Riot Games API to fetch and d
 
 ---
 
+## Quality & Coverage
+
+- Locally generate reports:
+  ```bash
+  mvn verify
+  ```
+  Reports:
+  - JaCoCo coverage: `target/site/jacoco/index.html`
+  - Checkstyle: `target/site/checkstyle.html`
+  - PMD: `target/site/pmd.html`
+  - SpotBugs: `target/site/spotbugs.html`
+
+- In CI (GitHub Actions), test reports and coverage are uploaded as artifacts:
+  - `surefire-reports`, `jacoco-report`, and `analysis-site`.
+
+---
+
 ## Table of Contents
 
 - Features
@@ -18,6 +35,7 @@ SummonerAPI is a Spring Boot web app that uses the Riot Games API to fetch and d
 - API Docs (Swagger UI)
 - HTTP API (Endpoints & Examples)
 - Actuator & Observability
+- Quality & Coverage
 - Docker
 - Security
 - Rate Limiting
@@ -47,7 +65,7 @@ SummonerAPI is a Spring Boot web app that uses the Riot Games API to fetch and d
 ## Tech Stack
 
 - Java 21
-- Spring Boot 3.2.x
+- Spring Boot 3.3.x
 - Maven
 - Thymeleaf
 - Lombok
@@ -152,6 +170,7 @@ rate.limit.paths=/api/**,/search
 - `RIOT_API_KEY` → `riot.api.key`
 - `RIOT_API_REGION` → `riot.api.region`
 - `RIOT_API_COMMUNITY_DRAGON_URL` → `riot.api.community-dragon.url`
+- `RIOT_API_MAX_CONCURRENT` → `riot.api.max-concurrent`
 - `SPRING_DATASOURCE_URL` → `spring.datasource.url`
 - `SPRING_DATASOURCE_USERNAME` → `spring.datasource.username`
 - `SPRING_DATASOURCE_PASSWORD` → `spring.datasource.password`
@@ -189,6 +208,19 @@ Actuator is enabled. Exposed endpoints:
   - `riotapi.client.latency{type,status,retries}` – end-to-end latency including retries
   - `riotapi.client.retries{type}` – retry counter per request type
 - Note: By default, the security configuration allows only `/actuator/health` and `/actuator/info`. The `/actuator/metrics/*` endpoint is exposed by management but denied by the web security layer. For local debugging, temporarily permit metrics in `SecurityConfig` or use a separate management port.
+ - Build info: When the Spring Boot Maven Plugin goal `build-info` is enabled, `GET /actuator/info` includes build metadata (name, version, time, git) for easier troubleshooting and deployments.
+
+### Access Logging & Correlation
+
+- Each request is assigned/propagated a correlation ID via `X-Request-Id` and exposed in logs and responses.
+  - If the header is provided by the client, it is sanitized to `[A-Za-z0-9_.-]` and truncated to 64 chars.
+  - Otherwise a UUID is generated. See `RequestIdFilter` and tests in `src/test/java/.../RequestIdFilterTest.java`.
+- An access log is emitted for every request with method, path, status, duration, client IP and sanitized user agent. See `AccessLogFilter`.
+  - Log levels: INFO for <400, WARN for 4xx, ERROR for 5xx.
+  - To reduce noise, tune `logging.level.com.zerox80.riotapi.config.AccessLogFilter` (e.g., to `WARN`).
+- MDC propagation across async tasks and virtual threads ensures the `requestId` appears in logs from the Java `HttpClient` and `@Async` executors.
+  - See `MdcPropagatingExecutor` and `AsyncConfig` task decorator.
+
 
 ---
 
@@ -196,8 +228,8 @@ Actuator is enabled. Exposed endpoints:
 
 - Swagger UI is available when running locally:
   - OpenAPI JSON: `/v3/api-docs`
-  - Swagger UI: `/swagger-ui.html`
-- Only public endpoints are documented (e.g., `/api/summoner-suggestions`, `/api/me`).
+  - Swagger UI: `/swagger-ui/index.html`
+  - Only public endpoints are documented (e.g., `/api/summoner-suggestions`, `/api/me`).
 
 ---
 
@@ -247,8 +279,15 @@ docker compose up --build
 ```
 
 This starts PostgreSQL and the app. Override environment variables in `docker-compose.yml` as needed.
-
 Tip: You can adjust the host port via `.env` using `APP_HTTP_PORT`, e.g., `APP_HTTP_PORT=8081`.
+
+Production profile:
+- To enable production hardening (see `src/main/resources/application-prod.properties`), set `SPRING_PROFILES_ACTIVE=prod` in your `.env` before starting Compose.
+  - Example `.env` snippet:
+    ```env
+    APP_HTTP_PORT=8081
+    SPRING_PROFILES_ACTIVE=prod
+    ```
 
 Runtime notes:
 - The container now uses exec-form ENTRYPOINT (`["java","-jar","app.jar"]`). Prefer passing JVM options via `JAVA_TOOL_OPTIONS` instead of shell-expanding `JAVA_OPTS`.
@@ -261,6 +300,7 @@ docker run --rm \
   -p 8080:8080 \
   -e RIOT_API_KEY=YOUR_RIOT_API_KEY \
   -e RIOT_API_REGION=euw1 \
+  -e SPRING_PROFILES_ACTIVE=prod \
   summonerapi:local
 ```
 
@@ -402,6 +442,6 @@ GPL v3 — see `LICENSE`.
 - The Riot API has strict rate limits. The client includes basic retry/backoff for 429/5xx.
 
 Dependency updates (Sept 2025):
-- Spring Boot parent: 3.2.14
+- Spring Boot parent: 3.3.5
 - springdoc-openapi-starter-webmvc-ui: 2.6.0
 - PostgreSQL JDBC driver: 42.7.7

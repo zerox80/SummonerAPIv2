@@ -25,8 +25,8 @@ services:
       PGPASSWORD: postgres
     entrypoint: ["bash", "-lc"]
     command: >
-      "psql -h db -U postgres -tc \"SELECT 1 FROM pg_database WHERE datname='summoner_db'\" | grep -q 1 
-      || psql -h db -U postgres -c \"CREATE DATABASE summoner_db\""
+      psql -h db -U postgres -tc "SELECT 1 FROM pg_database WHERE datname='summoner_db'" | grep -q 1 ||
+      psql -h db -U postgres -c "CREATE DATABASE summoner_db"
     restart: "no"
 
   app:
@@ -39,12 +39,19 @@ services:
     environment:
       RIOT_API_KEY: ${RIOT_API_KEY}
       RIOT_API_REGION: ${RIOT_API_REGION:-euw1}
+      RIOT_API_MAX_CONCURRENT: ${RIOT_API_MAX_CONCURRENT:-15}
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/summoner_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
       RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
       RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
       RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-60}
+      RATE_LIMIT_PATHS: "${RATE_LIMIT_PATHS:-/api/**,/search}"
+      RATE_LIMIT_TRUST_PROXY: ${RATE_LIMIT_TRUST_PROXY:-false}
+      RATE_LIMIT_INCLUDE_HEADERS: ${RATE_LIMIT_INCLUDE_HEADERS:-true}
+      RATE_LIMIT_CACHE_MAX_IPS: ${RATE_LIMIT_CACHE_MAX_IPS:-100000}
+      RATE_LIMIT_ALLOWED_PROXIES: ${RATE_LIMIT_ALLOWED_PROXIES:-}
       RIOT_API_COMMUNITY_DRAGON_URL: ${RIOT_API_COMMUNITY_DRAGON_URL:-https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons}
       # Flyway: baseline existing non-empty schema and then run migrations > baseline version
       SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
