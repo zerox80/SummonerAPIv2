@@ -16,28 +16,11 @@ services:
       retries: 12
     restart: unless-stopped
 
-  db-init:
-    image: postgres:16
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      PGPASSWORD: postgres
-    entrypoint: ["sh", "-ec"]
-    command: |
-      EXISTS=$(psql "postgresql://postgres:postgres@db:5432/postgres" -tAc "SELECT 1 FROM pg_database WHERE datname='summoner_db'")
-      if [ "$EXISTS" != "1" ]; then
-        psql "postgresql://postgres:postgres@db:5432/postgres" -v ON_ERROR_STOP=1 -c "CREATE DATABASE summoner_db"
-      fi
-    restart: "no"
-
   app:
     build: .
     depends_on:
       db:
         condition: service_healthy
-      db-init:
-        condition: service_completed_successfully
     environment:
       RIOT_API_KEY: ${RIOT_API_KEY}
       RIOT_API_REGION: ${RIOT_API_REGION:-euw1}
@@ -58,8 +41,8 @@ services:
       # Flyway: baseline existing non-empty schema and then run migrations > baseline version
       SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
       SPRING_FLYWAY_BASELINE_VERSION: "0"
-      # Use Flyway for schema management; let Hibernate validate instead of auto-updating
-      SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+      # Use Flyway for schema management and allow Hibernate to create/update any remaining tables
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
       # Build aggregation (scheduler + manual trigger)
       BUILD_AGG_ENABLED: ${BUILD_AGG_ENABLED:-false}
       BUILD_AGG_QUEUE_ID: ${BUILD_AGG_QUEUE_ID:-420}

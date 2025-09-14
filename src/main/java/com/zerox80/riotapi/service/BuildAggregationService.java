@@ -203,6 +203,9 @@ public class BuildAggregationService {
                                 if (m.getInfo().getQueueId() != q) continue;
                                 String mv = m.getInfo().getGameVersion();
                                 if (!StringUtils.hasText(mv) || !mv.startsWith(patch + ".")) continue;
+                                // Skip remakes: treat very short matches as no-result
+                                long gd = m.getInfo().getGameDuration();
+                                if (gd > 0 && gd < 300) continue;
                                 for (ParticipantDto p : m.getInfo().getParticipants()) {
                                     if (p == null) continue;
                                     if (p.getChampionId() == championKey.intValue()) {

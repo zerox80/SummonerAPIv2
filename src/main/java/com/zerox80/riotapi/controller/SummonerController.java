@@ -5,6 +5,7 @@ import com.zerox80.riotapi.model.LeagueEntryDTO;
 import com.zerox80.riotapi.model.MatchV5Dto;
 import com.zerox80.riotapi.model.SummonerSuggestionDTO;
 import com.zerox80.riotapi.service.RiotApiService;
+import com.zerox80.riotapi.service.DataDragonService;
 import com.zerox80.riotapi.model.SummonerProfileData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,18 +48,20 @@ public class SummonerController {
 
     private static final Logger logger = LoggerFactory.getLogger(SummonerController.class);
     private final RiotApiService riotApiService;
+    private final DataDragonService dataDragonService;
     private final ObjectMapper objectMapper;
     private static final String SEARCH_HISTORY_COOKIE = "searchHistory";
     private static final int MAX_HISTORY_SIZE = 10;
 
     @Autowired
-    public SummonerController(RiotApiService riotApiService, ObjectMapper objectMapper) {
+    public SummonerController(RiotApiService riotApiService, DataDragonService dataDragonService, ObjectMapper objectMapper) {
         this.riotApiService = riotApiService;
+        this.dataDragonService = dataDragonService;
         this.objectMapper = objectMapper;
     }
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, java.util.Locale locale) {
         // Ensure all template variables exist to prevent Thymeleaf errors on first load
         model.addAttribute("summoner", null);
         model.addAttribute("leagueEntries", Collections.emptyList());
@@ -68,6 +71,13 @@ public class SummonerController {
         model.addAttribute("leagueError", null);
         model.addAttribute("matchHistoryError", null);
         model.addAttribute("error", null);
+        // Provide DDragon image base URLs (for champion icons, etc.)
+        model.addAttribute("bases", dataDragonService.getImageBases(null));
+        try {
+            model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale));
+        } catch (Exception ignore) {
+            model.addAttribute("champImgByKey", java.util.Collections.emptyMap());
+        }
         return "index";
     }
 
@@ -109,7 +119,7 @@ public class SummonerController {
     }
 
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
-    public Callable<String> searchSummoner(@RequestParam("riotId") String riotId, Model model, HttpServletRequest request, HttpServletResponse response) {
+    public Callable<String> searchSummoner(@RequestParam("riotId") String riotId, Model model, HttpServletRequest request, HttpServletResponse response, java.util.Locale locale) {
         if (!StringUtils.hasText(riotId) || !riotId.contains("#")) {
             model.addAttribute("error", "Invalid Riot ID. Please use the format Name#TAG.");
             return () -> "index";
@@ -136,6 +146,8 @@ public class SummonerController {
                     model.addAttribute("matchHistory", Collections.emptyList());
                     model.addAttribute("championPlayCounts", Collections.emptyMap());
                     model.addAttribute("matchHistoryInfo", profileData.errorMessage());
+                    model.addAttribute("bases", dataDragonService.getImageBases(null));
+                    try { model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale)); } catch (Exception ignore) { model.addAttribute("champImgByKey", java.util.Collections.emptyMap()); }
                     return "index";
                 }
 
@@ -144,6 +156,8 @@ public class SummonerController {
                 model.addAttribute("matchHistory", profileData.matchHistory());
                 model.addAttribute("championPlayCounts", profileData.championPlayCounts());
                 model.addAttribute("profileIconUrl", profileData.profileIconUrl());
+                model.addAttribute("bases", dataDragonService.getImageBases(null));
+                try { model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale)); } catch (Exception ignore) { model.addAttribute("champImgByKey", java.util.Collections.emptyMap()); }
 
                 if (profileData.summoner() != null && profileData.suggestion() != null) {
                     updateSearchHistoryCookie(request, response, riotId, profileData.suggestion());
@@ -163,6 +177,8 @@ public class SummonerController {
                 model.addAttribute("matchHistory", Collections.emptyList());
                 model.addAttribute("championPlayCounts", Collections.emptyMap());
                 model.addAttribute("matchHistoryInfo", "An error occurred while fetching data.");
+                model.addAttribute("bases", dataDragonService.getImageBases(null));
+                try { model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale)); } catch (Exception ignore) { model.addAttribute("champImgByKey", java.util.Collections.emptyMap()); }
             } catch (Exception e) {
                 logger.error("Unexpected error during summoner search for Riot ID '{}': {}", riotId, e.getMessage(), e);
                 model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
@@ -170,6 +186,8 @@ public class SummonerController {
                 model.addAttribute("matchHistory", Collections.emptyList());
                 model.addAttribute("championPlayCounts", Collections.emptyMap());
                 model.addAttribute("matchHistoryInfo", "An unexpected error occurred.");
+                model.addAttribute("bases", dataDragonService.getImageBases(null));
+                try { model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale)); } catch (Exception ignore) { model.addAttribute("champImgByKey", java.util.Collections.emptyMap()); }
             }
             return "index";
         };

@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             // Summary
-            const vis = rows.filter(r => r.style.display !== 'none');
+            const vis = rows.filter(r => r.style.display !== 'none' && String(r.getAttribute('data-remake')) !== 'true');
             let wins=0, k=0, d=0, a=0;
             vis.forEach(r => {
                 if (String(r.getAttribute('data-win')) === 'true') wins++;

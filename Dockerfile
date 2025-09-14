@@ -8,12 +8,10 @@ ARG SKIP_TESTS=true
 
 # Use BuildKit cache for Maven repo to accelerate builds across runs
 COPY pom.xml .
-RUN --mount=type=cache,target=/root/.m2 \
-    mvn -q -T 5 -e -DskipTests dependency:go-offline
+RUN mvn -q -T 5 -e -DskipTests dependency:go-offline
 
 COPY src ./src
-RUN --mount=type=cache,target=/root/.m2 \
-    mvn -q -T 5 -DskipTests=${SKIP_TESTS} clean package
+RUN mvn -q -T 5 -DskipTests=${SKIP_TESTS} clean package
 
 # ===== Stage 2: Runtime =====
 FROM eclipse-temurin:21-jre

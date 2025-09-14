@@ -157,9 +157,9 @@
                 <div th:if="${championPlayCounts != null && !championPlayCounts.isEmpty()}">
                     <ul class="list-unstyled mb-0">
                         <li th:each="champEntry, iterStat : ${championPlayCounts.entrySet()}" th:if="${iterStat.count <= 5}" class="d-flex align-items-center mb-2">
-                            <img th:src="@{'/ui/champions/' + ${champEntry.key} + '.png'}"
+                            <img th:src="${bases.champSquare + champEntry.key + '.png'}"
                                  th:alt="${champEntry.key}"
-                                 class="me-2 rounded js-champ-fallback recent-champ-icon"
+                                 class="me-2 rounded recent-champ-icon"
                                   loading="lazy"/>
                             <span th:text="${champEntry.key}" class="fw-medium">ChampionName</span>
                             <span class="text-muted mx-2">&bull;</span>
@@ -295,10 +295,10 @@
                 <th:block th:each="match, iterStat : ${matchHistory}">
                     <!-- Render only if we have basic match info -->
                     <th:block th:if="${match != null and match.info != null}">
-                    <div th:with="meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}"
+                    <div th:with="gd=${match.info.gameDuration != null ? match.info.gameDuration : 0}, isRemake=${gd > 0 && gd < 300}, meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}"
                          class="list-group-item match-row"
-                         th:classappend="${me != null && me.win ? ' win' : ' loss'}"
-                         th:attr="data-q=${match.info.queueId}, data-k=${me != null ? me.kills : 0}, data-d=${me != null ? me.deaths : 0}, data-a=${me != null ? me.assists : 0}, data-win=${me != null ? me.win : false}">
+                         th:classappend="${isRemake ? ' remake' : (me != null && me.win ? ' win' : ' loss')}"
+                         th:attr="data-q=${match.info.queueId}, data-k=${me != null ? me.kills : 0}, data-d=${me != null ? me.deaths : 0}, data-a=${me != null ? me.assists : 0}, data-win=${me != null ? me.win : false}, data-remake=${isRemake}">
                         <span class="d-none search-index">
                             <th:block th:with="meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}">
                                 <span th:text="${me != null ? me.championName : ''}"></span>
@@ -322,11 +322,11 @@
                                 <span th:text="${' (' + min + 'm ' + sec + 's)'}">(0m 0s)</span>
                             </h5>
                             <div class="d-flex align-items-center">
-                                <th:block th:with="meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}">
+                                <th:block th:with="gd=${match.info.gameDuration != null ? match.info.gameDuration : 0}, isRemake=${gd > 0 && gd < 300}, meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}">
                                     <span class="badge rounded-pill px-3 py-2 fw-semibold"
-                                          th:text="${me != null && me.win ? 'Victory' : 'Defeat'}"
-                                          th:classappend="${me != null && me.win ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis'}"></span>
-                                    <span th:if="${match.info.lpChange != null}"
+                                          th:text="${isRemake ? 'Remake' : (me != null && me.win ? 'Victory' : 'Defeat')}"
+                                          th:classappend="${isRemake ? 'bg-secondary-subtle text-secondary-emphasis' : (me != null && me.win ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis')}"></span>
+                                    <span th:if="${match.info.lpChange != null && !isRemake}"
                                           th:text="${(match.info.lpChange > 0 ? '+' : '') + match.info.lpChange + ' LP'}"
                                           th:classappend="${match.info.lpChange > 0 ? 'lp-badge gain ms-2' : (match.info.lpChange < 0 ? 'lp-badge loss ms-2' : 'lp-badge neutral ms-2')}">
                                     </span>
@@ -342,7 +342,7 @@
                         <th:block th:if="${match.info.participants != null}">
                             <div th:each="p : ${match.info.participants}" th:if="${p.puuid == #vars.summoner.puuid}" class="mb-3 p-2 player-performance">
                                 <strong>Your Performance:</strong>
-                                <img th:src="@{'/ui/champions/' + ${p.championName} + '.png'}" th:alt="${p.championName}" width="32" height="32" class="me-1 align-middle rounded" loading="lazy" />
+                                <img th:src="${(champImgByKey != null and champImgByKey.containsKey(p.championId)) ? champImgByKey[p.championId] : (bases.champSquare + p.championName + '.png')}" th:alt="${p.championName}" width="32" height="32" class="me-1 align-middle rounded" loading="lazy" />
                                 <span th:text="${p.championName}" class="fw-medium">Champ</span> -
                                 KDA: <span th:text="${p.kda}" class="fw-bold">K/D/A</span>
                             </div>
@@ -367,8 +367,7 @@
                             <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 100}"
                                 th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
                                 <td>
-                                    <img th:src="@{'/ui/champions/' + ${p.championName} + '.png'}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy"
-                                         />
+                                    <img th:src="${(champImgByKey != null and champImgByKey.containsKey(p.championId)) ? champImgByKey[p.championId] : (bases.champSquare + p.championName + '.png')}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy" />
                                     <span th:text="${p.championName}">Champion</span>
                                 </td>
                                 <td>
@@ -400,8 +399,7 @@
                             <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 200}"
                                 th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
                                 <td>
-                                    <img th:src="@{'/ui/champions/' + ${p.championName} + '.png'}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy"
-                                         />
+                                    <img th:src="${bases.champSquare + p.championName + '.png'}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy" />
                                     <span th:text="${p.championName}">Champion</span>
                                 </td>
                                 <td>
@@ -776,7 +774,7 @@
             }
 
             function updateSummary(){
-                const vis = rows.filter(r => r.style.display !== 'none');
+                const vis = rows.filter(r => r.style.display !== 'none' && String(r.getAttribute('data-remake')) !== 'true');
                 let wins=0, k=0, d=0, a=0;
                 vis.forEach(r => {
                     if (String(r.getAttribute('data-win')) === 'true') wins++;
