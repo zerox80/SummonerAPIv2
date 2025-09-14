@@ -1,0 +1,65 @@
+{
+  "passive": {
+    "name": "Zeichen der Assassine",
+    "description": "Trifft Akali einen Gegner mit einer Fähigkeit, entsteht ein Ring um das Ziel. Verlässt Akali diesen Ring, verstärkt ihr nächster Nahkampfangriff die Reichweite, verursacht zusätzlichen Schaden und gewährt Lauftempo.",
+    "imageFull": "Akali_P.png"
+  },
+  "spells": [
+    {
+      "id": "AkaliQ",
+      "name": "Fünf-Punkte-Schlag",
+      "tooltip": "Akali schleudert fünf Kunai in einem Fächer nach vorn und verursacht magischen Schaden. Gegner am Rand des Fächers erleiden zusätzlichen Schaden und werden kurzzeitig verlangsamt.",
+      "imageFull": "AkaliQ.png",
+      "cooldown": "1,5 s",
+      "cost": "130 Energie",
+      "range": "Fächerreichweite ~550 • Kantenbereich weiter",
+      "damage": "30/55/80/105/130 (+60% AP) • Kante: +25% Schaden",
+      "notes": [
+        "Verlangsamt am Rand: 50/60/70/80/90% für 0,5 s",
+        "Heilt Akali leicht, wenn Ziele unter niedriger Gesundheit sind"
+      ]
+    },
+    {
+      "id": "AkaliW",
+      "name": "Zwielichtschleier",
+      "tooltip": "Akali erschafft eine Rauchwolke, erhält kurzzeitig Lauftempo und wird darin verdeckt. Innerhalb des Schleiers regeneriert sie Energie pro Sekunde und kann nicht direkt anvisiert werden. Angreifen oder Fähigkeiten lüften sie kurz.",
+      "imageFull": "AkaliW.png",
+      "cooldown": "20/18,5/17/15,5/14 s",
+      "cost": "40 Energie",
+      "range": "Selbst",
+      "notes": [
+        "Dauer: 5/5,5/6/6,5/7 s",
+        "Gesamte Energiewiederherstellung: ~80",
+        "Gewährt beim Betreten/Verlassen kurzzeitig zusätzliches Lauftempo"
+      ]
+    },
+    {
+      "id": "AkaliE",
+      "name": "Shuriken-Flip",
+      "tooltip": "Akali springt rückwärts und wirft ein Shuriken nach vorn, das den ersten getroffenen Gegner markiert und Schaden verursacht. Reaktivierung: Akali stürmt zum markierten Ziel und verursacht erneut Schaden.",
+      "imageFull": "AkaliE.png",
+      "cooldown": "16/14,5/13/11,5/10 s",
+      "cost": "30 Energie",
+      "range": "Shuriken 825 • Reaktivierung bis ~2500",
+      "damage": "Teil 1: 50/85/120/155/190 (+35% AD) (+50% AP) • Teil 2: 50/85/120/155/190 (+35% AD) (+50% AP)",
+      "notes": [
+        "Reaktivierung bis zu 3 s nach Markierung möglich",
+        "Kann Champions, Monster und platzierte Ziele (z. B. Wards) markieren"
+      ]
+    },
+    {
+      "id": "AkaliR",
+      "name": "Perfekte Ausführung",
+      "tooltip": "Akali stürmt nach vorn und stößt Gegner zur Seite (1. Aktivierung). Nach kurzer Verzögerung kann sie erneut aktivieren, um durch einen Gegner zu sprinten und hohen Schaden zu verursachen, der bei Zielen mit niedriger Gesundheit erhöht wird (2. Aktivierung).",
+      "imageFull": "AkaliR.png",
+      "cooldown": "100/85/70 s",
+      "cost": "Keine Kosten",
+      "range": "1. Dash ~675 • 2. Dash ~775",
+      "damage": "1. Aktivierung: 120/180/240 (+50% AD) (+30% AP) • 2. Aktivierung: 120/180/240 (+30% AD) (+45% AP) • Zusätzlicher Schaden bis zu +200% gegen sehr niedrige Gesundheit",
+      "notes": [
+        "Die 2. Aktivierung ist erst nach ~2,5 s verfügbar",
+        "1. Aktivierung verursacht Schub-/phys. Schaden, 2. Aktivierung überwiegend magischen Schaden"
+      ]
+    }
+  ]
+}
