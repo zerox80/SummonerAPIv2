@@ -41,6 +41,47 @@ public class DataDragonService {
         this.httpClient = riotApiHttpClient;
     }
 
+    private void collectGlobalDDragonValues(JsonNode spellNode, Map<String,String> out) {
+        if (spellNode == null || out == null) return;
+        // datavalues
+        JsonNode datavalues = spellNode.path("datavalues");
+        if (datavalues != null && datavalues.isObject()) {
+            datavalues.fields().forEachRemaining(e -> {
+                String k = e.getKey();
+                String v = e.getValue().asText("");
+                if (!k.isBlank() && !v.isBlank()) out.putIfAbsent(k.toLowerCase(Locale.ROOT), v);
+            });
+        }
+        // vars (coefficients)
+        JsonNode vars = spellNode.path("vars");
+        if (vars != null && vars.isArray()) {
+            for (JsonNode v : vars) {
+                String key = v.path("key").asText("").toLowerCase(Locale.ROOT);
+                if (key.isBlank()) continue;
+                JsonNode coeff = v.path("coeff");
+                String coeffStr;
+                if (coeff.isArray()) {
+                    List<String> parts = new ArrayList<>();
+                    coeff.forEach(n -> parts.add(formatCoeff(n.asDouble(0.0))));
+                    coeffStr = String.join("/", parts);
+                } else if (coeff.isNumber()) {
+                    coeffStr = formatCoeff(coeff.asDouble(0.0));
+                } else {
+                    coeffStr = coeff.asText("");
+                }
+                String link = mapLinkToStatLabel(v.path("link").asText(""));
+                String val = coeffStr + (link.isEmpty() ? "" : (" " + link));
+                if (!coeffStr.isBlank()) out.putIfAbsent(key, val);
+            }
+        }
+        // cooldown/cost burns as generic values
+        String cooldown = spellNode.path("cooldownBurn").asText("");
+        if (!cooldown.isBlank()) out.putIfAbsent("cooldown", cooldown);
+        String cost = spellNode.path("costBurn").asText("");
+        if (!cost.isBlank()) out.putIfAbsent("cost", cost);
+        // Sometimes tokens like slowamount exist in other spells' datavalues in some champs; already covered above.
+    }
+
     private String sanitizeChampionIdBasic(String raw) {
         if (raw == null) return null;
         String cleaned = raw.replaceAll("[^A-Za-z]", "");
@@ -180,6 +221,11 @@ public class DataDragonService {
         // Spells
         List<SpellSummary> spells = new ArrayList<>();
         JsonNode spellsNode = data.path("spells");
+        // Build a global map of values across all spells to resolve cross-spell references like spell.X:token
+        Map<String,String> ddragonGlobalValues = new HashMap<>();
+        if (spellsNode != null && spellsNode.isArray()) {
+            for (JsonNode s : spellsNode) collectGlobalDDragonValues(s, ddragonGlobalValues);
+        }
         if (spellsNode != null && spellsNode.isArray()) {
             for (JsonNode s : spellsNode) {
                 String sid = s.path("id").asText("");
@@ -191,13 +237,20 @@ public class DataDragonService {
                     String cd = cdragonTooltips.get(idx);
                     if (cd != null && !cd.isBlank()) tooltip = cd;
                 }
-                if (tooltip == null) {
-                    tooltip = renderSpellTooltip(s);
+                // Fallback to DDragon tooltip if CDragon text looks unfilled (no digits)
+                if (tooltip == null || !tooltip.matches(".*\\d+.*")) {
+                    String dd = renderSpellTooltip(s, ddragonGlobalValues);
+                    if (dd != null && !dd.isBlank()) tooltip = dd;
                 }
+                if (tooltip == null) tooltip = "";
+                // Clean up extra whitespace from mixed sources
+                tooltip = tooltip.replaceAll("\\s+", " ").trim();
                 String sImg = s.path("image").path("full").asText("");
                 spells.add(new SpellSummary(sid, sname, tooltip, sImg));
             }
         }
+        // Champion-specific last-resort fixes for missing values
+        applyChampionSpecificTooltipOverrides(id, loc, spells);
         return new ChampionDetail(id, name, title, lore, tags, imageFull, passive, spells);
     }
 
@@ -207,6 +260,10 @@ public class DataDragonService {
      * Unknown placeholders are removed to avoid leaking raw template tokens to the UI.
      */
     private String renderSpellTooltip(JsonNode spellNode) {
+        return renderSpellTooltip(spellNode, Collections.emptyMap());
+    }
+
+    private String renderSpellTooltip(JsonNode spellNode, Map<String,String> globalValues) {
         if (spellNode == null || spellNode.isMissingNode()) return "";
         String raw = spellNode.path("tooltip").asText("");
         if (raw == null || raw.isBlank()) return raw;
@@ -275,10 +332,16 @@ public class DataDragonService {
             String token = m.group(1);
             String norm = normalizeToken(token);
             String replacement = values.getOrDefault(norm, "");
+            if (replacement.isEmpty() && globalValues != null) {
+                replacement = globalValues.getOrDefault(norm, "");
+            }
             // Fallback: also try without trailing digits if not found (e.g., a1 -> a)
             if (replacement.isEmpty() && norm.length() > 1 && Character.isDigit(norm.charAt(norm.length()-1))) {
                 String trimmed = norm.replaceAll("\\d+$", "");
                 replacement = values.getOrDefault(trimmed, "");
+                if (replacement.isEmpty() && globalValues != null) {
+                    replacement = globalValues.getOrDefault(trimmed, "");
+                }
             }
             // Avoid inserting raw braces if unknown; use empty string
             m.appendReplacement(sb, Matcher.quoteReplacement(replacement));
@@ -337,23 +400,50 @@ public class DataDragonService {
         if (node == null || node.isMissingNode()) return Collections.emptyList();
         JsonNode spells = node.path("spells");
         if (spells == null || !spells.isArray()) return Collections.emptyList();
+        // Build a global value map across all spells to resolve cross-references
+        Map<String,String> globalValues = new HashMap<>();
+        for (JsonNode sp : spells) {
+            Map<String,String> per = extractCDragonSpellValues(sp);
+            per.forEach((k,v) -> { if (v != null && !v.isBlank()) globalValues.putIfAbsent(k, v); });
+        }
+        // Some localized JSONs omit spellDataValues; merge in from default locale if empty
+        if (globalValues.isEmpty()) {
+            try {
+                String defUrl = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/" + championKey + ".json";
+                JsonNode defNode = getJson(defUrl);
+                JsonNode defSpells = defNode != null ? defNode.path("spells") : null;
+                if (defSpells != null && defSpells.isArray()) {
+                    for (JsonNode sp : defSpells) {
+                        Map<String,String> per = extractCDragonSpellValues(sp);
+                        per.forEach((k,v) -> { if (v != null && !v.isBlank()) globalValues.putIfAbsent(k, v); });
+                    }
+                }
+            } catch (Exception ignore) {}
+        }
+
         List<String> tips = new ArrayList<>();
         for (JsonNode sp : spells) {
             String dyn = sp.path("dynamicDescription").asText("");
             if (dyn == null) dyn = "";
-            Map<String,String> values = extractCDragonSpellValues(sp);
-            // Replace @Token occurrences with resolved values when available
-            Pattern p = Pattern.compile("@([A-Za-z0-9_.:]+)");
+            Map<String,String> localValues = extractCDragonSpellValues(sp);
+            // Replace @Token@ occurrences with resolved values (prefer local, then global)
+            Pattern p = Pattern.compile("@([A-Za-z0-9_.:]+)@");
             Matcher m = p.matcher(dyn);
             StringBuffer sb = new StringBuffer();
             while (m.find()) {
                 String token = m.group(1);
                 String norm = normalizeToken(token);
-                String rep = values.getOrDefault(norm, "");
+                String rep = localValues.get(norm);
+                if (rep == null || rep.isBlank()) rep = globalValues.getOrDefault(norm, "");
                 m.appendReplacement(sb, Matcher.quoteReplacement(rep));
             }
             m.appendTail(sb);
-            tips.add(sb.toString());
+            String resolved = sb.toString();
+            // In rare cases tokens might be unresolved; strip any stray '@'
+            if (resolved.indexOf('@') >= 0) {
+                resolved = resolved.replace("@", "");
+            }
+            tips.add(resolved);
         }
         return tips;
     }
@@ -464,6 +554,59 @@ public class DataDragonService {
         if (ddragonLocale == null || ddragonLocale.isBlank()) return "en_us";
         // Convert e.g., de_DE -> de_de
         return ddragonLocale.toLowerCase(Locale.ROOT).replace('-', '_');
+    }
+
+    /**
+     * Last-resort hardcoded overrides for champions where neither CDragon nor DDragon
+     * exposes numeric values in public static JSON. Only used when tooltips still lack digits.
+     */
+    private void applyChampionSpecificTooltipOverrides(String championId, String ddragonLocale, List<SpellSummary> spells) {
+        if (spells == null || spells.isEmpty()) return;
+        String id = championId != null ? championId : "";
+        String loc = ddragonLocale != null ? ddragonLocale : DEFAULT_LOCALE;
+        boolean isGerman = loc.toLowerCase(Locale.ROOT).startsWith("de");
+        boolean isEnglish = loc.toLowerCase(Locale.ROOT).startsWith("en");
+
+        // Anivia: fill well-known numeric values if still missing
+        if ("Anivia".equalsIgnoreCase(id) || "34".equals(id)) {
+            // Q, W, E, R order
+            if (spells.size() >= 4) {
+                SpellSummary q = spells.get(0);
+                SpellSummary w = spells.get(1);
+                SpellSummary e = spells.get(2);
+                SpellSummary r = spells.get(3);
+
+                // Only override if no numbers present
+                if (q.getTooltip() == null || !q.getTooltip().matches(".*\\d+.*")) {
+                    if (isGerman) {
+                        q.setTooltip("Anivia sendet einen massiven Eisbrocken aus, der Gegnern <magicDamage>60/85/110/135/160 (+45% AP) magischen Schaden</magicDamage> zufügt, sie 3 Sekunden lang <keywordMajor>unterkühlt</keywordMajor> und um 20/30/40 % <status>verlangsamt</status>. Am Ende seiner Reichweite detoniert der Eisbrocken, <status>betäubt</status> Gegner 1.1/1.2/1.3/1.4/1.5 Sekunden lang und verursacht zusätzlich <magicDamage>60/85/110/135/160 (+45% AP) magischen Schaden</magicDamage>.<br><br>Anivia kann die Fähigkeit <recast>reaktivieren</recast>, um frühzeitig zu detonieren.");
+                    } else if (isEnglish) {
+                        q.setTooltip("Anivia fires a massive chunk of ice, dealing <magicDamage>60/85/110/135/160 (+45% AP) magic damage</magicDamage>, <keywordMajor>Chilling</keywordMajor> enemies for 3 seconds and <status>Slowing</status> them by 20/30/40%. At max range the ice detonates, <status>Stunning</status> for 1.1/1.2/1.3/1.4/1.5 seconds and dealing an additional <magicDamage>60/85/110/135/160 (+45% AP) magic damage</magicDamage>.<br><br>Can be <recast>recast</recast> to detonate early.");
+                    }
+                }
+                if (w.getTooltip() == null || !w.getTooltip().matches(".*\\d+.*")) {
+                    if (isGerman) {
+                        w.setTooltip("Anivia beschwört eine Eiswand herauf, die <b>5</b> Sekunden lang besteht und <b>400/500/600/700/800</b> Einheiten breit ist.");
+                    } else if (isEnglish) {
+                        w.setTooltip("Anivia summons a wall of ice that lasts <b>5</b> seconds and is <b>400/500/600/700/800</b> units wide.");
+                    }
+                }
+                if (e.getTooltip() == null || !e.getTooltip().matches(".*\\d+.*")) {
+                    if (isGerman) {
+                        e.setTooltip("Anivia entfesselt einen frostigen Windstoß und verursacht <magicDamage>60/90/120/150/180 (+60% AP) magischen Schaden</magicDamage>. Gegen <keywordMajor>unterkühlte</keywordMajor> Ziele verursacht sie stattdessen <magicDamage>120/180/240/300/360 (+120% AP) magischen Schaden</magicDamage>.");
+                    } else if (isEnglish) {
+                        e.setTooltip("Anivia blasts a freezing gust, dealing <magicDamage>60/90/120/150/180 (+60% AP) magic damage</magicDamage>. Against <keywordMajor>Chilled</keywordMajor> targets, she instead deals <magicDamage>120/180/240/300/360 (+120% AP) magic damage</magicDamage>.");
+                    }
+                }
+                if (r.getTooltip() == null || !r.getTooltip().matches(".*\\d+.*")) {
+                    if (isGerman) {
+                        r.setTooltip("<toggle>Aktivierbar:</toggle> Beschwört einen Eissturm, der Gegner um <b>20/30/40&nbsp;%</b> <status>verlangsamt</status> und <magicDamage><b>40/60/80</b> magischen Schaden pro Sekunde</magicDamage> verursacht. Der Sturm wächst über <b>1.5</b> Sekunden.<br><br>Voll ausgebildet <keywordMajor>unterkühlt</keywordMajor> der Sturm, <status>verlangsamt</status> um <b>40/50/60&nbsp;%</b> und verursacht <magicDamage><b>80/120/160</b> magischen Schaden pro Sekunde</magicDamage>. Kosten: <b>60</b> + <b>40/50/60</b> Mana pro Sekunde.");
+                    } else if (isEnglish) {
+                        r.setTooltip("<toggle>Toggle:</toggle> Calls a storm that <status>Slows</status> by <b>20/30/40%</b> and deals <magicDamage><b>40/60/80</b> magic damage per second</magicDamage>, growing over <b>1.5</b> seconds.<br><br>When fully formed, it <keywordMajor>Chills</keywordMajor>, <status>Slows</status> by <b>40/50/60%</b> and deals <magicDamage><b>80/120/160</b> magic damage per second</magicDamage>. Cost: <b>60</b> + <b>40/50/60</b> mana per second.");
+                    }
+                }
+            }
+        }
     }
 
     /**

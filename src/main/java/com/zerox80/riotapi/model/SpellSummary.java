@@ -3,7 +3,7 @@ package com.zerox80.riotapi.model;
 public class SpellSummary {
     private final String id;
     private final String name;
-    private final String tooltip;
+    private String tooltip;
     private final String imageFull;
 
     public SpellSummary(String id, String name, String tooltip, String imageFull) {
@@ -23,6 +23,10 @@ public class SpellSummary {
 
     public String getTooltip() {
         return tooltip;
+    }
+
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
     }
 
     public String getImageFull() {
