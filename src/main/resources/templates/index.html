@@ -399,7 +399,7 @@
                             <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 200}"
                                 th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
                                 <td>
-                                    <img th:src="${bases.champSquare + p.championName + '.png'}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy" />
+                                    <img th:src="${(champImgByKey != null and champImgByKey.containsKey(p.championId)) ? champImgByKey[p.championId] : (bases.champSquare + p.championName + '.png')}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy" />
                                     <span th:text="${p.championName}">Champion</span>
                                 </td>
                                 <td>
