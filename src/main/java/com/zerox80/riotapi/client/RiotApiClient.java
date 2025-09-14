@@ -377,6 +377,22 @@ public class RiotApiClient {
                         .thenApply(list -> list != null ? list : List.of()));
     }
 
+    /**
+     * Overloaded variant that supports pagination via 'start' offset.
+     * Official API supports 'start' and 'count' query parameters.
+     */
+    @Cacheable(value = "matchIds", key = "#puuid + '-' + #start + '-' + #count")
+    public CompletableFuture<List<String>> getMatchIdsByPuuid(String puuid, int start, int count) {
+        String host = this.regionalRoute + ".api.riotgames.com";
+        String path = "/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=" + start + "&count=" + count;
+        String url = "https://" + host + path;
+        logger.debug(">>> RiotApiClient (MatchIdsPaged): PUUID [{}], start {}, count {}", maskPuuid(puuid), start, count);
+        String key = puuid + "-" + start + "-" + count;
+        return coalesce(matchIdsInFlight, key,
+                () -> sendApiRequestAsync(url, MATCH_ID_LIST_TYPE, "MatchIdsPaged")
+                        .thenApply(list -> list != null ? list : List.of()));
+    }
+
     @Cacheable(value = "matchDetails", key = "#matchId")
     public CompletableFuture<MatchV5Dto> getMatchDetails(String matchId) {
         String host = this.regionalRoute + ".api.riotgames.com";

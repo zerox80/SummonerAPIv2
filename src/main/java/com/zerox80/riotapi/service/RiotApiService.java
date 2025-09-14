@@ -40,6 +40,48 @@ public class RiotApiService {
         this.playerLpRecordService = playerLpRecordService;
     }
 
+    /**
+     * Paged variant: fetch match history with offset (start) and count.
+     * Uses Riot API's start/count parameters for the ID list and then hydrates details in small batches.
+     */
+    public CompletableFuture<List<MatchV5Dto>> getMatchHistoryPaged(String puuid, int start, int count) {
+        if (!StringUtils.hasText(puuid)) {
+            logger.error("Error: PUUID cannot be empty when fetching match history.");
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        if (count <= 0) {
+            logger.error("Error: Count must be positive.");
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        if (start < 0) start = 0;
+
+        final int from = start;
+        final int limit = count;
+        logger.info("Fetching paged match IDs for PUUID: {}, start={}, count={}...", maskPuuid(puuid), from, limit);
+        return riotApiClient.getMatchIdsByPuuid(puuid, from, limit)
+                .thenCompose(matchIds -> {
+                    if (matchIds == null || matchIds.isEmpty()) {
+                        return CompletableFuture.completedFuture(Collections.<MatchV5Dto>emptyList());
+                    }
+                    List<List<String>> batches = ListUtils.partition(matchIds, 5);
+                    List<CompletableFuture<List<MatchV5Dto>>> batchFutures = batches.stream()
+                            .map(this::fetchMatchBatch)
+                            .collect(Collectors.toList());
+                    CompletableFuture<Void> allDone = CompletableFuture.allOf(batchFutures.toArray(new CompletableFuture[0]));
+                    return allDone.thenApply(v -> batchFutures.stream()
+                            .flatMap(f -> {
+                                List<MatchV5Dto> list = f.join();
+                                return list != null ? list.stream() : Stream.<MatchV5Dto>empty();
+                            })
+                            .filter(java.util.Objects::nonNull)
+                            .collect(Collectors.toList()));
+                })
+                .exceptionally(ex -> {
+                    logger.error("Error fetching paged match history for puuid {}: {}", maskPuuid(puuid), ex.getMessage(), ex);
+                    return Collections.<MatchV5Dto>emptyList();
+                });
+    }
+
     public CompletableFuture<Summoner> getSummonerByRiotId(String gameName, String tagLine) {
         if (!StringUtils.hasText(gameName) || !StringUtils.hasText(tagLine)) {
             logger.error("Error: Game name and tag line cannot be empty.");
@@ -211,7 +253,8 @@ public class RiotApiService {
                                                 summoner.getPuuid(), ex.getMessage(), ex);
                                         return Collections.emptyList();
                                     });
-                    CompletableFuture<List<MatchV5Dto>> matchHistoryFuture = getMatchHistory(summoner.getPuuid(), 30);
+                    // Load fewer matches initially for faster first render; client can request more via pagination
+                    CompletableFuture<List<MatchV5Dto>> matchHistoryFuture = getMatchHistory(summoner.getPuuid(), 10);
 
                     return CompletableFuture.allOf(leagueEntriesFuture, matchHistoryFuture)
                             .thenApply(v -> {

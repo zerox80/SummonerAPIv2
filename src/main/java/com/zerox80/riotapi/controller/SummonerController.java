@@ -10,6 +10,7 @@ import com.zerox80.riotapi.model.SummonerProfileData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,14 +51,41 @@ public class SummonerController {
     private final RiotApiService riotApiService;
     private final DataDragonService dataDragonService;
     private final ObjectMapper objectMapper;
+    private final int matchesPageSize;
     private static final String SEARCH_HISTORY_COOKIE = "searchHistory";
     private static final int MAX_HISTORY_SIZE = 10;
 
     @Autowired
-    public SummonerController(RiotApiService riotApiService, DataDragonService dataDragonService, ObjectMapper objectMapper) {
+    public SummonerController(RiotApiService riotApiService, DataDragonService dataDragonService, ObjectMapper objectMapper,
+                              @Value("${ui.matches.page-size:10}") int matchesPageSize) {
         this.riotApiService = riotApiService;
         this.dataDragonService = dataDragonService;
         this.objectMapper = objectMapper;
+        this.matchesPageSize = matchesPageSize;
+    }
+
+    @GetMapping("/api/matches")
+    @ResponseBody
+    public ResponseEntity<?> getMoreMatches(@RequestParam("riotId") String riotId,
+                                            @RequestParam(value = "start", defaultValue = "0") int start,
+                                            @RequestParam(value = "count", defaultValue = "10") int count) {
+        try {
+            if (!StringUtils.hasText(riotId) || !riotId.contains("#")) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid riotId format. Expected Name#TAG"));
+            }
+            String[] parts = riotId.split("#", 2);
+            String gameName = parts[0];
+            String tagLine = parts[1];
+            Summoner summoner = riotApiService.getSummonerByRiotId(gameName, tagLine).join();
+            if (summoner == null || !StringUtils.hasText(summoner.getPuuid())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Summoner not found."));
+            }
+            List<MatchV5Dto> list = riotApiService.getMatchHistoryPaged(summoner.getPuuid(), start, count).join();
+            return ResponseEntity.ok(list != null ? list : Collections.emptyList());
+        } catch (Exception e) {
+            logger.error("/api/matches error: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to load matches."));
+        }
     }
 
     @GetMapping("/")
@@ -73,6 +101,7 @@ public class SummonerController {
         model.addAttribute("error", null);
         // Provide DDragon image base URLs (for champion icons, etc.)
         model.addAttribute("bases", dataDragonService.getImageBases(null));
+        model.addAttribute("matchesPageSize", matchesPageSize);
         try {
             model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale));
         } catch (Exception ignore) {
@@ -157,6 +186,16 @@ public class SummonerController {
                 model.addAttribute("championPlayCounts", profileData.championPlayCounts());
                 model.addAttribute("profileIconUrl", profileData.profileIconUrl());
                 model.addAttribute("bases", dataDragonService.getImageBases(null));
+                model.addAttribute("matchesPageSize", matchesPageSize);
+                // Provide the Riot ID used for this view to enable client-side pagination fetches
+                try {
+                    String currentRiotId = profileData.summoner() != null && profileData.suggestion() != null
+                            ? profileData.suggestion().getRiotId()
+                            : (gameName + "#" + tagLine);
+                    model.addAttribute("riotId", currentRiotId);
+                } catch (Exception ignore) {
+                    model.addAttribute("riotId", gameName + "#" + tagLine);
+                }
                 try { model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale)); } catch (Exception ignore) { model.addAttribute("champImgByKey", java.util.Collections.emptyMap()); }
 
                 if (profileData.summoner() != null && profileData.suggestion() != null) {
