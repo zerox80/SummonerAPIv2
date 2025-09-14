@@ -400,45 +400,85 @@ public class DataDragonService {
         if (node == null || node.isMissingNode()) return Collections.emptyList();
         JsonNode spells = node.path("spells");
         if (spells == null || !spells.isArray()) return Collections.emptyList();
-        // Build a global value map across all spells to resolve cross-references
+
+        // Also fetch default-locale (en) as a robust fallback when localized strings miss numbers
+        JsonNode defNode = null;
+        JsonNode defSpells = null;
+        try {
+            String defUrl = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/" + championKey + ".json";
+            defNode = getJson(defUrl);
+            defSpells = defNode != null ? defNode.path("spells") : null;
+        } catch (Exception ignore) {}
+
+        // Build global value maps to resolve cross-references
         Map<String,String> globalValues = new HashMap<>();
         for (JsonNode sp : spells) {
             Map<String,String> per = extractCDragonSpellValues(sp);
             per.forEach((k,v) -> { if (v != null && !v.isBlank()) globalValues.putIfAbsent(k, v); });
         }
-        // Some localized JSONs omit spellDataValues; merge in from default locale if empty
-        if (globalValues.isEmpty()) {
-            try {
-                String defUrl = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/" + championKey + ".json";
-                JsonNode defNode = getJson(defUrl);
-                JsonNode defSpells = defNode != null ? defNode.path("spells") : null;
-                if (defSpells != null && defSpells.isArray()) {
-                    for (JsonNode sp : defSpells) {
-                        Map<String,String> per = extractCDragonSpellValues(sp);
-                        per.forEach((k,v) -> { if (v != null && !v.isBlank()) globalValues.putIfAbsent(k, v); });
-                    }
-                }
-            } catch (Exception ignore) {}
+        Map<String,String> defGlobalValues = new HashMap<>();
+        if (defSpells != null && defSpells.isArray()) {
+            for (JsonNode sp : defSpells) {
+                Map<String,String> per = extractCDragonSpellValues(sp);
+                per.forEach((k,v) -> { if (v != null && !v.isBlank()) defGlobalValues.putIfAbsent(k, v); });
+            }
         }
 
         List<String> tips = new ArrayList<>();
-        for (JsonNode sp : spells) {
+        for (int i = 0; i < spells.size(); i++) {
+            JsonNode sp = spells.get(i);
             String dyn = sp.path("dynamicDescription").asText("");
             if (dyn == null) dyn = "";
             Map<String,String> localValues = extractCDragonSpellValues(sp);
-            // Replace @Token@ occurrences with resolved values (prefer local, then global)
+            // Prepare default spell values for per-token fallback
+            Map<String,String> defValues = Collections.emptyMap();
+            JsonNode defSp = (defSpells != null && i < defSpells.size()) ? defSpells.get(i) : null;
+            if (defSp != null) {
+                defValues = extractCDragonSpellValues(defSp);
+            }
+            // Replace @Token@ occurrences with resolved values
             Pattern p = Pattern.compile("@([A-Za-z0-9_.:]+)@");
             Matcher m = p.matcher(dyn);
             StringBuffer sb = new StringBuffer();
+            boolean anyTokenMissing = false;
             while (m.find()) {
                 String token = m.group(1);
                 String norm = normalizeToken(token);
                 String rep = localValues.get(norm);
                 if (rep == null || rep.isBlank()) rep = globalValues.getOrDefault(norm, "");
+                if ((rep == null || rep.isBlank()) && defValues != null) rep = defValues.get(norm);
+                if ((rep == null || rep.isBlank()) && defGlobalValues != null) rep = defGlobalValues.getOrDefault(norm, "");
+                if (rep == null) rep = "";
+                if (rep.isBlank()) anyTokenMissing = true;
                 m.appendReplacement(sb, Matcher.quoteReplacement(rep));
             }
             m.appendTail(sb);
             String resolved = sb.toString();
+            boolean hasDigits = resolved.matches(".*\\d+.*");
+
+            // If still obviously incomplete (no digits at all), fall back to default dynamic text fully
+            if ((!hasDigits || anyTokenMissing) && defSp != null) {
+                String dynDef = defSp.path("dynamicDescription").asText("");
+                Matcher md = p.matcher(dynDef != null ? dynDef : "");
+                StringBuffer sbd = new StringBuffer();
+                while (md.find()) {
+                    String token = md.group(1);
+                    String norm = normalizeToken(token);
+                    String rep = defValues.get(norm);
+                    if (rep == null || rep.isBlank()) rep = defGlobalValues.getOrDefault(norm, "");
+                    if (rep == null) rep = "";
+                    md.appendReplacement(sbd, Matcher.quoteReplacement(rep));
+                }
+                md.appendTail(sbd);
+                String resolvedDef = sbd.toString();
+                if (resolvedDef.indexOf('@') >= 0) {
+                    resolvedDef = resolvedDef.replace("@", "");
+                }
+                if (resolvedDef.matches(".*\\d+.*")) {
+                    resolved = resolvedDef; // prefer numeric default text over incomplete localized one
+                }
+            }
+
             // In rare cases tokens might be unresolved; strip any stray '@'
             if (resolved.indexOf('@') >= 0) {
                 resolved = resolved.replace("@", "");
@@ -682,6 +722,9 @@ public class DataDragonService {
         map.put("spell", DDRAGON_BASE + "/cdn/" + ver + "/img/spell/");
         map.put("passive", DDRAGON_BASE + "/cdn/" + ver + "/img/passive/");
         map.put("splash", DDRAGON_BASE + "/cdn/img/champion/splash/");
+        // Ranked emblems from CommunityDragon static assets (CDN-only)
+        map.put("rankedMiniCrest", "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/");
+        map.put("rankedEmblem", "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblems/");
         return map;
     }
 
