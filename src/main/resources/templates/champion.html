@@ -71,7 +71,7 @@
                 </div>
             </div>
 
-            <div class="card glass-card">
+            <div class="card glass-card" th:if="${champion.passive != null or (champion.spells != null and !#lists.isEmpty(champion.spells))}">
                 <div class="card-header section-header d-flex align-items-center gap-2">
                     <i class="fa-solid fa-bolt text-warning"></i>
                     Abilities
@@ -89,12 +89,28 @@
                         <div>
                             <div class="fw-semibold"><span th:text="${iter.index == 0 ? 'Q' : (iter.index == 1 ? 'W' : (iter.index == 2 ? 'E' : 'R'))}">Q</span> — <span th:text="${s.name}">Spell</span></div>
                             <div class="text-secondary small" th:utext="${s.tooltip}">Tooltip</div>
+                            <div class="text-secondary small mt-2" th:if="${(s.cooldown != null and !#strings.isEmpty(s.cooldown))
+                                                                      or (s.cost != null and !#strings.isEmpty(s.cost))
+                                                                      or (s.range != null and !#strings.isEmpty(s.range))
+                                                                      or (s.damage != null and !#strings.isEmpty(s.damage))
+                                                                      or (s.scaling != null and !#strings.isEmpty(s.scaling))
+                                                                      or (s.notes != null and !#lists.isEmpty(s.notes))}">
+                                <div class="fw-semibold">Werte</div>
+                                <ul class="mb-0 ps-3">
+                                    <li th:if="${s.damage != null and !#strings.isEmpty(s.damage)}">Schaden: <span th:text="${s.damage}"></span></li>
+                                    <li th:if="${s.cooldown != null and !#strings.isEmpty(s.cooldown)}">Abklingzeit: <span th:text="${s.cooldown}"></span></li>
+                                    <li th:if="${s.cost != null and !#strings.isEmpty(s.cost)}">Kosten: <span th:text="${s.cost}"></span></li>
+                                    <li th:if="${s.range != null and !#strings.isEmpty(s.range)}">Reichweite: <span th:text="${s.range}"></span></li>
+                                    <li th:if="${s.scaling != null and !#strings.isEmpty(s.scaling)}">Skalierung: <span th:text="${s.scaling}"></span></li>
+                                    <li th:each="n : ${s.notes}" th:text="${n}"></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-4">
+        <div class="col-12 col-lg-4" th:if="${false}">
             <div class="card glass-card">
                 <div class="card-header section-header d-flex align-items-center gap-2">
                     <i class="fa-solid fa-wand-magic-sparkles text-info"></i>

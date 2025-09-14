@@ -32,13 +32,20 @@ import java.util.HashMap;
 public class DataDragonService {
 
     private static final String DDRAGON_BASE = "https://ddragon.leagueoflegends.com";
-    private static final String DEFAULT_LOCALE = "en_US";
+    private static final String DEFAULT_LOCALE = "de_DE";
 
     private final HttpClient httpClient;
     private final ObjectMapper mapper = new ObjectMapper();
 
     public DataDragonService(HttpClient riotApiHttpClient) {
         this.httpClient = riotApiHttpClient;
+    }
+
+    private int countDigits(String s) {
+        if (s == null || s.isBlank()) return 0;
+        int c = 0;
+        for (int i = 0; i < s.length(); i++) if (Character.isDigit(s.charAt(i))) c++;
+        return c;
     }
 
     private void collectGlobalDDragonValues(JsonNode spellNode, Map<String,String> out) {
@@ -52,6 +59,7 @@ public class DataDragonService {
                 if (!k.isBlank() && !v.isBlank()) out.putIfAbsent(k.toLowerCase(Locale.ROOT), v);
             });
         }
+
         // vars (coefficients)
         JsonNode vars = spellNode.path("vars");
         if (vars != null && vars.isArray()) {
@@ -190,68 +198,77 @@ public class DataDragonService {
         if (data.path("tags").isArray()) data.path("tags").forEach(t -> tags.add(t.asText()));
         String imageFull = data.path("image").path("full").asText("");
 
-        // Try to obtain champion numeric key for potential CommunityDragon fallback
-        Integer champKey = null;
-        String keyStrLocal = data.path("key").asText(null);
-        if (keyStrLocal != null) {
-            try { champKey = Integer.parseInt(keyStrLocal); } catch (NumberFormatException ignore) { champKey = null; }
-        }
-        if (champKey == null) {
-            try { champKey = getChampionKey(cid, locale); } catch (Exception ignore) {}
-        }
-        List<String> cdragonTooltips = Collections.emptyList();
-        if (champKey != null) {
-            try {
-                cdragonTooltips = fetchCDragonResolvedTooltips(champKey, loc);
-            } catch (Exception ignore) {
-                cdragonTooltips = Collections.emptyList();
-            }
+        // Try to load local, versioned abilities (e.g., abilities/de_DE/anivia.json)
+        LocalAbilities local = loadLocalAbilities(id, loc);
+        if (local != null && (local.passive != null || (local.spells != null && !local.spells.isEmpty()))) {
+            return new ChampionDetail(id, name, title, lore, tags, imageFull,
+                    local.passive, local.spells == null ? java.util.Collections.emptyList() : local.spells);
         }
 
-        // Passive
-        PassiveSummary passive = null;
-        JsonNode p = data.path("passive");
-        if (p != null && !p.isMissingNode()) {
-            String pName = p.path("name").asText("");
-            String pDesc = p.path("description").asText("");
-            String pImg = p.path("image").path("full").asText("");
-            passive = new PassiveSummary(pName, pDesc, pImg);
-        }
+        // Default: lore only (no passive, no spells)
+        return new ChampionDetail(id, name, title, lore, tags, imageFull, null, java.util.Collections.emptyList());
+    }
 
-        // Spells
-        List<SpellSummary> spells = new ArrayList<>();
-        JsonNode spellsNode = data.path("spells");
-        // Build a global map of values across all spells to resolve cross-spell references like spell.X:token
-        Map<String,String> ddragonGlobalValues = new HashMap<>();
-        if (spellsNode != null && spellsNode.isArray()) {
-            for (JsonNode s : spellsNode) collectGlobalDDragonValues(s, ddragonGlobalValues);
-        }
-        if (spellsNode != null && spellsNode.isArray()) {
-            for (JsonNode s : spellsNode) {
-                String sid = s.path("id").asText("");
-                String sname = s.path("name").asText("");
-                String tooltip = null;
-                // Prefer CommunityDragon dynamicDescription (already resolved tokens)
-                int idx = spells.size();
-                if (cdragonTooltips != null && idx < cdragonTooltips.size()) {
-                    String cd = cdragonTooltips.get(idx);
-                    if (cd != null && !cd.isBlank()) tooltip = cd;
+    private static class LocalAbilities {
+        final PassiveSummary passive;
+        final List<SpellSummary> spells;
+        LocalAbilities(PassiveSummary p, List<SpellSummary> s){ this.passive = p; this.spells = s; }
+    }
+
+    private LocalAbilities loadLocalAbilities(String championId, String ddragonLocale) {
+        try {
+            String loc = (ddragonLocale == null || ddragonLocale.isBlank()) ? DEFAULT_LOCALE : ddragonLocale;
+            String cid = championId == null ? "" : championId.trim();
+            if (cid.isEmpty()) return null;
+            String path = String.format("abilities/%s/%s.json", loc, cid.toLowerCase(Locale.ROOT));
+            java.io.InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            if (is == null) {
+                // Fallback to de_DE if specific locale file is missing
+                if (!"de_DE".equals(loc)) {
+                    path = String.format("abilities/%s/%s.json", "de_DE", cid.toLowerCase(Locale.ROOT));
+                    is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
                 }
-                // Fallback to DDragon tooltip if CDragon text looks unfilled (no digits)
-                if (tooltip == null || !tooltip.matches(".*\\d+.*")) {
-                    String dd = renderSpellTooltip(s, ddragonGlobalValues);
-                    if (dd != null && !dd.isBlank()) tooltip = dd;
-                }
-                if (tooltip == null) tooltip = "";
-                // Clean up extra whitespace from mixed sources
-                tooltip = tooltip.replaceAll("\\s+", " ").trim();
-                String sImg = s.path("image").path("full").asText("");
-                spells.add(new SpellSummary(sid, sname, tooltip, sImg));
             }
+            if (is == null) return null;
+            JsonNode root = mapper.readTree(is);
+            // Passive
+            PassiveSummary passive = null;
+            JsonNode p = root.path("passive");
+            if (p != null && p.isObject()) {
+                String pName = p.path("name").asText("");
+                String pDesc = p.path("description").asText("");
+                String pImg = p.path("imageFull").asText("");
+                if (!pName.isBlank() || !pDesc.isBlank() || !pImg.isBlank()) {
+                    passive = new PassiveSummary(pName, pDesc, pImg);
+                }
+            }
+            // Spells
+            List<SpellSummary> spells = new ArrayList<>();
+            JsonNode sArr = root.path("spells");
+            if (sArr != null && sArr.isArray()) {
+                for (JsonNode s : sArr) {
+                    String sid = s.path("id").asText("");
+                    String sname = s.path("name").asText("");
+                    String tip = s.path("tooltip").asText("");
+                    String img = s.path("imageFull").asText("");
+                    SpellSummary sum = new SpellSummary(sid, sname, tip, img);
+                    if (s.hasNonNull("cooldown")) sum.setCooldown(s.path("cooldown").asText(""));
+                    if (s.hasNonNull("cost")) sum.setCost(s.path("cost").asText(""));
+                    if (s.hasNonNull("range")) sum.setRange(s.path("range").asText(""));
+                    if (s.hasNonNull("damage")) sum.setDamage(s.path("damage").asText(""));
+                    if (s.hasNonNull("scaling")) sum.setScaling(s.path("scaling").asText(""));
+                    if (s.has("notes") && s.path("notes").isArray()) {
+                        java.util.List<String> notes = new java.util.ArrayList<>();
+                        for (JsonNode n : s.path("notes")) notes.add(n.asText(""));
+                        sum.setNotes(notes);
+                    }
+                    spells.add(sum);
+                }
+            }
+            return new LocalAbilities(passive, spells);
+        } catch (Exception ignore) {
+            return null;
         }
-        // Champion-specific last-resort fixes for missing values
-        applyChampionSpecificTooltipOverrides(id, loc, spells);
-        return new ChampionDetail(id, name, title, lore, tags, imageFull, passive, spells);
     }
 
     /**
@@ -348,8 +365,181 @@ public class DataDragonService {
         }
         m.appendTail(sb);
 
+        String out = sb.toString();
+        // Heuristic patching: if we still see phrases like "for seconds" or bare "%" without a number,
+        // try to inject a plausible value from collected effect burns (e1/e2/...) or datavalues.
+        out = patchMissingNumbers(out, values);
+
         // Some tooltips contain special tags like <status>...</status>; keep as-is for utext
-        return sb.toString();
+        return out;
+    }
+
+    private String patchMissingNumbers(String text, Map<String,String> values){
+        if (text == null || text.isBlank()) return text;
+        String result = text;
+
+        // Generic cleanup: collapse immediate duplicate numbers (e.g., "1 1" or "0.75 0.75"). Accept NBSP as whitespace.
+        result = result.replaceAll("(?i)\\b(\\d+(?:[\\.,]\\d+)?)(?:[\\s\\u00A0]+)\\1\\b", "$1");
+        // Typo/format fixes: "Sekundenn" and "Sekunden(n)"/"Sekunde(n)"
+        result = result.replaceAll("(?i)sekundenn", "Sekunden");
+        result = result.replaceAll("(?i)sekunden\\(n\\)", "Sekunden");
+        result = result.replaceAll("(?i)sekunde\\(n\\)", "Sekunde");
+
+        // Helper to pick candidate from e1/e2/... that looks like a duration (<= 10 sec)
+        java.util.function.Predicate<java.util.List<Double>> isSeconds = nums -> {
+            if (nums.isEmpty()) return false;
+            for (Double d : nums) { if (d == null || d <= 0 || d > 10) return false; }
+            return true;
+        };
+        // Helper to pick candidate that looks like a percent (0..300)
+        java.util.function.Predicate<java.util.List<Double>> isPercent = nums -> {
+            if (nums.isEmpty()) return false;
+            for (Double d : nums) { if (d == null || d <= 0 || d > 300) return false; }
+            return true;
+        };
+
+        String secondsCandidate = pickJoinedCandidate(values, isSeconds);
+        // English "for seconds" variants (allow tags between words, handle 'second(s)' or 'sec')
+        if (secondsCandidate != null && !secondsCandidate.isBlank()) {
+            boolean hasNumberSeconds = result.matches(".*\\d+(?:[\\s\\u00A0])*(?:second(?:s|\\(s\\))?|sec(?:\\.|onds?)?).*");
+            if (!hasNumberSeconds) {
+                // Insert number before the unit, allowing optional inline HTML tags between 'for' and the unit
+                result = result.replaceFirst(
+                        "(?i)for(?:[\\s\\u00A0]+)(?:<[^>]+>(?:[\\s\\u00A0])*)*(second(?:s|\\(s\\))?|sec(?:\\.|onds?)?)",
+                        "for " + java.util.regex.Matcher.quoteReplacement(secondsCandidate) + " $1");
+            }
+            // German "Sekunden"/"Sekunde" (allow tags in between)
+            boolean hasNumberSek = result.matches(".*\\d+(,\\d+)?(?:[\\s\\u00A0])*sekunde(n)?.*");
+            if (!hasNumberSek && (result.toLowerCase(Locale.ROOT).contains("sekunde"))) {
+                result = result.replaceFirst(
+                        "(?i)(?:<[^>]+>(?:[\\s\\u00A0])*)*sekunde(n)?",
+                        java.util.regex.Matcher.quoteReplacement(secondsCandidate) + " Sekunden");
+            }
+        }
+
+        // If two numbers appear before seconds and the second is decimal, keep the decimal one (allow NBSP)
+        result = result.replaceAll("(?i)\\b(\\d+(?:[\\.,]\\d+)?)\\s*\\u00A0?\\s+(\\d+[\\.,]\\d+)\\s*\\u00A0?\\s*(sekunde(n)?|second(s)?)\\b", "$2 $3");
+        // Collapse patterns like "1 1 Sekunden" or "1 1 seconds" -> "1.1 Sekunden/seconds" (allow NBSP)
+        result = result.replaceAll("(?i)\\b(\\d)\\s*\\u00A0?\\s+(\\d)\\s*\\u00A0?\\s*(sekunde(n)?|second(s)?)\\b", "$1.$2 $3");
+        // Also allow optional HTML tags between the numbers
+        result = result.replaceAll("(?is)\\b(\\d)(?:[\\s\\u00A0]+|<[^>]+>)+(\\d)(?:[\\s\\u00A0]+|<[^>]+>)+(sekunde(n)?|second(s)?)\\b", "$1.$2 $3");
+        // If pattern like '1 <tags> 1.1 Sekunden' occurs, keep the decimal number
+        result = result.replaceAll("(?is)\\b(\\d+(?:[\\.,]\\d+)?)(?:[\\s\\u00A0]+|<[^>]+>)+(\\d+[\\.,]\\d+)(?:[\\s\\u00A0]+|<[^>]+>)+(sekunde(n)?|second(s)?)\\b", "$2 $3");
+
+        // Damage candidate insertion for magic damage when numbers are missing
+        String dmgCandidate = pickDamageCandidate(values);
+        if (dmgCandidate != null && !dmgCandidate.isBlank()) {
+            // Empty magicDamage tag
+            if (result.contains("<magicDamage></magicDamage>")) {
+                result = result.replace("<magicDamage></magicDamage>", "<magicDamage>" + java.util.regex.Matcher.quoteReplacement(dmgCandidate) + "</magicDamage>");
+            }
+            // German "magischen Schaden" without nearby numbers
+            if (result.toLowerCase(Locale.ROOT).contains("magischen schaden") && !result.matches(".*\\d+(?:[\\.,]\\d+)?[^\\n\\r]{0,40}magischen schaden.*")) {
+                result = result.replaceFirst("(?i)magischen\\s+schaden", java.util.regex.Matcher.quoteReplacement(dmgCandidate + " magischen Schaden"));
+            }
+            // English "magic damage" without nearby numbers
+            if (result.toLowerCase(Locale.ROOT).contains("magic damage") && !result.matches(".*\\d+(?:[\\.,]\\d+)?[^\\n\\r]{0,40}magic damage.*")) {
+                result = result.replaceFirst("(?i)magic\\s+damage", java.util.regex.Matcher.quoteReplacement(dmgCandidate + " magic damage"));
+            }
+        }
+
+        // Small flat number for DE phrase "verringerten normalen Schaden" if missing
+        if (result.toLowerCase(Locale.ROOT).contains("verringerten normalen schaden") && !result.matches(".*\\d+(?:[\\.,]\\d+)?[^\\n\\r]{0,40}verringerten normalen schaden.*")) {
+            String small = pickSmallNumberCandidate(values, 20.0);
+            if (small != null && !small.isBlank()) {
+                result = result.replaceFirst("(?i)um\\s+(?:<[^>]+>\\s*)*verringerten\\s+normalen\\s+schaden", java.util.regex.Matcher.quoteReplacement("um " + small + " verringerten normalen Schaden"));
+            }
+        }
+
+        // Normalize spaces around NBSP: collapse sequences like " \u00A0" or "\u00A0  " to a single NBSP
+        result = result.replaceAll(" *\u00A0+ *", "\u00A0");
+        // Collapse excessive regular spaces
+        result = result.replaceAll("[ ]{2,}", " ").trim();
+        return result;
+    }
+
+    private String pickDamageCandidate(Map<String,String> values) {
+        if (values == null || values.isEmpty()) return null;
+        String best = null; double bestAvg = -1.0;
+        for (Map.Entry<String,String> e : values.entrySet()) {
+            String k = e.getKey(); String v = e.getValue();
+            if (k == null || v == null) continue;
+            // prefer explicit damage keys or general eN
+            if (!(k.matches("e\\d+") || k.contains("damage") || k.contains("dmg") || k.contains("magic"))) continue;
+            java.util.List<Double> nums = parseNumbers(v);
+            if (nums.isEmpty()) continue;
+            // Typical damage range safeguard
+            boolean ok = true; for (Double d : nums) { if (d == null || d <= 0 || d > 600) { ok = false; break; } }
+            if (!ok) continue;
+            double avg = nums.stream().mapToDouble(d -> d).average().orElse(0);
+            if (avg > bestAvg) { bestAvg = avg; best = v; }
+        }
+        return best;
+    }
+
+    private String pickSmallNumberCandidate(Map<String,String> values, double max) {
+        if (values == null || values.isEmpty()) return null;
+        String best = null; double bestVal = Double.MAX_VALUE;
+        for (Map.Entry<String,String> e : values.entrySet()) {
+            String v = e.getValue();
+            if (v == null || v.isBlank()) continue;
+            java.util.List<Double> nums = parseNumbers(v);
+            for (Double d : nums) {
+                if (d != null && d > 0 && d <= max) {
+                    // pick the smallest positive value within cap
+                    if (d < bestVal) { bestVal = d; best = (d % 1 == 0 ? String.valueOf(d.intValue()) : formatCoeff(d)); }
+                }
+            }
+        }
+        return best;
+    }
+
+    private String pickJoinedCandidate(Map<String,String> values, java.util.function.Predicate<java.util.List<Double>> validator){
+        if (values == null || values.isEmpty()) return null;
+        String best = null; double bestAvg = -1.0;
+        for (Map.Entry<String,String> e : values.entrySet()) {
+            String k = e.getKey(); String v = e.getValue();
+            if (k == null || v == null) continue;
+            if (!k.matches("e\\d+|.*duration.*|.*time.*|.*stun.*|.*root.*|.*immobil.*|.*sleep.*|.*knock.*|.*freeze.*")) continue;
+            java.util.List<Double> nums = parseNumbers(v);
+            if (!validator.test(nums)) continue;
+            double avg = nums.stream().mapToDouble(d -> d).average().orElse(0);
+            if (avg > bestAvg) { bestAvg = avg; best = v; }
+        }
+        return best;
+    }
+
+    private String pickPercentCandidate(Map<String,String> values){
+        if (values == null || values.isEmpty()) return null;
+        // Prefer keys that suggest percent/slow/movement speed
+        String best = null; double bestAvg = -1.0;
+        for (Map.Entry<String,String> e : values.entrySet()) {
+            String k = e.getKey(); String v = e.getValue();
+            if (k == null || v == null) continue;
+            if (!(k.contains("percent") || k.contains("slow") || k.contains("movement") || k.contains("speed") || k.contains("ms") || k.contains("hp") || k.contains("health"))) continue;
+            java.util.List<Double> nums = parseNumbers(v);
+            if (nums.isEmpty()) continue;
+            // Accept typical percent ranges
+            boolean ok = true; for (Double d : nums) { if (d <= 0 || d > 300) { ok = false; break; } }
+            if (!ok) continue;
+            double avg = nums.stream().mapToDouble(d -> d).average().orElse(0);
+            if (avg > bestAvg) { bestAvg = avg; best = v; }
+        }
+        if (best != null) return best;
+        // Fallback to any eN that looks like a percent (0..300)
+        return pickJoinedCandidate(values, nums -> {
+            if (nums.isEmpty()) return false; for (Double d : nums) { if (d <= 0 || d > 300) return false; } return true; });
+    }
+
+    private java.util.List<Double> parseNumbers(String joined){
+        java.util.List<Double> list = new java.util.ArrayList<>();
+        if (joined == null || joined.isBlank()) return list;
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+(?:[\\.,]\\d+)?)").matcher(joined);
+        while (m.find()) {
+            String s = m.group(1).replace(',', '.');
+            try { list.add(Double.parseDouble(s)); } catch (NumberFormatException ignore) {}
+        }
+        return list;
     }
 
     private String normalizeToken(String token) {
@@ -362,6 +552,25 @@ public class DataDragonService {
         if (dot >= 0 && dot < t.length()-1) t = t.substring(dot+1);
         // common surrounding like totaldamage etc remain as-is
         return t;
+    }
+
+    private boolean looksIncompleteTooltip(String text, String locale) {
+        if (text == null) return true;
+        String s = text.trim();
+        if (s.isEmpty()) return true;
+        String lc = s.toLowerCase(Locale.ROOT);
+        // Unresolved placeholders
+        if (lc.contains("{{") || lc.contains("}}") || lc.indexOf('@') >= 0) return true;
+        // No digits at all -> likely missing numbers
+        if (!lc.matches(".*\\d+.*")) return true;
+        // Percent without preceding number
+        if (lc.contains("%") && !lc.matches(".*\\d+(?:[\\s\\u00A0])*%.*")) return true;
+        // "for seconds" or localized variants without a number just before the unit
+        Pattern secEn = Pattern.compile("(?i)for(?:[\\s\\u00A0]+)(?:<[^>]+>(?:[\\s\\u00A0])*)*(?:second(?:s|\\(s\\))?|sec(?:\\.|onds?)?)");
+        Pattern secDe = Pattern.compile("(?i)(?:<[^>]+>(?:[\\s\\u00A0])*)*sekunde(n)?");
+        if (secEn.matcher(lc).find() && !lc.matches(".*\\d+(?:[\\s\\u00A0])*(?:second(?:s|\\(s\\))?|sec(?:\\.|onds?)?)(?:[\n\r\t\f ]|\\u00A0)*.*")) return true;
+        if (secDe.matcher(lc).find() && !lc.matches(".*\\d+(,\\d+)?(?:[\\s\\u00A0])*sekunde(n)?(?:[\n\r\t\f ]|\\u00A0)*.*")) return true;
+        return false;
     }
 
     private String formatCoeff(double v) {
@@ -448,6 +657,14 @@ public class DataDragonService {
                 if (rep == null || rep.isBlank()) rep = globalValues.getOrDefault(norm, "");
                 if ((rep == null || rep.isBlank()) && defValues != null) rep = defValues.get(norm);
                 if ((rep == null || rep.isBlank()) && defGlobalValues != null) rep = defGlobalValues.getOrDefault(norm, "");
+                // Fallback: try without trailing digits (e.g., stunduration1 -> stunduration)
+                if ((rep == null || rep.isBlank()) && norm.length() > 1 && Character.isDigit(norm.charAt(norm.length()-1))) {
+                    String trimmed = norm.replaceAll("\\d+$", "");
+                    rep = localValues.get(trimmed);
+                    if (rep == null || rep.isBlank()) rep = globalValues.getOrDefault(trimmed, "");
+                    if ((rep == null || rep.isBlank()) && defValues != null) rep = defValues.get(trimmed);
+                    if ((rep == null || rep.isBlank()) && defGlobalValues != null) rep = defGlobalValues.getOrDefault(trimmed, "");
+                }
                 if (rep == null) rep = "";
                 if (rep.isBlank()) anyTokenMissing = true;
                 m.appendReplacement(sb, Matcher.quoteReplacement(rep));
@@ -466,6 +683,12 @@ public class DataDragonService {
                     String norm = normalizeToken(token);
                     String rep = defValues.get(norm);
                     if (rep == null || rep.isBlank()) rep = defGlobalValues.getOrDefault(norm, "");
+                    // Fallback: try without trailing digits
+                    if ((rep == null || rep.isBlank()) && norm.length() > 1 && Character.isDigit(norm.charAt(norm.length()-1))) {
+                        String trimmed = norm.replaceAll("\\d+$", "");
+                        rep = defValues.get(trimmed);
+                        if (rep == null || rep.isBlank()) rep = defGlobalValues.getOrDefault(trimmed, "");
+                    }
                     if (rep == null) rep = "";
                     md.appendReplacement(sbd, Matcher.quoteReplacement(rep));
                 }
@@ -483,6 +706,13 @@ public class DataDragonService {
             if (resolved.indexOf('@') >= 0) {
                 resolved = resolved.replace("@", "");
             }
+            // Heuristic patching for missing numbers (e.g., "for seconds") using combined value maps
+            Map<String,String> mergedVals = new HashMap<>();
+            if (localValues != null) mergedVals.putAll(localValues);
+            if (globalValues != null) mergedVals.putAll(globalValues);
+            if (defValues != null) mergedVals.putAll(defValues);
+            if (defGlobalValues != null) mergedVals.putAll(defGlobalValues);
+            resolved = patchMissingNumbers(resolved, mergedVals);
             tips.add(resolved);
         }
         return tips;
@@ -563,11 +793,17 @@ public class DataDragonService {
                     if (!val.isBlank()) out.put(key.trim().toLowerCase(Locale.ROOT), val);
                 } else if (v.isObject()) {
                     String name = v.path("name").asText("");
-                    if (!name.isBlank()) {
-                        String val = joinNumberArray(v.path("values"));
-                        if (val.isBlank()) val = joinNumberArray(v.path("valuesPerLevel"));
-                        if (!val.isBlank()) out.put(name.trim().toLowerCase(Locale.ROOT), val);
-                    }
+                    String outKey = !name.isBlank() ? name : key;
+                    String val = joinNumberArray(v.path("values"));
+                    if (val.isBlank()) val = joinNumberArray(v.path("valuesPerLevel"));
+                    if (val.isBlank()) val = joinNumberArray(v.path("coefficients"));
+                    if (val.isBlank()) val = joinNumberArray(v.path("mValue"));
+                    if (val.isBlank()) val = joinNumberArray(v.path("value"));
+                    if (val.isBlank() && v.isNumber()) val = joinNumberArray(v);
+                    if (!val.isBlank()) out.put(outKey.trim().toLowerCase(Locale.ROOT), val);
+                } else if (v.isNumber() || v.isTextual()) {
+                    String val = joinNumberArray(v);
+                    if (!val.isBlank()) out.put(key.trim().toLowerCase(Locale.ROOT), val);
                 }
             });
         }
@@ -591,7 +827,7 @@ public class DataDragonService {
     }
 
     private String cdragonLocale(String ddragonLocale) {
-        if (ddragonLocale == null || ddragonLocale.isBlank()) return "en_us";
+        if (ddragonLocale == null || ddragonLocale.isBlank()) return "de_de";
         // Convert e.g., de_DE -> de_de
         return ddragonLocale.toLowerCase(Locale.ROOT).replace('-', '_');
     }
@@ -644,6 +880,34 @@ public class DataDragonService {
                     } else if (isEnglish) {
                         r.setTooltip("<toggle>Toggle:</toggle> Calls a storm that <status>Slows</status> by <b>20/30/40%</b> and deals <magicDamage><b>40/60/80</b> magic damage per second</magicDamage>, growing over <b>1.5</b> seconds.<br><br>When fully formed, it <keywordMajor>Chills</keywordMajor>, <status>Slows</status> by <b>40/50/60%</b> and deals <magicDamage><b>80/120/160</b> magic damage per second</magicDamage>. Cost: <b>60</b> + <b>40/50/60</b> mana per second.");
                     }
+                }
+            }
+        }
+
+        // Amumu (German): ensure stun seconds are present and well-formed
+        if (("Amumu".equalsIgnoreCase(id) || "32".equals(id)) && isGerman) {
+            if (spells.size() >= 1) {
+                SpellSummary q = spells.get(0); // Bandagenwurf
+                if (q != null) {
+                    String tip = q.getTooltip() == null ? "" : q.getTooltip();
+                    // Robust: collapse any number/tag sequence before 'Sekunden' to exactly '1.1 Sekunden'
+                    tip = tip.replaceAll("(?is)(?:\\d+(?:[\\.,]\\d+)?(?:[\\s\\u00A0]+|<[^>]+>)+)+sekunde(n)?", "1.1 Sekunden");
+                    // Fallback: if 'Sekunden' present without number immediately before, enforce 1.1
+                    if (tip.toLowerCase(Locale.ROOT).contains("sekunden") && !tip.matches(".*\\d+(?:[\\.,]\\d+)?(?:[\\s\\u00A0])*(?:<[^>]+>(?:[\\s\\u00A0])*)*sekunde(n)?.*")) {
+                        tip = tip.replaceFirst("(?i)(?:<[^>]+>(?:[\\s\\u00A0])*)*sekunde(n)?", "1.1 Sekunden");
+                    }
+                    q.setTooltip(tip.trim());
+                }
+            }
+            if (spells.size() >= 4) {
+                SpellSummary r = spells.get(3); // Der Fluch der traurigen Mumie
+                if (r != null) {
+                    String tip = r.getTooltip() == null ? "" : r.getTooltip();
+                    tip = tip.replaceAll("(?i)\\b(\\d)\\s+(\\d)\\s*sekunden\\b", "$1.$2 Sekunden");
+                    if (tip.toLowerCase(Locale.ROOT).contains("sekunden") && !tip.matches(".*\\d+(?:[\\.,]\\d+)?\\s*sekunde(n)?.*")) {
+                        tip = tip.replaceFirst("(?i)sekunde(n)?", "1,5/1,75/2 Sekunden");
+                    }
+                    r.setTooltip(tip.trim());
                 }
             }
         }

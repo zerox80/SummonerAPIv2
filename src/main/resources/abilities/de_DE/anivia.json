@@ -1,0 +1,64 @@
+{
+  "passive": {
+    "name": "Wiedergeburt",
+    "description": "Erleidet Anivia tödlichen Schaden, verwandelt sie sich an Ort und Stelle in ein Ei. Überlebt das Ei eine kurze Dauer, kehrt Anivia mit Leben ins Spiel zurück.",
+    "imageFull": "Anivia_P.png"
+  },
+  "spells": [
+    {
+      "id": "FlashFrost",
+      "name": "Blitzeis",
+      "tooltip": "Anivia schickt ein langsam fliegendes Geschoss, das Gegner trifft und verlangsamt. Am Ziel oder beim erneuten Aktivieren explodiert es, betäubt kurz und verursacht magischen Schaden.",
+      "imageFull": "FlashFrost.png",
+      "cooldown": "12/11/10/9/8 s",
+      "cost": "80/85/90/95/100 Mana",
+      "range": "1100",
+      "damage": "Initial+Explosion je 60/90/120/150/180 (+45% AP) • Kombiniert: 120/180/240/300/360 (+90% AP)",
+      "notes": [
+        "Getroffene Gegner werden kurz betäubt",
+        "Explodiert automatisch an maximaler Reichweite oder bei erneuter Aktivierung"
+      ]
+    },
+    {
+      "id": "Crystallize",
+      "name": "Kristallisieren",
+      "tooltip": "Anivia erschafft eine Eiswand, die für kurze Zeit den Weg versperrt, Gelände formt und Bewegungen blockiert.",
+      "imageFull": "Crystallize.png",
+      "cooldown": "17/16/15/14/13 s",
+      "cost": "70 Mana",
+      "range": "1000",
+      "notes": [
+        "Dauer: 5 s",
+        "Länge: 5/6/7/8/9 Segmente"
+      ]
+    },
+    {
+      "id": "Frostbite",
+      "name": "Frostbiss",
+      "tooltip": "Anivia fügt einem Ziel magischen Schaden zu. Gegen unterkühlte Ziele verursacht die Fähigkeit erhöhten Schaden.",
+      "imageFull": "Frostbite.png",
+      "cooldown": "4 s",
+      "cost": "50 Mana",
+      "range": "650",
+      "damage": "80/120/160/200/240 (+60% AP) • Gegen unterkühlte Ziele: doppelter Schaden",
+      "notes": [
+        "Verstärkt, wenn Ziel von Q oder R verlangsamt wurde"
+      ]
+    },
+    {
+      "id": "GlacialStorm",
+      "name": "Eissturm",
+      "tooltip": "Anivia beschwört einen Sturm, der Gegner in einem Gebiet verlangsamt und pro Sekunde magischen Schaden verursacht. Kann erneut aktiviert werden, um den Sturm zu beenden.",
+      "imageFull": "GlacialStorm.png",
+      "cooldown": "1 s Reaktivierung",
+      "cost": "Initial 60/70/80 Mana + 40/50/60 Mana pro Sekunde",
+      "range": "Anvisierungsreichweite 750 • Radius 400",
+      "damage": "Pro Sekunde: 40/60/80 (+25% AP)",
+      "notes": [
+        "Verlangsamt Gegner: 20/30/40%",
+        "Wird größer und verursacht im Zentrum mehr Ticks",
+        "Endet automatisch, wenn Anivia außer Reichweite ist oder Mana fehlt"
+      ]
+    }
+  ]
+}
