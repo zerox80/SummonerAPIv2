@@ -988,7 +988,7 @@ public class DataDragonService {
         map.put("splash", DDRAGON_BASE + "/cdn/img/champion/splash/");
         // Ranked emblems from CommunityDragon static assets (CDN-only)
         map.put("rankedMiniCrest", "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/");
-        map.put("rankedEmblem", "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblems/");
+        map.put("rankedEmblem", "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/");
         return map;
     }
 

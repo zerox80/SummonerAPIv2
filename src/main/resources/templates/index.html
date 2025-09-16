@@ -108,7 +108,9 @@
                 <div th:each="entry : ${leagueEntries}" class="list-group-item league-entry">
                     <div class="d-flex w-100 justify-content-between mb-2">
                         <h4 class="mb-1">
-                            <img th:src="${bases.rankedMiniCrest + (entry.tier != null ? entry.tier.toLowerCase() : 'unranked') + '.png'}"
+                            <img th:src="${bases.rankedMiniCrest + ((entry.tier != null and #strings.equalsIgnoreCase(entry.tier, 'EMERALD'))
+                                  ? 'emerald.svg'
+                                  : ((entry.tier != null ? entry.tier.toLowerCase() : 'unranked') + '.png'))}"
                                  th:alt="${(entry.tier != null ? entry.tier.toLowerCase() : 'unranked') + ' Tier'}"
                                  class="tier-icon" loading="lazy"/>
                             <span th:text="${entry.queueType != null ? entry.queueType.replace('_', ' ').toLowerCase() : 'N/A'}" class="text-capitalize">Queue</span>
