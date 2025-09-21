@@ -27,6 +27,7 @@ import org.springframework.http.CacheControl;
 
 import java.util.List;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -53,16 +54,23 @@ public class SummonerController {
     private final DataDragonService dataDragonService;
     private final ObjectMapper objectMapper;
     private final int matchesPageSize;
+    private final int maxMatchesPageSize;
+    private final int maxMatchesStartOffset;
     private static final String SEARCH_HISTORY_COOKIE = "searchHistory";
     private static final int MAX_HISTORY_SIZE = 10;
 
     @Autowired
     public SummonerController(RiotApiService riotApiService, DataDragonService dataDragonService, ObjectMapper objectMapper,
-                              @Value("${ui.matches.page-size:10}") int matchesPageSize) {
+                              @Value("${ui.matches.page-size:10}") int matchesPageSize,
+                              @Value("${ui.matches.max-page-size:40}") int maxMatchesPageSize,
+                              @Value("${ui.matches.max-start-offset:1000}") int maxMatchesStartOffset) {
         this.riotApiService = riotApiService;
         this.dataDragonService = dataDragonService;
         this.objectMapper = objectMapper;
-        this.matchesPageSize = matchesPageSize;
+        this.matchesPageSize = matchesPageSize > 0 ? matchesPageSize : 10;
+        int pageLimit = Math.max(this.matchesPageSize, maxMatchesPageSize);
+        this.maxMatchesPageSize = pageLimit > 0 ? pageLimit : this.matchesPageSize;
+        this.maxMatchesStartOffset = Math.max(0, maxMatchesStartOffset);
     }
 
     @GetMapping("/api/matches")
@@ -85,13 +93,29 @@ public class SummonerController {
                         .cacheControl(CacheControl.noStore())
                         .body(Map.of("error", "Invalid riotId format. Expected Name#TAG"));
             }
+            if (count <= 0) {
+                return ResponseEntity.badRequest()
+                        .cacheControl(CacheControl.noStore())
+                        .body(Map.of("error", "Parameter 'count' must be positive."));
+            }
+            if (count > maxMatchesPageSize) {
+                return ResponseEntity.badRequest()
+                        .cacheControl(CacheControl.noStore())
+                        .body(Map.of("error", "Maximum matches per request is " + maxMatchesPageSize + "."));
+            }
+            int sanitizedStart = Math.max(0, start);
+            if (maxMatchesStartOffset > 0 && sanitizedStart > maxMatchesStartOffset) {
+                return ResponseEntity.badRequest()
+                        .cacheControl(CacheControl.noStore())
+                        .body(Map.of("error", "Parameter 'start' exceeds allowed offset of " + maxMatchesStartOffset + "."));
+            }
             Summoner summoner = riotApiService.getSummonerByRiotId(gameName, tagLine).join();
             if (summoner == null || !StringUtils.hasText(summoner.getPuuid())) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .cacheControl(CacheControl.noStore())
                         .body(Map.of("error", "Summoner not found."));
             }
-            List<MatchV5Dto> list = riotApiService.getMatchHistoryPaged(summoner.getPuuid(), start, count).join();
+            List<MatchV5Dto> list = riotApiService.getMatchHistoryPaged(summoner.getPuuid(), sanitizedStart, count).join();
             return ResponseEntity.ok()
                     .cacheControl(CacheControl.noStore())
                     .body(list != null ? list : Collections.emptyList());
@@ -283,8 +307,9 @@ public class SummonerController {
 
         Map<String, SummonerSuggestionDTO> history = getSearchHistoryFromCookie(request);
 
-        history.remove(normalizedRiotId.toLowerCase());
-        history.put(normalizedRiotId.toLowerCase(), suggestionDTO);
+        String normalizedKey = normalizedRiotId.toLowerCase(Locale.ROOT);
+        history.remove(normalizedKey);
+        history.put(normalizedKey, suggestionDTO);
 
         while (history.size() > MAX_HISTORY_SIZE) {
             String oldestKey = history.keySet().iterator().next();

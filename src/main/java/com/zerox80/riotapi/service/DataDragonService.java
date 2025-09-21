@@ -6,8 +6,10 @@ import com.zerox80.riotapi.model.ChampionDetail;
 import com.zerox80.riotapi.model.ChampionSummary;
 import com.zerox80.riotapi.model.PassiveSummary;
 import com.zerox80.riotapi.model.SpellSummary;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,13 +35,31 @@ import java.util.HashMap;
 public class DataDragonService {
 
     private static final String DDRAGON_BASE = "https://ddragon.leagueoflegends.com";
-    private static final String DEFAULT_LOCALE = "de_DE";
 
     private final HttpClient httpClient;
+    private final HttpClient fallbackHttp1;
     private final ObjectMapper mapper = new ObjectMapper();
+    private final String defaultLocale;
+    private final String userAgent;
+    private final ObjectProvider<DataDragonService> selfProvider;
 
-    public DataDragonService(HttpClient riotApiHttpClient) {
+    public DataDragonService(HttpClient riotApiHttpClient,
+                             @Value("${ddragon.default-locale:de_DE}") String defaultLocale,
+                             @Value("${app.user-agent:SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)}") String userAgent,
+                             ObjectProvider<DataDragonService> selfProvider) {
         this.httpClient = riotApiHttpClient;
+        this.fallbackHttp1 = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+        this.defaultLocale = (defaultLocale == null || defaultLocale.isBlank()) ? "de_DE" : defaultLocale;
+        this.userAgent = (userAgent == null || userAgent.isBlank()) ? "SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)" : userAgent;
+        this.selfProvider = selfProvider;
+    }
+
+    private DataDragonService self() {
+        DataDragonService proxy = selfProvider != null ? selfProvider.getIfAvailable() : null;
+        return proxy != null ? proxy : this;
     }
 
     private int countDigits(String s) {
@@ -100,6 +120,25 @@ public class DataDragonService {
         return cleaned.isBlank() ? null : cleaned;
     }
 
+    private String resolveCanonicalChampionId(String candidateId, String version, String localeTag) throws IOException, InterruptedException {
+        if (candidateId == null || candidateId.isBlank()) {
+            return null;
+        }
+        String lowerCandidate = candidateId.toLowerCase(Locale.ROOT);
+        for (ChampionSummary summary : self().getChampionSummariesCached(version, localeTag)) {
+            String summaryIdSanitized = sanitizeChampionIdBasic(summary.getId());
+            if (summaryIdSanitized == null) continue;
+            if (summaryIdSanitized.equalsIgnoreCase(candidateId) || summaryIdSanitized.toLowerCase(Locale.ROOT).equals(lowerCandidate)) {
+                return summary.getId();
+            }
+            String summaryNameSanitized = sanitizeChampionIdBasic(summary.getName());
+            if (summaryNameSanitized != null && (summaryNameSanitized.equalsIgnoreCase(candidateId) || summaryNameSanitized.toLowerCase(Locale.ROOT).equals(lowerCandidate))) {
+                return summary.getId();
+            }
+        }
+        return null;
+    }
+
     @Cacheable(cacheNames = "ddragonVersions")
     public List<String> getAllVersions() {
         String url = DDRAGON_BASE + "/api/versions.json";
@@ -130,7 +169,7 @@ public class DataDragonService {
     }
 
     public String resolveLocale(Locale locale) {
-        if (locale == null) return DEFAULT_LOCALE;
+        if (locale == null) return defaultLocale;
         String lang = locale.toLanguageTag();
         // Map common language tags to DDragon format
         if (lang.startsWith("de")) return "de_DE";
@@ -145,14 +184,18 @@ public class DataDragonService {
         if (lang.startsWith("ja")) return "ja_JP";
         if (lang.startsWith("ko")) return "ko_KR";
         if (lang.startsWith("zh")) return "zh_CN"; // Simplified Chinese
-        return DEFAULT_LOCALE;
+        return defaultLocale;
     }
 
-    @Cacheable(cacheNames = "ddragonChampionList", key = "#root.target.getLatestVersion() + '|' + #root.target.resolveLocale(#locale)")
     public List<ChampionSummary> getChampionSummaries(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
-        String url = DDRAGON_BASE + "/cdn/" + ver + "/data/" + loc + "/champion.json";
+        return self().getChampionSummariesCached(ver, loc);
+    }
+
+    @Cacheable(cacheNames = "ddragonChampionList", key = "#version + '|' + #localeTag")
+    public List<ChampionSummary> getChampionSummariesCached(String version, String localeTag) throws IOException, InterruptedException {
+        String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/champion.json";
         JsonNode root = getJson(url);
         JsonNode data = root.path("data");
         if (data.isMissingNode() || !data.isObject()) return Collections.emptyList();
@@ -175,21 +218,24 @@ public class DataDragonService {
         return list.stream().sorted((a,b) -> a.getName().compareToIgnoreCase(b.getName())).collect(Collectors.toList());
     }
 
-    @Cacheable(cacheNames = "ddragonChampionDetail", key = "#championId + '|' + #root.target.getLatestVersion() + '|' + #root.target.resolveLocale(#locale)")
     public ChampionDetail getChampionDetail(String championId, Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
+        return self().getChampionDetailCached(championId, ver, loc);
+    }
+
+    @Cacheable(cacheNames = "ddragonChampionDetail", key = "T(com.zerox80.riotapi.service.DataDragonService).safeLower(#championId) + '|' + #version + '|' + #localeTag")
+    public ChampionDetail getChampionDetailCached(String championId, String version, String localeTag) throws IOException, InterruptedException {
         String cid = sanitizeChampionIdBasic(championId);
         if (cid == null) return null;
-        String url = DDRAGON_BASE + "/cdn/" + ver + "/data/" + loc + "/champion/" + cid + ".json";
-        JsonNode root = getJson(url);
+        String canonicalId = resolveCanonicalChampionId(cid, version, localeTag);
+        if (canonicalId != null) {
+            cid = canonicalId;
+        }
+        JsonNode root = getJson(DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/champion/" + cid + ".json");
         JsonNode data = root.path("data").path(cid);
         if (data.isMissingNode()) {
-            // Try normalized ID (capitalize first letter)
-            String norm = normalizeChampionId(cid);
-            data = root.path("data").path(norm);
-            if (data.isMissingNode()) return null;
-            cid = norm;
+            return null;
         }
         String id = data.path("id").asText(cid);
         String name = data.path("name").asText("");
@@ -200,7 +246,7 @@ public class DataDragonService {
         String imageFull = data.path("image").path("full").asText("");
 
         // Try to load local, versioned abilities (e.g., abilities/de_DE/anivia.json)
-        LocalAbilities local = loadLocalAbilities(id, loc);
+        LocalAbilities local = loadLocalAbilities(id, localeTag);
         if (local != null && (local.passive != null || (local.spells != null && !local.spells.isEmpty()))) {
             return new ChampionDetail(id, name, title, lore, tags, imageFull,
                     local.passive, local.spells == null ? java.util.Collections.emptyList() : local.spells);
@@ -218,7 +264,7 @@ public class DataDragonService {
 
     private LocalAbilities loadLocalAbilities(String championId, String ddragonLocale) {
         try {
-            String loc = (ddragonLocale == null || ddragonLocale.isBlank()) ? DEFAULT_LOCALE : ddragonLocale;
+            String loc = (ddragonLocale == null || ddragonLocale.isBlank()) ? defaultLocale : ddragonLocale;
             String cid = championId == null ? "" : championId.trim();
             if (cid.isEmpty()) return null;
             String cidLower = cid.toLowerCase(Locale.ROOT);
@@ -756,15 +802,19 @@ public class DataDragonService {
      * Returns a map from champion numeric key (e.g., 34) to full champion square image URL.
      * Uses the latest version and resolved locale.
      */
-    @Cacheable(cacheNames = "ddragonChampionList", key = "'keyToImg|' + #root.target.getLatestVersion() + '|' + #root.target.resolveLocale(#locale)")
     public Map<Integer, String> getChampionKeyToSquareUrl(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
-        String url = DDRAGON_BASE + "/cdn/" + ver + "/data/" + loc + "/champion.json";
+        return self().getChampionKeyToSquareUrlCached(ver, loc);
+    }
+
+    @Cacheable(cacheNames = "ddragonChampionList", key = "'keyToImg|' + #version + '|' + #localeTag")
+    public Map<Integer, String> getChampionKeyToSquareUrlCached(String version, String localeTag) throws IOException, InterruptedException {
+        String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/champion.json";
         JsonNode root = getJson(url);
         JsonNode data = root.path("data");
         if (!data.isObject()) return Collections.emptyMap();
-        String base = DDRAGON_BASE + "/cdn/" + ver + "/img/champion/";
+        String base = DDRAGON_BASE + "/cdn/" + version + "/img/champion/";
         Map<Integer,String> map = new java.util.HashMap<>();
         data.fields().forEachRemaining(e -> {
             JsonNode n = e.getValue();
@@ -846,7 +896,7 @@ public class DataDragonService {
     private void applyChampionSpecificTooltipOverrides(String championId, String ddragonLocale, List<SpellSummary> spells) {
         if (spells == null || spells.isEmpty()) return;
         String id = championId != null ? championId : "";
-        String loc = ddragonLocale != null ? ddragonLocale : DEFAULT_LOCALE;
+        String loc = ddragonLocale != null ? ddragonLocale : defaultLocale;
         boolean isGerman = loc.toLowerCase(Locale.ROOT).startsWith("de");
         boolean isEnglish = loc.toLowerCase(Locale.ROOT).startsWith("en");
 
@@ -923,22 +973,27 @@ public class DataDragonService {
     /**
      * Returns the numeric champion key for a given DDragon champion id (e.g., Anivia -> 34).
      */
-    @Cacheable(cacheNames = "ddragonChampionDetail", key = "'key-' + #championId + '|' + #root.target.getLatestVersion() + '|' + #root.target.resolveLocale(#locale)")
     public Integer getChampionKey(String championId, Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
+        return self().getChampionKeyCached(championId, ver, loc);
+    }
+
+    @Cacheable(cacheNames = "ddragonChampionDetail", key = "'key-' + T(com.zerox80.riotapi.service.DataDragonService).safeLower(#championId) + '|' + #version + '|' + #localeTag")
+    public Integer getChampionKeyCached(String championId, String version, String localeTag) throws IOException, InterruptedException {
         String cid = sanitizeChampionIdBasic(championId);
         if (cid == null) return null;
-        String url = DDRAGON_BASE + "/cdn/" + ver + "/data/" + loc + "/champion/" + cid + ".json";
-        JsonNode root = getJson(url);
+        String canonicalId = resolveCanonicalChampionId(cid, version, localeTag);
+        if (canonicalId != null) {
+            cid = canonicalId;
+        }
+        JsonNode root = getJson(DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/champion/" + cid + ".json");
         JsonNode data = root.path("data").path(cid);
         if (data.isMissingNode()) {
-            String norm = normalizeChampionId(cid);
-            data = root.path("data").path(norm);
-            if (data.isMissingNode()) return null;
+            return null;
         }
         String keyStr = data.path("key").asText(null);
-        if (keyStr == null) return null;
+        if (keyStr == null || keyStr.isBlank()) return null;
         try {
             return Integer.parseInt(keyStr);
         } catch (NumberFormatException e) {
@@ -946,18 +1001,12 @@ public class DataDragonService {
         }
     }
 
-    private String normalizeChampionId(String raw) {
-        if (raw == null || raw.isBlank()) return raw;
-        String r = raw.trim();
-        return r.substring(0,1).toUpperCase(Locale.ROOT) + r.substring(1);
-    }
-
     private JsonNode getJson(String url) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder(URI.create(url))
                 .timeout(Duration.ofSeconds(20))
                 .GET()
                 .header("Accept", "application/json")
-                .header("User-Agent", "SummonerAPI/1.0 (+https://stats.rujbin.eu)")
+                .header("User-Agent", this.userAgent)
                 .build();
 
         try {
@@ -970,11 +1019,7 @@ public class DataDragonService {
         }
 
         // Fallback: retry once with a simple HTTP/1.1 client (helps in rare ALPN/HTTP2 issues)
-        HttpClient fallback = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
-        HttpResponse<String> res2 = fallback.send(req, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpResponse<String> res2 = fallbackHttp1.send(req, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         if (res2.statusCode() / 100 != 2) {
             throw new IOException("HTTP " + res2.statusCode() + " from " + url);
         }
@@ -1000,11 +1045,15 @@ public class DataDragonService {
     }
 
     // ===== Items =====
-    @Cacheable(cacheNames = "ddragonItems", key = "#root.target.getLatestVersion() + '|' + #root.target.resolveLocale(#locale)")
     public Map<Integer, com.zerox80.riotapi.model.ItemSummary> getItems(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
-        String url = DDRAGON_BASE + "/cdn/" + ver + "/data/" + loc + "/item.json";
+        return self().getItemsCached(ver, loc);
+    }
+
+    @Cacheable(cacheNames = "ddragonItems", key = "#version + '|' + #localeTag")
+    public Map<Integer, com.zerox80.riotapi.model.ItemSummary> getItemsCached(String version, String localeTag) throws IOException, InterruptedException {
+        String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/item.json";
         JsonNode root = getJson(url);
         JsonNode data = root.path("data");
         if (!data.isObject()) return Collections.emptyMap();
@@ -1020,10 +1069,16 @@ public class DataDragonService {
     }
 
     // ===== Runes (Reforged) =====
-    @Cacheable(cacheNames = "ddragonRunes", key = "#root.target.getLatestVersion() + '|' + #root.target.resolveLocale(#locale)")
     public Map<Integer, String> getRuneStyleNames(Locale locale) throws IOException, InterruptedException {
+        String ver = getLatestVersion();
+        String loc = resolveLocale(locale);
+        return self().getRuneStyleNamesCached(ver, loc);
+    }
+
+    @Cacheable(cacheNames = "ddragonRunes", key = "#version + '|' + #localeTag")
+    public Map<Integer, String> getRuneStyleNamesCached(String version, String localeTag) throws IOException, InterruptedException {
         Map<Integer, String> styleNames = new java.util.HashMap<>();
-        for (JsonNode style : getRunesArray(locale)) {
+        for (JsonNode style : getRunesArray(version, localeTag)) {
             int id = style.path("id").asInt();
             String name = style.path("name").asText("");
             styleNames.put(id, name);
@@ -1031,10 +1086,16 @@ public class DataDragonService {
         return styleNames;
     }
 
-    @Cacheable(cacheNames = "ddragonRunes", key = "'perks-' + #root.target.getLatestVersion() + '|' + #root.target.resolveLocale(#locale)")
     public Map<Integer, com.zerox80.riotapi.model.RunePerkInfo> getRunePerkLookup(Locale locale) throws IOException, InterruptedException {
+        String ver = getLatestVersion();
+        String loc = resolveLocale(locale);
+        return self().getRunePerkLookupCached(ver, loc);
+    }
+
+    @Cacheable(cacheNames = "ddragonRunes", key = "'perks-' + #version + '|' + #localeTag")
+    public Map<Integer, com.zerox80.riotapi.model.RunePerkInfo> getRunePerkLookupCached(String version, String localeTag) throws IOException, InterruptedException {
         Map<Integer, com.zerox80.riotapi.model.RunePerkInfo> map = new java.util.HashMap<>();
-        for (JsonNode style : getRunesArray(locale)) {
+        for (JsonNode style : getRunesArray(version, localeTag)) {
             for (JsonNode slot : style.path("slots")) {
                 for (JsonNode perk : slot.path("runes")) {
                     int id = perk.path("id").asInt();
@@ -1047,19 +1108,21 @@ public class DataDragonService {
         return map;
     }
 
-    private JsonNode getRunesArray(Locale locale) throws IOException, InterruptedException {
-        String ver = getLatestVersion();
-        String loc = resolveLocale(locale);
-        String url = DDRAGON_BASE + "/cdn/" + ver + "/data/" + loc + "/runesReforged.json";
+    private JsonNode getRunesArray(String version, String localeTag) throws IOException, InterruptedException {
+        String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/runesReforged.json";
         return getJson(url);
     }
 
     // ===== Summoner Spells =====
-    @Cacheable(cacheNames = "ddragonSummonerSpells", key = "#root.target.getLatestVersion() + '|' + #root.target.resolveLocale(#locale)")
     public Map<Integer, com.zerox80.riotapi.model.SummonerSpellInfo> getSummonerSpells(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
-        String url = DDRAGON_BASE + "/cdn/" + ver + "/data/" + loc + "/summoner.json";
+        return self().getSummonerSpellsCached(ver, loc);
+    }
+
+    @Cacheable(cacheNames = "ddragonSummonerSpells", key = "#version + '|' + #localeTag")
+    public Map<Integer, com.zerox80.riotapi.model.SummonerSpellInfo> getSummonerSpellsCached(String version, String localeTag) throws IOException, InterruptedException {
+        String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/summoner.json";
         JsonNode root = getJson(url);
         JsonNode data = root.path("data");
         if (!data.isObject()) return Collections.emptyMap();
@@ -1072,5 +1135,9 @@ public class DataDragonService {
             map.put(id, new com.zerox80.riotapi.model.SummonerSpellInfo(id, name, imageFull));
         });
         return map;
+    }
+
+    public static String safeLower(String value) {
+        return value == null ? null : value.toLowerCase(Locale.ROOT);
     }
 }

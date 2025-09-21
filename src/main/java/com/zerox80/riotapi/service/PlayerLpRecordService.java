@@ -13,10 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import java.util.Set;
 
 @Service
 public class PlayerLpRecordService {
@@ -53,16 +57,15 @@ public class PlayerLpRecordService {
             return;
         }
 
-        for (MatchV5Dto match : matchHistory) {
-            if (match.getInfo() == null) continue;
+        Map<String, List<PlayerLpRecord>> recordsByQueue = preloadRankedRecords(summoner.getPuuid(), matchHistory);
 
-            int queueId = match.getInfo().getQueueId();
-            String queueTypeForDbQuery;
-            if (queueId == 420) {
-                queueTypeForDbQuery = "RANKED_SOLO_5x5";
-            } else if (queueId == 440) {
-                queueTypeForDbQuery = "RANKED_FLEX_SR";
-            } else {
+        for (MatchV5Dto match : matchHistory) {
+            if (match == null || match.getInfo() == null) {
+                continue;
+            }
+
+            String queueTypeForDbQuery = resolveRankedQueueType(match.getInfo().getQueueId());
+            if (queueTypeForDbQuery == null) {
                 continue;
             }
 
@@ -74,45 +77,117 @@ public class PlayerLpRecordService {
             Instant matchEndTime = Instant.ofEpochMilli(endMillis);
 
             try {
-                Optional<PlayerLpRecord> recordBeforeOpt = playerLpRecordRepository
-                        .findFirstByPuuidAndQueueTypeAndTimestampBeforeOrderByTimestampDesc(
-                                summoner.getPuuid(), queueTypeForDbQuery, matchEndTime);
+                List<PlayerLpRecord> records = recordsByQueue.getOrDefault(queueTypeForDbQuery, Collections.emptyList());
+                if (records.isEmpty()) {
+                    logger.debug("No LP history available for puuid {} queue {}.", maskPuuid(summoner.getPuuid()), queueTypeForDbQuery);
+                    continue;
+                }
 
-                Optional<PlayerLpRecord> recordAfterOpt = playerLpRecordRepository
-                        .findFirstByPuuidAndQueueTypeAndTimestampGreaterThanEqualOrderByTimestampAsc(
-                                summoner.getPuuid(), queueTypeForDbQuery, matchEndTime);
+                PlayerLpRecord recordBefore = findRecordBefore(records, matchEndTime);
+                PlayerLpRecord recordAfter = findRecordAfter(records, matchEndTime);
 
-                if (recordBeforeOpt.isPresent() && recordAfterOpt.isPresent()) {
-                    PlayerLpRecord recordBefore = recordBeforeOpt.get();
-                    PlayerLpRecord recordAfter = recordAfterOpt.get();
-
-                    if (recordAfter.getTimestamp().isBefore(matchEndTime)) {
-                        logger.debug("LP record after match {} for PUUID {} (queue {}) occurs before match end time {}.",
-                                safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery, matchEndTime);
-                        continue;
-                    }
-
-                    int lpBefore = recordBefore.getLeaguePoints();
-                    int lpAfter = recordAfter.getLeaguePoints();
-                    int lpChange = lpAfter - lpBefore;
-
-                    if (!Objects.equals(recordBefore.getTier(), recordAfter.getTier()) || !Objects.equals(recordBefore.getRank(), recordAfter.getRank())) {
-                        logger.warn("Tier/Rank changed for match {}. PUUID: {}. Before: {} {} {} LP, After: {} {} {} LP. LP Change calculation might be inaccurate or represent promotion/demotion.",
-                                safeMatchId(match), maskPuuid(summoner.getPuuid()),
-                                recordBefore.getTier(), recordBefore.getRank(), recordBefore.getLeaguePoints(),
-                                recordAfter.getTier(), recordAfter.getRank(), recordAfter.getLeaguePoints());
-                        match.getInfo().setLpChange(null);
-                    } else {
-                        match.getInfo().setLpChange(lpChange);
-                    }
-                } else {
+                if (recordBefore == null || recordAfter == null) {
                     logger.debug("LP records before or after match {} not found for PUUID {} and queue {}. Cannot calculate LP change.",
                             safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery);
+                    continue;
+                }
+
+                if (recordAfter.getTimestamp().isBefore(matchEndTime)) {
+                    logger.debug("LP record after match {} for PUUID {} (queue {}) occurs before match end time {}.",
+                            safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery, matchEndTime);
+                    continue;
+                }
+
+                int lpBefore = recordBefore.getLeaguePoints();
+                int lpAfter = recordAfter.getLeaguePoints();
+                int lpChange = lpAfter - lpBefore;
+
+                if (!Objects.equals(recordBefore.getTier(), recordAfter.getTier()) || !Objects.equals(recordBefore.getRank(), recordAfter.getRank())) {
+                    logger.warn("Tier/Rank changed for match {}. PUUID: {}. Before: {} {} {} LP, After: {} {} {} LP. LP Change calculation might be inaccurate or represent promotion/demotion.",
+                            safeMatchId(match), maskPuuid(summoner.getPuuid()),
+                            recordBefore.getTier(), recordBefore.getRank(), recordBefore.getLeaguePoints(),
+                            recordAfter.getTier(), recordAfter.getRank(), recordAfter.getLeaguePoints());
+                    match.getInfo().setLpChange(null);
+                } else {
+                    match.getInfo().setLpChange(lpChange);
                 }
             } catch (Exception e) {
                 logger.error("Error calculating LP change for match {} PUUID {}: {}", safeMatchId(match), maskPuuid(summoner.getPuuid()), e.getMessage(), e);
             }
         }
+    }
+
+    private Map<String, List<PlayerLpRecord>> preloadRankedRecords(String puuid, List<MatchV5Dto> matchHistory) {
+        Set<String> queues = new HashSet<>();
+        for (MatchV5Dto match : matchHistory) {
+            if (match == null || match.getInfo() == null) {
+                continue;
+            }
+            String queue = resolveRankedQueueType(match.getInfo().getQueueId());
+            if (queue != null) {
+                queues.add(queue);
+            }
+        }
+
+        Map<String, List<PlayerLpRecord>> cache = new HashMap<>();
+        for (String queue : queues) {
+            try {
+                List<PlayerLpRecord> recordsDesc = playerLpRecordRepository.findByPuuidAndQueueTypeOrderByTimestampDesc(puuid, queue);
+                if (recordsDesc.isEmpty()) {
+                    cache.put(queue, Collections.emptyList());
+                } else {
+                    List<PlayerLpRecord> ascending = new ArrayList<>(recordsDesc);
+                    Collections.reverse(ascending);
+                    cache.put(queue, ascending);
+                }
+            } catch (Exception e) {
+                logger.error("Failed to preload LP records for puuid {} queue {}: {}", maskPuuid(puuid), queue, e.getMessage(), e);
+                cache.put(queue, Collections.emptyList());
+            }
+        }
+        return cache;
+    }
+
+    private String resolveRankedQueueType(int queueId) {
+        return switch (queueId) {
+            case 420 -> "RANKED_SOLO_5x5";
+            case 440 -> "RANKED_FLEX_SR";
+            default -> null;
+        };
+    }
+
+    private PlayerLpRecord findRecordBefore(List<PlayerLpRecord> records, Instant timestamp) {
+        int low = 0;
+        int high = records.size() - 1;
+        PlayerLpRecord candidate = null;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            PlayerLpRecord current = records.get(mid);
+            if (current.getTimestamp().isBefore(timestamp)) {
+                candidate = current;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return candidate;
+    }
+
+    private PlayerLpRecord findRecordAfter(List<PlayerLpRecord> records, Instant timestamp) {
+        int low = 0;
+        int high = records.size() - 1;
+        PlayerLpRecord candidate = null;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            PlayerLpRecord current = records.get(mid);
+            if (current.getTimestamp().isBefore(timestamp)) {
+                low = mid + 1;
+            } else {
+                candidate = current;
+                high = mid - 1;
+            }
+        }
+        return candidate;
     }
 
     private static String maskPuuid(String puuid) {

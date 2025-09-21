@@ -128,13 +128,16 @@ mvn spring-boot:run
 
 - Database
   - `spring.datasource.url`, `spring.datasource.username`, `spring.datasource.password`
-  - JPA: `spring.jpa.hibernate.ddl-auto` (e.g., `update` for local dev; prefer `validate` with Flyway in prod)
+  - JPA: `spring.jpa.hibernate.ddl-auto` (use `validate`/`none` when Flyway manages the schema; only fall back to `create`/`update` for disposable dev environments)
 
 - Champion Build Aggregation
   - `build.agg.enabled`, `build.agg.queue-id`, `build.agg.pages`, `build.agg.matches-per-summoner`, `build.agg.max-summoners`, `build.agg.champions`, `build.agg.cron`, `build.agg.trigger-enabled`
 
 - Rate Limiting
   - See the dedicated section below for `rate.limit.*` keys
+
+- UI / Match History
+  - `ui.matches.page-size`, `ui.matches.max-page-size`, `ui.matches.max-start-offset` — keep `/api/matches` pagination within safe bounds
 
 ### Minimal application.properties (example)
 
@@ -179,6 +182,9 @@ rate.limit.paths=/api/**,/search
 - `SPRING_JPA_HIBERNATE_DDL_AUTO` → `spring.jpa.hibernate.ddl-auto`
 - `BUILD_AGG_*` → `build.agg.*`
 - `RATE_LIMIT_*` → `rate.limit.*`
+- `UI_MATCHES_PAGE_SIZE` → `ui.matches.page-size`
+- `UI_MATCHES_MAX_PAGE_SIZE` → `ui.matches.max-page-size`
+- `UI_MATCHES_MAX_START_OFFSET` → `ui.matches.max-start-offset`
 
 ### Supported platform regions and regional routing (Match V5)
 

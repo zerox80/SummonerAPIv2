@@ -3,6 +3,7 @@ package com.zerox80.riotapi.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;
+import org.springframework.cache.support.NoOpCacheManager;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,10 +24,12 @@ class RiotApiClientConcurrencyTest {
                 "test-key",
                 "na1",
                 "https://example.com",
+                "JUnit/ConcurrencyTest",
                 new ObjectMapper(),
                 new SimpleMeterRegistry(),
                 HttpClient.newHttpClient(),
-                1
+                1,
+                new NoOpCacheManager()
         );
 
         Field limiterField = RiotApiClient.class.getDeclaredField("outboundLimiter");

@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
@@ -29,6 +31,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,6 +58,8 @@ public class RiotApiClient {
     private final String communityDragonUrl;
     private final MeterRegistry meterRegistry;
     private final int maxConcurrentOutbound;
+    private final String userAgent;
+    private final CacheManager cacheManager;
 
     // In-flight request coalescing maps to prevent duplicate upstream calls on cache misses
     private final Map<String, CompletableFuture<AccountDto>> accountByRiotIdInFlight = new ConcurrentHashMap<>();
@@ -71,14 +76,17 @@ public class RiotApiClient {
     public RiotApiClient(@Value("${riot.api.key:}") String apiKey,
                          @Value("${riot.api.region:euw1}") String platformRegion,
                          @Value("${riot.api.community-dragon.url:https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons}") String communityDragonUrl,
+                         @Value("${app.user-agent:SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)}") String userAgent,
                          ObjectMapper objectMapper,
                          MeterRegistry meterRegistry,
                          HttpClient httpClient,
-                         @Value("${riot.api.max-concurrent:15}") int maxConcurrentOutbound) {
+                         @Value("${riot.api.max-concurrent:15}") int maxConcurrentOutbound,
+                         CacheManager cacheManager) {
         this.apiKey = apiKey;
-        this.platformRegion = platformRegion.toLowerCase();
+        this.platformRegion = platformRegion.toLowerCase(Locale.ROOT);
         this.regionalRoute = determineRegionalRoute(this.platformRegion);
         this.communityDragonUrl = communityDragonUrl;
+        this.userAgent = userAgent;
         this.meterRegistry = meterRegistry;
         this.maxConcurrentOutbound = maxConcurrentOutbound > 0 ? maxConcurrentOutbound : 15;
         // Copy and harden the mapper: Riot APIs use lowerCamelCase; ignore unknown fields
@@ -87,6 +95,7 @@ public class RiotApiClient {
                 .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
         this.httpClient = httpClient;
         this.outboundLimiter = new Semaphore(this.maxConcurrentOutbound);
+        this.cacheManager = cacheManager;
 
         if (this.apiKey == null || this.apiKey.isBlank() || "YOUR_API_KEY".equalsIgnoreCase(this.apiKey)) {
             logger.warn("Riot API key is missing or placeholder. Set property 'riot.api.key' or env 'RIOT_API_KEY'.");
@@ -131,7 +140,7 @@ public class RiotApiClient {
                 .uri(URI.create(url))
                 .header("X-Riot-Token", this.apiKey)
                 .header("Accept", "application/json")
-                .header("User-Agent", "SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)")
+                .header("User-Agent", this.userAgent)
                 .timeout(Duration.ofSeconds(15))
                 .build();
         Timer.Sample sample = Timer.start(meterRegistry);
@@ -160,7 +169,7 @@ public class RiotApiClient {
                 .uri(URI.create(url))
                 .header("Authorization", "Bearer " + bearerToken)
                 .header("Accept", "application/json")
-                .header("User-Agent", "SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)")
+                .header("User-Agent", this.userAgent)
                 .timeout(Duration.ofSeconds(15))
                 .build();
         Timer.Sample sample = Timer.start(meterRegistry);
@@ -305,7 +314,7 @@ public class RiotApiClient {
         }
     }
 
-    @Cacheable(value = "accounts", key = "#gameName.toLowerCase() + '#' + #tagLine.toLowerCase()")
+    @Cacheable(value = "accounts", key = "T(com.zerox80.riotapi.client.RiotApiClient).accountCacheKey(#gameName, #tagLine)")
     public CompletableFuture<AccountDto> getAccountByRiotId(String gameName, String tagLine) {
         String encodedGameName = URLEncoder.encode(gameName, StandardCharsets.UTF_8).replace("+", "%20");
         String encodedTagLine = URLEncoder.encode(tagLine, StandardCharsets.UTF_8);
@@ -317,9 +326,10 @@ public class RiotApiClient {
         logger.debug(">>> RiotApiClient (Account): Requesting RAW Riot ID: [{}#{}]", gameName, tagLine);
         logger.debug(">>> RiotApiClient (Account): Requesting ENCODED URL: [{}]", url);
 
-        String inflightKey = gameName.toLowerCase() + "#" + tagLine.toLowerCase();
-        return coalesce(accountByRiotIdInFlight, inflightKey,
+        String inflightKey = accountCacheKey(gameName, tagLine);
+        CompletableFuture<AccountDto> future = coalesce(accountByRiotIdInFlight, inflightKey,
                 () -> sendApiRequestAsync(url, AccountDto.class, "Account"));
+        return evictOnException(future, "accounts", inflightKey);
     }
 
     @Cacheable(value = "summoners", key = "#puuid")
@@ -328,8 +338,9 @@ public class RiotApiClient {
         String path = "/lol/summoner/v4/summoners/by-puuid/" + puuid;
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (Summoner): Requesting by PUUID [{}]", maskPuuid(puuid));
-        return coalesce(summonerByPuuidInFlight, puuid,
+        CompletableFuture<Summoner> future = coalesce(summonerByPuuidInFlight, puuid,
                 () -> sendApiRequestAsync(url, Summoner.class, "Summoner"));
+        return evictOnException(future, "summoners", puuid);
     }
 
     /**
@@ -342,9 +353,11 @@ public class RiotApiClient {
         String path = "/lol/league/v4/entries/by-summoner/" + summonerId;
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (LeagueEntries): Requesting URL: [{}]", url);
-        return coalesce(leagueBySummonerIdInFlight, summonerId,
+        String cacheKey = "sid:" + summonerId;
+        CompletableFuture<List<LeagueEntryDTO>> future = coalesce(leagueBySummonerIdInFlight, summonerId,
                 () -> sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntries")
                         .thenApply(list -> list != null ? list : List.of()));
+        return evictOnException(future, "leagueEntries", cacheKey);
     }
 
     /**
@@ -357,9 +370,11 @@ public class RiotApiClient {
         String path = "/lol/league/v4/entries/by-puuid/" + puuid;
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (LeagueEntries PUUID): Requesting by PUUID [{}]", maskPuuid(puuid));
-        return coalesce(leagueByPuuidInFlight, puuid,
+        String cacheKey = "puuid:" + puuid;
+        CompletableFuture<List<LeagueEntryDTO>> future = coalesce(leagueByPuuidInFlight, puuid,
                 () -> sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntriesByPuuid")
                         .thenApply(list -> list != null ? list : List.of()));
+        return evictOnException(future, "leagueEntries", cacheKey);
     }
 
     /**
@@ -382,9 +397,10 @@ public class RiotApiClient {
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (MatchIds): Requesting by PUUID [{}], count {}", maskPuuid(puuid), count);
         String key = puuid + "-" + count;
-        return coalesce(matchIdsInFlight, key,
+        CompletableFuture<List<String>> future = coalesce(matchIdsInFlight, key,
                 () -> sendApiRequestAsync(url, MATCH_ID_LIST_TYPE, "MatchIds")
                         .thenApply(list -> list != null ? list : List.of()));
+        return evictOnException(future, "matchIds", key);
     }
 
     /**
@@ -398,9 +414,10 @@ public class RiotApiClient {
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (MatchIdsPaged): PUUID [{}], start {}, count {}", maskPuuid(puuid), start, count);
         String key = puuid + "-" + start + "-" + count;
-        return coalesce(matchIdsInFlight, key,
+        CompletableFuture<List<String>> future = coalesce(matchIdsInFlight, key,
                 () -> sendApiRequestAsync(url, MATCH_ID_LIST_TYPE, "MatchIdsPaged")
                         .thenApply(list -> list != null ? list : List.of()));
+        return evictOnException(future, "matchIds", key);
     }
 
     @Cacheable(value = "matchDetails", key = "#matchId")
@@ -409,8 +426,9 @@ public class RiotApiClient {
         String path = "/lol/match/v5/matches/" + matchId;
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (MatchDetails): Requesting URL: [{}]", url);
-        return coalesce(matchDetailsInFlight, matchId,
+        CompletableFuture<MatchV5Dto> future = coalesce(matchDetailsInFlight, matchId,
                 () -> sendApiRequestAsync(url, MatchV5Dto.class, "MatchDetails"));
+        return evictOnException(future, "matchDetails", matchId);
     }
 
     /**
@@ -424,7 +442,9 @@ public class RiotApiClient {
         String path = "/lol/league/v4/entries/" + urlEncode(queue) + "/" + urlEncode(tier) + "/" + urlEncode(division) + "?page=" + page;
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (Entries {} {} {} p{}): {}", queue, tier, division, page, url);
-        return sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntriesByTier");
+        String cacheKey = queue + "|" + tier + "|" + division + "|" + page;
+        CompletableFuture<List<LeagueEntryDTO>> future = sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntriesByTier");
+        return evictOnException(future, "leagueEntries", cacheKey);
     }
 
     private String urlEncode(String s) {
@@ -441,7 +461,8 @@ public class RiotApiClient {
         String path = "/lol/summoner/v4/summoners/" + summonerId;
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (Summoner by ID): Requesting ID [{}]", maskId(summonerId));
-        return sendApiRequestAsync(url, Summoner.class, "SummonerById");
+        CompletableFuture<Summoner> future = sendApiRequestAsync(url, Summoner.class, "SummonerById");
+        return evictOnException(future, "summoners", summonerId);
     }
 
     public String getPlatformRegion() {
@@ -471,5 +492,24 @@ public class RiotApiClient {
         if (s == null) return null;
         if (s.length() <= max) return s;
         return s.substring(0, max) + "…";
+    }
+
+    private <T> CompletableFuture<T> evictOnException(CompletableFuture<T> future, String cacheName, Object cacheKey) {
+        return future.whenComplete((value, throwable) -> {
+            if (throwable != null && cacheManager != null) {
+                Cache cache = cacheManager.getCache(cacheName);
+                if (cache != null) {
+                    cache.evict(cacheKey);
+                }
+            }
+        });
+    }
+
+    public static String lower(String value) {
+        return java.util.Objects.requireNonNull(value, "value").toLowerCase(Locale.ROOT);
+    }
+
+    public static String accountCacheKey(String gameName, String tagLine) {
+        return lower(gameName) + "#" + lower(tagLine);
     }
 }

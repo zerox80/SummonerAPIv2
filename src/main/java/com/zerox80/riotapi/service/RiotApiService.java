@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import java.util.Optional;
+import java.util.Locale;
 import com.zerox80.riotapi.util.ListUtils;
 
 @Service
@@ -217,7 +218,7 @@ public class RiotApiService {
         if (!StringUtils.hasText(partialName)) {
             stream = historyToUse.entrySet().stream();
         } else {
-            String lowerPartialName = partialName.toLowerCase();
+            String lowerPartialName = partialName.toLowerCase(Locale.ROOT);
             stream = historyToUse.entrySet().stream()
                     .filter(entry -> entry.getKey().startsWith(lowerPartialName));
         }
