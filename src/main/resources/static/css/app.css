@@ -189,7 +189,7 @@ img, svg { max-width: 100%; height: auto; }
 .match-item { transition: background-color .15s ease, transform .15s ease; }
 .match-item:hover { background: rgba(255,255,255,.03); transform: translateY(-1px); }
 
-.player-performance { background: rgba(255,255,255,.02); border-radius: .5rem; }
+.player-performance { background: rgba(255,255,255,.02); border-radius: .5rem; width: 100%; }
 
 /* Enhanced match rows (inspired, not identical) */
 .match-row {
