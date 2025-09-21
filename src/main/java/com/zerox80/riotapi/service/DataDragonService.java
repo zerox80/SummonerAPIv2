@@ -42,6 +42,7 @@ public class DataDragonService {
     private final String defaultLocale;
     private final String userAgent;
     private final ObjectProvider<DataDragonService> selfProvider;
+    private volatile String lastKnownVersion;
 
     public DataDragonService(HttpClient riotApiHttpClient,
                              @Value("${ddragon.default-locale:de_DE}") String defaultLocale,
@@ -139,7 +140,7 @@ public class DataDragonService {
         return null;
     }
 
-    @Cacheable(cacheNames = "ddragonVersions")
+    @Cacheable(cacheNames = "ddragonVersions", unless = "#result == null || #result.isEmpty()")
     public List<String> getAllVersions() {
         String url = DDRAGON_BASE + "/api/versions.json";
         try {
@@ -147,6 +148,9 @@ public class DataDragonService {
             if (node.isArray()) {
                 List<String> versions = new ArrayList<>();
                 node.forEach(n -> versions.add(n.asText()));
+                if (!versions.isEmpty()) {
+                    lastKnownVersion = versions.get(0);
+                }
                 return versions;
             }
         } catch (Exception e) {
@@ -157,7 +161,11 @@ public class DataDragonService {
 
     public String getLatestVersion() {
         List<String> versions = getAllVersions();
-        return versions.isEmpty() ? "latest" : versions.get(0);
+        if (!versions.isEmpty()) {
+            lastKnownVersion = versions.get(0);
+            return versions.get(0);
+        }
+        return (lastKnownVersion != null && !lastKnownVersion.isBlank()) ? lastKnownVersion : "latest";
     }
 
     public String getLatestShortPatch() {
@@ -245,11 +253,34 @@ public class DataDragonService {
         if (data.path("tags").isArray()) data.path("tags").forEach(t -> tags.add(t.asText()));
         String imageFull = data.path("image").path("full").asText("");
 
-        // Try to load local, versioned abilities (e.g., abilities/de_DE/anivia.json)
+        // Try to load local, versioned abilities (e.g., abilities/<locale>/anivia.json)
         LocalAbilities local = loadLocalAbilities(id, localeTag);
-        if (local != null && (local.passive != null || (local.spells != null && !local.spells.isEmpty()))) {
+        if (local != null && localeEquals(localeTag, local.localeTag)
+                && (local.passive != null || (local.spells != null && !local.spells.isEmpty()))) {
+            applyChampionSpecificTooltipOverrides(id, localeTag, local.spells);
             return new ChampionDetail(id, name, title, lore, tags, imageFull,
                     local.passive, local.spells == null ? java.util.Collections.emptyList() : local.spells);
+        }
+
+        LocalAbilities generated = buildChampionAbilities(data, localeTag);
+        if ((generated == null || generated.spells == null || generated.spells.isEmpty())
+                && !"en_US".equalsIgnoreCase(localeTag)) {
+            try {
+                JsonNode enRoot = getJson(DDRAGON_BASE + "/cdn/" + version + "/data/en_US/champion/" + cid + ".json");
+                JsonNode enData = enRoot.path("data").path(cid);
+                if (!enData.isMissingNode()) {
+                    generated = buildChampionAbilities(enData, "en_US");
+                }
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            } catch (Exception ignore) {
+                // fallback failed; keep previous result
+            }
+        }
+        if (generated != null && (generated.passive != null || (generated.spells != null && !generated.spells.isEmpty()))) {
+            applyChampionSpecificTooltipOverrides(id, generated.localeTag, generated.spells);
+            return new ChampionDetail(id, name, title, lore, tags, imageFull,
+                    generated.passive, generated.spells == null ? java.util.Collections.emptyList() : generated.spells);
         }
 
         // Default: lore only (no passive, no spells)
@@ -259,7 +290,12 @@ public class DataDragonService {
     private static class LocalAbilities {
         final PassiveSummary passive;
         final List<SpellSummary> spells;
-        LocalAbilities(PassiveSummary p, List<SpellSummary> s){ this.passive = p; this.spells = s; }
+        final String localeTag;
+        LocalAbilities(PassiveSummary p, List<SpellSummary> s, String localeTag) {
+            this.passive = p;
+            this.spells = s;
+            this.localeTag = localeTag;
+        }
     }
 
     private LocalAbilities loadLocalAbilities(String championId, String ddragonLocale) {
@@ -270,9 +306,6 @@ public class DataDragonService {
             String cidLower = cid.toLowerCase(Locale.ROOT);
 
             InputStream stream = openLocalizedAbilityStream(loc, cidLower);
-            if (stream == null && !"de_DE".equals(loc)) {
-                stream = openLocalizedAbilityStream("de_DE", cidLower);
-            }
             if (stream == null) return null;
 
             JsonNode root;
@@ -313,15 +346,126 @@ public class DataDragonService {
                     spells.add(sum);
                 }
             }
-            return new LocalAbilities(passive, spells);
+            return new LocalAbilities(passive, spells, loc);
         } catch (Exception ignore) {
             return null;
         }
     }
 
+    private LocalAbilities buildChampionAbilities(JsonNode championData, String localeTag) {
+        if (championData == null || championData.isMissingNode()) {
+            return null;
+        }
+
+        PassiveSummary passive = null;
+        JsonNode passiveNode = championData.path("passive");
+        if (passiveNode.isObject()) {
+            String pName = passiveNode.path("name").asText("");
+            String pDesc = passiveNode.path("description").asText("");
+            String pImg = passiveNode.path("image").path("full").asText("");
+            if (!pName.isBlank() || !pDesc.isBlank() || !pImg.isBlank()) {
+                passive = new PassiveSummary(pName, pDesc, pImg);
+            }
+        }
+
+        List<SpellSummary> spells = new ArrayList<>();
+        JsonNode spellsArray = championData.path("spells");
+        if (spellsArray != null && spellsArray.isArray()) {
+            Map<String, String> globalValues = new HashMap<>();
+            spellsArray.forEach(node -> collectGlobalDDragonValues(node, globalValues));
+
+            List<String> cdragonTooltips = Collections.emptyList();
+            String keyStr = championData.path("key").asText("");
+            if (!keyStr.isBlank()) {
+                try {
+                    int champKey = Integer.parseInt(keyStr);
+                    cdragonTooltips = fetchCDragonResolvedTooltips(champKey, localeTag);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    cdragonTooltips = Collections.emptyList();
+                } catch (Exception ignore) {
+                    cdragonTooltips = Collections.emptyList();
+                }
+            }
+
+            for (int i = 0; i < spellsArray.size(); i++) {
+                JsonNode spellNode = spellsArray.get(i);
+                String sid = spellNode.path("id").asText("");
+                String sname = spellNode.path("name").asText("");
+                String tooltip = renderSpellTooltip(spellNode, globalValues);
+                if (looksIncompleteTooltip(tooltip, localeTag)) {
+                    if (cdragonTooltips != null && i < cdragonTooltips.size()) {
+                        String resolved = cdragonTooltips.get(i);
+                        if (resolved != null && !resolved.isBlank()) {
+                            tooltip = resolved;
+                        }
+                    }
+                }
+                String img = spellNode.path("image").path("full").asText("");
+                SpellSummary summary = new SpellSummary(sid, sname, tooltip, img);
+
+                String cooldown = spellNode.path("cooldownBurn").asText("");
+                if (!cooldown.isBlank()) summary.setCooldown(cooldown);
+                String cost = spellNode.path("costBurn").asText("");
+                if (!cost.isBlank()) summary.setCost(cost);
+                String range = spellNode.path("rangeBurn").asText("");
+                if (!range.isBlank()) summary.setRange(range);
+
+                JsonNode effectBurn = spellNode.path("effectBurn");
+                if (effectBurn.isArray()) {
+                    StringBuilder dmgBuilder = new StringBuilder();
+                    for (int e = 1; e < effectBurn.size(); e++) {
+                        String val = effectBurn.get(e).asText("").trim();
+                        if (val.isBlank()) continue;
+                        if (dmgBuilder.length() > 0) dmgBuilder.append(" / ");
+                        dmgBuilder.append(val);
+                    }
+                    String dmg = dmgBuilder.toString();
+                    if (!dmg.isBlank()) summary.setDamage(dmg);
+                }
+
+                JsonNode levelTip = spellNode.path("leveltip");
+                if (levelTip.isObject()) {
+                    JsonNode labels = levelTip.path("label");
+                    JsonNode effects = levelTip.path("effect");
+                    if (labels.isArray()) {
+                        List<String> notes = new ArrayList<>();
+                        for (int j = 0; j < labels.size(); j++) {
+                            String label = labels.get(j).asText("").trim();
+                            String effect = (effects.isArray() && j < effects.size()) ? effects.get(j).asText("").trim() : "";
+                            StringBuilder sb = new StringBuilder();
+                            if (!label.isEmpty()) sb.append(label);
+                            if (!effect.isEmpty()) {
+                                if (sb.length() > 0) sb.append(": ");
+                                sb.append(effect);
+                            }
+                            String note = sb.toString();
+                            if (!note.isBlank()) notes.add(note);
+                        }
+                        if (!notes.isEmpty()) summary.setNotes(notes);
+                    }
+                }
+
+                spells.add(summary);
+            }
+        }
+
+        if (passive == null && spells.isEmpty()) {
+            return null;
+        }
+        return new LocalAbilities(passive, spells, localeTag);
+    }
+
     private InputStream openLocalizedAbilityStream(String locale, String cidLower) {
         String path = String.format("abilities/%s/%s.json", locale, cidLower);
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+    }
+
+    private boolean localeEquals(String a, String b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        return a.replace('-', '_').equalsIgnoreCase(b.replace('-', '_'));
     }
 
     /**
@@ -1028,7 +1172,15 @@ public class DataDragonService {
 
     @Cacheable(cacheNames = "ddragonImageBases", key = "#version == null || #version.isBlank() ? 'latest' : #version")
     public Map<String, String> getImageBases(String version) {
-        String ver = (version == null || version.isBlank()) ? getLatestVersion() : version;
+        String ver = version;
+        if (ver == null || ver.isBlank() || "latest".equalsIgnoreCase(ver)) {
+            String fallback = lastKnownVersion;
+            if (fallback == null || fallback.isBlank()) {
+                fallback = getLatestVersion();
+            }
+            ver = (fallback == null || fallback.isBlank()) ? "latest" : fallback;
+        }
+        lastKnownVersion = ver;
         Map<String,String> map = new LinkedHashMap<>();
         map.put("version", ver);
         map.put("cdn", DDRAGON_BASE + "/cdn/");

@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,9 +51,9 @@ class BuildAggregationServiceTest {
     @BeforeEach
     void setup() {
         service = new BuildAggregationService(riotApiClient, dataDragonService, itemRepo, runeRepo, spellRepo, new NoOpTransactionManager());
-        when(itemRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
-        when(runeRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
-        when(spellRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
+        lenient().when(itemRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
+        lenient().when(runeRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
+        lenient().when(spellRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
     }
 
     @Test
@@ -123,9 +124,8 @@ class BuildAggregationServiceTest {
         match.setInfo(info);
         return match;
     }
-}
 
-class NoOpTransactionManager extends AbstractPlatformTransactionManager {
+    private static class NoOpTransactionManager extends AbstractPlatformTransactionManager {
 
     @Override
     protected Object doGetTransaction() {
@@ -146,4 +146,6 @@ class NoOpTransactionManager extends AbstractPlatformTransactionManager {
     protected void doRollback(DefaultTransactionStatus status) {
         // no-op
     }
+}
+
 }
