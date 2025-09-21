@@ -11,17 +11,22 @@ import com.zerox80.riotapi.repository.ChampionRuneStatRepository;
 import com.zerox80.riotapi.repository.ChampionSpellPairStatRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class BuildAggregationService {
@@ -33,17 +38,20 @@ public class BuildAggregationService {
     private final ChampionItemStatRepository itemRepo;
     private final ChampionRuneStatRepository runeRepo;
     private final ChampionSpellPairStatRepository spellRepo;
+    private final TransactionTemplate transactionTemplate;
 
     public BuildAggregationService(RiotApiClient riot,
                                    DataDragonService dd,
                                    ChampionItemStatRepository itemRepo,
                                    ChampionRuneStatRepository runeRepo,
-                                   ChampionSpellPairStatRepository spellRepo) {
+                                   ChampionSpellPairStatRepository spellRepo,
+                                   PlatformTransactionManager transactionManager) {
         this.riot = riot;
         this.dd = dd;
         this.itemRepo = itemRepo;
         this.runeRepo = runeRepo;
         this.spellRepo = spellRepo;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     private List<ChampionItemStat> fetchItems(String championId, String patch, int queueId, String role) {
@@ -136,7 +144,6 @@ public class BuildAggregationService {
     }
 
     @Async("appTaskExecutor")
-    @Transactional
     public void aggregateChampion(String championId,
                                   Integer queueId,
                                   int pagesToScan,
@@ -205,7 +212,11 @@ public class BuildAggregationService {
                 }
             }
         }
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        try {
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        } catch (CompletionException ex) {
+            log.warn("Aggregation {}: failed while collecting league entries: {}", championId, ex.getCause() != null ? ex.getCause().toString() : ex.toString());
+        }
         log.info("Aggregation {}: fetched {} summoner ids in {}ms", championId, summonerIds.size(), (System.currentTimeMillis()-t0));
 
         // Resolve to PUUIDs
@@ -302,38 +313,55 @@ public class BuildAggregationService {
                     .exceptionally(ex -> { log.warn("Aggregation match fetch error: {}", ex.toString()); return null; })
             );
         }
-        CompletableFuture.allOf(aggFutures.toArray(new CompletableFuture[0]))
-                .orTimeout(Duration.ofMinutes(5).toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS)
-                .join();
+        CompletableFuture<Void> aggregateAll = CompletableFuture.allOf(aggFutures.toArray(new CompletableFuture[0]));
+        long timeoutMillis = Duration.ofMinutes(5).toMillis();
+        try {
+            aggregateAll.get(timeoutMillis, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            aggFutures.forEach(f -> f.cancel(true));
+            log.warn("Aggregation {} timed out after {} ms. Cancelled {} outstanding tasks.", championId, timeoutMillis, aggFutures.size());
+            return;
+        } catch (InterruptedException e) {
+            aggFutures.forEach(f -> f.cancel(true));
+            Thread.currentThread().interrupt();
+            log.warn("Aggregation {} interrupted: {}", championId, e.toString());
+            return;
+        } catch (ExecutionException e) {
+            aggFutures.forEach(f -> f.cancel(true));
+            Throwable cause = e.getCause() != null ? e.getCause() : e;
+            log.warn("Aggregation {} encountered an error: {}", championId, cause.toString());
+            return;
+        }
 
         // Replace existing aggregates atomically per champion/patch/queue
-        itemRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
-        runeRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
-        spellRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
-
         List<ChampionItemStat> itemEntities = itemCounts.entrySet().stream()
                 .flatMap(roleEntry -> roleEntry.getValue().entrySet().stream()
                         .map(itemEntry -> newItemEntity(championId, roleEntry.getKey(), patch, q, itemEntry.getKey(), itemEntry.getValue())))
                 .collect(Collectors.toList());
-        if (!itemEntities.isEmpty()) {
-            itemRepo.saveAll(itemEntities);
-        }
-
         List<ChampionRuneStat> runeEntities = runeCounts.entrySet().stream()
                 .flatMap(roleEntry -> roleEntry.getValue().entrySet().stream()
                         .map(runeEntry -> newRuneEntity(championId, roleEntry.getKey(), patch, q, runeEntry.getKey(), runeEntry.getValue())))
                 .collect(Collectors.toList());
-        if (!runeEntities.isEmpty()) {
-            runeRepo.saveAll(runeEntities);
-        }
-
         List<ChampionSpellPairStat> spellEntities = spellCounts.entrySet().stream()
                 .flatMap(roleEntry -> roleEntry.getValue().entrySet().stream()
                         .map(spellEntry -> newSpellEntity(championId, roleEntry.getKey(), patch, q, spellEntry.getKey(), spellEntry.getValue())))
                 .collect(Collectors.toList());
-        if (!spellEntities.isEmpty()) {
-            spellRepo.saveAll(spellEntities);
-        }
+
+        transactionTemplate.executeWithoutResult(status -> {
+            itemRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
+            runeRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
+            spellRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
+
+            if (!itemEntities.isEmpty()) {
+                itemRepo.saveAll(itemEntities);
+            }
+            if (!runeEntities.isEmpty()) {
+                runeRepo.saveAll(runeEntities);
+            }
+            if (!spellEntities.isEmpty()) {
+                spellRepo.saveAll(spellEntities);
+            }
+        });
 
         int distinctItems = itemCounts.getOrDefault("ALL", Collections.emptyMap()).size();
         int distinctRunes = runeCounts.getOrDefault("ALL", Collections.emptyMap()).size();

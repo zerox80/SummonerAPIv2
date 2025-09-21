@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
+import org.springframework.transaction.support.DefaultTransactionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,7 @@ class BuildAggregationServiceTest {
 
     @BeforeEach
     void setup() {
-        service = new BuildAggregationService(riotApiClient, dataDragonService, itemRepo, runeRepo, spellRepo);
+        service = new BuildAggregationService(riotApiClient, dataDragonService, itemRepo, runeRepo, spellRepo, new NoOpTransactionManager());
         when(itemRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
         when(runeRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
         when(spellRepo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -119,5 +122,28 @@ class BuildAggregationServiceTest {
 
         match.setInfo(info);
         return match;
+    }
+}
+
+class NoOpTransactionManager extends AbstractPlatformTransactionManager {
+
+    @Override
+    protected Object doGetTransaction() {
+        return new Object();
+    }
+
+    @Override
+    protected void doBegin(Object transaction, TransactionDefinition definition) {
+        // no-op
+    }
+
+    @Override
+    protected void doCommit(DefaultTransactionStatus status) {
+        // no-op
+    }
+
+    @Override
+    protected void doRollback(DefaultTransactionStatus status) {
+        // no-op
     }
 }

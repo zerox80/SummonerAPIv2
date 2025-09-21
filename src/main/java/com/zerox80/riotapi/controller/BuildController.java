@@ -5,7 +5,10 @@ import com.zerox80.riotapi.service.BuildAggregationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Locale;
 
@@ -17,6 +20,9 @@ public class BuildController {
 
     @Value("${build.agg.trigger-enabled:false}")
     private boolean triggerEnabled;
+
+    @Value("${build.agg.trigger-token:}")
+    private String triggerToken;
 
     public BuildController(BuildAggregationService agg) {
         this.agg = agg;
@@ -37,9 +43,18 @@ public class BuildController {
                                             @RequestParam(value = "pages", defaultValue = "1") int pages,
                                             @RequestParam(value = "matchesPerSummoner", defaultValue = "8") int matchesPerSummoner,
                                             @RequestParam(value = "maxSummoners", defaultValue = "75") int maxSummoners,
-                                            Locale locale) {
+                                            Locale locale,
+                                            HttpServletRequest request) {
         if (!triggerEnabled) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Aggregation trigger is disabled");
+        }
+        if (!StringUtils.hasText(triggerToken)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Aggregation trigger token is not configured");
+        }
+
+        String providedToken = request.getHeader("X-Aggregation-Token");
+        if (!triggerToken.equals(providedToken)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid aggregation trigger token");
         }
         agg.aggregateChampion(id, queueId, pages, matchesPerSummoner, maxSummoners, locale);
         return ResponseEntity.accepted().body("Aggregation started for " + id);
