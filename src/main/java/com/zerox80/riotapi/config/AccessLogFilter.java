@@ -29,6 +29,12 @@ public class AccessLogFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(AccessLogFilter.class);
 
+    private final RateLimitProperties rateProps;
+
+    public AccessLogFilter(RateLimitProperties rateProps) {
+        this.rateProps = rateProps;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -42,7 +48,7 @@ public class AccessLogFilter extends OncePerRequestFilter {
             String method = request.getMethod();
             String path = safePath(request.getRequestURI());
             String ua = sanitizeUa(request.getHeader("User-Agent"));
-            String ip = request.getRemoteAddr();
+            String ip = clientIp(request);
             String reqId = safeRequestId(MDC.get("requestId"));
 
             String msg = String.format("%s %s -> %d in %dms ip=%s ua=\"%s\" reqId=%s",
@@ -81,5 +87,75 @@ public class AccessLogFilter extends OncePerRequestFilter {
         String cleaned = id.replaceAll("[^A-Za-z0-9_.-]", "");
         if (cleaned.length() > 64) cleaned = cleaned.substring(0, 64);
         return cleaned.isEmpty() ? "-" : cleaned;
+    }
+
+    // --- Proxy-aware client IP extraction (aligned with RateLimitingFilter) ---
+    private String clientIp(HttpServletRequest request) {
+        try {
+            if (rateProps != null && rateProps.isTrustProxy()) {
+                String remoteAddr = request.getRemoteAddr();
+                if (rateProps.getAllowedProxies() != null && !rateProps.getAllowedProxies().isEmpty()) {
+                    if (!isAllowedProxy(remoteAddr)) {
+                        return remoteAddr;
+                    }
+                }
+                String fwd = request.getHeader("Forwarded");
+                if (fwd != null && !fwd.isBlank()) {
+                    try {
+                        String[] parts = fwd.split(",");
+                        for (String part : parts) {
+                            String[] kvs = part.split(";");
+                            for (String kv : kvs) {
+                                String[] pair = kv.trim().split("=", 2);
+                                if (pair.length == 2 && pair[0].trim().equalsIgnoreCase("for")) {
+                                    return extractIp(pair[1]);
+                                }
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                }
+                String xff = request.getHeader("X-Forwarded-For");
+                if (xff != null && !xff.isBlank()) {
+                    int comma = xff.indexOf(',');
+                    String first = (comma > 0 ? xff.substring(0, comma) : xff).trim();
+                    return extractIp(first);
+                }
+            }
+            return request.getRemoteAddr();
+        } catch (Exception e) {
+            return request.getRemoteAddr();
+        }
+    }
+
+    private boolean isAllowedProxy(String remoteAddr) {
+        try {
+            for (String allowed : rateProps.getAllowedProxies()) {
+                if (allowed != null && !allowed.isBlank() && remoteAddr.equals(allowed.trim())) {
+                    return true;
+                }
+            }
+        } catch (Exception ignored) {}
+        return false;
+    }
+
+    private String extractIp(String val) {
+        if (val == null) return null;
+        String v = val.trim();
+        if (v.startsWith("\"") && v.endsWith("\"") && v.length() > 1) {
+            v = v.substring(1, v.length() - 1);
+        }
+        if (v.startsWith("[")) {
+            int end = v.indexOf(']');
+            if (end > 0) {
+                return v.substring(1, end);
+            }
+            return v;
+        }
+        long colonCount = v.chars().filter(ch -> ch == ':').count();
+        if (colonCount == 1 && v.contains(".")) {
+            int colonIdx = v.indexOf(':');
+            return v.substring(0, colonIdx);
+        }
+        return v;
     }
 }

@@ -6,10 +6,16 @@ import com.zerox80.riotapi.model.ChampionDetail;
 import com.zerox80.riotapi.model.ChampionSummary;
 import com.zerox80.riotapi.model.PassiveSummary;
 import com.zerox80.riotapi.model.SpellSummary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.util.HtmlUtils;
+import org.owasp.html.HtmlPolicyBuilder;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +42,8 @@ public class DataDragonService {
 
     private static final String DDRAGON_BASE = "https://ddragon.leagueoflegends.com";
 
+    private static final Logger logger = LoggerFactory.getLogger(DataDragonService.class);
+
     private final HttpClient httpClient;
     private final HttpClient fallbackHttp1;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -43,6 +51,19 @@ public class DataDragonService {
     private final String userAgent;
     private final ObjectProvider<DataDragonService> selfProvider;
     private volatile String lastKnownVersion;
+
+    // Conservative HTML sanitization policy for tooltips/descriptions from DDragon/CDragon.
+    // Allow common inline formatting and a small set of known game-specific tags used in tooltips
+    // (e.g., <magicDamage>, <physicalDamage>, <trueDamage>, <status>, <br>), without any attributes.
+    private static final PolicyFactory TOOLTIP_POLICY =
+            new HtmlPolicyBuilder()
+                    .allowElements("b", "strong", "i", "em", "u", "small", "sup", "sub", "br", "span")
+                    .allowElements("magicdamage", "physicaldamage", "truedamage", "status")
+                    // No attributes/URLs allowed; compose with basic formatting sanitizer for safety
+                    .toFactory()
+                    .and(Sanitizers.FORMATTING);
+
+    private static final Pattern TAG_STRIP_PATTERN = Pattern.compile("<[^>]+>");
 
     public DataDragonService(HttpClient riotApiHttpClient,
                              @Value("${ddragon.default-locale:de_DE}") String defaultLocale,
@@ -61,6 +82,26 @@ public class DataDragonService {
     private DataDragonService self() {
         DataDragonService proxy = selfProvider != null ? selfProvider.getIfAvailable() : null;
         return proxy != null ? proxy : this;
+    }
+
+    private String sanitizeHtml(String html) {
+        if (html == null || html.isBlank()) return html;
+        try {
+            return applyTooltipPolicy(html);
+        } catch (RuntimeException ex) {
+            logger.warn("Tooltip sanitization failed; falling back to plain text", ex);
+            return stripTagsToPlainText(html);
+        }
+    }
+
+    protected String applyTooltipPolicy(String html) {
+        return TOOLTIP_POLICY.sanitize(html);
+    }
+
+    private String stripTagsToPlainText(String html) {
+        String withoutTags = TAG_STRIP_PATTERN.matcher(html).replaceAll(" ");
+        String unescaped = HtmlUtils.htmlUnescape(withoutTags);
+        return unescaped.replaceAll("\\s+", " ").trim();
     }
 
     private int countDigits(String s) {
@@ -320,7 +361,7 @@ public class DataDragonService {
                 String pDesc = p.path("description").asText("");
                 String pImg = p.path("imageFull").asText("");
                 if (!pName.isBlank() || !pDesc.isBlank() || !pImg.isBlank()) {
-                    passive = new PassiveSummary(pName, pDesc, pImg);
+                    passive = new PassiveSummary(pName, sanitizeHtml(pDesc), pImg);
                 }
             }
             // Spells
@@ -332,7 +373,7 @@ public class DataDragonService {
                     String sname = s.path("name").asText("");
                     String tip = s.path("tooltip").asText("");
                     String img = s.path("imageFull").asText("");
-                    SpellSummary sum = new SpellSummary(sid, sname, tip, img);
+                    SpellSummary sum = new SpellSummary(sid, sname, sanitizeHtml(tip), img);
                     if (s.hasNonNull("cooldown")) sum.setCooldown(s.path("cooldown").asText(""));
                     if (s.hasNonNull("cost")) sum.setCost(s.path("cost").asText(""));
                     if (s.hasNonNull("range")) sum.setRange(s.path("range").asText(""));
@@ -364,7 +405,7 @@ public class DataDragonService {
             String pDesc = passiveNode.path("description").asText("");
             String pImg = passiveNode.path("image").path("full").asText("");
             if (!pName.isBlank() || !pDesc.isBlank() || !pImg.isBlank()) {
-                passive = new PassiveSummary(pName, pDesc, pImg);
+                passive = new PassiveSummary(pName, sanitizeHtml(pDesc), pImg);
             }
         }
 
@@ -402,7 +443,7 @@ public class DataDragonService {
                     }
                 }
                 String img = spellNode.path("image").path("full").asText("");
-                SpellSummary summary = new SpellSummary(sid, sname, tooltip, img);
+                SpellSummary summary = new SpellSummary(sid, sname, sanitizeHtml(tooltip), img);
 
                 String cooldown = spellNode.path("cooldownBurn").asText("");
                 if (!cooldown.isBlank()) summary.setCooldown(cooldown);

@@ -3,8 +3,8 @@
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Allow toggling tests during build (default: skip tests)
-ARG SKIP_TESTS=true
+# Allow toggling tests during build (default: run tests for safety)
+ARG SKIP_TESTS=false
 
 # Use BuildKit cache for Maven repo to accelerate builds across runs
 COPY pom.xml .

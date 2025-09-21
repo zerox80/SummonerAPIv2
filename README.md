@@ -285,6 +285,7 @@ docker compose up --build
 ```
 
 This starts PostgreSQL and the app. Override environment variables in `docker-compose.yml` as needed.
+Docker builds now run the full Maven test suite by default; if you need a faster inner-loop build (not recommended for production images), pass `--build-arg SKIP_TESTS=true` in your Compose `build.args` section.
 Tip: You can adjust the host port via `.env` using `APP_HTTP_PORT`, e.g., `APP_HTTP_PORT=8081`.
 
 Production profile:
@@ -310,6 +311,8 @@ docker run --rm \
   summonerapi:local
 ```
 
+> By default `docker build` runs unit tests (`SKIP_TESTS=false`). For experimental builds you can opt out via `docker build --build-arg SKIP_TESTS=true -t summonerapi:fast .`, but always let CI run with tests enabled.
+
 ---
 
 ## Security
@@ -320,10 +323,16 @@ docker run --rm \
 - A lightweight IP-based rate limiter protects `/api/**` and `/search` (see Rate Limiting below).
 - CSRF exemption for Aggregation: The mutating endpoint `POST /api/champions/{id}/aggregate` is exempt from CSRF to allow non-browser clients (curl/Swagger). Other mutating endpoints (if added) require sending the CSRF token header `X-XSRF-TOKEN`.
 
+### Server-side HTML Sanitizing for tooltips
+
+- Tooltips and passive descriptions from DDragon/CDragon are sanitized server-side using OWASP Java HTML Sanitizer.
+- Only a conservative set of inline formatting tags and known game-specific tags (e.g., `<magicDamage>`, `<physicalDamage>`, `<trueDamage>`, `<status>`, `<br>`) are allowed, without attributes. This is an additional layer to the strict CSP.
+
 Behind a reverse proxy (NGINX/Ingress):
 
 - Set `rate.limit.trust-proxy=true` (or env `RATE_LIMIT_TRUST_PROXY=true`) so client IP is resolved from `Forwarded`/`X-Forwarded-For`.
 - `ForwardedHeaderFilter` is registered to apply forwarded headers to requests.
+- Access logging honors the same proxy trust rules: when `rate.limit.trust-proxy=true` (and optionally `rate.limit.allowed-proxies` is set), the `AccessLogFilter` logs the left-most client IP from `Forwarded`/`X-Forwarded-For`.
 
 ### Error Handling & Request Correlation
 
@@ -446,6 +455,11 @@ GPL v3 — see `LICENSE`.
 
 - Secrets are never logged. Configure via env vars or `application.properties`.
 - The Riot API has strict rate limits. The client includes basic retry/backoff for 429/5xx.
+
+UI & Misc updates (Sept 2025):
+- Dynamic region indicator in the navbar reflects the configured platform region (e.g., `euw1`).
+- Server-side sanitizing for champion tooltips and passive descriptions to complement CSP.
+- Access logging is proxy-aware when `rate.limit.trust-proxy` is enabled.
 
 Dependency updates (Sept 2025):
 - Spring Boot parent: 3.3.5
