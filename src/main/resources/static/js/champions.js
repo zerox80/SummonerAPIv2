@@ -1,15 +1,25 @@
 // Simple client-side filtering for champions list
+
 (function(){
-  function normalize(s){ return (s||'').toLowerCase(); }
+  const ROLE_BUTTON_SELECTOR = '.btn-group [data-role]';
+
+  function normalize(s){
+    return (s || '').toString().trim().toLowerCase();
+  }
+
   function hasTag(tagsCSV, tag){
-    const tags = (tagsCSV||'').split(',').map(t=>t.trim());
-    return tags.includes(tag);
+    if (!tagsCSV) return false;
+    const expected = normalize(tag);
+    return tagsCSV.split(',')
+      .map(part => normalize(part))
+      .filter(Boolean)
+      .includes(expected);
   }
 
   function applyFilters(){
     const q = normalize(document.getElementById('champSearch')?.value || '');
-    const activeBtn = document.querySelector('.btn-group [data-role].active');
-    const role = activeBtn ? activeBtn.getAttribute('data-role') : 'all';
+    const activeBtn = document.querySelector(`${ROLE_BUTTON_SELECTOR}.active`);
+    const role = activeBtn ? normalize(activeBtn.getAttribute('data-role')) : 'all';
 
     const cards = document.querySelectorAll('#champList > [data-name]');
     cards.forEach(card => {
@@ -24,10 +34,10 @@
   }
 
   function initRoleButtons(){
-    document.querySelectorAll('.btn-group [data-role]').forEach(btn => {
+    document.querySelectorAll(ROLE_BUTTON_SELECTOR).forEach(btn => {
       btn.addEventListener('click', function(e){
         e.preventDefault();
-        document.querySelectorAll('.btn-group [data-role]').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll(ROLE_BUTTON_SELECTOR).forEach(b=>b.classList.remove('active'));
         this.classList.add('active');
         applyFilters();
       });

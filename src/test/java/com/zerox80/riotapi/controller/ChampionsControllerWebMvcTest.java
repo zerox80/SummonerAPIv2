@@ -1,5 +1,6 @@
 package com.zerox80.riotapi.controller;
 
+import com.zerox80.riotapi.client.RiotApiClient;
 import com.zerox80.riotapi.model.ChampionSummary;
 import com.zerox80.riotapi.service.BuildAggregationService;
 import com.zerox80.riotapi.service.DataDragonService;
@@ -32,6 +33,9 @@ class ChampionsControllerWebMvcTest {
 
     @MockBean
     private BuildAggregationService buildAggregationService;
+
+    @MockBean
+    private RiotApiClient riotApiClient;
 
     @Test
     void championsPage_shouldRenderWithModel_whenServiceReturnsData() throws Exception {

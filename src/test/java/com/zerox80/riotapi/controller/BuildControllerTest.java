@@ -1,5 +1,6 @@
 package com.zerox80.riotapi.controller;
 
+import com.zerox80.riotapi.client.RiotApiClient;
 import com.zerox80.riotapi.dto.ChampionBuildDto;
 import com.zerox80.riotapi.service.BuildAggregationService;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ class BuildControllerTest {
 
     @MockBean
     private BuildAggregationService aggregationService;
+
+    @MockBean
+    private RiotApiClient riotApiClient;
 
     @Test
     void getBuild_shouldReturnChampionBuild() throws Exception {

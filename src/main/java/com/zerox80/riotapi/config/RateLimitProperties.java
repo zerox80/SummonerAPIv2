@@ -1,11 +1,13 @@
 package com.zerox80.riotapi.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 @ConfigurationProperties(prefix = "rate.limit")
 public class RateLimitProperties {
 

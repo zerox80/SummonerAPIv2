@@ -1,5 +1,6 @@
 package com.zerox80.riotapi.controller;
 
+import com.zerox80.riotapi.client.RiotApiClient;
 import com.zerox80.riotapi.service.BuildAggregationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ class BuildControllerMissingTokenConfigurationTest {
 
     @MockBean
     private BuildAggregationService aggregationService;
+
+    @MockBean
+    private RiotApiClient riotApiClient;
 
     @Test
     void aggregateShouldRejectWhenTokenNotConfigured() throws Exception {

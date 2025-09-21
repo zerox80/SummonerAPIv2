@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -31,8 +32,8 @@ public class AccessLogFilter extends OncePerRequestFilter {
 
     private final RateLimitProperties rateProps;
 
-    public AccessLogFilter(RateLimitProperties rateProps) {
-        this.rateProps = rateProps;
+    public AccessLogFilter(ObjectProvider<RateLimitProperties> ratePropsProvider) {
+        this.rateProps = ratePropsProvider.getIfAvailable(RateLimitProperties::new);
     }
 
     @Override

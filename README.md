@@ -59,6 +59,7 @@ SummonerAPI is a Spring Boot web app that uses the Riot Games API to fetch and d
 - Optional LP history via PostgreSQL (with Flyway support)
 - Basic champion build aggregation API (sampling recent ranked matches)
 - Lightweight UI with Thymeleaf and Bootstrap 5
+- Accessible light/dark theme toggle that follows system preferences and persists per browser
 
 ---
 
@@ -319,6 +320,7 @@ docker run --rm \
 
 - CSRF protection enabled via cookie-based token (`CookieCsrfTokenRepository`).
 - Dynamic Content Security Policy (CSP) nonce is added per request to harden inline scripts.
+- New security headers filter enforces HSTS, CSP, Referrer-Policy, and related headers (tune via `security.headers.*`).
 - Actuator hardening: only `/actuator/health` and `/actuator/info` are permitted; everything else under `/actuator/**` is denied by web security.
 - A lightweight IP-based rate limiter protects `/api/**` and `/search` (see Rate Limiting below).
 - CSRF exemption for Aggregation: The mutating endpoint `POST /api/champions/{id}/aggregate` is exempt from CSRF to allow non-browser clients (curl/Swagger). Other mutating endpoints (if added) require sending the CSRF token header `X-XSRF-TOKEN`.

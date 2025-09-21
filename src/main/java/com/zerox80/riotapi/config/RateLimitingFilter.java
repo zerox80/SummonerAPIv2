@@ -2,6 +2,8 @@ package com.zerox80.riotapi.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,10 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.util.AntPathMatcher;
-import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -49,9 +51,17 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     private List<String> pathPatterns;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    public RateLimitingFilter(RateLimitProperties properties, MeterRegistry meterRegistry) {
-        this.properties = properties;
-        this.meterRegistry = meterRegistry;
+    public RateLimitingFilter(ObjectProvider<RateLimitProperties> properties, ObjectProvider<MeterRegistry> meterRegistry) {
+        RateLimitProperties provided = properties.getIfAvailable();
+        if (provided != null) {
+            this.properties = provided;
+        } else {
+            RateLimitProperties fallback = new RateLimitProperties();
+            fallback.setEnabled(false);
+            fallback.setIncludeHeaders(false);
+            this.properties = fallback;
+        }
+        this.meterRegistry = meterRegistry.getIfAvailable(SimpleMeterRegistry::new);
     }
 
     @PostConstruct

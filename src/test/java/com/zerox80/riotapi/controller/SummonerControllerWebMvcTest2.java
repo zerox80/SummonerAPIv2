@@ -1,6 +1,7 @@
 package com.zerox80.riotapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerox80.riotapi.client.RiotApiClient;
 import com.zerox80.riotapi.model.Summoner;
 import com.zerox80.riotapi.model.SummonerSuggestionDTO;
 import com.zerox80.riotapi.service.DataDragonService;
@@ -39,6 +40,9 @@ class SummonerControllerWebMvcTest2 {
 
     @MockBean
     private DataDragonService dataDragonService;
+
+    @MockBean
+    private RiotApiClient riotApiClient;
 
     @Autowired
     private ObjectMapper objectMapper;
