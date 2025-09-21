@@ -12,4 +12,5 @@ public interface ChampionItemStatRepository extends JpaRepository<ChampionItemSt
     Optional<ChampionItemStat> findByChampionIdAndRoleAndPatchAndQueueIdAndItemId(String championId, String role, String patch, int queueId, int itemId);
     List<ChampionItemStat> findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(String championId, String role, String patch, int queueId);
     List<ChampionItemStat> findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(String championId, String patch, int queueId);
+    void deleteByChampionIdAndPatchAndQueueId(String championId, String patch, int queueId);
 }

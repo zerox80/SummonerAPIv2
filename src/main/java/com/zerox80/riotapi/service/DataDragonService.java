@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -220,17 +221,18 @@ public class DataDragonService {
             String loc = (ddragonLocale == null || ddragonLocale.isBlank()) ? DEFAULT_LOCALE : ddragonLocale;
             String cid = championId == null ? "" : championId.trim();
             if (cid.isEmpty()) return null;
-            String path = String.format("abilities/%s/%s.json", loc, cid.toLowerCase(Locale.ROOT));
-            java.io.InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-            if (is == null) {
-                // Fallback to de_DE if specific locale file is missing
-                if (!"de_DE".equals(loc)) {
-                    path = String.format("abilities/%s/%s.json", "de_DE", cid.toLowerCase(Locale.ROOT));
-                    is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-                }
+            String cidLower = cid.toLowerCase(Locale.ROOT);
+
+            InputStream stream = openLocalizedAbilityStream(loc, cidLower);
+            if (stream == null && !"de_DE".equals(loc)) {
+                stream = openLocalizedAbilityStream("de_DE", cidLower);
             }
-            if (is == null) return null;
-            JsonNode root = mapper.readTree(is);
+            if (stream == null) return null;
+
+            JsonNode root;
+            try (InputStream is = stream) {
+                root = mapper.readTree(is);
+            }
             // Passive
             PassiveSummary passive = null;
             JsonNode p = root.path("passive");
@@ -269,6 +271,11 @@ public class DataDragonService {
         } catch (Exception ignore) {
             return null;
         }
+    }
+
+    private InputStream openLocalizedAbilityStream(String locale, String cidLower) {
+        String path = String.format("abilities/%s/%s.json", locale, cidLower);
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
     }
 
     /**

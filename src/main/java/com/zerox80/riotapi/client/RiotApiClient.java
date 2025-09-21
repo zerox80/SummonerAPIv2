@@ -26,6 +26,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
@@ -197,15 +199,13 @@ public class RiotApiClient {
                     if (throwable != null) {
                         if (attempt < MAX_ATTEMPTS) {
                             Duration delay = computeBackoffDelay(attempt, Optional.empty());
-                            logger.warn("Request {} to {} failed (attempt {}/{}). Retrying in {} ms. Cause: {}",
+                            logger.warn("Request {} to {} failed (attempt {}/{})\n Retrying in {} ms. Cause: {}",
                                     requestType, url, attempt, MAX_ATTEMPTS, delay.toMillis(), throwable.toString());
                             retries.incrementAndGet();
                             meterRegistry.counter("riotapi.client.retries", "type", requestType).increment();
                             return delayed(delay).thenCompose(v -> sendWithRetryInstrumented(request, requestType, url, attempt + 1, retries));
                         }
-                        CompletableFuture<HttpResponse<String>> failed = new CompletableFuture<>();
-                        failed.completeExceptionally(throwable);
-                        return failed;
+                        return CompletableFuture.failedFuture(throwable);
                     }
 
                     int status = response.statusCode();
@@ -240,10 +240,20 @@ public class RiotApiClient {
 
     private Optional<Long> parseRetryAfterSeconds(HttpResponse<String> response) {
         return response.headers().firstValue("Retry-After").flatMap(value -> {
+            if (value == null) return Optional.empty();
+            String raw = value.trim();
+            // Case 1: delta-seconds
             try {
-                return Optional.of(Long.parseLong(value.trim()));
-            } catch (NumberFormatException e) {
-                return Optional.empty();
+                return Optional.of(Long.parseLong(raw));
+            } catch (NumberFormatException ignored) {
+                // Case 2: HTTP-date (RFC 7231) e.g., Sun, 06 Nov 1994 08:49:37 GMT
+                try {
+                    ZonedDateTime until = ZonedDateTime.parse(raw, DateTimeFormatter.RFC_1123_DATE_TIME);
+                    long seconds = Duration.between(java.time.Instant.now(), until.toInstant()).getSeconds();
+                    return Optional.of(Math.max(1, seconds));
+                } catch (Exception ignored2) {
+                    return Optional.empty();
+                }
             }
         });
     }
@@ -326,7 +336,7 @@ public class RiotApiClient {
      * Fetches league entries (rank, tier, etc.) by the encrypted summoner ID.
      * Official endpoint: /lol/league/v4/entries/by-summoner/{encryptedSummonerId}
      */
-    @Cacheable(value = "leagueEntries", key = "#summonerId")
+    @Cacheable(value = "leagueEntries", key = "'sid:' + #summonerId")
     public CompletableFuture<List<LeagueEntryDTO>> getLeagueEntriesBySummonerId(String summonerId) {
         String host = this.platformRegion + ".api.riotgames.com";
         String path = "/lol/league/v4/entries/by-summoner/" + summonerId;
@@ -341,7 +351,7 @@ public class RiotApiClient {
      * Fetches league entries using PUUID to prepare for removal of SummonerIDs from payloads.
      * Official endpoint: /lol/league/v4/entries/by-puuid/{puuid}
      */
-    @Cacheable(value = "leagueEntries", key = "#puuid")
+    @Cacheable(value = "leagueEntries", key = "'puuid:' + #puuid")
     public CompletableFuture<List<LeagueEntryDTO>> getLeagueEntriesByPuuid(String puuid) {
         String host = this.platformRegion + ".api.riotgames.com";
         String path = "/lol/league/v4/entries/by-puuid/" + puuid;
@@ -430,7 +440,7 @@ public class RiotApiClient {
         String host = this.platformRegion + ".api.riotgames.com";
         String path = "/lol/summoner/v4/summoners/" + summonerId;
         String url = "https://" + host + path;
-        logger.debug(">>> RiotApiClient (Summoner by ID): Requesting ID [{}]", maskPuuid(summonerId));
+        logger.debug(">>> RiotApiClient (Summoner by ID): Requesting ID [{}]", maskId(summonerId));
         return sendApiRequestAsync(url, Summoner.class, "SummonerById");
     }
 
@@ -448,6 +458,13 @@ public class RiotApiClient {
         int len = puuid.length();
         if (len <= 10) return "***";
         return puuid.substring(0, 6) + "..." + puuid.substring(len - 4);
+    }
+
+    private static String maskId(String id) {
+        if (id == null) return "(null)";
+        int len = id.length();
+        if (len <= 8) return "***";
+        return id.substring(0, Math.min(4, len)) + "..." + id.substring(len - Math.min(3, len));
     }
 
     private String abbreviate(String s, int max) {

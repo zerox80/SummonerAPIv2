@@ -21,8 +21,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous">
-    <!-- App Styles -->
-    <link rel="stylesheet" href="/css/app.css?v=2">
+    <!-- App Styles (versioned via ResourceUrlEncodingFilter) -->
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
 </head>
 <body class="app-body">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top glass-nav border-bottom border-secondary-subtle">
@@ -578,7 +578,7 @@
 
                                 // Profile Icon
                                 const img = document.createElement('img');
-                                img.src = suggestion.profileIconUrl;
+                                img.src = suggestion.profileIconUrl || (`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg`);
                                 img.alt = 'Icon';
                                 img.classList.add('suggestion-avatar','me-2');
                                 img.onerror = function() { this.style.display = 'none'; };

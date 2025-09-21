@@ -83,13 +83,16 @@ public class RiotApiService {
     }
 
     public CompletableFuture<Summoner> getSummonerByRiotId(String gameName, String tagLine) {
-        if (!StringUtils.hasText(gameName) || !StringUtils.hasText(tagLine)) {
+        String trimmedGameName = gameName != null ? gameName.trim() : null;
+        String trimmedTagLine = tagLine != null ? tagLine.trim() : null;
+
+        if (!StringUtils.hasText(trimmedGameName) || !StringUtils.hasText(trimmedTagLine)) {
             logger.error("Error: Game name and tag line cannot be empty.");
             return CompletableFuture.completedFuture(null);
         }
 
-        logger.info("Searching for account: {}#{}...", gameName, tagLine);
-        return riotApiClient.getAccountByRiotId(gameName, tagLine)
+        logger.info("Searching for account: {}#{}...", trimmedGameName, trimmedTagLine);
+        return riotApiClient.getAccountByRiotId(trimmedGameName, trimmedTagLine)
                 .thenCompose(account -> {
                     if (account != null && StringUtils.hasText(account.getPuuid())) {
                         logger.info("Account found, PUUID: {}. Fetching summoner data...", maskPuuid(account.getPuuid()));
@@ -99,18 +102,18 @@ public class RiotApiService {
                                         if (StringUtils.hasText(account.getGameName())) {
                                             summoner.setName(account.getGameName());
                                         } else {
-                                            summoner.setName(gameName);
+                                            summoner.setName(trimmedGameName);
                                             logger.warn("Warning: gameName is missing from AccountDto for PUUID: {}. Using provided gameName for Summoner object.", maskPuuid(account.getPuuid()));
                                         }
                                     }
                                     return summoner;
                                 });
                     } else {
-                        logger.info("Account for {}#{} not found or PUUID is missing.", gameName, tagLine);
+                        logger.info("Account for {}#{} not found or PUUID is missing.", trimmedGameName, trimmedTagLine);
                         return CompletableFuture.completedFuture(null);
                     }
                 }).exceptionally(ex -> {
-                    logger.error("Error fetching summoner data for {}#{}: {}", gameName, tagLine, ex.getMessage(), ex);
+                    logger.error("Error fetching summoner data for {}#{}: {}", trimmedGameName, trimmedTagLine, ex.getMessage(), ex);
                     return null;
                 });
     }
@@ -219,11 +222,20 @@ public class RiotApiService {
                     .filter(entry -> entry.getKey().startsWith(lowerPartialName));
         }
 
-        return stream
+        List<SummonerSuggestionDTO> out = stream
                 .limit(10)
                 .map(Map.Entry::getValue)
                 .distinct()
                 .collect(Collectors.toList());
+        // Enrich missing icon URLs to satisfy frontend expectation
+        out.forEach(dto -> {
+            if (dto != null && !StringUtils.hasText(dto.getProfileIconUrl())) {
+                try {
+                    dto.setProfileIconUrl(riotApiClient.getProfileIconUrl(dto.getProfileIconId()));
+                } catch (Exception ignored) {}
+            }
+        });
+        return out;
     }
 
     public CompletableFuture<SummonerProfileData> getSummonerProfileDataAsync(String gameName, String tagLine) {
@@ -236,7 +248,7 @@ public class RiotApiService {
 
                     String displayRiotId = summoner.getName() + "#" + tagLine;
                     String iconUrl = riotApiClient.getProfileIconUrl(summoner.getProfileIconId());
-                    SummonerSuggestionDTO suggestionDTO = new SummonerSuggestionDTO(displayRiotId, summoner.getProfileIconId(), summoner.getSummonerLevel());
+                    SummonerSuggestionDTO suggestionDTO = new SummonerSuggestionDTO(displayRiotId, summoner.getProfileIconId(), summoner.getSummonerLevel(), iconUrl);
 
                     // Fetch league entries (by PUUID) and match history concurrently
                     CompletableFuture<List<LeagueEntryDTO>> leagueEntriesFuture =

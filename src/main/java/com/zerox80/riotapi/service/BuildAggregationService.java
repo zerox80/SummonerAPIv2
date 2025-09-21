@@ -19,8 +19,8 @@ import org.springframework.scheduling.annotation.Async;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,25 +46,43 @@ public class BuildAggregationService {
         this.spellRepo = spellRepo;
     }
 
+    private List<ChampionItemStat> fetchItems(String championId, String patch, int queueId, String role) {
+        if (StringUtils.hasText(role) && !"ALL".equals(role)) {
+            return itemRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId);
+        }
+        return itemRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId);
+    }
+
+    private List<ChampionRuneStat> fetchRunes(String championId, String patch, int queueId, String role) {
+        if (StringUtils.hasText(role) && !"ALL".equals(role)) {
+            return runeRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId);
+        }
+        return runeRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId);
+    }
+
+    private List<ChampionSpellPairStat> fetchSpells(String championId, String patch, int queueId, String role) {
+        if (StringUtils.hasText(role) && !"ALL".equals(role)) {
+            return spellRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId);
+        }
+        return spellRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId);
+    }
+
     public ChampionBuildDto loadBuild(String championId, Integer queueId, String role, Locale locale) {
         String patch = dd.getLatestShortPatch();
         int q = (queueId == null) ? 420 : queueId; // default SoloQ
-        String roleUse = (StringUtils.hasText(role) ? role.toUpperCase(Locale.ROOT) : null);
+        String requestedRole = (StringUtils.hasText(role) ? role.toUpperCase(Locale.ROOT) : "ALL");
 
-        // Items (top 10)
-        List<ChampionItemStat> items = (roleUse != null && !roleUse.equals("ALL"))
-                ? itemRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, roleUse, patch, q)
-                : itemRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, q);
+        List<ChampionItemStat> items = fetchItems(championId, patch, q, requestedRole);
+        List<ChampionRuneStat> runes = fetchRunes(championId, patch, q, requestedRole);
+        List<ChampionSpellPairStat> spells = fetchSpells(championId, patch, q, requestedRole);
 
-        // Runes (top 10)
-        List<ChampionRuneStat> runes = (roleUse != null && !roleUse.equals("ALL"))
-                ? runeRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, roleUse, patch, q)
-                : runeRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, q);
-
-        // Spells (top 10)
-        List<ChampionSpellPairStat> spells = (roleUse != null && !roleUse.equals("ALL"))
-                ? spellRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, roleUse, patch, q)
-                : spellRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, q);
+        String effectiveRole = requestedRole;
+        if (!"ALL".equals(requestedRole) && items.isEmpty() && runes.isEmpty() && spells.isEmpty()) {
+            effectiveRole = "ALL";
+            items = fetchItems(championId, patch, q, effectiveRole);
+            runes = fetchRunes(championId, patch, q, effectiveRole);
+            spells = fetchSpells(championId, patch, q, effectiveRole);
+        }
 
         Map<Integer, ItemSummary> itemLookupTmp;
         Map<Integer, SummonerSpellInfo> spellLookupTmp;
@@ -114,7 +132,7 @@ public class BuildAggregationService {
             return new SpellPairStatDto(s.getSpell1Id(), s.getSpell2Id(), s.getCount(), s.getWins(), s1Name, s2Name, s1Icon, s2Icon);
         }).collect(Collectors.toList());
 
-        return new ChampionBuildDto(championId, patch, q, roleUse, itemDtos, runeDtos, spellDtos);
+        return new ChampionBuildDto(championId, patch, q, effectiveRole, itemDtos, runeDtos, spellDtos);
     }
 
     @Async("appTaskExecutor")
@@ -145,27 +163,45 @@ public class BuildAggregationService {
         String queueStr = (q == 440) ? "RANKED_FLEX_SR" : "RANKED_SOLO_5x5";
 
         // Collect summoner IDs (encrypted summonerId) and then resolve to PUUIDs
-        List<String> summonerIds = new CopyOnWriteArrayList<>();
+        List<String> summonerIds = java.util.Collections.synchronizedList(new ArrayList<>());
+        java.util.Set<String> seenSummonerIds = java.util.concurrent.ConcurrentHashMap.newKeySet();
         AtomicInteger pages = new AtomicInteger(0);
         List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        BooleanSupplier hasCapacity = () -> {
+            synchronized (summonerIds) {
+                return summonerIds.size() < maxSummoners;
+            }
+        };
+
         outer:
         for (String tier : tiers) {
             for (String div : divisions) {
                 for (int page = 1; page <= Math.max(1, pagesToScan); page++) {
+                    if (!hasCapacity.getAsBoolean()) {
+                        break outer;
+                    }
                     int finalPage = page;
                     futures.add(riot.getEntriesByQueueTierDivision(queueStr, tier, div, page)
                             .thenAccept(entries -> {
                                 if (entries != null) {
-                                    entries.stream().limit(200).forEach(le -> {
-                                        if (summonerIds.size() < maxSummoners) {
-                                            summonerIds.add(le.getSummonerId());
-                                        }
-                                    });
+                                    entries.stream()
+                                            .limit(200)
+                                            .map(le -> le != null ? le.getSummonerId() : null)
+                                            .filter(StringUtils::hasText)
+                                            .forEach(sid -> {
+                                                if (seenSummonerIds.add(sid)) {
+                                                    synchronized (summonerIds) {
+                                                        if (summonerIds.size() < maxSummoners) {
+                                                            summonerIds.add(sid);
+                                                        }
+                                                    }
+                                                }
+                                            });
                                 }
                                 pages.incrementAndGet();
                             })
                             .exceptionally(ex -> { log.warn("Entries fetch failed: {}", ex.toString()); return null; }));
-                    if (summonerIds.size() >= maxSummoners) break outer;
                 }
             }
         }
@@ -173,7 +209,12 @@ public class BuildAggregationService {
         log.info("Aggregation {}: fetched {} summoner ids in {}ms", championId, summonerIds.size(), (System.currentTimeMillis()-t0));
 
         // Resolve to PUUIDs
-        List<String> puuids = summonerIds.stream().limit(maxSummoners).map(id -> riot.getSummonerById(id)
+        List<String> uniqueSummonerIds;
+        synchronized (summonerIds) {
+            uniqueSummonerIds = new ArrayList<>(summonerIds);
+        }
+
+        List<String> puuids = uniqueSummonerIds.stream().limit(maxSummoners).map(id -> riot.getSummonerById(id)
                 .thenApply(s -> s != null ? s.getPuuid() : null)
                 .exceptionally(ex -> null))
             .collect(Collectors.toList())
@@ -181,10 +222,14 @@ public class BuildAggregationService {
             .filter(StringUtils::hasText)
             .collect(Collectors.toList());
 
-        // Prepare counters
-        Map<Integer, int[]> itemCounts = new HashMap<>(); // id -> [count, wins]
-        Map<String, int[]> runeCounts = new HashMap<>(); // key: primary|sub|keystone
-        Map<String, int[]> spellCounts = new HashMap<>(); // key: min(sp1,sp2)|max(...)
+        Map<String, Map<Integer, int[]>> itemCounts = new java.util.concurrent.ConcurrentHashMap<>();
+        Map<String, Map<String, int[]>> runeCounts = new java.util.concurrent.ConcurrentHashMap<>();
+        Map<String, Map<String, int[]>> spellCounts = new java.util.concurrent.ConcurrentHashMap<>();
+
+        // Ensure ALL bucket exists up-front to avoid extra conditionals later
+        itemCounts.put("ALL", new java.util.concurrent.ConcurrentHashMap<>());
+        runeCounts.put("ALL", new java.util.concurrent.ConcurrentHashMap<>());
+        spellCounts.put("ALL", new java.util.concurrent.ConcurrentHashMap<>());
 
         // Fetch matches per puuid and aggregate
         List<CompletableFuture<Void>> aggFutures = new ArrayList<>();
@@ -203,97 +248,169 @@ public class BuildAggregationService {
                                 if (m.getInfo().getQueueId() != q) continue;
                                 String mv = m.getInfo().getGameVersion();
                                 if (!StringUtils.hasText(mv) || !mv.startsWith(patch + ".")) continue;
-                                // Skip remakes: treat very short matches as no-result
                                 long gd = m.getInfo().getGameDuration();
                                 if (gd > 0 && gd < 300) continue;
                                 for (ParticipantDto p : m.getInfo().getParticipants()) {
-                                    if (p == null) continue;
-                                    if (p.getChampionId() == championKey.intValue()) {
-                                        boolean win = p.isWin();
-                                        // items
-                                        int[] slots = {p.getItem0(), p.getItem1(), p.getItem2(), p.getItem3(), p.getItem4(), p.getItem5()};
-                                        for (int itemId : slots) {
-                                            if (itemId <= 0) continue;
-                                            int[] arr = itemCounts.computeIfAbsent(itemId, k -> new int[2]);
-                                            arr[0] += 1; if (win) arr[1] += 1;
-                                        }
-                                        // runes
-                                        PerksDto perks = p.getPerks();
-                                        if (perks != null && perks.getStyles() != null && perks.getStyles().size() >= 2) {
-                                            PerkStyleDto primary = perks.getStyles().get(0);
-                                            PerkStyleDto sub = perks.getStyles().get(1);
-                                            int keystone = 0;
-                                            if (primary.getSelections() != null && !primary.getSelections().isEmpty()) {
-                                                keystone = primary.getSelections().get(0).getPerk();
+                                    if (p == null || p.getChampionId() != championKey.intValue()) continue;
+                                    boolean win = p.isWin();
+                                    String roleKey = normalizeRole(p.getTeamPosition());
+
+                                    Map<Integer, int[]> allItemsBucket = itemCounts.computeIfAbsent("ALL", key -> new java.util.concurrent.ConcurrentHashMap<>());
+                                    int[] slots = {p.getItem0(), p.getItem1(), p.getItem2(), p.getItem3(), p.getItem4(), p.getItem5()};
+                                    for (int itemId : slots) {
+                                        if (itemId > 0) {
+                                            incrementCounter(allItemsBucket, itemId, win);
+                                            if (roleKey != null) {
+                                                incrementCounter(itemCounts.computeIfAbsent(roleKey, key -> new java.util.concurrent.ConcurrentHashMap<>()), itemId, win);
                                             }
-                                            String key = primary.getStyle() + "|" + sub.getStyle() + "|" + keystone;
-                                            int[] arr = runeCounts.computeIfAbsent(key, k -> new int[2]);
-                                            arr[0] += 1; if (win) arr[1] += 1;
                                         }
-                                        // summoner spells
-                                        int a = p.getSummoner1Id();
-                                        int b = p.getSummoner2Id();
-                                        int s1 = Math.min(a, b), s2 = Math.max(a, b);
-                                        String key = s1 + "|" + s2;
-                                        int[] arr = spellCounts.computeIfAbsent(key, k -> new int[2]);
-                                        arr[0] += 1; if (win) arr[1] += 1;
+                                    }
+
+                                    PerksDto perks = p.getPerks();
+                                    if (perks != null && perks.getStyles() != null && perks.getStyles().size() >= 2) {
+                                        PerkStyleDto primary = perks.getStyles().get(0);
+                                        PerkStyleDto sub = perks.getStyles().get(1);
+                                        int keystone = 0;
+                                        if (primary != null && primary.getSelections() != null && !primary.getSelections().isEmpty()) {
+                                            keystone = primary.getSelections().get(0).getPerk();
+                                        }
+                                        String runeKey = primary.getStyle() + "|" + sub.getStyle() + "|" + keystone;
+                                        Map<String, int[]> allRunesBucket = runeCounts.computeIfAbsent("ALL", key -> new java.util.concurrent.ConcurrentHashMap<>());
+                                        incrementCounter(allRunesBucket, runeKey, win);
+                                        if (roleKey != null) {
+                                            incrementCounter(runeCounts.computeIfAbsent(roleKey, key -> new java.util.concurrent.ConcurrentHashMap<>()), runeKey, win);
+                                        }
+                                    }
+
+                                    int a = p.getSummoner1Id();
+                                    int b = p.getSummoner2Id();
+                                    int s1 = Math.min(a, b), s2 = Math.max(a, b);
+                                    if (s1 > 0 || s2 > 0) {
+                                        String spellKey = s1 + "|" + s2;
+                                        Map<String, int[]> allSpellsBucket = spellCounts.computeIfAbsent("ALL", key -> new java.util.concurrent.ConcurrentHashMap<>());
+                                        incrementCounter(allSpellsBucket, spellKey, win);
+                                        if (roleKey != null) {
+                                            incrementCounter(spellCounts.computeIfAbsent(roleKey, key -> new java.util.concurrent.ConcurrentHashMap<>()), spellKey, win);
+                                        }
                                     }
                                 }
-                            } catch (Exception ignore) {}
+                            } catch (Exception ignore) {
+                                // Defensive: aggregation should never fail the entire job because of a single match
+                            }
                         }
                     })
                     .exceptionally(ex -> { log.warn("Aggregation match fetch error: {}", ex.toString()); return null; })
             );
         }
-        CompletableFuture.allOf(aggFutures.toArray(new CompletableFuture[0])).orTimeout(Duration.ofMinutes(5).toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS).join();
+        CompletableFuture.allOf(aggFutures.toArray(new CompletableFuture[0]))
+                .orTimeout(Duration.ofMinutes(5).toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS)
+                .join();
 
-        // Flush to DB
-        itemCounts.forEach((itemId, arr) -> itemRepo.findByChampionIdAndRoleAndPatchAndQueueIdAndItemId(championId, "ALL", patch, q, itemId)
-                .map(e -> { e.setCount(e.getCount()+arr[0]); e.setWins(e.getWins()+arr[1]); return itemRepo.save(e); })
-                .orElseGet(() -> itemRepo.save(newEntity(championId, patch, q, itemId, arr[0], arr[1]))));
+        // Replace existing aggregates atomically per champion/patch/queue
+        itemRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
+        runeRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
+        spellRepo.deleteByChampionIdAndPatchAndQueueId(championId, patch, q);
 
-        runeCounts.forEach((k, arr) -> {
-            String[] parts = k.split("\\|");
-            int primary = Integer.parseInt(parts[0]);
-            int sub = Integer.parseInt(parts[1]);
-            int keystone = Integer.parseInt(parts[2]);
-            runeRepo.findByChampionIdAndRoleAndPatchAndQueueIdAndPrimaryStyleAndSubStyleAndKeystone(championId, "ALL", patch, q, primary, sub, keystone)
-                    .map(e -> { e.setCount(e.getCount()+arr[0]); e.setWins(e.getWins()+arr[1]); return runeRepo.save(e); })
-                    .orElseGet(() -> {
-                        ChampionRuneStat e = new ChampionRuneStat();
-                        e.setChampionId(championId); e.setRole("ALL"); e.setPatch(patch); e.setQueueId(q);
-                        e.setPrimaryStyle(primary); e.setSubStyle(sub); e.setKeystone(keystone);
-                        e.setCount(arr[0]); e.setWins(arr[1]);
-                        return runeRepo.save(e);
-                    });
-        });
+        List<ChampionItemStat> itemEntities = itemCounts.entrySet().stream()
+                .flatMap(roleEntry -> roleEntry.getValue().entrySet().stream()
+                        .map(itemEntry -> newItemEntity(championId, roleEntry.getKey(), patch, q, itemEntry.getKey(), itemEntry.getValue())))
+                .collect(Collectors.toList());
+        if (!itemEntities.isEmpty()) {
+            itemRepo.saveAll(itemEntities);
+        }
 
-        spellCounts.forEach((k, arr) -> {
-            String[] parts = k.split("\\|");
-            int s1 = Integer.parseInt(parts[0]);
-            int s2 = Integer.parseInt(parts[1]);
-            spellRepo.findByChampionIdAndRoleAndPatchAndQueueIdAndSpell1IdAndSpell2Id(championId, "ALL", patch, q, s1, s2)
-                    .map(e -> { e.setCount(e.getCount()+arr[0]); e.setWins(e.getWins()+arr[1]); return spellRepo.save(e); })
-                    .orElseGet(() -> {
-                        ChampionSpellPairStat e = new ChampionSpellPairStat();
-                        e.setChampionId(championId); e.setRole("ALL"); e.setPatch(patch); e.setQueueId(q);
-                        e.setSpell1Id(s1); e.setSpell2Id(s2); e.setCount(arr[0]); e.setWins(arr[1]);
-                        return spellRepo.save(e);
-                    });
-        });
+        List<ChampionRuneStat> runeEntities = runeCounts.entrySet().stream()
+                .flatMap(roleEntry -> roleEntry.getValue().entrySet().stream()
+                        .map(runeEntry -> newRuneEntity(championId, roleEntry.getKey(), patch, q, runeEntry.getKey(), runeEntry.getValue())))
+                .collect(Collectors.toList());
+        if (!runeEntities.isEmpty()) {
+            runeRepo.saveAll(runeEntities);
+        }
 
-        log.info("Aggregation {} done in {}ms. items={}, runes={}, spells={}", championId, (System.currentTimeMillis()-t0), itemCounts.size(), runeCounts.size(), spellCounts.size());
+        List<ChampionSpellPairStat> spellEntities = spellCounts.entrySet().stream()
+                .flatMap(roleEntry -> roleEntry.getValue().entrySet().stream()
+                        .map(spellEntry -> newSpellEntity(championId, roleEntry.getKey(), patch, q, spellEntry.getKey(), spellEntry.getValue())))
+                .collect(Collectors.toList());
+        if (!spellEntities.isEmpty()) {
+            spellRepo.saveAll(spellEntities);
+        }
+
+        int distinctItems = itemCounts.getOrDefault("ALL", Collections.emptyMap()).size();
+        int distinctRunes = runeCounts.getOrDefault("ALL", Collections.emptyMap()).size();
+        int distinctSpells = spellCounts.getOrDefault("ALL", Collections.emptyMap()).size();
+        log.info("Aggregation {} done in {}ms. items={}, runes={}, spells={}", championId, (System.currentTimeMillis()-t0), distinctItems, distinctRunes, distinctSpells);
     }
 
-    private ChampionItemStat newEntity(String championId, String patch, int q, int itemId, int count, int wins) {
-        ChampionItemStat e = new ChampionItemStat();
-        e.setChampionId(championId);
-        e.setRole("ALL");
-        e.setPatch(patch);
-        e.setQueueId(q);
-        e.setItemId(itemId);
-        e.setCount(count);
-        e.setWins(wins);
-        return e;
+    private static <K> void incrementCounter(Map<K, int[]> bucket, K key, boolean win) {
+        bucket.compute(key, (k, arr) -> {
+            if (arr == null) arr = new int[2];
+            arr[0] += 1;
+            if (win) arr[1] += 1;
+            return arr;
+        });
+    }
+
+    private String normalizeRole(String raw) {
+        if (!StringUtils.hasText(raw)) {
+            return null;
+        }
+        String upper = raw.trim().toUpperCase(Locale.ROOT);
+        return switch (upper) {
+            case "TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY" -> upper;
+            case "MID" -> "MIDDLE";
+            case "BOT" -> "BOTTOM";
+            case "ADC", "CARRY" -> "BOTTOM";
+            case "SUPPORT" -> "UTILITY";
+            case "NONE" -> null;
+            default -> null;
+        };
+    }
+
+    private ChampionItemStat newItemEntity(String championId, String role, String patch, int queueId, int itemId, int[] data) {
+        ChampionItemStat entity = new ChampionItemStat();
+        entity.setChampionId(championId);
+        entity.setRole(role);
+        entity.setPatch(patch);
+        entity.setQueueId(queueId);
+        entity.setItemId(itemId);
+        entity.setCount(data[0]);
+        entity.setWins(data[1]);
+        return entity;
+    }
+
+    private ChampionRuneStat newRuneEntity(String championId, String role, String patch, int queueId, String key, int[] data) {
+        String[] parts = key.split("\\|");
+        int primary = Integer.parseInt(parts[0]);
+        int sub = Integer.parseInt(parts[1]);
+        int keystone = Integer.parseInt(parts[2]);
+
+        ChampionRuneStat entity = new ChampionRuneStat();
+        entity.setChampionId(championId);
+        entity.setRole(role);
+        entity.setPatch(patch);
+        entity.setQueueId(queueId);
+        entity.setPrimaryStyle(primary);
+        entity.setSubStyle(sub);
+        entity.setKeystone(keystone);
+        entity.setCount(data[0]);
+        entity.setWins(data[1]);
+        return entity;
+    }
+
+    private ChampionSpellPairStat newSpellEntity(String championId, String role, String patch, int queueId, String key, int[] data) {
+        String[] parts = key.split("\\|");
+        int s1 = Integer.parseInt(parts[0]);
+        int s2 = Integer.parseInt(parts[1]);
+
+        ChampionSpellPairStat entity = new ChampionSpellPairStat();
+        entity.setChampionId(championId);
+        entity.setRole(role);
+        entity.setPatch(patch);
+        entity.setQueueId(queueId);
+        entity.setSpell1Id(s1);
+        entity.setSpell2Id(s2);
+        entity.setCount(data[0]);
+        entity.setWins(data[1]);
+        return entity;
     }
 }

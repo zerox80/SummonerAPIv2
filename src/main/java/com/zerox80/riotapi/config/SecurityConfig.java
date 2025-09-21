@@ -1,18 +1,19 @@
 package com.zerox80.riotapi.config;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.HeaderWriterFilter;
-import org.springframework.web.filter.ForwardedHeaderFilter;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -46,6 +47,8 @@ public class SecurityConfig {
                 )
                 .addHeaderWriter(new StaticHeadersWriter("Permissions-Policy",
                     "geolocation=(), microphone=(), camera=(), payment=()"))
+                .addHeaderWriter(new StaticHeadersWriter("Cross-Origin-Opener-Policy", "same-origin"))
+                .addHeaderWriter(new StaticHeadersWriter("Cross-Origin-Resource-Policy", "same-origin"))
             )
             .authorizeHttpRequests(auth -> auth
                 // Actuator-Härtung: health/info erlauben, Rest verweigern
@@ -59,9 +62,15 @@ public class SecurityConfig {
     }
 
     @Bean
+    public FilterRegistrationBean<RateLimitingFilter> disableAutoRegistration(RateLimitingFilter rateLimitingFilter) {
+        FilterRegistrationBean<RateLimitingFilter> registration = new FilterRegistrationBean<>(rateLimitingFilter);
+        registration.setEnabled(false);
+        return registration;
+    }
+
+    @Bean
     public ForwardedHeaderFilter forwardedHeaderFilter() {
         // Ensures that X-Forwarded-* / Forwarded headers are applied to the HttpServletRequest
         return new ForwardedHeaderFilter();
     }
 }
-

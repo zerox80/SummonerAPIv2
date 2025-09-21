@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.CacheControl;
 
 import java.util.List;
 import java.util.Collections;
@@ -70,21 +71,35 @@ public class SummonerController {
                                             @RequestParam(value = "start", defaultValue = "0") int start,
                                             @RequestParam(value = "count", defaultValue = "10") int count) {
         try {
-            if (!StringUtils.hasText(riotId) || !riotId.contains("#")) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid riotId format. Expected Name#TAG"));
+            String trimmedRiotId = riotId != null ? riotId.trim() : null;
+            if (!StringUtils.hasText(trimmedRiotId) || !trimmedRiotId.contains("#")) {
+                return ResponseEntity.badRequest()
+                        .cacheControl(CacheControl.noStore())
+                        .body(Map.of("error", "Invalid riotId format. Expected Name#TAG"));
             }
-            String[] parts = riotId.split("#", 2);
-            String gameName = parts[0];
-            String tagLine = parts[1];
+            String[] parts = trimmedRiotId.split("#", 2);
+            String gameName = parts[0].trim();
+            String tagLine = parts[1].trim();
+            if (!StringUtils.hasText(gameName) || !StringUtils.hasText(tagLine)) {
+                return ResponseEntity.badRequest()
+                        .cacheControl(CacheControl.noStore())
+                        .body(Map.of("error", "Invalid riotId format. Expected Name#TAG"));
+            }
             Summoner summoner = riotApiService.getSummonerByRiotId(gameName, tagLine).join();
             if (summoner == null || !StringUtils.hasText(summoner.getPuuid())) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Summoner not found."));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .cacheControl(CacheControl.noStore())
+                        .body(Map.of("error", "Summoner not found."));
             }
             List<MatchV5Dto> list = riotApiService.getMatchHistoryPaged(summoner.getPuuid(), start, count).join();
-            return ResponseEntity.ok(list != null ? list : Collections.emptyList());
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.noStore())
+                    .body(list != null ? list : Collections.emptyList());
         } catch (Exception e) {
             logger.error("/api/matches error: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to load matches."));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .cacheControl(CacheControl.noStore())
+                    .body(Map.of("error", "Failed to load matches."));
         }
     }
 
@@ -112,9 +127,12 @@ public class SummonerController {
 
     @GetMapping("/api/summoner-suggestions")
     @ResponseBody
-    public List<SummonerSuggestionDTO> summonerSuggestions(@RequestParam("query") String query, HttpServletRequest request) {
+    public ResponseEntity<List<SummonerSuggestionDTO>> summonerSuggestions(@RequestParam("query") String query, HttpServletRequest request) {
         Map<String, SummonerSuggestionDTO> userHistory = getSearchHistoryFromCookie(request);
-        return riotApiService.getSummonerSuggestions(query, userHistory);
+        List<SummonerSuggestionDTO> list = riotApiService.getSummonerSuggestions(query, userHistory);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .body(list);
     }
 
     @GetMapping("/api/me")
@@ -122,12 +140,14 @@ public class SummonerController {
     public Callable<ResponseEntity<?>> getMySummoner(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         if (!StringUtils.hasText(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")) {
             return () -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .cacheControl(CacheControl.noStore())
                     .body(Map.of("error", "Missing or invalid Authorization header. Expected 'Bearer <token>'."));
         }
 
         String bearerToken = authorizationHeader.substring("Bearer ".length()).trim();
         if (!StringUtils.hasText(bearerToken)) {
             return () -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .cacheControl(CacheControl.noStore())
                     .body(Map.of("error", "Empty bearer token."));
         }
 
@@ -136,12 +156,16 @@ public class SummonerController {
                 Summoner summoner = riotApiService.getSummonerViaRso(bearerToken).join();
                 if (summoner == null) {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .cacheControl(CacheControl.noStore())
                             .body(Map.of("error", "Summoner not found or token invalid."));
                 }
-                return ResponseEntity.ok(summoner);
+                return ResponseEntity.ok()
+                        .cacheControl(CacheControl.noStore())
+                        .body(summoner);
             } catch (Exception e) {
                 logger.error("Error in /api/me endpoint: {}", e.getMessage(), e);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .cacheControl(CacheControl.noStore())
                         .body(Map.of("error", "Internal error while resolving summoner via RSO."));
             }
         };
@@ -149,14 +173,15 @@ public class SummonerController {
 
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public Callable<String> searchSummoner(@RequestParam("riotId") String riotId, Model model, HttpServletRequest request, HttpServletResponse response, java.util.Locale locale) {
-        if (!StringUtils.hasText(riotId) || !riotId.contains("#")) {
+        String normalizedRiotId = riotId != null ? riotId.trim() : null;
+        if (!StringUtils.hasText(normalizedRiotId) || !normalizedRiotId.contains("#")) {
             model.addAttribute("error", "Invalid Riot ID. Please use the format Name#TAG.");
             return () -> "index";
         }
 
-        String[] parts = riotId.split("#", 2);
-        String gameName = parts[0];
-        String tagLine = parts[1];
+        String[] parts = normalizedRiotId.split("#", 2);
+        String gameName = parts[0].trim();
+        String tagLine = parts[1].trim();
 
         if (!StringUtils.hasText(gameName) || !StringUtils.hasText(tagLine)) {
             model.addAttribute("error", "Invalid Riot ID. Name and Tagline cannot be empty.");
@@ -251,10 +276,15 @@ public class SummonerController {
     }
 
     private void updateSearchHistoryCookie(HttpServletRequest request, HttpServletResponse response, String riotId, SummonerSuggestionDTO suggestionDTO) {
+        String normalizedRiotId = riotId != null ? riotId.trim() : null;
+        if (!StringUtils.hasText(normalizedRiotId) || suggestionDTO == null) {
+            return;
+        }
+
         Map<String, SummonerSuggestionDTO> history = getSearchHistoryFromCookie(request);
 
-        history.remove(riotId.toLowerCase());
-        history.put(riotId.toLowerCase(), suggestionDTO);
+        history.remove(normalizedRiotId.toLowerCase());
+        history.put(normalizedRiotId.toLowerCase(), suggestionDTO);
 
         while (history.size() > MAX_HISTORY_SIZE) {
             String oldestKey = history.keySet().iterator().next();

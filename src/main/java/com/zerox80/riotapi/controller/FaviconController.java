@@ -3,15 +3,15 @@ package com.zerox80.riotapi.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.http.ResponseEntity;
 
 @Controller
 public class FaviconController {
 
     @GetMapping("/favicon.ico")
-    public RedirectView faviconIco() {
-        RedirectView rv = new RedirectView("/favicon.svg");
-        rv.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-        return rv;
+    public ResponseEntity<Void> faviconIco() {
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
+                .location(java.net.URI.create("/favicon.svg"))
+                .build();
     }
 }

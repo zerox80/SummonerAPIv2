@@ -11,4 +11,12 @@ public class SummonerSuggestionDTO {
     private String riotId;
     private int profileIconId;
     private long summonerLevel;
+    private String profileIconUrl;
+
+    public SummonerSuggestionDTO(String riotId, int profileIconId, long summonerLevel) {
+        this.riotId = riotId;
+        this.profileIconId = profileIconId;
+        this.summonerLevel = summonerLevel;
+        this.profileIconUrl = null;
+    }
 } 
