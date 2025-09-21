@@ -5,6 +5,7 @@ import com.zerox80.riotapi.model.SpellSummary;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.Authenticator;
 import java.net.CookieHandler;
 import java.net.ProxySelector;
 import java.net.URI;
@@ -106,6 +107,11 @@ class DataDragonServiceTest {
 
         @Override
         public Optional<ProxySelector> proxy() {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<Authenticator> authenticator() {
             return Optional.empty();
         }
 
