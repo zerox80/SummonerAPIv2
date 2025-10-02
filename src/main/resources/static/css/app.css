@@ -91,7 +91,7 @@ html, body {
 }
 
 /* Hero */
-.hero { position: relative; }
+.hero { position: relative; z-index: 200; }
 .gradient-orb {
   width: 480px; height: 480px; border-radius: 50%;
   filter: blur(40px); opacity: .35; pointer-events: none;
