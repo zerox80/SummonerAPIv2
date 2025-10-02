@@ -92,6 +92,10 @@ html, body {
 
 /* Hero */
 .hero { position: relative; }
+.hero.search-dropdown-open {
+  padding-bottom: 6rem;
+  transition: padding-bottom .15s ease;
+}
 .gradient-orb {
   width: 480px; height: 480px; border-radius: 50%;
   filter: blur(40px); opacity: .35; pointer-events: none;

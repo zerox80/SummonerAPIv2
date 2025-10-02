@@ -466,6 +466,7 @@
         const riotIdInput = document.getElementById('riotId');
         const suggestionsContainer = document.getElementById('suggestions-container');
         let debounceTimer;
+        const heroSection = riotIdInput?.closest('.hero');
         // Ensure dropdown uses CSS absolute positioning directly under the input
         function positionDropdown(force = false){
             if (!suggestionsContainer || !riotIdInput) return;
@@ -482,6 +483,7 @@
             suggestionsContainer.style.maxWidth = `${Math.round(width)}px`;
             suggestionsContainer.style.boxShadow = '0 20px 40px rgba(0,0,0,0.45)';
             suggestionsContainer.style.border = '1px solid rgba(15,20,30,0.75)';
+            heroSection?.classList.add('search-dropdown-open');
         }
 
         function resetDropdownPlacement(){
@@ -493,6 +495,7 @@
             suggestionsContainer.style.maxWidth = '';
             suggestionsContainer.style.boxShadow = '';
             suggestionsContainer.style.border = '';
+            heroSection?.classList.remove('search-dropdown-open');
         }
 
         // ===== Local history fallback (in addition to cookie-backed API) =====
