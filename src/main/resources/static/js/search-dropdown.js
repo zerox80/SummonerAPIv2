@@ -276,6 +276,7 @@ export function initSearchDropdown() {
             riotIdInput.setAttribute('aria-expanded','false');
             riotIdInput.removeAttribute('aria-activedescendant');
             activeIndex = -1;
+            resetDropdownPlacement();
         }
     });
 }
