@@ -8,21 +8,36 @@ export function initSearchDropdown() {
     const heroSection = riotIdInput?.closest('.hero');
     const dropdownOriginalParent = suggestionsContainer?.parentElement || null;
     const dropdownOriginalNextSibling = suggestionsContainer?.nextSibling || null;
+    const dropdownParentWrapper = dropdownOriginalParent?.parentElement || null;
     const dropdownPlaceholder = document.createElement('div');
+    dropdownPlaceholder.className = 'search-dropdown-placeholder';
     dropdownPlaceholder.style.display = 'none';
+    dropdownPlaceholder.style.height = '0';
+    dropdownPlaceholder.style.width = '100%';
+    dropdownPlaceholder.style.maxWidth = '100%';
     let dropdownMovedToBody = false;
 
     function moveDropdownToBody(){
         if (!suggestionsContainer || dropdownMovedToBody || !dropdownOriginalParent) return;
-        dropdownOriginalParent.insertBefore(dropdownPlaceholder, dropdownOriginalNextSibling);
+        dropdownPlaceholder.style.display = 'block';
+        dropdownPlaceholder.style.height = '0';
+        if (dropdownParentWrapper) {
+            dropdownParentWrapper.insertBefore(dropdownPlaceholder, dropdownOriginalParent.nextSibling);
+        } else {
+            dropdownOriginalParent.insertBefore(dropdownPlaceholder, dropdownOriginalNextSibling);
+        }
         document.body.appendChild(suggestionsContainer);
         dropdownMovedToBody = true;
     }
 
     function restoreDropdownParent(){
         if (!suggestionsContainer || !dropdownMovedToBody || !dropdownOriginalParent) return;
-        dropdownOriginalParent.insertBefore(suggestionsContainer, dropdownPlaceholder);
-        dropdownPlaceholder.remove();
+        dropdownOriginalParent.insertBefore(suggestionsContainer, dropdownOriginalNextSibling);
+        dropdownPlaceholder.style.display = 'none';
+        dropdownPlaceholder.style.height = '0';
+        if (dropdownPlaceholder.parentElement) {
+            dropdownPlaceholder.parentElement.removeChild(dropdownPlaceholder);
+        }
         dropdownMovedToBody = false;
     }
 
