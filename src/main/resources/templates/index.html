@@ -503,6 +503,13 @@
             suggestionsContainer.style.maxWidth = `${Math.round(width)}px`;
             suggestionsContainer.style.boxShadow = '0 20px 40px rgba(0,0,0,0.45)';
             suggestionsContainer.style.border = '1px solid rgba(15,20,30,0.75)';
+            requestAnimationFrame(() => {
+                const dropdownHeight = suggestionsContainer.offsetHeight || 0;
+                if (dropdownHeight > 0 && dropdownPlaceholder) {
+                    dropdownPlaceholder.style.display = 'block';
+                    dropdownPlaceholder.style.height = `${dropdownHeight + 24}px`;
+                }
+            });
             heroSection?.classList.add('search-dropdown-open');
         }
 
@@ -516,6 +523,8 @@
             suggestionsContainer.style.boxShadow = '';
             suggestionsContainer.style.border = '';
             heroSection?.classList.remove('search-dropdown-open');
+            dropdownPlaceholder.style.display = 'none';
+            dropdownPlaceholder.style.height = '0';
             restoreDropdownParent();
         }
 
