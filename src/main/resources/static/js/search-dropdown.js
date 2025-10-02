@@ -33,7 +33,7 @@ export function initSearchDropdown() {
         if (!rect || !rect.width) return;
         moveDropdownToBody();
         const left = rect.left;
-        const top = rect.bottom + 20;
+        const top = rect.bottom;
         const width = rect.width;
         suggestionsContainer.style.position = 'fixed';
         suggestionsContainer.style.zIndex = '999999';

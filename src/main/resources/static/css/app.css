@@ -112,6 +112,7 @@ html, body {
   left: 0;
   right: 0;
   z-index: 1050 !important; /* High z-index, but not fixed-level */
+  margin-top: 0.5rem; /* Add a small gap below the search input */
   max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
   border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);
   /* Fully opaque backgrounds (no blur/alpha) */
