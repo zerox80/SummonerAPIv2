@@ -92,12 +92,7 @@ html, body {
 }
 
 /* Hero */
-.hero { position: relative; z-index: 20; }
-.hero.search-dropdown-open {
-  padding-bottom: 6rem;
-  transition: padding-bottom .15s ease;
-}
-.gradient-orb {
+.hero { position: relative; z-index: 20; }.gradient-orb {
   width: 480px; height: 480px; border-radius: 50%;
   filter: blur(40px); opacity: .35; pointer-events: none;
 }
@@ -112,9 +107,11 @@ html, body {
 
 /* Suggestions dropdown */
 .suggestions-dropdown {
-  position: fixed !important; /* force fixed positioning */
-  top: 0; left: 0; /* JS will position it */
-  z-index: 999999 !important; /* sit above absolutely everything (footer/nav etc.) */
+  position: absolute !important; /* Use absolute positioning relative to .search-group */
+  top: 100%; /* Position below the input group */
+  left: 0;
+  right: 0;
+  z-index: 1050 !important; /* High z-index, but not fixed-level */
   max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
   border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);
   /* Fully opaque backgrounds (no blur/alpha) */
