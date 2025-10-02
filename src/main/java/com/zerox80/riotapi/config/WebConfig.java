@@ -1,6 +1,5 @@
 package com.zerox80.riotapi.config;
 
-import jakarta.servlet.Filter;
 import org.springframework.boot.web.server.Compression;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -12,7 +11,6 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
-import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 
 import java.time.Duration;
@@ -34,11 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResolver(new PathResourceResolver());
     }
 
-    // Make Thymeleaf rewrite resource URLs to include the content version (e.g., app.css?v=<hash>)
-    @Bean
-    public Filter resourceUrlEncodingFilter() {
-        return new ResourceUrlEncodingFilter();
-    }
+    // Note: ResourceUrlEncodingFilter is automatically provided by Spring Boot's Thymeleaf autoconfiguration
 
     // Add weak ETag to dynamic responses to enable conditional GETs and save bandwidth
     @Bean
