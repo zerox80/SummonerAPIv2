@@ -1,30 +1,78 @@
 // Search dropdown with suggestions and history
 export function initSearchDropdown() {
     const riotIdInput = document.getElementById('riotId');
+    const suggestionsContainer = document.getElementById('suggestions-container');
     if (!riotIdInput || !suggestionsContainer) return;
 
     let debounceTimer;
-    function showSuggestions() {
-        if (!suggestionsContainer || !riotIdInput) return;
+    const heroSection = riotIdInput?.closest('.hero');
+    const dropdownOriginalParent = suggestionsContainer?.parentElement || null;
+    const dropdownOriginalNextSibling = suggestionsContainer?.nextSibling || null;
+    const dropdownPlaceholder = document.createElement('div');
+    dropdownPlaceholder.style.display = 'none';
+    let dropdownMovedToBody = false;
 
-        requestAnimationFrame(() => {
+    function moveDropdownToBody(){
+        if (!suggestionsContainer || dropdownMovedToBody || !dropdownOriginalParent) return;
+        dropdownOriginalParent.insertBefore(dropdownPlaceholder, dropdownOriginalNextSibling);
+        document.body.appendChild(suggestionsContainer);
+        dropdownMovedToBody = true;
+    }
+
+    function restoreDropdownParent(){
+        if (!suggestionsContainer || !dropdownMovedToBody || !dropdownOriginalParent) return;
+        dropdownOriginalParent.insertBefore(suggestionsContainer, dropdownPlaceholder);
+        dropdownPlaceholder.remove();
+        dropdownMovedToBody = false;
+    }
+
+    function positionDropdown(force = false){
+        if (!suggestionsContainer || !riotIdInput) return;
+        if (!force && suggestionsContainer.style.display !== 'block') return;
+
+        // Wait for CSS transition to finish before calculating position
+        setTimeout(() => {
             const rect = riotIdInput.getBoundingClientRect();
             if (!rect || !rect.width) return;
+            moveDropdownToBody();
+            const left = rect.left;
+            const top = rect.bottom + 8; // Reduced gap
+            const width = rect.width;
+            suggestionsContainer.style.position = 'fixed';
+            suggestionsContainer.style.zIndex = '999999';
+            suggestionsContainer.style.left = `${Math.round(left)}px`;
+            suggestionsContainer.style.top = `${Math.round(top)}px`;
+            suggestionsContainer.style.width = `${Math.round(width)}px`;
+            suggestionsContainer.style.maxWidth = `${Math.round(width)}px`;
+            suggestionsContainer.style.boxShadow = '0 20px 40px rgba(0,0,0,0.45)';
+            suggestionsContainer.style.border = '1px solid rgba(15,20,30,0.75)';
+            requestAnimationFrame(() => {
+                const dropdownHeight = suggestionsContainer.offsetHeight || 0;
+                if (dropdownHeight > 0 && dropdownPlaceholder) {
+                    dropdownPlaceholder.style.display = 'block';
+                    dropdownPlaceholder.style.height = `${dropdownHeight + 24}px`;
+                }
+            });
+        }, 160);
 
-            suggestionsContainer.style.width = `${rect.width}px`;
-            suggestionsContainer.style.display = 'block';
-            riotIdInput.setAttribute('aria-expanded', 'true');
-        });
+        heroSection?.classList.add('search-dropdown-open');
     }
 
-    function hideSuggestions() {
+    function resetDropdownPlacement(){
         if (!suggestionsContainer) return;
-        suggestionsContainer.innerHTML = '';
-        suggestionsContainer.style.display = 'none';
-        riotIdInput.setAttribute('aria-expanded', 'false');
-        riotIdInput.removeAttribute('aria-activedescendant');
+        suggestionsContainer.style.position = '';
+        suggestionsContainer.style.zIndex = '';
+        suggestionsContainer.style.left = '';
+        suggestionsContainer.style.top = '';
+        suggestionsContainer.style.width = '';
+        suggestionsContainer.style.maxWidth = '';
+        suggestionsContainer.style.boxShadow = '';
+        suggestionsContainer.style.border = '';
+        heroSection?.classList.remove('search-dropdown-open');
+        dropdownPlaceholder.style.display = 'none';
+        dropdownPlaceholder.style.height = '0';
+        restoreDropdownParent();
     }
-{{ ... }}
 
     // Local history
     const LS_KEY = 'searchHistory';
@@ -77,24 +125,31 @@ export function initSearchDropdown() {
             item.addEventListener('click', (e)=>{
                 e.preventDefault();
                 riotIdInput.value = riotId;
-                hideSuggestions();
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.style.display = 'none';
+                riotIdInput.setAttribute('aria-expanded','false');
+                riotIdInput.removeAttribute('aria-activedescendant');
             });
             suggestionsContainer.appendChild(item);
         });
         const trimmedQuery = (filterTerm ?? '').trim();
-        if (!filtered.length && !trimmedQuery.length) {
-            hideSuggestions();
-            return;
+        if (!filtered.length) {
+            if (trimmedQuery.length) {
+                const empty = document.createElement('div');
+                empty.className = 'suggestion-section';
+                empty.textContent = 'Keine Einträge';
+                suggestionsContainer.appendChild(empty);
+            } else {
+                suggestionsContainer.style.display = 'none';
+                riotIdInput.setAttribute('aria-expanded','false');
+                riotIdInput.removeAttribute('aria-activedescendant');
+                resetDropdownPlacement();
+                return;
+            }
         }
-
-        if (!filtered.length && trimmedQuery.length) {
-            const empty = document.createElement('div');
-            empty.className = 'suggestion-section';
-            empty.textContent = 'Keine Einträge';
-            suggestionsContainer.appendChild(empty);
-        }
-
-        showSuggestions();
+        suggestionsContainer.style.display = 'block';
+        riotIdInput.setAttribute('aria-expanded','true');
+        positionDropdown();
     }
 
     function fetchAndDisplaySuggestions(query) {
@@ -148,12 +203,16 @@ export function initSearchDropdown() {
                             item.addEventListener('click', function (e) {
                                 e.preventDefault();
                                 riotIdInput.value = suggestion.riotId;
-                                hideSuggestions();
+                                suggestionsContainer.innerHTML = '';
+                                suggestionsContainer.style.display = 'none';
+                                riotIdInput.setAttribute('aria-expanded', 'false');
+                                riotIdInput.removeAttribute('aria-activedescendant');
                             });
 
                             suggestionsContainer.appendChild(item);
                         });
-                        showSuggestions();
+                        suggestionsContainer.style.display = 'block';
+                        riotIdInput.setAttribute('aria-expanded', 'true');
                     }
                 })
                 .catch(error => console.error('Error fetching suggestions:', error));
@@ -171,7 +230,10 @@ export function initSearchDropdown() {
     });
 
     riotIdInput.addEventListener('focus', function () {
-        fetchAndDisplaySuggestions(riotIdInput.value);
+        if (riotIdInput.value === '') {
+            fetchAndDisplaySuggestions('');
+        }
+        positionDropdown(true);
     });
 
     // Keyboard navigation
@@ -191,20 +253,28 @@ export function initSearchDropdown() {
     }
 
     riotIdInput.addEventListener('keydown', function(e){
+        const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
         if (!items.length) return;
         if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = (activeIndex + 1) % items.length; updateActive(activeIndex); }
         else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = (activeIndex - 1 + items.length) % items.length; updateActive(activeIndex); }
         else if (e.key === 'Enter') {
             if (activeIndex >= 0 && items[activeIndex]) { e.preventDefault(); items[activeIndex].click(); }
         } else if (e.key === 'Escape') {
-            hideSuggestions();
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = 'none';
+            resetDropdownPlacement();
+            riotIdInput.setAttribute('aria-expanded','false');
+            riotIdInput.removeAttribute('aria-activedescendant');
             activeIndex = -1;
         }
     });
 
     document.addEventListener('click', function (event) {
         if (!riotIdInput.contains(event.target) && !suggestionsContainer.contains(event.target)) {
-            hideSuggestions();
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.style.display = 'none';
+            riotIdInput.setAttribute('aria-expanded','false');
+            riotIdInput.removeAttribute('aria-activedescendant');
             activeIndex = -1;
         }
     });
