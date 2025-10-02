@@ -497,6 +497,7 @@
             const top = rect.bottom + 20; // add comfortable gap below input
             const width = rect.width;
             suggestionsContainer.style.position = 'fixed';
+            suggestionsContainer.style.zIndex = '999999';
             suggestionsContainer.style.left = `${Math.round(left)}px`;
             suggestionsContainer.style.top = `${Math.round(top)}px`;
             suggestionsContainer.style.width = `${Math.round(width)}px`;
@@ -516,6 +517,7 @@
         function resetDropdownPlacement(){
             if (!suggestionsContainer) return;
             suggestionsContainer.style.position = '';
+            suggestionsContainer.style.zIndex = '';
             suggestionsContainer.style.left = '';
             suggestionsContainer.style.top = '';
             suggestionsContainer.style.width = '';
