@@ -112,14 +112,14 @@ html, body {
 
 /* Suggestions dropdown */
 .suggestions-dropdown {
-  position: absolute; top: calc(100% + .25rem); left: 0;
-  z-index: 999999; /* sit above absolutely everything (footer/nav etc.) */
+  position: fixed !important; /* force fixed positioning */
+  top: 0; left: 0; /* JS will position it */
+  z-index: 999999 !important; /* sit above absolutely everything (footer/nav etc.) */
   max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
   border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);
   /* Fully opaque backgrounds (no blur/alpha) */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   background: #1a1f2e !important; /* Solid background for dark theme */
-  position: absolute;
   isolation: isolate; /* new stacking context */
   background-clip: padding-box;
 }
@@ -129,7 +129,6 @@ html, body {
   position: sticky; /* stays at top when scrolling */
   top: 0; left: 0; right: 0; height: 0; /* create stacking context */
 }
-.suggestions-dropdown { position: relative; }
 .suggestions-dropdown::after {
   content: "";
   position: absolute; inset: 0; border-radius: inherit;
