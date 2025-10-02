@@ -575,12 +575,20 @@
                 });
                 suggestionsContainer.appendChild(item);
             });
-            // Always show the dropdown, even if no items (show a placeholder)
+            const trimmedQuery = (filterTerm ?? '').trim();
             if (!filtered.length) {
-                const empty = document.createElement('div');
-                empty.className = 'suggestion-section';
-                empty.textContent = 'Keine Einträge';
-                suggestionsContainer.appendChild(empty);
+                if (trimmedQuery.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'suggestion-section';
+                    empty.textContent = 'Keine Einträge';
+                    suggestionsContainer.appendChild(empty);
+                } else {
+                    suggestionsContainer.style.display = 'none';
+                    riotIdInput.setAttribute('aria-expanded','false');
+                    riotIdInput.removeAttribute('aria-activedescendant');
+                    resetDropdownPlacement();
+                    return;
+                }
             }
             suggestionsContainer.style.display = 'block';
             riotIdInput.setAttribute('aria-expanded','true');
