@@ -472,8 +472,8 @@
             if (!force && suggestionsContainer.style.display !== 'block') return;
             const rect = riotIdInput.getBoundingClientRect();
             if (!rect || !rect.width) return;
-            const left = rect.left + (window.scrollX || window.pageXOffset);
-            const top = rect.bottom + (window.scrollY || window.pageYOffset) + 16; // add larger gap
+            const left = rect.left;
+            const top = rect.bottom + 20; // add comfortable gap below input
             const width = rect.width;
             suggestionsContainer.style.position = 'fixed';
             suggestionsContainer.style.left = `${Math.round(left)}px`;
