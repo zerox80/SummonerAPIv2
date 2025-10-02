@@ -52,7 +52,7 @@
 
 <main class="container mt-5">
     <!-- Hero/Search -->
-    <section class="hero glass-card rounded-4 p-4 p-md-5 mb-4 shadow-lg position-relative">
+    <section class="hero glass-card rounded-4 p-4 mb-4 shadow-lg position-relative">
         <div class="position-absolute gradient-orb orb-1"></div>
         <div class="position-absolute gradient-orb orb-2"></div>
         <div class="text-center mb-4">
@@ -60,7 +60,7 @@
             <p class="text-secondary mb-0">Check ranks, recent matches, and champions at a glance.</p>
         </div>
         <form th:action="@{/search}" method="get" class="position-relative">
-            <div class="input-group input-group-lg search-group shadow-sm rounded-3">
+            <div class="input-group search-group shadow-sm rounded-3">
                 <span class="input-group-text bg-transparent border-0 ps-3"><i class="fas fa-user-tag text-secondary" aria-hidden="true"></i></span>
                 <label for="riotId" class="visually-hidden">Riot ID</label>
                 <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" />

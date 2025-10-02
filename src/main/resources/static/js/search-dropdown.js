@@ -1,18 +1,20 @@
 // Search dropdown with suggestions and history
 export function initSearchDropdown() {
     const riotIdInput = document.getElementById('riotId');
-    const suggestionsContainer = document.getElementById('suggestions-container');
     if (!riotIdInput || !suggestionsContainer) return;
 
     let debounceTimer;
     function showSuggestions() {
         if (!suggestionsContainer || !riotIdInput) return;
-        const rect = riotIdInput.getBoundingClientRect();
-        if (!rect || !rect.width) return;
 
-        suggestionsContainer.style.width = `${rect.width}px`;
-        suggestionsContainer.style.display = 'block';
-        riotIdInput.setAttribute('aria-expanded', 'true');
+        requestAnimationFrame(() => {
+            const rect = riotIdInput.getBoundingClientRect();
+            if (!rect || !rect.width) return;
+
+            suggestionsContainer.style.width = `${rect.width}px`;
+            suggestionsContainer.style.display = 'block';
+            riotIdInput.setAttribute('aria-expanded', 'true');
+        });
     }
 
     function hideSuggestions() {
@@ -22,6 +24,7 @@ export function initSearchDropdown() {
         riotIdInput.setAttribute('aria-expanded', 'false');
         riotIdInput.removeAttribute('aria-activedescendant');
     }
+{{ ... }}
 
     // Local history
     const LS_KEY = 'searchHistory';
