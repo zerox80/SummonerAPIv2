@@ -473,13 +473,15 @@
             const rect = riotIdInput.getBoundingClientRect();
             if (!rect || !rect.width) return;
             const left = rect.left + (window.scrollX || window.pageXOffset);
-            const top = rect.bottom + (window.scrollY || window.pageYOffset) + 8; // add small gap
+            const top = rect.bottom + (window.scrollY || window.pageYOffset) + 16; // add larger gap
             const width = rect.width;
             suggestionsContainer.style.position = 'fixed';
             suggestionsContainer.style.left = `${Math.round(left)}px`;
             suggestionsContainer.style.top = `${Math.round(top)}px`;
             suggestionsContainer.style.width = `${Math.round(width)}px`;
             suggestionsContainer.style.maxWidth = `${Math.round(width)}px`;
+            suggestionsContainer.style.boxShadow = '0 20px 40px rgba(0,0,0,0.45)';
+            suggestionsContainer.style.border = '1px solid rgba(15,20,30,0.75)';
         }
 
         function resetDropdownPlacement(){
@@ -489,6 +491,8 @@
             suggestionsContainer.style.top = '';
             suggestionsContainer.style.width = '';
             suggestionsContainer.style.maxWidth = '';
+            suggestionsContainer.style.boxShadow = '';
+            suggestionsContainer.style.border = '';
         }
 
         // ===== Local history fallback (in addition to cookie-backed API) =====
