@@ -467,9 +467,24 @@
         const suggestionsContainer = document.getElementById('suggestions-container');
         let debounceTimer;
         // Ensure dropdown uses CSS absolute positioning directly under the input
-        function positionDropdown(){
+        function positionDropdown(force = false){
+            if (!suggestionsContainer || !riotIdInput) return;
+            if (!force && suggestionsContainer.style.display !== 'block') return;
+            const rect = riotIdInput.getBoundingClientRect();
+            if (!rect || !rect.width) return;
+            const left = rect.left + (window.scrollX || window.pageXOffset);
+            const top = rect.bottom + (window.scrollY || window.pageYOffset) + 8; // add small gap
+            const width = rect.width;
+            suggestionsContainer.style.position = 'fixed';
+            suggestionsContainer.style.left = `${Math.round(left)}px`;
+            suggestionsContainer.style.top = `${Math.round(top)}px`;
+            suggestionsContainer.style.width = `${Math.round(width)}px`;
+            suggestionsContainer.style.maxWidth = `${Math.round(width)}px`;
+        }
+
+        function resetDropdownPlacement(){
             if (!suggestionsContainer) return;
-            suggestionsContainer.style.position = 'absolute';
+            suggestionsContainer.style.position = '';
             suggestionsContainer.style.left = '';
             suggestionsContainer.style.top = '';
             suggestionsContainer.style.width = '';
@@ -541,6 +556,7 @@
             }
             suggestionsContainer.style.display = 'block';
             riotIdInput.setAttribute('aria-expanded','true');
+            positionDropdown();
         }
 
         function fetchAndDisplaySuggestions(query) {
@@ -643,7 +659,7 @@
             if (riotIdInput.value === '') {
                 fetchAndDisplaySuggestions('');
             }
-            positionDropdown();
+            positionDropdown(true);
         });
 
         // Keyboard navigation for suggestions
@@ -672,6 +688,7 @@
             } else if (e.key === 'Escape') {
                 suggestionsContainer.innerHTML = '';
                 suggestionsContainer.style.display = 'none';
+                resetDropdownPlacement();
                 riotIdInput.setAttribute('aria-expanded','false');
                 riotIdInput.removeAttribute('aria-activedescendant');
                 activeIndex = -1;
