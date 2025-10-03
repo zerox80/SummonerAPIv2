@@ -1,4 +1,5 @@
 // Search dropdown with suggestions and history
+// Coordinates Riot ID lookup UX: debounced remote requests, local history, accessibility, and teardown
 import {
   DEBOUNCE_DELAYS,
   CACHE_DURATION,
@@ -12,6 +13,7 @@ import {
 } from './constants.js';
 
 // Instance tracking using WeakMap for better memory management
+// Ensures the component is only initialized once per input and can be GC'd when DOM nodes go away
 const instances = new WeakMap();
 
 /**
@@ -39,6 +41,7 @@ export function initSearchDropdown() {
     let justOpened = false;
     let justOpenedTimer = null;
 
+    // Flag input for screen readers to know suggestion list visibility
     const setExpandedState = (expanded) => {
         riotIdInput.setAttribute('aria-expanded', expanded ? 'true' : 'false');
         if (!expanded) {
@@ -46,6 +49,7 @@ export function initSearchDropdown() {
         }
     };
 
+    // Signal async work so AT users get progress feedback
     const setBusyState = (busy) => {
         if (busy) {
             riotIdInput.setAttribute('aria-busy', 'true');
@@ -58,6 +62,7 @@ export function initSearchDropdown() {
      * Positions the suggestions dropdown relative to the search input
      * @param {boolean} force - Force repositioning even if dropdown is not visible
      */
+    // Lightweight positioning hook: we rely mostly on CSS but ensure hero section styling updates
     function positionDropdown(force = false) {
         if (!suggestionsContainer || !searchGroup) return;
         if (!force && suggestionsContainer.style.display !== 'block') return;
@@ -75,6 +80,7 @@ export function initSearchDropdown() {
         }
     }
 
+    // Reset inline overrides so layout reverts to stylesheet defaults
     function resetDropdownPlacement() {
         if (!suggestionsContainer) return;
         suggestionsContainer.style.removeProperty('position');
@@ -86,6 +92,7 @@ export function initSearchDropdown() {
         heroSection?.classList.remove(CSS_CLASSES.DROPDOWN_OPEN);
     }
 
+    // Guard against multiple concurrent fetches when users type quickly
     function cancelInFlightRequest() {
         if (!currentAbortController) return;
         try {
@@ -98,6 +105,7 @@ export function initSearchDropdown() {
         }
     }
 
+    // Remove keyboard focus styling from all suggestions
     function clearActiveState() {
         if (!suggestionsContainer) return;
         suggestionsContainer.querySelectorAll('[role="option"]').forEach(el => {
@@ -109,6 +117,7 @@ export function initSearchDropdown() {
         activeIndex = -1;
     }
 
+    // Close dropdown and clean timers/network state
     function hideSuggestions() {
         cancelInFlightRequest();
         suggestionsContainer.innerHTML = '';
@@ -125,6 +134,7 @@ export function initSearchDropdown() {
     }
 
     // Cleanup function to prevent memory leaks
+    // Idempotent cleanup entry used by higher level teardown
     const cleanup = () => {
         isDestroyed = true;
         if (debounceTimer) {
@@ -136,6 +146,7 @@ export function initSearchDropdown() {
 
     // Local history
     const LS_KEY = STORAGE_KEYS.SEARCH_HISTORY;
+    // Resilient localStorage parser with format validation
     function loadLocalHistory() {
         try {
             const raw = localStorage.getItem(LS_KEY);
@@ -147,6 +158,7 @@ export function initSearchDropdown() {
         }
     }
 
+    // Insert the latest Riot ID into history while trimming duplicates and size
     function saveLocalHistory(riotId) {
         const v = (riotId || '').trim();
         // Validate format: must contain exactly one '#' and have non-empty parts
@@ -164,6 +176,7 @@ export function initSearchDropdown() {
         }
     }
 
+    // Populate dropdown with locally cached searches, optionally filtered by current query
     function renderLocalHistory(filterTerm) {
         clearActiveState();
         const list = loadLocalHistory();
@@ -216,6 +229,7 @@ export function initSearchDropdown() {
         positionDropdown();
     }
 
+    // Debounced remote fetch layered on top of local history suggestions
     function fetchAndDisplaySuggestions(query) {
         if (isDestroyed) return;
         if (debounceTimer) {
@@ -340,6 +354,7 @@ export function initSearchDropdown() {
         }, DEBOUNCE_DELAYS.SEARCH);
     }
 
+    // Finalize selection: populate input, close dropdown, submit form if available
     function commitSelection(value) {
         const trimmed = (value ?? '').toString();
         riotIdInput.value = trimmed;
@@ -353,6 +368,7 @@ export function initSearchDropdown() {
         }
     }
 
+    // Attach click/keyboard handlers for individual suggestion rows
     function bindOptionInteraction(element, onSelect) {
         if (!element) return;
         element.setAttribute('aria-selected', 'false');
@@ -369,12 +385,14 @@ export function initSearchDropdown() {
         });
     }
 
+    // Save the query synchronously so dropdown can reflect latest history after submit
     const handleFormSubmit = () => {
         const q = riotIdInput?.value || '';
         saveLocalHistory(q);
         setBusyState(false);
     };
 
+    // Centralized open routine used by multiple event sources
     const openSuggestions = () => {
         if (isDestroyed) return;
         fetchAndDisplaySuggestions(riotIdInput.value);
@@ -434,6 +452,7 @@ export function initSearchDropdown() {
     };
 
     // Keyboard navigation
+    // Highlight a suggestion while maintaining ARIA attributes and focus order
     function updateActive(toIndex) {
         const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
         items.forEach((el, i) => {
@@ -455,6 +474,7 @@ export function initSearchDropdown() {
         });
     }
 
+    // Normalize keyboard interactions for list navigation, selection, and dismissal
     const handleKeydown = e => {
         const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
         if (e.key === 'Escape') {
@@ -492,6 +512,7 @@ export function initSearchDropdown() {
         }
     };
 
+    // Close dropdown when clicking/focusing outside the search experience
     const handleDocumentInteraction = event => {
         const target = event.target;
         const isInsideInput = target === riotIdInput || riotIdInput.contains(target);
@@ -521,6 +542,7 @@ export function initSearchDropdown() {
     riotIdInput.addEventListener(EVENTS.BLUR, handleBlur);
     riotIdInput.addEventListener(EVENTS.KEYDOWN, handleKeydown);
 
+    // Public cleanup that detaches DOM listeners and releases instance handle
     const fullCleanup = () => {
         cleanup();
         document.removeEventListener(EVENTS.POINTERDOWN, handleDocumentInteraction);

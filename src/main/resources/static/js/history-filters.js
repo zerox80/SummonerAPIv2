@@ -10,6 +10,7 @@ import {
     ARIA
 } from './constants.js';
 
+// Provide a resilient alternative when the main history filter script fails to load
 export function initHistoryFiltersFallback() {
     try {
         const btnAll = document.querySelector(`#filterAll`);
@@ -22,6 +23,7 @@ export function initHistoryFiltersFallback() {
                    q === QUEUE_TYPES.TFT_RANKED;
         }
 
+        // Simplified filtering routine used when the primary React/SPA logic isn't available
         function fallbackApply(mode) {
             const rows = Array.from(document.querySelectorAll('.match-row'));
             const elWR = document.querySelector(SELECTORS.SUMMARY_WR);
@@ -44,6 +46,7 @@ export function initHistoryFiltersFallback() {
                 queueToggle.textContent = showRanked ? 'Ranked (any)' : 'All queues';
             }
 
+            // Toggle individual matches by queue type while avoiding layout thrash
             rows.forEach(r => {
                 const q = Number(r.getAttribute('data-q')) || 0;
                 const show = showRanked ? isRankedQ(q) : true;
@@ -51,6 +54,7 @@ export function initHistoryFiltersFallback() {
             });
 
             // Summary
+            // Aggregate stats excluding remakes to match main app logic
             const vis = rows.filter(r => r.style.display !== 'none' && String(r.getAttribute('data-remake')) !== 'true');
             let wins = 0, k = 0, d = 0, a = 0;
             vis.forEach(r => {
@@ -86,6 +90,7 @@ export function initHistoryFiltersFallback() {
             if (queueToggle) queueToggle.textContent = showRanked ? 'Ranked (any)' : 'All queues';
 
             // Sync with match-filters if available
+            // The presence of `window.setHistoryFilter` indicates the primary logic is active
             if (typeof window.setHistoryFilter === 'function') {
                 try {
                     window.__fallbackApplied = true;
@@ -93,6 +98,7 @@ export function initHistoryFiltersFallback() {
             }
         }
 
+        // Proxy filters to main handler if available; otherwise use local fallback
         function setMode(mode) {
             if (typeof window.setHistoryFilter === 'function') {
                 window.setHistoryFilter(mode);
@@ -101,6 +107,7 @@ export function initHistoryFiltersFallback() {
             }
         }
 
+        // Wire buttons so UI stays interactive even without the advanced script
         btnAll?.addEventListener(EVENTS.CLICK, (e) => {
             e.preventDefault();
             setMode('all');
