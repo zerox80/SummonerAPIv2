@@ -10,25 +10,8 @@ export function initSearchDropdown() {
     const searchGroup = riotIdInput.closest('.search-group');
     let isDestroyed = false;
     let currentAbortController = null; // For canceling in-flight requests
-    
-    // Cleanup function to prevent memory leaks
-    const cleanup = () => {
-        isDestroyed = true;
-        if (debounceTimer) {
-            clearTimeout(debounceTimer);
-            debounceTimer = null;
-        }
-        if (currentAbortController) {
-            try {
-                currentAbortController.abort();
-            } catch(e) {
-                console.debug('AbortController abort failed:', e);
-            }
-            currentAbortController = null;
-        }
-    };
 
-    function positionDropdown(force = false){
+    function positionDropdown(force = false) {
         if (!suggestionsContainer || !searchGroup) return;
         if (!force && suggestionsContainer.style.display !== 'block') return;
 
@@ -39,10 +22,13 @@ export function initSearchDropdown() {
         suggestionsContainer.style.removeProperty('width');
         suggestionsContainer.style.removeProperty('max-width');
         suggestionsContainer.style.removeProperty('z-index');
-        heroSection?.classList.add('search-dropdown-open');
+
+        if (suggestionsContainer.style.display === 'block') {
+            heroSection?.classList.add('search-dropdown-open');
+        }
     }
 
-    function resetDropdownPlacement(){
+    function resetDropdownPlacement() {
         if (!suggestionsContainer) return;
         suggestionsContainer.style.removeProperty('position');
         suggestionsContainer.style.removeProperty('left');
@@ -53,33 +39,79 @@ export function initSearchDropdown() {
         heroSection?.classList.remove('search-dropdown-open');
     }
 
+    function cancelInFlightRequest() {
+        if (!currentAbortController) return;
+        try {
+            currentAbortController.abort();
+        } catch (e) {
+            console.debug('AbortController abort failed:', e);
+        }
+        currentAbortController = null;
+    }
+
+    function clearActiveState() {
+        if (!suggestionsContainer) return;
+        suggestionsContainer.querySelectorAll('[role="option"]').forEach(el => {
+            el.classList.remove('active');
+            el.setAttribute('aria-selected', 'false');
+        });
+        riotIdInput.removeAttribute('aria-activedescendant');
+        activeIndex = -1;
+    }
+
+    function hideSuggestions() {
+        cancelInFlightRequest();
+        suggestionsContainer.innerHTML = '';
+        suggestionsContainer.style.display = 'none';
+        riotIdInput.setAttribute('aria-expanded', 'false');
+        clearActiveState();
+        resetDropdownPlacement();
+    }
+
+    // Cleanup function to prevent memory leaks
+    const cleanup = () => {
+        isDestroyed = true;
+        if (debounceTimer) {
+            clearTimeout(debounceTimer);
+            debounceTimer = null;
+        }
+        hideSuggestions();
+    };
+
     // Local history
     const LS_KEY = 'searchHistory';
-    function loadLocalHistory(){
+    function loadLocalHistory() {
         try {
             const raw = localStorage.getItem(LS_KEY);
             if (!raw) return [];
             const arr = JSON.parse(raw);
             return Array.isArray(arr) ? arr : [];
-        } catch { return []; }
+        } catch {
+            return [];
+        }
     }
-    
-    function saveLocalHistory(riotId){
+
+    function saveLocalHistory(riotId) {
         const v = (riotId || '').trim();
         // Validate format: must contain exactly one '#' and have non-empty parts
         if (!v || !v.includes('#')) return;
         const parts = v.split('#');
         if (parts.length !== 2 || !parts[0].trim() || !parts[1].trim()) return;
         const maxSize = 10;
-        const list = loadLocalHistory().filter(x=>x.toLowerCase() !== v.toLowerCase());
+        const list = loadLocalHistory().filter(x => x.toLowerCase() !== v.toLowerCase());
         list.unshift(v);
-        while(list.length > maxSize) list.pop();
-        try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
+        while (list.length > maxSize) list.pop();
+        try {
+            localStorage.setItem(LS_KEY, JSON.stringify(list));
+        } catch {
+            // ignore quota errors
+        }
     }
-    
-    function renderLocalHistory(filterTerm){
+
+    function renderLocalHistory(filterTerm) {
+        clearActiveState();
         const list = loadLocalHistory();
-        const filtered = (filterTerm ? list.filter(x=>x.toLowerCase().startsWith(filterTerm.toLowerCase())) : list).slice(0,10);
+        const filtered = (filterTerm ? list.filter(x => x.toLowerCase().startsWith(filterTerm.toLowerCase())) : list).slice(0, 10);
         suggestionsContainer.innerHTML = '';
         let idx = 0;
         if (filtered.length) {
@@ -91,28 +123,23 @@ export function initSearchDropdown() {
         filtered.forEach(riotId => {
             const item = document.createElement('a');
             item.href = '#';
-            item.classList.add('list-group-item','list-group-item-action','d-flex','align-items-center');
-            item.setAttribute('role','option');
+            item.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center');
+            item.setAttribute('role', 'option');
             const optId = `ls-suggestion-${idx++}`;
             item.id = optId;
-            item.setAttribute('aria-selected','false');
+            item.setAttribute('aria-selected', 'false');
             const icon = document.createElement('i');
-            icon.classList.add('fas','fa-history','me-2','text-secondary');
-            icon.setAttribute('aria-hidden','true');
+            icon.classList.add('fas', 'fa-history', 'me-2', 'text-secondary');
+            icon.setAttribute('aria-hidden', 'true');
             item.appendChild(icon);
             const text = document.createElement('span');
             text.className = 'suggestion-text';
             text.textContent = riotId;
             item.appendChild(text);
-            item.addEventListener('click', (e)=>{
+            item.addEventListener('click', e => {
                 e.preventDefault();
                 riotIdInput.value = riotId;
-                suggestionsContainer.innerHTML = '';
-                suggestionsContainer.style.display = 'none';
-                riotIdInput.setAttribute('aria-expanded','false');
-                riotIdInput.removeAttribute('aria-activedescendant');
-                activeIndex = -1;
-                resetDropdownPlacement();
+                hideSuggestions();
             });
             suggestionsContainer.appendChild(item);
         });
@@ -125,15 +152,12 @@ export function initSearchDropdown() {
                 empty.textContent = 'No entries found';
                 suggestionsContainer.appendChild(empty);
             } else {
-                suggestionsContainer.style.display = 'none';
-                riotIdInput.setAttribute('aria-expanded','false');
-                riotIdInput.removeAttribute('aria-activedescendant');
-                resetDropdownPlacement();
+                hideSuggestions();
                 return;
             }
         }
         suggestionsContainer.style.display = 'block';
-        riotIdInput.setAttribute('aria-expanded','true');
+        riotIdInput.setAttribute('aria-expanded', 'true');
         positionDropdown();
     }
 
@@ -144,29 +168,27 @@ export function initSearchDropdown() {
             debounceTimer = null;
         }
         const requestedQuery = typeof query === 'string' ? query : '';
-        activeIndex = -1;
+        const trimmedQuery = requestedQuery.trim();
+        const normalizedRequestedQuery = trimmedQuery.toLowerCase();
+
         try {
             renderLocalHistory(requestedQuery);
-        } catch(e) {
+        } catch (e) {
             console.error('Error rendering local history:', e);
+            return;
+        }
+
+        if (!trimmedQuery) {
+            cancelInFlightRequest();
             return;
         }
 
         debounceTimer = setTimeout(() => {
             if (isDestroyed) return;
-            const normalizedRequestedQuery = requestedQuery.trim().toLowerCase();
-            
-            // Cancel previous request if still in flight
-            if (currentAbortController) {
-                try {
-                    currentAbortController.abort();
-                } catch(e) {
-                    console.debug('AbortController abort failed:', e);
-                }
-            }
+            cancelInFlightRequest();
             currentAbortController = new AbortController();
             const thisAbortController = currentAbortController;
-            
+
             fetch(`/api/summoner-suggestions?query=${encodeURIComponent(requestedQuery)}`, {
                 signal: thisAbortController.signal
             })
@@ -182,13 +204,12 @@ export function initSearchDropdown() {
                     if (normalizedCurrentValue !== normalizedRequestedQuery) {
                         return;
                     }
-                    // Guard against null/undefined response
                     if (!suggestions || !Array.isArray(suggestions) || suggestions.length === 0) {
                         return;
                     }
-                    
+
                     suggestionsContainer.querySelectorAll('.suggestion-empty').forEach(el => el.remove());
-                    
+
                     let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
                     const hdr = document.createElement('div');
                     hdr.className = 'suggestion-section';
@@ -196,21 +217,21 @@ export function initSearchDropdown() {
                     suggestionsContainer.appendChild(hdr);
                     suggestions.forEach(suggestion => {
                         if (!suggestion || !suggestion.riotId) return; // Skip invalid suggestions
-                        
+
                         const item = document.createElement('a');
                         item.href = '#';
                         item.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center');
-                        item.setAttribute('role','option');
+                        item.setAttribute('role', 'option');
                         const optId = `suggestion-opt-${idx++}`;
                         item.id = optId;
-                        item.setAttribute('aria-selected','false');
+                        item.setAttribute('aria-selected', 'false');
 
                         const img = document.createElement('img');
                         // Validate profileIconId before building fallback URL
                         const hasValidIcon = suggestion.profileIconUrl && suggestion.profileIconUrl.trim();
                         const hasValidIconId = suggestion.profileIconId && !isNaN(Number(suggestion.profileIconId));
-                        const iconUrl = hasValidIcon 
-                            ? suggestion.profileIconUrl 
+                        const iconUrl = hasValidIcon
+                            ? suggestion.profileIconUrl
                             : (hasValidIconId ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg` : '');
                         if (iconUrl) {
                             img.src = iconUrl;
@@ -218,8 +239,10 @@ export function initSearchDropdown() {
                             img.style.display = 'none';
                         }
                         img.alt = 'Icon';
-                        img.classList.add('suggestion-avatar','me-2');
-                        img.onerror = function() { this.style.display = 'none'; };
+                        img.classList.add('suggestion-avatar', 'me-2');
+                        img.onerror = function () {
+                            this.style.display = 'none';
+                        };
                         item.appendChild(img);
 
                         const textContainer = document.createElement('div');
@@ -231,20 +254,15 @@ export function initSearchDropdown() {
                         if (suggestion.summonerLevel) {
                             const levelSpan = document.createElement('span');
                             levelSpan.textContent = `(Lvl: ${suggestion.summonerLevel})`;
-                            levelSpan.classList.add('level','text-muted','small');
+                            levelSpan.classList.add('level', 'text-muted', 'small');
                             textContainer.appendChild(levelSpan);
                         }
                         item.appendChild(textContainer);
 
-                        item.addEventListener('click', function (e) {
+                        item.addEventListener('click', e => {
                             e.preventDefault();
                             riotIdInput.value = suggestion.riotId;
-                            suggestionsContainer.innerHTML = '';
-                            suggestionsContainer.style.display = 'none';
-                            riotIdInput.setAttribute('aria-expanded', 'false');
-                            riotIdInput.removeAttribute('aria-activedescendant');
-                            activeIndex = -1;
-                            resetDropdownPlacement();
+                            hideSuggestions();
                         });
 
                         suggestionsContainer.appendChild(item);
@@ -267,100 +285,121 @@ export function initSearchDropdown() {
         }, 300);
     }
 
-    const searchForm = riotIdInput?.closest('form');
-    searchForm?.addEventListener('submit', (e)=>{
+    const searchForm = riotIdInput.closest('form');
+
+    const handleFormSubmit = () => {
         const q = riotIdInput?.value || '';
         saveLocalHistory(q);
-    });
+    };
 
-    riotIdInput.addEventListener('input', function () {
+    const handleInput = () => {
         fetchAndDisplaySuggestions(riotIdInput.value);
-    });
+    };
 
-    riotIdInput.addEventListener('focus', function () {
-        if (riotIdInput.value === '') {
-            fetchAndDisplaySuggestions('');
-        }
+    const handleFocus = () => {
+        fetchAndDisplaySuggestions(riotIdInput.value);
         positionDropdown(true);
-    });
+    };
+
+    const handleBlur = () => {
+        setTimeout(() => {
+            if (isDestroyed) return;
+            const activeElement = document.activeElement;
+            if (!activeElement) {
+                hideSuggestions();
+                return;
+            }
+            if (activeElement === riotIdInput) return;
+            if (!suggestionsContainer.contains(activeElement)) {
+                hideSuggestions();
+            }
+        }, 0);
+    };
 
     // Keyboard navigation
     function updateActive(toIndex) {
         const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
-        items.forEach((el,i) => {
+        items.forEach((el, i) => {
             if (i === toIndex) {
                 el.classList.add('active');
-                el.setAttribute('aria-selected','true');
+                el.setAttribute('aria-selected', 'true');
                 riotIdInput.setAttribute('aria-activedescendant', el.id);
             } else {
                 el.classList.remove('active');
-                el.setAttribute('aria-selected','false');
+                el.setAttribute('aria-selected', 'false');
             }
         });
     }
 
-    riotIdInput.addEventListener('keydown', function(e){
+    const handleKeydown = e => {
         const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
+        if (e.key === 'Escape') {
+            hideSuggestions();
+            return;
+        }
+        if (e.key === 'Tab') {
+            hideSuggestions();
+            return;
+        }
         if (!items.length) return;
-        if (e.key === 'ArrowDown') { 
-            e.preventDefault(); 
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
             e.stopPropagation();
-            activeIndex = (activeIndex + 1) % items.length; 
-            updateActive(activeIndex); 
-        }
-        else if (e.key === 'ArrowUp') { 
-            e.preventDefault(); 
+            activeIndex = (activeIndex + 1) % items.length;
+            updateActive(activeIndex);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
             e.stopPropagation();
-            activeIndex = (activeIndex - 1 + items.length) % items.length; 
-            updateActive(activeIndex); 
+            activeIndex = (activeIndex - 1 + items.length) % items.length;
+            updateActive(activeIndex);
+        } else if (e.key === 'Enter') {
+            if (activeIndex >= 0 && items[activeIndex]) {
+                e.preventDefault();
+                items[activeIndex].click();
+            }
         }
-        else if (e.key === 'Enter') {
-            if (activeIndex >= 0 && items[activeIndex]) { e.preventDefault(); items[activeIndex].click(); }
-        } else if (e.key === 'Escape') {
-            suggestionsContainer.innerHTML = '';
-            suggestionsContainer.style.display = 'none';
-            resetDropdownPlacement();
-            riotIdInput.setAttribute('aria-expanded','false');
-            riotIdInput.removeAttribute('aria-activedescendant');
-            activeIndex = -1;
-        }
-    });
+    };
 
-    const handleClickOutside = function (event) {
+    const handleClickOutside = event => {
         // Improved click-outside handler: check for modals and other overlays
         const target = event.target;
         const isInsideInput = riotIdInput.contains(target);
         const isInsideDropdown = suggestionsContainer.contains(target);
         const isInsideModal = target.closest('.modal');
-        
+
         if (!isInsideInput && !isInsideDropdown && !isInsideModal) {
-            suggestionsContainer.innerHTML = '';
-            suggestionsContainer.style.display = 'none';
-            riotIdInput.setAttribute('aria-expanded','false');
-            riotIdInput.removeAttribute('aria-activedescendant');
-            activeIndex = -1;
-            resetDropdownPlacement();
+            hideSuggestions();
         }
     };
-    
+
     // Prevent duplicate initialization
     if (window.__searchDropdownInitialized) {
         console.warn('Search dropdown already initialized');
         return window.__searchDropdownCleanup;
     }
     window.__searchDropdownInitialized = true;
-    
+
     document.addEventListener('click', handleClickOutside);
-    
+    searchForm?.addEventListener('submit', handleFormSubmit);
+    riotIdInput.addEventListener('input', handleInput);
+    riotIdInput.addEventListener('focus', handleFocus);
+    riotIdInput.addEventListener('blur', handleBlur);
+    riotIdInput.addEventListener('keydown', handleKeydown);
+
     const fullCleanup = () => {
         cleanup();
         document.removeEventListener('click', handleClickOutside);
+        searchForm?.removeEventListener('submit', handleFormSubmit);
+        riotIdInput.removeEventListener('input', handleInput);
+        riotIdInput.removeEventListener('focus', handleFocus);
+        riotIdInput.removeEventListener('blur', handleBlur);
+        riotIdInput.removeEventListener('keydown', handleKeydown);
         delete window.__searchDropdownInitialized;
         delete window.__searchDropdownCleanup;
     };
-    
+
     window.__searchDropdownCleanup = fullCleanup;
-    
+
     // Return cleanup function to allow proper teardown
     return fullCleanup;
 }
