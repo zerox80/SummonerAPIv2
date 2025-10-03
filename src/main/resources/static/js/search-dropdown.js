@@ -14,11 +14,15 @@ export function initSearchDropdown() {
     dropdownPlaceholder.style.padding = '0';
     dropdownPlaceholder.style.border = '0';
     dropdownPlaceholder.style.pointerEvents = 'none';
+    dropdownPlaceholder.style.flex = '0 0 0';
     let dropdownMovedToBody = false;
 
     function moveDropdownToBody(){
         if (!suggestionsContainer || dropdownMovedToBody || !searchGroup) return;
-        searchGroup.appendChild(dropdownPlaceholder);
+        dropdownPlaceholder.style.display = 'none';
+        if (!dropdownPlaceholder.parentElement) {
+            searchGroup.appendChild(dropdownPlaceholder);
+        }
         document.body.appendChild(suggestionsContainer);
         dropdownMovedToBody = true;
     }
@@ -36,23 +40,25 @@ export function initSearchDropdown() {
 
         moveDropdownToBody();
         const rect = searchGroup.getBoundingClientRect();
-        suggestionsContainer.style.position = 'fixed';
+        suggestionsContainer.style.setProperty('position', 'fixed', 'important');
         suggestionsContainer.style.left = `${Math.round(rect.left)}px`;
         suggestionsContainer.style.top = `${Math.round(rect.bottom + 8)}px`;
         suggestionsContainer.style.width = `${Math.round(rect.width)}px`;
         suggestionsContainer.style.maxWidth = `${Math.round(rect.width)}px`;
-        dropdownPlaceholder.style.display = 'block';
+        suggestionsContainer.style.setProperty('z-index', '999999', 'important');
+        dropdownPlaceholder.style.display = 'none';
         dropdownPlaceholder.style.height = '0';
         heroSection?.classList.add('search-dropdown-open');
     }
 
     function resetDropdownPlacement(){
         if (!suggestionsContainer) return;
-        suggestionsContainer.style.position = '';
+        suggestionsContainer.style.removeProperty('position');
         suggestionsContainer.style.left = '';
         suggestionsContainer.style.top = '';
         suggestionsContainer.style.width = '';
         suggestionsContainer.style.maxWidth = '';
+        suggestionsContainer.style.removeProperty('z-index');
         heroSection?.classList.remove('search-dropdown-open');
         dropdownPlaceholder.style.display = 'none';
         dropdownPlaceholder.style.height = '0';
