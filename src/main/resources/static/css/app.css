@@ -17,12 +17,11 @@
 .history-controls {
   flex-wrap: wrap;
   gap: .5rem;
-  overflow-x: auto; /* if many controls, allow horizontal scroll within the bar, not the page */
-  overflow-y: visible; /* allow dropdown to extend */
   position: relative;
   z-index: var(--z-controls); /* sit above any adjacent borders/overlays */
   margin-bottom: .5rem;
   background: var(--bs-body-bg);
+  overflow: visible; /* ensure dropdowns are never clipped */
 }
 .history-controls, .history-controls * { pointer-events: auto; }
 .history-controls .input-group { max-width: 100%; }
@@ -32,8 +31,58 @@
   max-width: 100%;
   flex: 1 1 240px;
 }
-.history-controls .dropdown-toggle { white-space: nowrap; }
-.history-controls .dropdown-menu { margin-top: .25rem; z-index: var(--z-dropdown); }
+.history-controls .dropdown-toggle {
+  white-space: nowrap;
+  min-width: 9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .35rem;
+}
+.history-controls .dropdown-menu {
+  margin-top: .45rem;
+  padding: .35rem 0;
+  z-index: var(--z-dropdown);
+  border-radius: .75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(14, 19, 29, 0.96);
+  box-shadow: 0 16px 40px rgba(8, 12, 20, 0.45);
+  min-width: 14rem;
+  max-height: 18rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.theme-light .history-controls .dropdown-menu {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 18px 44px rgba(10, 25, 45, 0.15);
+}
+.history-controls .dropdown-item {
+  font-size: .9rem;
+  padding: .45rem 1rem;
+  border-radius: 0;
+}
+.history-controls .dropdown-item.active,
+.history-controls .dropdown-item:focus,
+.history-controls .dropdown-item:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #e8f7ff;
+}
+.theme-light .history-controls .dropdown-item:hover,
+.theme-light .history-controls .dropdown-item:focus,
+.theme-light .history-controls .dropdown-item.active {
+  background: rgba(10, 200, 185, 0.12);
+  color: #086972;
+}
+.history-controls .dropdown-divider {
+  margin: .35rem 0;
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+.theme-light .history-controls .dropdown-divider {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
 .history-controls .nav-pills .nav-link { cursor: pointer; }
 .history-controls + .history-summary { margin-top: .25rem; }
 .history-summary {
