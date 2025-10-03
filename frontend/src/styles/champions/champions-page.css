@@ -1,0 +1,151 @@
+.champions-page {
+  display: grid;
+  gap: 2.5rem;
+  padding-bottom: 5rem;
+}
+
+.champions-hero {
+  display: grid;
+  gap: 1.75rem;
+  padding: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+}
+
+.champions-hero__text h1 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  letter-spacing: -0.02em;
+}
+
+.champions-hero__subtitle {
+  margin: 0.65rem 0 0;
+  max-width: 60ch;
+  color: var(--text-secondary);
+}
+
+.champions-hero__search {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.champions-hero__search-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.champions-hero__search input {
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.3);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+
+.champions-hero__search input:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.6);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22);
+}
+
+.champions-hero__controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.champions-grid-section {
+  padding: 2rem;
+  display: grid;
+  gap: 1.75rem;
+}
+
+.champions-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.champion-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.4rem;
+  border-radius: var(--radius-md);
+  background: rgba(17, 24, 65, 0.62);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease, border-color var(--duration-base) ease;
+}
+
+.champion-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+.champion-card__image {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid rgba(99, 102, 241, 0.25);
+}
+
+.champion-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.champion-card__content h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.champion-card__content p {
+  margin: 0.25rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.champion-card__tags {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.champion-card__tags span {
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 255, 0.8);
+}
+
+.champions-state {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem 1rem;
+}
+
+.champions-state.error {
+  color: #f87171;
+}
+
+@media (max-width: 960px) {
+  .champions-hero {
+    padding: 2rem;
+  }
+
+  .champions-grid-section {
+    padding: 1.6rem;
+  }
+}
