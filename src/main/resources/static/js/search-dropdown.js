@@ -43,8 +43,6 @@ export function initSearchDropdown() {
     const searchForm = riotIdInput.closest('form');
     let isDestroyed = false;
     let currentAbortController = null; // For canceling in-flight requests
-    let justOpened = false;
-    let justOpenedTimer = null;
 
     const announceStatus = (message) => {
         if (!statusRegion) return;
@@ -146,11 +144,6 @@ export function initSearchDropdown() {
         resetDropdownPlacement();
         setBusyState(false);
         announceStatus('Suggestions hidden');
-        justOpened = false;
-        if (justOpenedTimer) {
-            clearTimeout(justOpenedTimer);
-            justOpenedTimer = null;
-        }
     }
 
     // Cleanup function to prevent memory leaks
@@ -160,10 +153,6 @@ export function initSearchDropdown() {
         if (debounceTimer) {
             clearTimeout(debounceTimer);
             debounceTimer = null;
-        }
-        if (justOpenedTimer) {
-            clearTimeout(justOpenedTimer);
-            justOpenedTimer = null;
         }
         hideSuggestions();
     };
@@ -469,16 +458,12 @@ export function initSearchDropdown() {
     // Centralized open routine used by multiple event sources
     const openSuggestions = () => {
         if (isDestroyed) return;
+        // Avoid re-opening if already open and the user is just clicking/focusing
+        if (suggestionsContainer.style.display === 'block') {
+            return;
+        }
         fetchAndDisplaySuggestions(riotIdInput.value);
         positionDropdown(true);
-        justOpened = true;
-        if (justOpenedTimer) {
-            clearTimeout(justOpenedTimer);
-        }
-        justOpenedTimer = setTimeout(() => {
-            justOpened = false;
-            justOpenedTimer = null;
-        }, DEBOUNCE_DELAYS.JUST_OPENED);
     };
 
     const handleInput = () => {
@@ -489,40 +474,17 @@ export function initSearchDropdown() {
         openSuggestions();
     };
 
-    const handlePointerDown = () => {
-        openSuggestions();
-    };
-
-    const handleClick = () => {
-        openSuggestions();
-    };
-
     const handleBlur = () => {
-        // Use requestAnimationFrame for better timing consistency
+        // Use requestAnimationFrame to allow the next element to receive focus before we check it.
+        // This prevents the dropdown from closing when a suggestion item is clicked.
         requestAnimationFrame(() => {
             if (isDestroyed) return;
-            const evaluateBlur = () => {
-                if (isDestroyed) return;
-                const activeElement = document.activeElement;
-                if (!activeElement) {
-                    hideSuggestions();
-                    return;
-                }
-                if (activeElement === riotIdInput) return;
-                if (!suggestionsContainer.contains(activeElement)) {
-                    hideSuggestions();
-                }
-            };
 
-            if (justOpened) {
-                setTimeout(() => {
-                    justOpened = false;
-                    evaluateBlur();
-                }, Math.max(DEBOUNCE_DELAYS.JUST_OPENED, 100));
-                return;
+            // If focus moves to an element that is NOT the input and NOT inside the dropdown, hide it.
+            const activeElement = document.activeElement;
+            if (activeElement !== riotIdInput && !suggestionsContainer.contains(activeElement)) {
+                hideSuggestions();
             }
-
-            evaluateBlur();
         });
     };
 
@@ -602,7 +564,6 @@ export function initSearchDropdown() {
             }
         }
 
-        if (justOpened) return;
         if (!isInsideInput && !isInsideGroup && !isInsideDropdown && !isInsideModal) {
             hideSuggestions();
         }
@@ -617,8 +578,6 @@ export function initSearchDropdown() {
     document.addEventListener(EVENTS.POINTERDOWN, handleDocumentInteraction);
     document.addEventListener(EVENTS.FOCUSIN, handleDocumentInteraction);
     searchForm?.addEventListener(EVENTS.SUBMIT, handleFormSubmit);
-    riotIdInput.addEventListener(EVENTS.POINTERDOWN, handlePointerDown);
-    riotIdInput.addEventListener(EVENTS.CLICK, handleClick);
     riotIdInput.addEventListener(EVENTS.INPUT, handleInput);
     riotIdInput.addEventListener(EVENTS.FOCUS, handleFocus);
     riotIdInput.addEventListener(EVENTS.BLUR, handleBlur);
@@ -630,8 +589,6 @@ export function initSearchDropdown() {
         document.removeEventListener(EVENTS.POINTERDOWN, handleDocumentInteraction);
         document.removeEventListener(EVENTS.FOCUSIN, handleDocumentInteraction);
         searchForm?.removeEventListener(EVENTS.SUBMIT, handleFormSubmit);
-        riotIdInput.removeEventListener(EVENTS.POINTERDOWN, handlePointerDown);
-        riotIdInput.removeEventListener(EVENTS.CLICK, handleClick);
         riotIdInput.removeEventListener(EVENTS.INPUT, handleInput);
         riotIdInput.removeEventListener(EVENTS.FOCUS, handleFocus);
         riotIdInput.removeEventListener(EVENTS.BLUR, handleBlur);
