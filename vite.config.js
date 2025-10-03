@@ -4,8 +4,8 @@ import { resolve } from 'path'
 export default defineConfig({
   root: 'src/main/resources/static',
   build: {
-    outDir: '../../../../target/classes/static',
-    emptyOutDir: true,
+    outDir: '../../../../src/main/resources/static',
+    emptyOutDir: false, // Don't empty, preserve other static files
     rollupOptions: {
       input: {
         'js/app': resolve(__dirname, 'src/main/resources/static/js/app.js'),
@@ -15,17 +15,22 @@ export default defineConfig({
       output: {
         entryFileNames: 'js/[name].js',
         chunkFileNames: 'js/[name]-[hash].js',
-        assetFileNames: 'css/[name]-[hash][extname]'
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'css/[name][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        }
       }
     },
-    minify: 'terser',
+    minify: process.env.NODE_ENV === 'production' ? 'terser' : false,
     terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true
+        drop_console: process.env.NODE_ENV === 'production',
+        drop_debugger: process.env.NODE_ENV === 'production'
       }
     },
-    sourcemap: process.env.NODE_ENV === 'development'
+    sourcemap: process.env.NODE_ENV !== 'production'
   },
   server: {
     port: 3000,

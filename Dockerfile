@@ -1,6 +1,18 @@
 # syntax=docker/dockerfile:1.7
-# ===== Stage 1: Build =====
-FROM maven:3.9-eclipse-temurin-21 AS build
+# ===== Stage 1: Frontend Build =====
+FROM node:20-alpine AS frontend-build
+WORKDIR /app/frontend
+
+# Copy package files first for better caching
+COPY package*.json ./
+RUN npm ci
+
+# Copy source and build
+COPY . .
+RUN npm run build:docker
+
+# ===== Stage 2: Backend Build =====
+FROM maven:3.9-eclipse-temurin-21 AS backend-build
 WORKDIR /app
 
 # Allow toggling tests during build (default: skip tests for faster builds)
@@ -11,15 +23,19 @@ COPY pom.xml .
 RUN mvn -q -T 5 -e -DskipTests dependency:go-offline
 
 COPY src ./src
+
+# Copy built frontend assets to the correct location
+COPY --from=frontend-build /app/src/main/resources/static/ ./src/main/resources/static/
+
 RUN mvn -q -T 5 -DskipTests=${SKIP_TESTS} clean package
 
-# ===== Stage 2: Runtime =====
+# ===== Stage 3: Runtime =====
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 ENV JAVA_TOOL_OPTIONS=""
 
-COPY --from=build /app/target/riot-api-spring*.jar app.jar
+COPY --from=backend-build /app/target/riot-api-spring*.jar app.jar
 
 # Create non-root user and adjust ownership
 RUN useradd -u 10001 -r -g root -s /usr/sbin/nologin app \
