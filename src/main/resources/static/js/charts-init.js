@@ -60,8 +60,13 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
     const solo = buildLpSeries(420, 'RANKED_SOLO_5x5');
     const flex = buildLpSeries(440, 'RANKED_FLEX_SR');
     const lpCtx = document.getElementById('lpChart');
+    const lpContainer = lpCtx ? lpCtx.parentElement : null;
     
     if (lpCtx && (solo || flex)) {
+        if (lpContainer) {
+            lpCtx.classList.remove('d-none');
+            lpContainer.querySelectorAll('.chart-empty-msg').forEach(node => node.remove());
+        }
         const colors = chartColors();
         const allTimes = Array.from(new Set([...(solo?.times||[]), ...(flex?.times||[])].filter(t => t != null && typeof t === 'number' && !Number.isNaN(t)))).sort((a,b)=>a-b);
         const labels = allTimes.map(fmt);
@@ -97,10 +102,23 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
             console.error('Failed to create LP chart:', error);
             lpCtx.parentElement?.insertAdjacentHTML('beforeend', '<p class="text-danger small mt-2">Chart rendering failed</p>');
         }
+    } else if (lpCtx && lpContainer) {
+        lpCtx.classList.add('d-none');
+        if (!lpContainer.querySelector('.chart-empty-msg')) {
+            const msg = document.createElement('p');
+            msg.className = 'text-muted small chart-empty-msg mb-0';
+            msg.textContent = 'No ranked LP data available for recent matches yet.';
+            lpContainer.appendChild(msg);
+        }
     }
 
     const champCtx = document.getElementById('championChart');
+    const champContainer = champCtx ? champCtx.parentElement : null;
     if (champCtx && champLabels.length > 0) {
+        if (champContainer) {
+            champCtx.classList.remove('d-none');
+            champContainer.querySelectorAll('.chart-empty-msg').forEach(node => node.remove());
+        }
         const colors = chartColors();
         const combined = champLabels.map((l,i)=>({ label:l, value: champValues[i]||0 }));
         combined.sort((a,b)=>b.value-a.value);
@@ -125,6 +143,14 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
         } catch (error) {
             console.error('Failed to create champion chart:', error);
             champCtx.parentElement?.insertAdjacentHTML('beforeend', '<p class="text-danger small mt-2">Chart rendering failed</p>');
+        }
+    } else if (champCtx && champContainer) {
+        champCtx.classList.add('d-none');
+        if (!champContainer.querySelector('.chart-empty-msg')) {
+            const msg = document.createElement('p');
+            msg.className = 'text-muted small chart-empty-msg mb-0';
+            msg.textContent = 'No champion distribution data available yet.';
+            champContainer.appendChild(msg);
         }
     }
 

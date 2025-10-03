@@ -63,10 +63,11 @@
             <div class="input-group input-group-sm search-group shadow-sm rounded-3">
                 <span class="input-group-text bg-transparent border-0 ps-3"><i class="fas fa-user-tag text-secondary" aria-hidden="true"></i></span>
                 <label for="riotId" class="visually-hidden">Riot ID</label>
-                <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" aria-label="Search for summoner by Riot ID" th:value="${riotId}" />
+                <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" aria-label="Search for summoner by Riot ID" aria-describedby="riotIdHelp" pattern="^[^#]+#[A-Za-z0-9]{3,5}$" title="Use the format Name#TAG (tagline 3-5 letters or numbers)" th:value="${riotId}" />
                 <button class="btn btn-primary px-4" type="submit"><i class="fas fa-search me-1" aria-hidden="true"></i> Search</button>
                 <div id="suggestions-container" class="list-group suggestions-dropdown w-100" role="listbox" aria-label="Suggestions"></div>
             </div>
+            <div id="riotIdHelp" class="form-text text-secondary ps-1">Format: Name#TAG (tagline must be 3-5 letters or numbers, for example <span class="fw-semibold">Player#EUW</span>).</div>
             
         </form>
     </section>
@@ -340,73 +341,80 @@
                         </th:block>
 
                         <!-- Participants Table -->
-                        <details class="mt-2 w-100" th:if="${match.info.participants != null}">
-                            <summary class="btn btn-sm btn-participants">Show All Participants <i class="fas fa-users fa-xs" aria-hidden="true"></i></summary>
+                        <div th:if="${match.info.participants != null}" class="mt-2 w-100">
+                            <button class="btn btn-sm btn-participants" type="button"
+                                    data-bs-toggle="collapse"
+                                    th:attr="data-bs-target=${'#participants-' + iterStat.index}"
+                                    aria-expanded="false"
+                                    th:attrappend="aria-controls=${'participants-' + iterStat.index}">
+                                Show All Participants <i class="fas fa-users fa-xs" aria-hidden="true"></i>
+                            </button>
+                            <div class="collapse mt-3" th:id="${'participants-' + iterStat.index}">
+                                <!-- Blue Team Table -->
+                                <h6 class="text-primary">Blue Team</h6>
+                                <div class="table-responsive">
+                                <table class="table table-sm table-hover mt-2 match-table team-blue-table table-borderless align-middle">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Champion</th>
+                                        <th scope="col">Player</th>
+                                        <th scope="col">KDA</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody th:with="searchedPuuid=${#vars.summoner.puuid}">
+                                    <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 100}"
+                                        th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
+                                        <td>
+                                            <img th:src="${(champImgByKey != null and champImgByKey.containsKey(p.championId)) ? champImgByKey[p.championId] : (bases.champSquare + p.championName + '.png')}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy" />
+                                            <span th:text="${p.championName}">Champion</span>
+                                        </td>
+                                        <td>
+                                            <a class="text-break" th:if="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
+                                               th:href="@{/search(riotId=${p.riotIdGameName + '#' + p.riotIdTagline})}"
+                                               th:text="${p.riotIdGameName + '#' + p.riotIdTagline}"
+                                               title="Search this player">Player Name</a>
+                                            <span class="text-break" th:unless="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
+                                                  th:text="${p.summonerName} ?: 'Unknown Player'">Player Name</span>
+                                        </td>
+                                        <td th:text="${p.kda}" class="fw-medium">K/D/A</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                </div>
 
-                        <!-- Blue Team Table -->
-                        <h6 class="mt-3 text-primary">Blue Team</h6>
-                        <div class="table-responsive">
-                        <table class="table table-sm table-hover mt-2 match-table team-blue-table table-borderless align-middle">
-                            <thead>
-                            <tr>
-                                <th scope="col">Champion</th>
-                                <th scope="col">Player</th>
-                                <th scope="col">KDA</th>
-                            </tr>
-                            </thead>
-                            <tbody th:with="searchedPuuid=${#vars.summoner.puuid}">
-                            <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 100}"
-                                th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
-                                <td>
-                                    <img th:src="${(champImgByKey != null and champImgByKey.containsKey(p.championId)) ? champImgByKey[p.championId] : (bases.champSquare + p.championName + '.png')}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy" />
-                                    <span th:text="${p.championName}">Champion</span>
-                                </td>
-                                <td>
-                                    <a class="text-break" th:if="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
-                                       th:href="@{/search(riotId=${p.riotIdGameName + '#' + p.riotIdTagline})}"
-                                       th:text="${p.riotIdGameName + '#' + p.riotIdTagline}"
-                                       title="Search this player">Player Name</a>
-                                    <span class="text-break" th:unless="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
-                                          th:text="${p.summonerName} ?: 'Unknown Player'">Player Name</span>
-                                </td>
-                                <td th:text="${p.kda}" class="fw-medium">K/D/A</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                <!-- Red Team Table -->
+                                <h6 class="mt-3 text-danger">Red Team</h6>
+                                <div class="table-responsive">
+                                <table class="table table-sm table-hover mt-2 match-table team-red-table table-borderless align-middle">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Champion</th>
+                                        <th scope="col">Player</th>
+                                        <th scope="col">KDA</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody th:with="searchedPuuid=${#vars.summoner.puuid}">
+                                    <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 200}"
+                                        th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
+                                        <td>
+                                            <img th:src="${(champImgByKey != null and champImgByKey.containsKey(p.championId)) ? champImgByKey[p.championId] : (bases.champSquare + p.championName + '.png')}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy" />
+                                            <span th:text="${p.championName}">Champion</span>
+                                        </td>
+                                        <td>
+                                            <a th:if="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
+                                               th:href="@{/search(riotId=${p.riotIdGameName + '#' + p.riotIdTagline})}"
+                                               th:text="${p.riotIdGameName + '#' + p.riotIdTagline}"
+                                               title="Search this player">Player Name</a>
+                                            <span class="text-break" th:unless="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
+                                                  th:text="${p.summonerName} ?: 'Unknown Player'">Player Name</span>
+                                        </td>
+                                        <td th:text="${p.kda}" class="fw-medium">K/D/A</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
                         </div>
-
-                        <!-- Red Team Table -->
-                        <h6 class="mt-3 text-danger">Red Team</h6>
-                        <div class="table-responsive">
-                        <table class="table table-sm table-hover mt-2 match-table team-red-table table-borderless align-middle">
-                            <thead>
-                            <tr>
-                                <th scope="col">Champion</th>
-                                <th scope="col">Player</th>
-                                <th scope="col">KDA</th>
-                            </tr>
-                            </thead>
-                            <tbody th:with="searchedPuuid=${#vars.summoner.puuid}">
-                            <tr th:each="p : ${match.info.participants}" th:if="${p.teamId == 200}"
-                                th:classappend="${p.puuid == searchedPuuid ? 'table-info self-row' : ''}">
-                                <td>
-                                    <img th:src="${(champImgByKey != null and champImgByKey.containsKey(p.championId)) ? champImgByKey[p.championId] : (bases.champSquare + p.championName + '.png')}" th:alt="${p.championName}" width="24" height="24" class="me-1 align-middle rounded" loading="lazy" />
-                                    <span th:text="${p.championName}">Champion</span>
-                                </td>
-                                <td>
-                                    <a th:if="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
-                                       th:href="@{/search(riotId=${p.riotIdGameName + '#' + p.riotIdTagline})}"
-                                       th:text="${p.riotIdGameName + '#' + p.riotIdTagline}"
-                                       title="Search this player">Player Name</a>
-                                    <span class="text-break" th:unless="${p.riotIdGameName != null && p.riotIdTagline != null && !(p.riotIdGameName.isBlank() && p.riotIdTagline.isBlank())}"
-                                          th:text="${p.summonerName} ?: 'Unknown Player'">Player Name</span>
-                                </td>
-                                <td th:text="${p.kda}" class="fw-medium">K/D/A</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        </div>
-                    </details>
                     </div>
                     </div>
                     </th:block>

@@ -42,11 +42,13 @@ export function initThemeToggle(chartUpdateCallback) {
         }
         
         if (themeToggleBtn) {
-            themeToggleBtn.innerHTML = theme === 'light' 
-                ? '<i class="fa-regular fa-moon" aria-hidden="true"></i>' 
+            const nextLabel = theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
+            themeToggleBtn.innerHTML = theme === 'light'
+                ? '<i class="fa-regular fa-moon" aria-hidden="true"></i>'
                 : '<i class="fa-regular fa-sun" aria-hidden="true"></i>';
-            themeToggleBtn.setAttribute('aria-label', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+            themeToggleBtn.setAttribute('aria-label', nextLabel);
             themeToggleBtn.setAttribute('aria-pressed', theme === 'light' ? 'false' : 'true');
+            themeToggleBtn.setAttribute('title', nextLabel);
         }
         
         const themeMeta = document.getElementById('themeColor');

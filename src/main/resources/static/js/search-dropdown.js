@@ -11,6 +11,21 @@ export function initSearchDropdown() {
     let isDestroyed = false;
     let currentAbortController = null; // For canceling in-flight requests
 
+    const setExpandedState = (expanded) => {
+        riotIdInput.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        if (!expanded) {
+            riotIdInput.removeAttribute('aria-activedescendant');
+        }
+    };
+
+    const setBusyState = (busy) => {
+        if (busy) {
+            riotIdInput.setAttribute('aria-busy', 'true');
+        } else {
+            riotIdInput.removeAttribute('aria-busy');
+        }
+    };
+
     function positionDropdown(force = false) {
         if (!suggestionsContainer || !searchGroup) return;
         if (!force && suggestionsContainer.style.display !== 'block') return;
@@ -63,9 +78,10 @@ export function initSearchDropdown() {
         cancelInFlightRequest();
         suggestionsContainer.innerHTML = '';
         suggestionsContainer.style.display = 'none';
-        riotIdInput.setAttribute('aria-expanded', 'false');
+        setExpandedState(false);
         clearActiveState();
         resetDropdownPlacement();
+        setBusyState(false);
     }
 
     // Cleanup function to prevent memory leaks
@@ -157,7 +173,7 @@ export function initSearchDropdown() {
             }
         }
         suggestionsContainer.style.display = 'block';
-        riotIdInput.setAttribute('aria-expanded', 'true');
+        setExpandedState(true);
         positionDropdown();
     }
 
@@ -188,6 +204,7 @@ export function initSearchDropdown() {
             cancelInFlightRequest();
             currentAbortController = new AbortController();
             const thisAbortController = currentAbortController;
+            setBusyState(true);
 
             fetch(`/api/summoner-suggestions?query=${encodeURIComponent(requestedQuery)}`, {
                 signal: thisAbortController.signal
@@ -205,12 +222,14 @@ export function initSearchDropdown() {
                         return;
                     }
                     if (!suggestions || !Array.isArray(suggestions) || suggestions.length === 0) {
+                        setExpandedState(suggestionsContainer.querySelectorAll('[role="option"]').length > 0);
                         return;
                     }
 
                     suggestionsContainer.querySelectorAll('.suggestion-empty').forEach(el => el.remove());
 
                     let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
+                    clearActiveState();
                     const hdr = document.createElement('div');
                     hdr.className = 'suggestion-section';
                     hdr.textContent = 'Suggestions';
@@ -267,8 +286,9 @@ export function initSearchDropdown() {
 
                         suggestionsContainer.appendChild(item);
                     });
+
                     suggestionsContainer.style.display = 'block';
-                    riotIdInput.setAttribute('aria-expanded', 'true');
+                    setExpandedState(true);
                     positionDropdown(true);
                 })
                 .catch(error => {
@@ -281,6 +301,7 @@ export function initSearchDropdown() {
                     if (currentAbortController === thisAbortController) {
                         currentAbortController = null;
                     }
+                    setBusyState(false);
                 });
         }, 300);
     }
@@ -290,6 +311,7 @@ export function initSearchDropdown() {
     const handleFormSubmit = () => {
         const q = riotIdInput?.value || '';
         saveLocalHistory(q);
+        setBusyState(false);
     };
 
     const handleInput = () => {
