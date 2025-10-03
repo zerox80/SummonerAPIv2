@@ -6,8 +6,6 @@ export function initSearchDropdown() {
 
     let debounceTimer = null;
     let activeIndex = -1; // Declare at top to avoid hoisting issues
-    let justOpened = false;
-    let justOpenedTimer = null;
     const heroSection = riotIdInput?.closest('.hero');
     const searchGroup = riotIdInput.closest('.search-group');
     let isDestroyed = false;
@@ -155,10 +153,6 @@ export function initSearchDropdown() {
             text.textContent = riotId;
             item.appendChild(text);
             item.addEventListener('click', e => {
-                if (justOpened) {
-                    e.preventDefault();
-                    return;
-                }
                 e.preventDefault();
                 riotIdInput.value = riotId;
                 hideSuggestions();
@@ -285,10 +279,6 @@ export function initSearchDropdown() {
                         item.appendChild(textContainer);
 
                         item.addEventListener('click', e => {
-                            if (justOpened) {
-                                e.preventDefault();
-                                return;
-                            }
                             e.preventDefault();
                             riotIdInput.value = suggestion.riotId;
                             hideSuggestions();
@@ -328,14 +318,6 @@ export function initSearchDropdown() {
         if (isDestroyed) return;
         fetchAndDisplaySuggestions(riotIdInput.value);
         positionDropdown(true);
-        justOpened = true;
-        if (justOpenedTimer) {
-            clearTimeout(justOpenedTimer);
-        }
-        justOpenedTimer = setTimeout(() => {
-            justOpened = false;
-            justOpenedTimer = null;
-        }, 200);
     };
 
     const handleInput = () => {
