@@ -8,6 +8,10 @@
   backdrop-filter: blur(14px) saturate(160%);
 }
 
+.segmented-control {
+  flex-wrap: wrap;
+}
+
 .segmented-control__option {
   position: relative;
   padding: 0.45rem 0.9rem;
@@ -40,4 +44,16 @@
 .segmented-control--lg .segmented-control__option {
   padding: 0.55rem 1.15rem;
   font-size: 0.95rem;
+}
+
+@media (max-width: 700px) {
+  .segmented-control {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .segmented-control__option {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 120px;
+  }
 }
