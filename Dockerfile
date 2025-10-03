@@ -24,8 +24,8 @@ RUN mvn -q -T 5 -e -DskipTests dependency:go-offline
 
 COPY src ./src
 
-# Copy built frontend assets to the correct location
-COPY --from=frontend-build /app/src/main/resources/static/ ./src/main/resources/static/
+# Copy built frontend assets from dist to static directory
+COPY --from=frontend-build /app/dist/ ./src/main/resources/static/
 
 RUN mvn -q -T 5 -DskipTests=${SKIP_TESTS} clean package
 
