@@ -1,0 +1,177 @@
+.match-history {
+  display: grid;
+  gap: 2rem;
+  padding: 2.25rem;
+}
+
+.match-history__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.match-history__header h3 {
+  margin: 0.5rem 0 0;
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
+.match-history__filters {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.match-history__empty {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  border-radius: var(--radius-md);
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.match-history__empty p {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.match-history__empty span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.match-history__list {
+  display: grid;
+  gap: 1rem;
+}
+
+.match-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 1.75rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease, border-color var(--duration-base) ease;
+  align-items: center;
+}
+
+.match-card.is-win {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(34, 197, 94, 0.08));
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.match-card.is-loss {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.12), rgba(248, 113, 113, 0.08));
+  border-color: rgba(248, 113, 113, 0.25);
+}
+
+.match-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.match-card.is-win:hover {
+  border-color: rgba(34, 197, 94, 0.45);
+}
+
+.match-card.is-loss:hover {
+  border-color: rgba(248, 113, 113, 0.45);
+}
+
+.match-card__champion {
+  display: grid;
+  gap: 0.65rem;
+  align-items: center;
+  grid-template-columns: auto 1fr;
+}
+
+.match-card__champion img {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  object-fit: cover;
+}
+
+.match-card__champion-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+.match-card__info {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.match-card__queue {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.match-card__time {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.match-card__stats {
+  display: flex;
+  gap: 1.75rem;
+}
+
+.match-card__stat {
+  display: grid;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.match-card__stat .label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.match-card__stat .value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.match-card__role {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.match-history__load-more {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+@media (max-width: 960px) {
+  .match-card {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .match-card__stats {
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .match-history__header {
+    flex-direction: column;
+  }
+}

@@ -176,7 +176,11 @@ export default function SummonerPage() {
         <div className="summoner-page__grid">
           <SummonerHeader profile={profileQuery.data} derived={derived} />
           <RankedOverview entries={profileQuery.data.leagueEntries} bases={profileQuery.data.bases} />
+<<<<<<< HEAD
           <PerformanceSummary derived={derived} matches={matches} summoner={profileQuery.data.summoner} />
+=======
+          <PerformanceSummary derived={derived} matches={matches} />
+>>>>>>> 7f6dc3a (UI FIX)
           <TopChampions
             championPlayCounts={profileQuery.data.championPlayCounts}
             matches={matches}
