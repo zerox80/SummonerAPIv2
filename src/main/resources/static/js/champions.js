@@ -46,6 +46,13 @@
 
   // Use a more robust initialization pattern that handles both scenarios
   function initChampionsPage() {
+    // Prevent duplicate initialization
+    if (window.__championsPageInitialized) {
+      console.warn('Champions page already initialized, skipping');
+      return;
+    }
+    window.__championsPageInitialized = true;
+    
     const input = document.getElementById('champSearch');
     if (input) {
       input.addEventListener('input', applyFilters);

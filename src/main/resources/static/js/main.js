@@ -38,9 +38,15 @@ function setupImageFallbacks(){
                         img.style.display = 'none';
                     } else if (mode === 'transparent') {
                         // Replace src with transparent pixel only once to avoid infinite loop
-                        if (img.getAttribute('data-fallback-applied') !== '1'){
-                            img.setAttribute('data-fallback-applied','1');
-                            img.src = TRANSPARENT_PNG;
+                        const fallbackCount = parseInt(img.getAttribute('data-fallback-count') || '0', 10);
+                        if (fallbackCount < 1){
+                            img.setAttribute('data-fallback-count', '1');
+                            // Validate TRANSPARENT_PNG before applying
+                            if (TRANSPARENT_PNG && TRANSPARENT_PNG.startsWith('data:image/png;base64,')) {
+                                img.src = TRANSPARENT_PNG;
+                            } else {
+                                img.style.display = 'none';
+                            }
                         } else {
                             img.style.display = 'none';
                         }
@@ -89,7 +95,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const elCount = document.getElementById('summaryCount');
             const noMsg = document.getElementById('noMatchesMsg');
             const queueToggle = document.getElementById('queueToggle');
+            const queueDropdown = document.getElementById('queueDropdown');
             const showRanked = (mode === 'ranked');
+            
+            // Reset queue dropdown state
+            if (queueDropdown) {
+                queueDropdown.querySelectorAll('button[data-q]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            }
 
             rows.forEach(r => {
                 const q = Number(r.getAttribute('data-q')) || 0;
@@ -129,6 +143,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Update dropdown label for consistency
             if (queueToggle) queueToggle.textContent = showRanked ? 'Ranked (any)' : 'All queues';
+            
+            // Sync with match-filters if available
+            if (typeof window.setHistoryFilter === 'function') {
+                try {
+                    window.__fallbackApplied = true;
+                } catch(e) {}
+            }
         }
 
         function setMode(mode){

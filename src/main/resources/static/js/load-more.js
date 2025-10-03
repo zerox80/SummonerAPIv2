@@ -76,6 +76,7 @@ export function initLoadMore(matchesPageSize = 10) {
         // Use p.kda if available (from server), otherwise construct it
         td3.textContent = p.kda || `${p.kills ?? 0}/${p.deaths ?? 0}/${p.assists ?? 0}`;
         tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+        return tr;
     }
 
     function buildMatchRowEl(m){
@@ -248,7 +249,7 @@ export function initLoadMore(matchesPageSize = 10) {
             const counts = new Map();
             rows.forEach(r => {
                 const nameEl = r.querySelector('.search-index span');
-                const name = (nameEl && nameEl.textContent || '').trim();
+                const name = (nameEl?.textContent || '').trim();
                 if (name) counts.set(name, (counts.get(name) || 0) + 1);
             });
             const top = Array.from(counts.entries()).sort((a,b)=>b[1]-a[1]).slice(0,5);
@@ -294,7 +295,8 @@ export function initLoadMore(matchesPageSize = 10) {
             const arr = await res.json();
             if (!Array.isArray(arr) || arr.length === 0){
                 loadBtn.setAttribute('disabled','true');
-                loadBtn.querySelector('.label').textContent = 'No more matches';
+                const label = loadBtn.querySelector('.label');
+                if (label) label.textContent = 'No more matches';
                 // Loading state is already managed by setLoading at the end
                 return;
             }
@@ -310,7 +312,8 @@ export function initLoadMore(matchesPageSize = 10) {
             loadMoreAttempts++;
             if (loadMoreAttempts >= MAX_LOAD_ATTEMPTS) {
                 loadBtn.setAttribute('disabled','true');
-                loadBtn.querySelector('.label').textContent = 'Error loading matches';
+                const label = loadBtn.querySelector('.label');
+                if (label) label.textContent = 'Error loading matches';
             }
         } finally {
             setLoading(false);

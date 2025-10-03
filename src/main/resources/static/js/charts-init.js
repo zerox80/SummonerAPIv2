@@ -1,6 +1,19 @@
 // Chart initialization and management
 export function initCharts(leagueEntries, matches, champLabels, champValues) {
+    // Destroy existing charts to prevent memory leaks
+    if (window.__chartInstances && Array.isArray(window.__chartInstances)) {
+        window.__chartInstances.forEach(ch => {
+            if (ch && typeof ch.destroy === 'function') {
+                try {
+                    ch.destroy();
+                } catch(e) {
+                    console.debug('Chart destroy failed:', e);
+                }
+            }
+        });
+    }
     const charts = [];
+    window.__chartInstances = charts;
     const bodyEl = document.body;
     const isDark = () => bodyEl.classList.contains('theme-dark');
     const chartColors = () => ({
@@ -26,8 +39,13 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
 
         if (currentEntry && typeof currentEntry.lp === 'number') {
             let cur = currentEntry.lp;
+            if (typeof cur !== 'number' || Number.isNaN(cur)) cur = 0;
             const abs = new Array(deltas.length);
-            for (let i = deltas.length - 1; i >= 0; i--) { abs[i] = cur; cur -= (deltas[i] ?? 0); }
+            for (let i = deltas.length - 1; i >= 0; i--) { 
+                abs[i] = cur; 
+                const delta = deltas[i] ?? 0;
+                cur -= (typeof delta === 'number' && !Number.isNaN(delta)) ? delta : 0;
+            }
             return { times, values: abs };
         } else {
             let sum = 0; 
@@ -45,7 +63,7 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
     
     if (lpCtx && (solo || flex)) {
         const colors = chartColors();
-        const allTimes = Array.from(new Set([...(solo?.times||[]), ...(flex?.times||[])])).sort((a,b)=>a-b);
+        const allTimes = Array.from(new Set([...(solo?.times||[]), ...(flex?.times||[])].filter(t => t != null && typeof t === 'number' && !Number.isNaN(t)))).sort((a,b)=>a-b);
         const labels = allTimes.map(fmt);
         
         function align(series) {

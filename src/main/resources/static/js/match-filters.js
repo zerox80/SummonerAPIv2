@@ -88,7 +88,12 @@ export function initMatchFilters() {
         }
         
         if (selectedQueue === RANKED_SENTINEL) return isRankedQ(queueId);
-        if (selectedQueue !== null && typeof selectedQueue === 'number') return queueId === selectedQueue;
+        if (selectedQueue !== null) {
+            const normalizedQueue = typeof selectedQueue === 'number' ? selectedQueue : Number(selectedQueue);
+            if (!Number.isNaN(normalizedQueue)) {
+                return queueId === normalizedQueue;
+            }
+        }
         const f = currentFilter();
         if (f === 'all') return true;
         if (f === 'ranked') return isRankedQ(queueId);
@@ -102,6 +107,12 @@ export function initMatchFilters() {
     }
 
     function apply(){
+        // Clear any pending search timer to avoid duplicate calls
+        if (searchTimer) {
+            clearTimeout(searchTimer);
+            searchTimer = null;
+        }
+        
         const term = searchInput?.value?.trim().toLowerCase() || '';
         rows.forEach(r => {
             const show = matchesFilter(r) && matchesSearch(r, term);

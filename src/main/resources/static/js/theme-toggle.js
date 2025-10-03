@@ -57,15 +57,24 @@ export function initThemeToggle(chartUpdateCallback) {
         // Notify charts to update colors after stylesheet loads
         if (chartUpdateCallback) {
             let callbackExecuted = false;
+            let loadListenerFired = false;
+            let timeoutFired = false;
             
             const executeCallback = () => {
                 if (callbackExecuted) return;
+                // Only execute if both triggers have attempted (or timeout passed)
+                if (!loadListenerFired && !timeoutFired) return;
                 callbackExecuted = true;
-                chartUpdateCallback(theme);
+                try {
+                    chartUpdateCallback(theme);
+                } catch(e) {
+                    console.error('Chart update callback failed:', e);
+                }
             };
             
             // Wait for stylesheet to load and apply
             themeStylesheet.addEventListener('load', () => {
+                loadListenerFired = true;
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
                         executeCallback();
@@ -74,7 +83,10 @@ export function initThemeToggle(chartUpdateCallback) {
             }, { once: true });
             
             // Fallback timeout in case load event doesn't fire
-            setTimeout(() => executeCallback(), 300);
+            setTimeout(() => {
+                timeoutFired = true;
+                executeCallback();
+            }, 300);
         }
     }
 

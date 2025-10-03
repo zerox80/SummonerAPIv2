@@ -19,7 +19,11 @@ export function initSearchDropdown() {
             debounceTimer = null;
         }
         if (currentAbortController) {
-            currentAbortController.abort();
+            try {
+                currentAbortController.abort();
+            } catch(e) {
+                console.debug('AbortController abort failed:', e);
+            }
             currentAbortController = null;
         }
     };
@@ -137,14 +141,23 @@ export function initSearchDropdown() {
             debounceTimer = null;
         }
         activeIndex = -1;
-        renderLocalHistory(query);
+        try {
+            renderLocalHistory(query);
+        } catch(e) {
+            console.error('Error rendering local history:', e);
+            return;
+        }
 
         debounceTimer = setTimeout(() => {
             if (isDestroyed) return;
             
             // Cancel previous request if still in flight
             if (currentAbortController) {
-                currentAbortController.abort();
+                try {
+                    currentAbortController.abort();
+                } catch(e) {
+                    console.debug('AbortController abort failed:', e);
+                }
             }
             currentAbortController = new AbortController();
             
@@ -302,11 +315,24 @@ export function initSearchDropdown() {
         }
     };
     
+    // Prevent duplicate initialization
+    if (window.__searchDropdownInitialized) {
+        console.warn('Search dropdown already initialized');
+        return window.__searchDropdownCleanup;
+    }
+    window.__searchDropdownInitialized = true;
+    
     document.addEventListener('click', handleClickOutside);
     
-    // Return cleanup function to allow proper teardown
-    return () => {
+    const fullCleanup = () => {
         cleanup();
         document.removeEventListener('click', handleClickOutside);
+        delete window.__searchDropdownInitialized;
+        delete window.__searchDropdownCleanup;
     };
+    
+    window.__searchDropdownCleanup = fullCleanup;
+    
+    // Return cleanup function to allow proper teardown
+    return fullCleanup;
 }
