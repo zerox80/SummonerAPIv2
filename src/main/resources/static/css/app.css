@@ -262,17 +262,40 @@ img, svg { max-width: 100%; height: auto; }
 
 /* Match search input max width (replaces inline style) */
 .match-search-group {
-  max-width: 320px;
-  flex: 0 0 auto;
+  width: 320px;
+  max-width: 100%;
+  flex: 0 0 320px;
 }
 
 .match-search-group .form-control {
   width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
   transition: none;
 }
 
 .match-search-group .form-control:focus {
   width: 100%;
+}
+
+.history-controls .ms-auto {
+  flex: 0 0 auto;
+  display: flex;
+}
+
+.history-controls .ms-auto .match-search-group {
+  flex: 0 0 320px;
+}
+
+@media (max-width: 768px) {
+  .history-controls .ms-auto {
+    flex: 1 1 100%;
+  }
+  .history-controls .ms-auto .match-search-group {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 /* Default hidden; JS toggles to block/none */
