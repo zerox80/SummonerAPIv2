@@ -159,7 +159,7 @@ export default function SummonerPage() {
       {!riotIdParam && (
         <EmptyState
           title="Search for a Riot ID"
-          description="Example: Faker#KR1. Get a blazing-fast analysis dashboard."
+          description="Example: HideonBush#KR1 or G2 Caps#1323. Get a blazing-fast analysis dashboard."
         />
       )}
 

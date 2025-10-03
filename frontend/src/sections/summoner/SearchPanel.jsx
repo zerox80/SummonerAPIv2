@@ -6,10 +6,8 @@ import useDebouncedValue from '../../hooks/useDebouncedValue.js';
 import '../../styles/summoner/search-panel.css';
 
 const PLACEHOLDER_IDS = [
-  'Faker#KR1',
-  'Caps#EUW',
-  'Thebausffs#EUNE',
-  'Tyler1#NA1'
+  'HideonBush#KR1',
+  'G2 Caps#1323'
 ];
 
 export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) {
