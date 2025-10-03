@@ -41,7 +41,7 @@
                 </li>
             </ul>
             <span class="navbar-text me-3">
-                Currently only <span th:text="${#strings.toUpperCase(platformRegion)}">EUW1</span> is supported.
+                Currently only <span th:text="${platformRegion != null ? #strings.toUpperCase(platformRegion) : 'EUW1'}">EUW1</span> is supported.
             </span>
             <button id="themeToggle" class="btn btn-sm btn-outline-secondary" type="button" title="Toggle theme" aria-label="Switch to light mode" aria-pressed="false">
                 <i class="fa-regular fa-moon" aria-hidden="true"></i>
@@ -92,6 +92,7 @@
             <!-- PUUID Removed as per request -->
             <!-- <p class="mb-0"><strong>PUUID:</strong> <small th:text="${summoner.puuid}" class="text-muted">N/A</small></p> -->
         </div>
+        </div>
 
         <!-- Display League Entries -->
         <div th:if="${leagueEntries != null && !leagueEntries.isEmpty()}" class="card section-card glass-card shadow-sm">
@@ -129,9 +130,7 @@
                 </div>
             </div>
         </div>
-
         </div>
-    </div>
 
     <!-- Recently Played (own collapsible card) -->
     <div th:if="${summoner != null}" class="card section-card glass-card shadow-sm">
@@ -239,14 +238,14 @@
             <a data-bs-toggle="collapse" href="#matchHistoryCollapse" role="button" aria-expanded="true" aria-controls="matchHistoryCollapse"
                class="d-flex align-items-center gap-2 text-decoration-none text-reset w-100">
                 <i class="fa-solid fa-scroll text-info" aria-hidden="true"></i>
-                <span class="flex-grow-1">Match History <small class="text-muted" th:text="${matchHistory != null ? '(' + matchHistory.size() + ')' : ''}"></small></span>
+                <span class="flex-grow-1">Match History <small class="text-muted" th:text="${matchHistory != null && matchHistory.size() > 0 ? '(' + matchHistory.size() + ')' : ''}"></small></span>
                 <i class="fas fa-chevron-down fa-xs chev" aria-hidden="true"></i>
             </a>
         </div>
         <div class="px-3 py-2 d-flex align-items-center gap-2 flex-wrap history-controls">
             <ul class="nav nav-pills" id="historyFilters" role="tablist">
-                <li class="nav-item" role="presentation"><button id="filterAll" class="nav-link active" data-filter="all" type="button">All</button></li>
-                <li class="nav-item" role="presentation"><button id="filterRanked" class="nav-link" data-filter="ranked" type="button">Ranked</button></li>
+                <li class="nav-item" role="presentation"><button id="filterAll" class="nav-link active" data-filter="all" type="button" aria-label="Show all matches">All</button></li>
+                <li class="nav-item" role="presentation"><button id="filterRanked" class="nav-link" data-filter="ranked" type="button" aria-label="Show ranked matches only">Ranked</button></li>
                 
             </ul>
             <div class='dropdown ms-1'>
@@ -279,7 +278,7 @@
 
             <!-- Empty-state message for when filters/search hide all rows -->
             <div id="noMatchesMsg" class="text-muted small px-3 py-2">
-                No matches match your current filters or search.
+                No matches found for your current filters or search.
             </div>
 
             <div id="matchList" class="list-group list-group-flush" th:unless="${matchHistory.isEmpty()}"

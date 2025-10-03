@@ -85,7 +85,7 @@ export function initSearchDropdown() {
         if (filtered.length) {
             const hdr = document.createElement('div');
             hdr.className = 'suggestion-section';
-            hdr.textContent = 'Zuletzt gesucht';
+            hdr.textContent = 'Recent Searches';
             suggestionsContainer.appendChild(hdr);
         }
         filtered.forEach(riotId => {
@@ -111,6 +111,8 @@ export function initSearchDropdown() {
                 suggestionsContainer.style.display = 'none';
                 riotIdInput.setAttribute('aria-expanded','false');
                 riotIdInput.removeAttribute('aria-activedescendant');
+                activeIndex = -1;
+                resetDropdownPlacement();
             });
             suggestionsContainer.appendChild(item);
         });
@@ -119,7 +121,7 @@ export function initSearchDropdown() {
             if (trimmedQuery.length) {
                 const empty = document.createElement('div');
                 empty.className = 'suggestion-section';
-                empty.textContent = 'Keine Einträge';
+                empty.textContent = 'No entries found';
                 suggestionsContainer.appendChild(empty);
             } else {
                 suggestionsContainer.style.display = 'none';
@@ -179,7 +181,7 @@ export function initSearchDropdown() {
                     let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
                     const hdr = document.createElement('div');
                     hdr.className = 'suggestion-section';
-                    hdr.textContent = 'Vorschläge';
+                    hdr.textContent = 'Suggestions';
                     suggestionsContainer.appendChild(hdr);
                     suggestions.forEach(suggestion => {
                         if (!suggestion || !suggestion.riotId) return; // Skip invalid suggestions
@@ -193,10 +195,17 @@ export function initSearchDropdown() {
                         item.setAttribute('aria-selected','false');
 
                         const img = document.createElement('img');
-                        const iconUrl = (suggestion.profileIconUrl && suggestion.profileIconUrl.trim()) 
+                        // Validate profileIconId before building fallback URL
+                        const hasValidIcon = suggestion.profileIconUrl && suggestion.profileIconUrl.trim();
+                        const hasValidIconId = suggestion.profileIconId && !isNaN(Number(suggestion.profileIconId));
+                        const iconUrl = hasValidIcon 
                             ? suggestion.profileIconUrl 
-                            : `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg`;
-                        img.src = iconUrl;
+                            : (hasValidIconId ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg` : '');
+                        if (iconUrl) {
+                            img.src = iconUrl;
+                        } else {
+                            img.style.display = 'none';
+                        }
                         img.alt = 'Icon';
                         img.classList.add('suggestion-avatar','me-2');
                         img.onerror = function() { this.style.display = 'none'; };
@@ -223,6 +232,8 @@ export function initSearchDropdown() {
                             suggestionsContainer.style.display = 'none';
                             riotIdInput.setAttribute('aria-expanded', 'false');
                             riotIdInput.removeAttribute('aria-activedescendant');
+                            activeIndex = -1;
+                            resetDropdownPlacement();
                         });
 
                         suggestionsContainer.appendChild(item);

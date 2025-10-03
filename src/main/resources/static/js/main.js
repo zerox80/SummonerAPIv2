@@ -124,8 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const wr = games ? Math.round((wins/games)*100) : 0;
             // Improved KDA calculation: show "Perfect" for 0 deaths with kills/assists
             let kda;
-            if (d === 0) {
-                kda = (k + a > 0) ? 'Perfect' : '0.00';
+            if (d === 0 && (k > 0 || a > 0)) {
+                kda = 'Perfect';
+            } else if (d === 0) {
+                kda = '0.00';
             } else {
                 kda = ((k + a) / d).toFixed(2);
             }

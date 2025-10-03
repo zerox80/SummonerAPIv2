@@ -83,7 +83,7 @@ html, body {
 }
 
 .glass-nav {
-  background: rgba(0, 0, 0, 0.35) !important;
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   z-index: 1020; /* Below suggestions dropdown (1060) to prevent overlap */
@@ -99,9 +99,18 @@ html, body {
 }
 
 /* Hero */
-.hero { position: relative; z-index: 5; }.gradient-orb {
-  width: 480px; height: 480px; border-radius: 50%;
-  filter: blur(40px); opacity: .35; pointer-events: none;
+.hero { 
+  position: relative; 
+  z-index: 5; 
+}
+
+.gradient-orb {
+  width: 480px; 
+  height: 480px; 
+  border-radius: 50%;
+  filter: blur(20px); /* Reduced from 40px for better performance */
+  opacity: .35; 
+  pointer-events: none;
 }
 .orb-1 { top: -160px; left: -160px; background: radial-gradient(circle at 30% 30%, var(--app-accent), transparent 60%); }
 .orb-2 { bottom: -180px; right: -140px; background: radial-gradient(circle at 60% 60%, var(--app-accent-2), transparent 60%); }
@@ -114,18 +123,20 @@ html, body {
 
 /* Suggestions dropdown */
 .suggestions-dropdown {
-  position: absolute !important; /* Use absolute positioning relative to .search-group */
-  top: 100%; /* Position below the input group */
+  position: absolute;
+  top: 100%;
   left: 0;
   right: 0;
-  z-index: 1060 !important; /* Higher than nav (1020) and modals (1055) to prevent overlap */
-  margin-top: 0.5rem; /* Add a small gap below the search input */
-  max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
-  border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);
-  /* Fully opaque backgrounds (no blur/alpha) */
+  z-index: 1060;
+  margin-top: 0.5rem;
+  max-height: 320px; 
+  overflow: auto; 
+  display: none;
+  border-radius: .75rem; 
+  border: 1px solid rgba(20,20,30,.9);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  background: #1a1f2e !important; /* Solid background for dark theme */
-  isolation: isolate; /* new stacking context */
+  background: #1a1f2e;
+  isolation: isolate;
   background-clip: padding-box;
 }
 /* Hard underlay to block any bleed-through from glass backgrounds */
@@ -136,21 +147,24 @@ html, body {
 }
 .suggestions-dropdown::after {
   content: "";
-  position: absolute; inset: 0; border-radius: inherit;
-  background: inherit !important; opacity: 1 !important;
+  position: absolute; 
+  inset: 0; 
+  border-radius: inherit;
+  background: inherit;
+  opacity: 1;
   z-index: 0;
 }
-.suggestions-dropdown > * { position: relative; z-index: 1000000; }
+.suggestions-dropdown > * { position: relative; z-index: 10; }
 /* Disable any backdrop/filter effects inside dropdown fully */
 .suggestions-dropdown, .suggestions-dropdown * {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  mix-blend-mode: normal !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  mix-blend-mode: normal;
 }
 .theme-dark .suggestions-dropdown .list-group-item, .suggestions-dropdown .list-group-item { 
-  background: #1a1f2e !important; /* Solid background in dark */
+  background: #1a1f2e;
   border: 0;
-  color: #f0f6fc !important;
+  color: #f0f6fc;
   padding: .5rem .75rem;
   gap: .5rem;
   width: 100%;
@@ -161,22 +175,22 @@ html, body {
 .theme-dark .suggestions-dropdown .list-group-item.active,
 .suggestions-dropdown .list-group-item:hover,
 .suggestions-dropdown .list-group-item.active { 
-  background: #2d3748 !important; /* Solid hover/active */
-  color: #ffffff !important;
+  background: #2d3748;
+  color: #ffffff;
 }
-.theme-light .suggestions-dropdown { background: #ffffff !important; }
+.theme-light .suggestions-dropdown { background: #ffffff; }
 .theme-light .suggestions-dropdown .list-group-item { 
-  background: #ffffff !important; /* Solid background in light */
+  background: #ffffff;
   border: 0;
-  color: #24292f !important;
+  color: #24292f;
   padding: .5rem .75rem;
   gap: .5rem;
   background-clip: padding-box;
 }
 .theme-light .suggestions-dropdown .list-group-item + .list-group-item { border-top: 1px solid rgba(0,0,0,.06); }
 .theme-light .suggestions-dropdown .list-group-item:hover { 
-  background: #f6f8fa !important; /* Solid hover background */
-  color: #0969da !important;
+  background: #f6f8fa;
+  color: #0969da;
 }
 
 /* Suggestion helpers */
@@ -187,8 +201,8 @@ html, body {
 .theme-dark .suggestion-section { color: #cbd5e1; }
 .theme-light .suggestion-section { color: #475569; }
 /* Make section header background fully opaque to avoid any bleed-through */
-.theme-dark .suggestion-section { background: #1a1f2e !important; border-bottom: 1px solid rgba(255,255,255,.08); }
-.theme-light .suggestion-section { background: #ffffff !important; border-bottom: 1px solid rgba(0,0,0,.06); }
+.theme-dark .suggestion-section { background: #1a1f2e; border-bottom: 1px solid rgba(255,255,255,.08); }
+.theme-light .suggestion-section { background: #ffffff; border-bottom: 1px solid rgba(0,0,0,.06); }
 
 /* Media and tables */
 .tier-icon { width: 64px; height: 64px; margin-right: 1rem; }
@@ -235,7 +249,7 @@ img, svg { max-width: 100%; height: auto; }
 
 /* Charts */
 .chart-canvas {
-  height: 220px !important; /* ensure visible size across themes */
+  height: 220px;
   max-height: 60vh;
 }
 
@@ -302,7 +316,19 @@ img, svg { max-width: 100%; height: auto; }
 #noMatchesMsg { display: none; }
 
 /* Sidebar + avatar */
-.sidebar-sticky { position: sticky; top: 6rem; align-self: start; z-index: 1; }
+.sidebar-sticky { 
+  position: sticky; 
+  top: 6rem; 
+  align-self: start; 
+  z-index: 1; 
+}
+
+@media (max-width: 992px) {
+  .sidebar-sticky {
+    position: relative;
+    top: 0;
+  }
+}
 .profile-avatar { width: 112px; height: 112px; object-fit: cover; }
 @media (max-width: 992px) { .profile-avatar { width: 72px; height: 72px; } }
 
@@ -317,7 +343,16 @@ img, svg { max-width: 100%; height: auto; }
 /* History controls */
 .history-controls .nav-pills .nav-link { padding: .35rem .75rem; }
 .history-controls .form-control { min-width: 240px; }
-.history-summary { white-space: nowrap; }
+.history-summary { 
+  white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+  .history-summary {
+    white-space: normal;
+    flex-wrap: wrap;
+  }
+}
 
 /* Colored team backgrounds */
 .team-blue-table tbody tr { background: rgba(30,144,255,0.06); }

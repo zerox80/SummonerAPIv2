@@ -95,13 +95,13 @@
                                                                       or (s.damage != null and !#strings.isEmpty(s.damage))
                                                                       or (s.scaling != null and !#strings.isEmpty(s.scaling))
                                                                       or (s.notes != null and !#lists.isEmpty(s.notes))}">
-                                <div class="fw-semibold">Werte</div>
+                                <div class="fw-semibold">Stats</div>
                                 <ul class="mb-0 ps-3">
-                                    <li th:if="${s.damage != null and !#strings.isEmpty(s.damage)}">Schaden: <span th:text="${s.damage}"></span></li>
-                                    <li th:if="${s.cooldown != null and !#strings.isEmpty(s.cooldown)}">Abklingzeit: <span th:text="${s.cooldown}"></span></li>
-                                    <li th:if="${s.cost != null and !#strings.isEmpty(s.cost)}">Kosten: <span th:text="${s.cost}"></span></li>
-                                    <li th:if="${s.range != null and !#strings.isEmpty(s.range)}">Reichweite: <span th:text="${s.range}"></span></li>
-                                    <li th:if="${s.scaling != null and !#strings.isEmpty(s.scaling)}">Skalierung: <span th:text="${s.scaling}"></span></li>
+                                    <li th:if="${s.damage != null and !#strings.isEmpty(s.damage)}">Damage: <span th:text="${s.damage}"></span></li>
+                                    <li th:if="${s.cooldown != null and !#strings.isEmpty(s.cooldown)}">Cooldown: <span th:text="${s.cooldown}"></span></li>
+                                    <li th:if="${s.cost != null and !#strings.isEmpty(s.cost)}">Cost: <span th:text="${s.cost}"></span></li>
+                                    <li th:if="${s.range != null and !#strings.isEmpty(s.range)}">Range: <span th:text="${s.range}"></span></li>
+                                    <li th:if="${s.scaling != null and !#strings.isEmpty(s.scaling)}">Scaling: <span th:text="${s.scaling}"></span></li>
                                     <li th:each="n : ${s.notes}" th:text="${n}"></li>
                                 </ul>
                             </div>
@@ -110,82 +110,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-4" th:if="${false}">
-            <div class="card glass-card">
-                <div class="card-header section-header d-flex align-items-center gap-2">
-                    <i class="fa-solid fa-wand-magic-sparkles text-info"></i>
-                    Recommended Runes (beta)
-                </div>
-                <div class="card-body runes">
-                    <div th:if="${build == null || build.runes == null || #lists.isEmpty(build.runes)}" class="build-placeholder small">Coming soon: aggregated popular runes based on recent matches.</div>
-                    <div th:if="${build != null && build.runes != null && !#lists.isEmpty(build.runes)}" class="d-flex flex-column gap-3">
-                        <div class="d-flex align-items-center justify-content-between small text-secondary">
-                            <div>Patch <span th:text="${build.patch}">x.y</span> • Queue <span th:text="${build.queueId}">420</span></div>
-                        </div>
-                        <div th:each="r,iter : ${build.runes}" th:if="${iter.index < 6}" class="d-flex align-items-center gap-3 p-2 rounded-3 bg-soft-glass">
-                            <img th:if="${r.keystoneIconUrl}" th:src="${r.keystoneIconUrl}" alt="Keystone" width="36" height="36" class="rounded" loading="lazy"/>
-                            <div class="flex-grow-1">
-                                <div class="fw-semibold" th:text="${r.keystoneName}">Keystone</div>
-                                <div class="text-secondary small">
-                                    <span th:text="${r.primaryStyleName}">Primary</span> + <span th:text="${r.subStyleName}">Secondary</span>
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                <div class="fw-semibold" th:text="${#numbers.formatInteger(r.count, 0)}">0</div>
-                                <div class="text-secondary small">
-                                    <span th:text="${#numbers.formatDecimal((r.wins * 100.0) / (r.count == 0 ? 1 : r.count), 0, 0)}">0</span>% WR
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card glass-card">
-                <div class="card-header section-header d-flex align-items-center gap-2">
-                    <i class="fa-solid fa-sack-xmark text-warning"></i>
-                    Popular Item Builds (beta)
-                </div>
-                <div class="card-body">
-                    <div th:if="${build == null || build.items == null || #lists.isEmpty(build.items)}" class="build-placeholder small">Coming soon: item builds aggregated from match-v5.</div>
-                    <div th:if="${build != null && build.items != null && !#lists.isEmpty(build.items)}" class="row g-2">
-                        <div class="col-6 d-flex align-items-center gap-2" th:each="it,iter : ${build.items}" th:if="${iter.index < 8}">
-                            <img th:if="${it.imageUrl}" th:src="${it.imageUrl}" th:alt="${it.name}" width="36" height="36" class="rounded" loading="lazy"/>
-                            <div class="flex-grow-1">
-                                <div class="fw-semibold small" th:text="${it.name}">Item</div>
-                                <div class="text-secondary small">
-                                    <span th:text="${#numbers.formatInteger(it.count, 0)}">0</span> • <span th:text="${#numbers.formatDecimal((it.wins * 100.0) / (it.count == 0 ? 1 : it.count), 0, 0)}">0</span>% WR
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card glass-card">
-                <div class="card-header section-header d-flex align-items-center gap-2">
-                    <i class="fa-solid fa-hat-wizard text-success"></i>
-                    Summoner Spells (beta)
-                </div>
-                <div class="card-body summoner-spells">
-                    <div th:if="${build == null || build.spells == null || #lists.isEmpty(build.spells)}" class="build-placeholder small">Coming soon: common summoner spells by role and rank.</div>
-                    <div th:if="${build != null && build.spells != null && !#lists.isEmpty(build.spells)}" class="d-flex flex-column gap-2">
-                        <div class="d-flex align-items-center gap-2 p-2 rounded-3 bg-soft-glass" th:each="sp,iter : ${build.spells}" th:if="${iter.index < 6}">
-                            <div class="d-flex align-items-center gap-1">
-                                <img th:if="${sp.spell1IconUrl}" th:src="${sp.spell1IconUrl}" th:alt="${sp.spell1Name}" width="32" height="32" class="rounded" loading="lazy"/>
-                                <span class="text-secondary small">+</span>
-                                <img th:if="${sp.spell2IconUrl}" th:src="${sp.spell2IconUrl}" th:alt="${sp.spell2Name}" width="32" height="32" class="rounded" loading="lazy"/>
-                            </div>
-                            <div class="flex-grow-1">
-                                <div class="fw-semibold small"><span th:text="${sp.spell1Name}">Spell1</span> + <span th:text="${sp.spell2Name}">Spell2</span></div>
-                            </div>
-                            <div class="text-end">
-                                <div class="fw-semibold" th:text="${#numbers.formatInteger(sp.count, 0)}">0</div>
-                                <div class="text-secondary small"><span th:text="${#numbers.formatDecimal((sp.wins * 100.0) / (sp.count == 0 ? 1 : sp.count), 0, 0)}">0</span>% WR</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Builds section removed (disabled via th:if="${false}") -->
     </div>
 </main>
 
