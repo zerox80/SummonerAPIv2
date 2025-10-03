@@ -6,83 +6,53 @@ export function initSearchDropdown() {
 
     let debounceTimer;
     const heroSection = riotIdInput?.closest('.hero');
-    const dropdownOriginalParent = suggestionsContainer?.parentElement || null;
-    const dropdownOriginalNextSibling = suggestionsContainer?.nextSibling || null;
-    const dropdownParentWrapper = dropdownOriginalParent?.parentElement || null;
+    const searchGroup = riotIdInput.closest('.search-group');
     const dropdownPlaceholder = document.createElement('div');
-    dropdownPlaceholder.className = 'search-dropdown-placeholder';
     dropdownPlaceholder.style.display = 'none';
     dropdownPlaceholder.style.height = '0';
-    dropdownPlaceholder.style.width = '100%';
-    dropdownPlaceholder.style.maxWidth = '100%';
+    dropdownPlaceholder.style.margin = '0';
+    dropdownPlaceholder.style.padding = '0';
+    dropdownPlaceholder.style.border = '0';
+    dropdownPlaceholder.style.pointerEvents = 'none';
     let dropdownMovedToBody = false;
 
     function moveDropdownToBody(){
-        if (!suggestionsContainer || dropdownMovedToBody || !dropdownOriginalParent) return;
-        dropdownPlaceholder.style.display = 'block';
-        dropdownPlaceholder.style.height = '0';
-        if (dropdownParentWrapper) {
-            dropdownParentWrapper.insertBefore(dropdownPlaceholder, dropdownOriginalParent.nextSibling);
-        } else {
-            dropdownOriginalParent.insertBefore(dropdownPlaceholder, dropdownOriginalNextSibling);
-        }
+        if (!suggestionsContainer || dropdownMovedToBody || !searchGroup) return;
+        searchGroup.appendChild(dropdownPlaceholder);
         document.body.appendChild(suggestionsContainer);
         dropdownMovedToBody = true;
     }
 
     function restoreDropdownParent(){
-        if (!suggestionsContainer || !dropdownMovedToBody || !dropdownOriginalParent) return;
-        dropdownOriginalParent.insertBefore(suggestionsContainer, dropdownOriginalNextSibling);
-        dropdownPlaceholder.style.display = 'none';
-        dropdownPlaceholder.style.height = '0';
-        if (dropdownPlaceholder.parentElement) {
-            dropdownPlaceholder.parentElement.removeChild(dropdownPlaceholder);
-        }
+        if (!suggestionsContainer || !dropdownMovedToBody || !searchGroup) return;
+        searchGroup.insertBefore(suggestionsContainer, dropdownPlaceholder);
+        dropdownPlaceholder.remove();
         dropdownMovedToBody = false;
     }
 
     function positionDropdown(force = false){
-        if (!suggestionsContainer || !riotIdInput) return;
+        if (!suggestionsContainer || !searchGroup) return;
         if (!force && suggestionsContainer.style.display !== 'block') return;
 
-        // Wait for CSS transition to finish before calculating position
-        setTimeout(() => {
-            const rect = riotIdInput.getBoundingClientRect();
-            if (!rect || !rect.width) return;
-            moveDropdownToBody();
-            const left = rect.left;
-            const top = rect.bottom + 8; // Reduced gap
-            const width = rect.width;
-            suggestionsContainer.style.position = 'fixed';
-            suggestionsContainer.style.zIndex = '999999';
-            suggestionsContainer.style.left = `${Math.round(left)}px`;
-            suggestionsContainer.style.top = `${Math.round(top)}px`;
-            suggestionsContainer.style.width = `${Math.round(width)}px`;
-            suggestionsContainer.style.maxWidth = `${Math.round(width)}px`;
-            suggestionsContainer.style.boxShadow = '0 20px 40px rgba(0,0,0,0.45)';
-            suggestionsContainer.style.border = '1px solid rgba(15,20,30,0.75)';
-            requestAnimationFrame(() => {
-                const dropdownHeight = suggestionsContainer.offsetHeight || 0;
-                if (dropdownHeight > 0 && dropdownPlaceholder) {
-                    dropdownPlaceholder.style.display = 'block';
-                    dropdownPlaceholder.style.height = `${dropdownHeight + 24}px`;
-                }
-            });
-        }, 160);
-
+        moveDropdownToBody();
+        const rect = searchGroup.getBoundingClientRect();
+        suggestionsContainer.style.position = 'fixed';
+        suggestionsContainer.style.left = `${Math.round(rect.left)}px`;
+        suggestionsContainer.style.top = `${Math.round(rect.bottom + 8)}px`;
+        suggestionsContainer.style.width = `${Math.round(rect.width)}px`;
+        suggestionsContainer.style.maxWidth = `${Math.round(rect.width)}px`;
+        dropdownPlaceholder.style.display = 'block';
+        dropdownPlaceholder.style.height = '0';
         heroSection?.classList.add('search-dropdown-open');
     }
 
     function resetDropdownPlacement(){
         if (!suggestionsContainer) return;
         suggestionsContainer.style.position = '';
-        suggestionsContainer.style.zIndex = '';
         suggestionsContainer.style.left = '';
         suggestionsContainer.style.top = '';
         suggestionsContainer.style.width = '';
         suggestionsContainer.style.maxWidth = '';
-        suggestionsContainer.style.boxShadow = '';
-        suggestionsContainer.style.border = '';
         heroSection?.classList.remove('search-dropdown-open');
         dropdownPlaceholder.style.display = 'none';
         dropdownPlaceholder.style.height = '0';
