@@ -1,15 +1,18 @@
 # syntax=docker/dockerfile:1.7
 # ===== Stage 1: Frontend Build =====
 FROM node:20-alpine AS frontend-build
-WORKDIR /app/frontend
+WORKDIR /app
 
 # Copy package files first for better caching
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copy source and build
 COPY . .
 RUN npm run build:docker
+
+# Debug: list build output
+RUN ls -la dist/
 
 # ===== Stage 2: Backend Build =====
 FROM maven:3.9-eclipse-temurin-21 AS backend-build
