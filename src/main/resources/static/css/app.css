@@ -170,16 +170,20 @@ html, body {
 .theme-light .search-group .form-control::placeholder { color: rgba(0,0,0,.45); }
 .search-group .form-control:focus { box-shadow: none; }
 /* Ensure the suggestions dropdown anchors to the input group, not the whole form */
-.search-group { position: relative; overflow: visible !important; }
+.search-group {
+  position: relative;
+  overflow: visible !important;
+  align-items: center;
+}
 
 /* Suggestions dropdown */
 .suggestions-dropdown {
-  position: absolute;
-  top: 100%;
+  position: absolute !important;
+  top: calc(100% + 0.5rem);
   left: 0;
   right: 0;
   z-index: var(--z-dropdown);
-  margin-top: 0.5rem;
+  margin-top: 0;
   max-height: 320px; 
   overflow: auto; 
   display: none;
@@ -189,6 +193,7 @@ html, body {
   background: #1a1f2e;
   isolation: isolate;
   background-clip: padding-box;
+  flex: none;
 }
 .suggestions-dropdown.show,
 .suggestions-dropdown.is-visible {
