@@ -7,6 +7,7 @@ import BuildItemsTable from '../components/champions/BuildItemsTable.jsx';
 import BuildRunesTable from '../components/champions/BuildRunesTable.jsx';
 import BuildSummonerSpellsTable from '../components/champions/BuildSummonerSpellsTable.jsx';
 import { useChampionDetail, useChampionBuild } from '../hooks/useChampionDetail.js';
+import { formatQueueById, roleLabel } from '../utils/formatters.js';
 import '../styles/champions/champion-detail-page.css';
 
 const QUEUE_OPTIONS = [
@@ -40,6 +41,15 @@ export default function ChampionDetailPage() {
 
   const champion = detailQuery.data;
   const build = buildQuery.data;
+
+  const buildMeta = useMemo(() => {
+    if (!build) return null;
+    const tokens = [];
+    if (build.patch) tokens.push(`Patch ${build.patch}`);
+    if (build.queueId) tokens.push(formatQueueById(build.queueId));
+    if (build.role) tokens.push(roleLabel(build.role));
+    return tokens.length > 0 ? tokens.join(' • ') : null;
+  }, [build]);
 
   const heroImage = useMemo(() => {
     if (!champion?.imageFull) return null;
@@ -77,7 +87,7 @@ export default function ChampionDetailPage() {
       />
 
       <div className="champion-detail__layout">
-        <section className="champion-detail__lore">
+        <section className="champion-detail__lore glass-panel">
           <h3>Geschichte</h3>
           <p>{champion.lore}</p>
         </section>
@@ -85,9 +95,24 @@ export default function ChampionDetailPage() {
         <AbilityList passive={champion.passive} spells={champion.spells} />
       </div>
 
-      <BuildItemsTable title="Beliebteste Items" items={build?.items} />
-      <BuildRunesTable title="Runenpräferenzen" runes={build?.runes} />
-      <BuildSummonerSpellsTable title="Beschwörerzauber" spells={build?.spells} />
+      <BuildItemsTable
+        title="Beliebteste Items"
+        items={build?.items}
+        loading={buildQuery.isLoading}
+        meta={buildMeta}
+      />
+      <BuildRunesTable
+        title="Runenpräferenzen"
+        runes={build?.runes}
+        loading={buildQuery.isLoading}
+        meta={buildMeta}
+      />
+      <BuildSummonerSpellsTable
+        title="Beschwörerzauber"
+        spells={build?.spells}
+        loading={buildQuery.isLoading}
+        meta={buildMeta}
+      />
     </div>
   );
 }
