@@ -323,6 +323,12 @@ export function initSearchDropdown() {
         positionDropdown(true);
     };
 
+    const handlePointerDown = () => {
+        if (isDestroyed) return;
+        fetchAndDisplaySuggestions(riotIdInput.value);
+        positionDropdown(true);
+    };
+
     const handleBlur = () => {
         setTimeout(() => {
             if (isDestroyed) return;
@@ -403,6 +409,7 @@ export function initSearchDropdown() {
 
     document.addEventListener('click', handleClickOutside);
     searchForm?.addEventListener('submit', handleFormSubmit);
+    riotIdInput.addEventListener('pointerdown', handlePointerDown);
     riotIdInput.addEventListener('input', handleInput);
     riotIdInput.addEventListener('focus', handleFocus);
     riotIdInput.addEventListener('blur', handleBlur);
@@ -412,6 +419,7 @@ export function initSearchDropdown() {
         cleanup();
         document.removeEventListener('click', handleClickOutside);
         searchForm?.removeEventListener('submit', handleFormSubmit);
+        riotIdInput.removeEventListener('pointerdown', handlePointerDown);
         riotIdInput.removeEventListener('input', handleInput);
         riotIdInput.removeEventListener('focus', handleFocus);
         riotIdInput.removeEventListener('blur', handleBlur);
