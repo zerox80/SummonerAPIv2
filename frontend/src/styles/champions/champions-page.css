@@ -1,32 +1,32 @@
 .champions-page {
   display: grid;
   gap: 2.5rem;
-  padding-bottom: 5rem;
+  padding-bottom: 3.5rem;
 }
 
 .champions-hero {
   display: grid;
-  gap: 1.75rem;
-  padding: 2.5rem;
+  gap: 1.25rem;
+  padding: 2rem;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   align-items: center;
 }
 
 .champions-hero__text h1 {
   margin: 0.35rem 0 0;
-  font-size: clamp(2.1rem, 4vw, 3rem);
+  font-size: clamp(1.9rem, 3.5vw, 2.7rem);
   letter-spacing: -0.02em;
 }
 
 .champions-hero__subtitle {
   margin: 0.65rem 0 0;
-  max-width: 60ch;
+  max-width: 70ch;
   color: var(--text-secondary);
 }
 
 .champions-hero__search {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.4rem;
 }
 
 .champions-hero__search-label {
@@ -40,7 +40,7 @@
 .champions-hero__search input {
   border-radius: var(--radius-sm);
   border: 1px solid rgba(99, 102, 241, 0.3);
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.9rem;
   background: rgba(15, 23, 42, 0.3);
   color: var(--text-primary);
   font-size: 1rem;
@@ -55,26 +55,26 @@
 
 .champions-hero__controls {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
 .champions-grid-section {
-  padding: 2rem;
+  padding: 1.5rem;
   display: grid;
   gap: 1.75rem;
 }
 
 .champions-grid {
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 .champion-card {
   display: grid;
-  gap: 1rem;
-  padding: 1.4rem;
+  gap: 0.85rem;
+  padding: 1.1rem;
   border-radius: var(--radius-md);
   background: rgba(17, 24, 65, 0.62);
   border: 1px solid rgba(99, 102, 241, 0.22);
@@ -103,18 +103,18 @@
 
 .champion-card__content h3 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   letter-spacing: -0.01em;
 }
 
 .champion-card__content p {
   margin: 0.25rem 0 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .champion-card__tags {
-  margin-top: 0.75rem;
+  margin-top: 0.6rem;
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
