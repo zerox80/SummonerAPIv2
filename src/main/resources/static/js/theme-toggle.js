@@ -54,9 +54,19 @@ export function initThemeToggle(chartUpdateCallback) {
         
         localStorage.setItem('theme', theme);
         
-        // Notify charts to update colors
+        // Notify charts to update colors after stylesheet loads
         if (chartUpdateCallback) {
-            setTimeout(() => chartUpdateCallback(theme), 100);
+            // Wait for stylesheet to load and apply
+            themeStylesheet.addEventListener('load', () => {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        chartUpdateCallback(theme);
+                    });
+                });
+            }, { once: true });
+            
+            // Fallback timeout in case load event doesn't fire
+            setTimeout(() => chartUpdateCallback(theme), 300);
         }
     }
 

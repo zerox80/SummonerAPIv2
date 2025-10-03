@@ -32,6 +32,9 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
         } else {
             let sum = 0; 
             const rel = deltas.map(d => (sum += (d ?? 0)));
+            // Validate that we have meaningful data
+            const hasNonZero = rel.some(v => v !== 0 && !Number.isNaN(v));
+            if (!hasNonZero) return null;
             return { times, values: rel };
         }
     }

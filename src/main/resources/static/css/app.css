@@ -79,7 +79,7 @@ html, body {
   background: rgba(0, 0, 0, 0.35) !important;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  z-index: 1030; /* below dropdown suggestions */
+  z-index: 1030; /* Below suggestions dropdown (1060) but above other content */
 }
 .theme-light .glass-nav { background: rgba(255,255,255,0.7) !important; }
 

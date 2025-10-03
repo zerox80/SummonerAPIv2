@@ -8,9 +8,11 @@ export function initSearchDropdown() {
     let activeIndex = -1; // Declare at top to avoid hoisting issues
     const heroSection = riotIdInput?.closest('.hero');
     const searchGroup = riotIdInput.closest('.search-group');
+    let isDestroyed = false;
     
     // Cleanup function to prevent memory leaks
     const cleanup = () => {
+        isDestroyed = true;
         if (debounceTimer) {
             clearTimeout(debounceTimer);
             debounceTimer = null;
@@ -121,6 +123,7 @@ export function initSearchDropdown() {
     }
 
     function fetchAndDisplaySuggestions(query) {
+        if (isDestroyed) return;
         if (debounceTimer) {
             clearTimeout(debounceTimer);
             debounceTimer = null;
@@ -129,6 +132,7 @@ export function initSearchDropdown() {
         renderLocalHistory(query);
 
         debounceTimer = setTimeout(() => {
+            if (isDestroyed) return;
             fetch(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`)
                 .then(response => {
                     if (!response.ok) {
@@ -163,7 +167,10 @@ export function initSearchDropdown() {
                         item.setAttribute('aria-selected','false');
 
                         const img = document.createElement('img');
-                        img.src = suggestion.profileIconUrl || (`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg`);
+                        const iconUrl = (suggestion.profileIconUrl && suggestion.profileIconUrl.trim()) 
+                            ? suggestion.profileIconUrl 
+                            : `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg`;
+                        img.src = iconUrl;
                         img.alt = 'Icon';
                         img.classList.add('suggestion-avatar','me-2');
                         img.onerror = function() { this.style.display = 'none'; };

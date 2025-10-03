@@ -89,7 +89,7 @@ export function initLoadMore(matchesPageSize = 10) {
         const parts = Array.isArray(info.participants) ? info.participants : [];
         const me = parts.find(p => p && p.puuid === searchedPuuid) || null;
         const gd = Number(info.gameDuration||0); 
-        const isRemake = gd>0 && gd<300;
+        const isRemake = gd > 0 && gd <= 300;
         const row = document.createElement('div');
         row.className = 'list-group-item match-row';
         row.classList.add(isRemake ? 'remake' : (me && me.win ? 'win' : 'loss'));
@@ -101,8 +101,17 @@ export function initLoadMore(matchesPageSize = 10) {
         row.setAttribute('data-remake', String(isRemake));
 
         const hiddenIdx = document.createElement('span'); hiddenIdx.className='d-none search-index';
-        const idxSpan = document.createElement('span'); idxSpan.textContent = me?.championName || ''; hiddenIdx.appendChild(idxSpan);
-        parts.forEach(p=>{ const s=document.createElement('span'); if (p.riotIdGameName && p.riotIdTagline){ s.textContent = `${p.riotIdGameName}#${p.riotIdTagline}`;} hiddenIdx.appendChild(s); });
+        if (me?.championName) {
+            const idxSpan = document.createElement('span'); 
+            idxSpan.textContent = me.championName; 
+            hiddenIdx.appendChild(idxSpan);
+        }
+        parts.forEach(p=>{ 
+            if (!p || !p.riotIdGameName || !p.riotIdTagline) return;
+            const s=document.createElement('span'); 
+            s.textContent = `${p.riotIdGameName}#${p.riotIdTagline}`; 
+            hiddenIdx.appendChild(s); 
+        });
         row.appendChild(hiddenIdx);
 
         const top = document.createElement('div'); top.className='d-flex w-100 justify-content-between';
@@ -208,12 +217,23 @@ export function initLoadMore(matchesPageSize = 10) {
         return row;
     }
 
+    let recentUpdateCache = null;
+    let recentUpdateTime = 0;
+    const CACHE_DURATION = 5000; // 5 seconds
+    
     function updateRecentFromDom(){
         try {
             const body = document.getElementById('recentChampsBody');
             const countEl = document.getElementById('recentCount');
             if (!body || !countEl) return;
-            const rows = Array.from(document.querySelectorAll('.match-row'));
+            
+            // Use cache if recent enough
+            const now = Date.now();
+            if (recentUpdateCache && (now - recentUpdateTime) < CACHE_DURATION) {
+                return;
+            }
+            
+            const rows = Array.from(document.querySelectorAll('#matchList .match-row'));
             const counts = new Map();
             rows.forEach(r => {
                 const nameEl = r.querySelector('.search-index span');
@@ -241,9 +261,16 @@ export function initLoadMore(matchesPageSize = 10) {
                 body.appendChild(ul);
             }
             countEl.textContent = String(rows.length);
+            
+            // Update cache
+            recentUpdateTime = now;
+            recentUpdateCache = true;
         } catch(_) {}
     }
 
+    let loadMoreAttempts = 0;
+    const MAX_LOAD_ATTEMPTS = 3;
+    
     async function loadMore(){
         if (!riotId) return;
         setLoading(true);
@@ -261,10 +288,19 @@ export function initLoadMore(matchesPageSize = 10) {
             arr.forEach(m => frag.appendChild(buildMatchRowEl(m)));
             matchList.appendChild(frag);
             loaded += arr.length;
+            loadMoreAttempts = 0; // Reset on success
             if (typeof window.refreshMatchRows === 'function') window.refreshMatchRows();
             updateRecentFromDom();
-        } catch(err){ console.error('Load more failed:', err); }
-        setLoading(false);
+        } catch(err){ 
+            console.error('Load more failed:', err);
+            loadMoreAttempts++;
+            if (loadMoreAttempts >= MAX_LOAD_ATTEMPTS) {
+                loadBtn.setAttribute('disabled','true');
+                loadBtn.querySelector('.label').textContent = 'Error loading matches';
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
     loadBtn.addEventListener('click', function(e){ e.preventDefault(); loadMore(); });

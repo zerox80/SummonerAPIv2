@@ -35,8 +35,10 @@ export function initMatchFilters() {
     (function buildQueueMenu(){
         if (!queueDropdown) return;
         const present = Array.from(new Set(rows.map(r => {
-            const q = Number(r.getAttribute('data-q'));
-            return (Number.isNaN(q) || q === null) ? 0 : q;
+            const qAttr = r.getAttribute('data-q');
+            if (!qAttr || qAttr === 'null' || qAttr === 'undefined') return 0;
+            const q = Number(qAttr);
+            return Number.isNaN(q) ? 0 : q;
         })));
         const items = present.length ? present : Object.keys(QUEUE_NAMES).map(Number);
         const uniqueSorted = Array.from(new Set(items)).sort((a,b)=>a-b);
@@ -70,8 +72,17 @@ export function initMatchFilters() {
 
     function matchesFilter(row){
         const qAttr = row.getAttribute('data-q');
+        if (!qAttr || qAttr === 'null' || qAttr === 'undefined') {
+            const queueId = 0;
+            if (selectedQueue === RANKED_SENTINEL) return isRankedQ(queueId);
+            if (selectedQueue !== null && typeof selectedQueue === 'number') return queueId === selectedQueue;
+            const f = currentFilter();
+            if (f === 'all') return true;
+            if (f === 'ranked') return isRankedQ(queueId);
+            return true;
+        }
         const q = Number(qAttr);
-        const queueId = (Number.isNaN(q) || q === null) ? 0 : q;
+        const queueId = Number.isNaN(q) ? 0 : q;
         if (selectedQueue === RANKED_SENTINEL) return isRankedQ(queueId);
         if (selectedQueue !== null && typeof selectedQueue === 'number') return queueId === selectedQueue;
         const f = currentFilter();
@@ -159,7 +170,17 @@ export function initMatchFilters() {
         apply();
     });
 
-    let t; 
-    searchInput?.addEventListener('input', ()=>{ clearTimeout(t); t=setTimeout(apply, 200); });
+    let searchTimer; 
+    const handleSearchInput = () => { 
+        clearTimeout(searchTimer); 
+        searchTimer = setTimeout(apply, 200); 
+    };
+    searchInput?.addEventListener('input', handleSearchInput);
     apply();
+    
+    // Return cleanup function
+    return () => {
+        if (searchTimer) clearTimeout(searchTimer);
+        searchInput?.removeEventListener('input', handleSearchInput);
+    };
 }

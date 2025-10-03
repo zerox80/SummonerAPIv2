@@ -287,7 +287,7 @@
                 <th:block th:each="match, iterStat : ${matchHistory}">
                     <!-- Render only if we have basic match info -->
                     <th:block th:if="${match != null and match.info != null}">
-                    <div th:with="gd=${match.info.gameDuration != null ? match.info.gameDuration : 0}, isRemake=${gd > 0 && gd < 300}, meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}"
+                    <div th:with="gd=${match.info.gameDuration != null ? match.info.gameDuration : 0}, isRemake=${gd > 0 && gd <= 300}, meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}"
                          class="list-group-item match-row"
                          th:classappend="${isRemake ? ' remake' : (me != null && me.win ? ' win' : ' loss')}"
                          th:attr="data-q=${match.info.queueId}, data-k=${me != null ? me.kills : 0}, data-d=${me != null ? me.deaths : 0}, data-a=${me != null ? me.assists : 0}, data-win=${me != null ? me.win : false}, data-remake=${isRemake}">
@@ -314,7 +314,7 @@
                                 <span th:text="${' (' + min + 'm ' + sec + 's)'}">(0m 0s)</span>
                             </h5>
                             <div class="d-flex align-items-center">
-                                <th:block th:with="gd=${match.info.gameDuration != null ? match.info.gameDuration : 0}, isRemake=${gd > 0 && gd < 300}, meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}">
+                                <th:block th:with="gd=${match.info.gameDuration != null ? match.info.gameDuration : 0}, isRemake=${gd > 0 && gd <= 300}, meList=${match.info.participants != null ? match.info.participants.?[puuid==#vars.summoner.puuid] : null}, me=${meList != null && !#lists.isEmpty(meList) ? meList[0] : null}">
                                     <span class="badge rounded-pill px-3 py-2 fw-semibold"
                                           th:text="${isRemake ? 'Remake' : (me != null && me.win ? 'Victory' : 'Defeat')}"
                                           th:classappend="${isRemake ? 'bg-secondary-subtle text-secondary-emphasis' : (me != null && me.win ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis')}"></span>
