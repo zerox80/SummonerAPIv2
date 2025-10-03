@@ -314,19 +314,26 @@ export function initSearchDropdown() {
         setBusyState(false);
     };
 
-    const handleInput = () => {
-        fetchAndDisplaySuggestions(riotIdInput.value);
-    };
-
-    const handleFocus = () => {
-        fetchAndDisplaySuggestions(riotIdInput.value);
-        positionDropdown(true);
-    };
-
-    const handlePointerDown = () => {
+    const openSuggestions = () => {
         if (isDestroyed) return;
         fetchAndDisplaySuggestions(riotIdInput.value);
         positionDropdown(true);
+    };
+
+    const handleInput = () => {
+        openSuggestions();
+    };
+
+    const handleFocus = () => {
+        openSuggestions();
+    };
+
+    const handlePointerDown = () => {
+        openSuggestions();
+    };
+
+    const handleClick = () => {
+        openSuggestions();
     };
 
     const handleBlur = () => {
@@ -391,11 +398,12 @@ export function initSearchDropdown() {
     const handleClickOutside = event => {
         // Improved click-outside handler: check for modals and other overlays
         const target = event.target;
-        const isInsideInput = riotIdInput.contains(target);
+        const isInsideInput = target === riotIdInput || riotIdInput.contains(target);
+        const isInsideGroup = searchGroup?.contains(target);
         const isInsideDropdown = suggestionsContainer.contains(target);
         const isInsideModal = target.closest('.modal');
 
-        if (!isInsideInput && !isInsideDropdown && !isInsideModal) {
+        if (!isInsideInput && !isInsideGroup && !isInsideDropdown && !isInsideModal) {
             hideSuggestions();
         }
     };
@@ -410,6 +418,7 @@ export function initSearchDropdown() {
     document.addEventListener('click', handleClickOutside);
     searchForm?.addEventListener('submit', handleFormSubmit);
     riotIdInput.addEventListener('pointerdown', handlePointerDown);
+    riotIdInput.addEventListener('click', handleClick);
     riotIdInput.addEventListener('input', handleInput);
     riotIdInput.addEventListener('focus', handleFocus);
     riotIdInput.addEventListener('blur', handleBlur);
@@ -420,6 +429,7 @@ export function initSearchDropdown() {
         document.removeEventListener('click', handleClickOutside);
         searchForm?.removeEventListener('submit', handleFormSubmit);
         riotIdInput.removeEventListener('pointerdown', handlePointerDown);
+        riotIdInput.removeEventListener('click', handleClick);
         riotIdInput.removeEventListener('input', handleInput);
         riotIdInput.removeEventListener('focus', handleFocus);
         riotIdInput.removeEventListener('blur', handleBlur);
