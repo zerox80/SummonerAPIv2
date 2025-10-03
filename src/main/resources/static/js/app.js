@@ -13,13 +13,18 @@ document.addEventListener('DOMContentLoaded', function () {
     initSearchDropdown();
 
     // Initialize match filters
-    initMatchFilters();
+    let matchFiltersCleanup = null;
+    try {
+        matchFiltersCleanup = initMatchFilters();
+    } catch (error) {
+        console.error('Match filters initialization failed:', error);
+    }
 
     // Get chart data from Thymeleaf
-    const leagueEntries = window.leagueEntriesData || [];
-    const matches = window.matchesData || [];
-    const champLabels = window.champLabelsData || [];
-    const champValues = window.champValuesData || [];
+    const leagueEntries = Array.isArray(window.leagueEntriesData) ? window.leagueEntriesData : [];
+    const matches = Array.isArray(window.matchesData) ? window.matchesData : [];
+    const champLabels = Array.isArray(window.champLabelsData) ? window.champLabelsData : [];
+    const champValues = Array.isArray(window.champValuesData) ? window.champValuesData : [];
 
     // Initialize charts and get update callback with error boundary
     let updateCharts;
@@ -40,6 +45,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Initialize load more functionality
-    const matchesPageSize = window.matchesPageSizeData || 10;
-    initLoadMore(matchesPageSize);
+    const matchesPageSizeRaw = window.matchesPageSizeData;
+    const matchesPageSize = Number.isFinite(Number(matchesPageSizeRaw)) ? Number(matchesPageSizeRaw) : 10;
+    try {
+        initLoadMore(matchesPageSize);
+    } catch (error) {
+        console.error('Load more initialization failed:', error);
+    }
+
+    if (typeof matchFiltersCleanup === 'function') {
+        window.addEventListener('beforeunload', () => {
+            try {
+                matchFiltersCleanup();
+            } catch (cleanupError) {
+                console.debug('Match filters cleanup failed on unload:', cleanupError);
+            }
+        }, { once: true });
+    }
 });

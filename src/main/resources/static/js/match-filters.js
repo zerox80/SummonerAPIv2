@@ -11,6 +11,13 @@ import {
 
 // Instance tracking using WeakMap for better memory management
 const instances = new WeakMap();
+const RANKED_SENTINEL = Symbol('ranked-any');
+
+function isRankedQueue(queueId) {
+    return queueId === QUEUE_TYPES.RANKED_SOLO ||
+        queueId === QUEUE_TYPES.RANKED_FLEX ||
+        queueId === QUEUE_TYPES.TFT_RANKED;
+}
 
 export function initMatchFilters() {
     let rows = Array.from(document.querySelectorAll('.match-row'));
@@ -25,8 +32,9 @@ export function initMatchFilters() {
     if (!rows.length && noMsg) { noMsg.style.display = ''; }
 
     // Check if already initialized
-    if (instances.has(filters || searchInput || {})) {
-        return instances.get(filters || searchInput || {});
+    const instanceKey = filters || searchInput || document.body;
+    if (instances.has(instanceKey)) {
+        return instances.get(instanceKey);
     }
 
     // Helper function to normalize queue ID
@@ -36,14 +44,16 @@ export function initMatchFilters() {
         return Number.isNaN(q) || q < 0 ? 0 : q;
     }
 
-    // Populate dropdown with present queues
-    (function buildQueueMenu(){
+    function buildQueueMenu(){
         if (!queueDropdown) return;
         const present = Array.from(new Set(rows.map(r => {
             const qAttr = r.getAttribute('data-q');
             return normalizeQueueId(qAttr);
         })));
-        const items = present.length ? present : Object.keys(QUEUE_NAMES).map(Number);
+        const defaultQueues = Object.keys(QUEUE_NAMES)
+            .map(key => Number(key))
+            .filter(num => Number.isFinite(num) && num >= 0);
+        const items = present.length ? present : defaultQueues;
         const uniqueSorted = Array.from(new Set(items)).sort((a,b)=>a-b);
         queueDropdown.innerHTML = '';
         
@@ -84,13 +94,19 @@ export function initMatchFilters() {
             queueDropdown.appendChild(li);
         });
         if (queueToggle) queueToggle.textContent = 'All queues';
-    })();
+    }
+
+    buildQueueMenu();
 
     // Expose a helper to refresh internal row cache after DOM changes
-    window.refreshMatchRows = function(){
+    const refreshMatchRows = function(forceMenuRefresh = false){
         rows = Array.from(document.querySelectorAll('.match-row'));
+        if (forceMenuRefresh) {
+            buildQueueMenu();
+        }
         apply();
     };
+    window.refreshMatchRows = refreshMatchRows;
 
     let selectedQueue = null;
     let forcedFilter = 'all';
@@ -101,7 +117,7 @@ export function initMatchFilters() {
         const qAttr = row.getAttribute('data-q');
         const queueId = normalizeQueueId(qAttr);
         
-        if (selectedQueue === RANKED_SENTINEL) return isRankedQ(queueId);
+        if (selectedQueue === RANKED_SENTINEL) return isRankedQueue(queueId);
         if (selectedQueue !== null) {
             const normalizedQueue = typeof selectedQueue === 'number' ? selectedQueue : Number(selectedQueue);
             if (!Number.isNaN(normalizedQueue)) {
@@ -110,7 +126,7 @@ export function initMatchFilters() {
         }
         const f = currentFilter();
         if (f === 'all') return true;
-        if (f === 'ranked') return isRankedQ(queueId);
+        if (f === 'ranked') return isRankedQueue(queueId);
         return true;
     }
 
@@ -132,10 +148,16 @@ export function initMatchFilters() {
     }
 
     function updateSummary(){
-        const vis = rows.filter(r => r.style.display !== 'none' && String(r.getAttribute('data-remake')) !== 'true');
+        const vis = rows.filter(r => {
+            if (r.style.display === 'none') return false;
+            const attr = r.getAttribute('data-remake');
+            const isRemake = attr === 'true' || attr === true;
+            return !isRemake;
+        });
         let wins=0, k=0, d=0, a=0;
         vis.forEach(r => {
-            if (String(r.getAttribute('data-win')) === 'true') wins++;
+            const winAttr = r.getAttribute('data-win');
+            if (winAttr === 'true' || winAttr === true) wins++;
             k += Number(r.getAttribute('data-k'))||0;
             d += Number(r.getAttribute('data-d'))||0;
             a += Number(r.getAttribute('data-a'))||0;
@@ -216,19 +238,21 @@ export function initMatchFilters() {
         filters?.removeEventListener(EVENTS.CLICK, filterClickHandler);
         queueDropdown?.removeEventListener(EVENTS.CLICK, queueClickHandler);
         window.removeEventListener(EVENTS.BEFOREUNLOAD, cleanup);
-        instances.delete(filters || searchInput || {});
+        if (window.refreshMatchRows === refreshMatchRows) {
+            window.refreshMatchRows = undefined;
+        }
+        instances.delete(instanceKey);
     };
-    
+
     searchInput?.addEventListener(EVENTS.INPUT, handleSearchInput);
     filters?.addEventListener(EVENTS.CLICK, filterClickHandler);
     queueDropdown?.addEventListener(EVENTS.CLICK, queueClickHandler);
     window.addEventListener(EVENTS.BEFOREUNLOAD, cleanup);
-    
+
     // Store cleanup function globally for reuse
-    instances.set(filters || searchInput || {}, cleanup);
-    
+    instances.set(instanceKey, cleanup);
+
     apply();
-    
-    // Return cleanup function
+
     return cleanup;
 }

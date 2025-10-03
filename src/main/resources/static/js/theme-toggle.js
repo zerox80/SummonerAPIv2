@@ -20,8 +20,9 @@ export function initThemeToggle(chartUpdateCallback) {
     const bodyEl = document.body;
 
     // Check if already initialized
-    if (instances.has(themeToggleBtn || {})) {
-        return instances.get(themeToggleBtn || {});
+    const instanceKey = themeToggleBtn || document.body;
+    if (instances.has(instanceKey)) {
+        return instances.get(instanceKey);
     }
 
     const BOOTSWATCH_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7';
@@ -36,7 +37,8 @@ export function initThemeToggle(chartUpdateCallback) {
             console.warn('Theme stylesheet element not found');
             return;
         }
-        const themeName = THEMES[theme] || THEMES.dark;
+        const normalizedTheme = (theme === THEMES.LIGHT || theme === THEMES.DARK) ? theme : THEMES.DARK;
+        const themeName = BOOTSWATCH_THEMES[normalizedTheme] || BOOTSWATCH_THEMES.dark;
         const href = `${BOOTSWATCH_BASE}/${themeName}/bootstrap.min.css`;
         const sri = BOOTSWATCH_SRI[themeName];
         themeStylesheet.setAttribute('href', href);
@@ -48,13 +50,13 @@ export function initThemeToggle(chartUpdateCallback) {
             themeStylesheet.removeAttribute('crossorigin');
         }
         bodyEl.classList.remove('theme-dark', 'theme-light');
-        bodyEl.classList.add(theme === 'light' ? 'theme-light' : 'theme-dark');
-        
+        bodyEl.classList.add(normalizedTheme === THEMES.LIGHT ? 'theme-light' : 'theme-dark');
+
         // Keep navbar colors aligned with the currently active theme
         const navEl = document.querySelector('nav.navbar');
         if (navEl) {
             navEl.classList.remove('navbar-dark','bg-dark','navbar-light','bg-light');
-            if (theme === 'light') { 
+            if (normalizedTheme === THEMES.LIGHT) { 
                 navEl.classList.add('navbar-light','bg-light'); 
             } else { 
                 navEl.classList.add('navbar-dark','bg-dark'); 
@@ -64,26 +66,30 @@ export function initThemeToggle(chartUpdateCallback) {
         // Adjust Riot ID input text color to maintain contrast in both themes
         const riotIdInput = document.getElementById('riotId');
         if (riotIdInput) {
-            riotIdInput.classList.toggle('text-light', theme !== 'light');
-            riotIdInput.classList.toggle('text-dark', theme === 'light');
+            riotIdInput.classList.toggle('text-light', normalizedTheme !== THEMES.LIGHT);
+            riotIdInput.classList.toggle('text-dark', normalizedTheme === THEMES.LIGHT);
         }
-        
+
         if (themeToggleBtn) {
             // Swap icon/ARIA metadata so assistive tech tracks the new theme state
-            const nextLabel = theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
-            themeToggleBtn.innerHTML = theme === 'light'
+            const nextLabel = normalizedTheme === THEMES.LIGHT ? 'Switch to dark mode' : 'Switch to light mode';
+            themeToggleBtn.innerHTML = normalizedTheme === THEMES.LIGHT
                 ? '<i class="fa-regular fa-moon" aria-hidden="true"></i>'
                 : '<i class="fa-regular fa-sun" aria-hidden="true"></i>';
             themeToggleBtn.setAttribute('aria-label', nextLabel);
-            themeToggleBtn.setAttribute('aria-pressed', theme === 'light' ? 'false' : 'true');
+            themeToggleBtn.setAttribute('aria-pressed', normalizedTheme === THEMES.LIGHT ? 'false' : 'true');
             themeToggleBtn.setAttribute('title', nextLabel);
         }
-        
+
         // Update browser UI color (mobile address bar, etc.) via meta tag
-        if (themeMeta) themeMeta.setAttribute('content', theme === 'light' ? '#f7f7fb' : '#0b1018');
-        
-        localStorage.setItem(STORAGE_KEYS.THEME, theme);
-        
+        if (themeMeta) themeMeta.setAttribute('content', normalizedTheme === THEMES.LIGHT ? '#f7f7fb' : '#0b1018');
+
+        try {
+            localStorage.setItem(STORAGE_KEYS.THEME, normalizedTheme);
+        } catch (e) {
+            console.debug('Unable to persist theme preference:', e);
+        }
+
         // Notify charts to update colors after stylesheet loads
         if (chartUpdateCallback && themeStylesheet) {
             let callbackExecuted = false;
@@ -92,7 +98,7 @@ export function initThemeToggle(chartUpdateCallback) {
                 if (callbackExecuted) return;
                 callbackExecuted = true;
                 try {
-                    chartUpdateCallback(theme);
+                    chartUpdateCallback(normalizedTheme);
                 } catch (e) {
                     console.error('Chart update callback failed:', e);
                 }
@@ -106,23 +112,31 @@ export function initThemeToggle(chartUpdateCallback) {
                 });
             };
 
-            themeStylesheet.addEventListener(EVENTS.LOAD, onLoad);
+            themeStylesheet.addEventListener(EVENTS.LOAD, onLoad, { once: true });
             setTimeout(executeCallback, 300);
         }
     }
 
     // Restore saved theme (or default) on next frame to avoid flash of unstyled content
-    const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || THEMES.DARK;
+    let savedTheme = THEMES.DARK;
+    try {
+        savedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || THEMES.DARK;
+    } catch {
+        savedTheme = THEMES.DARK;
+    }
     requestAnimationFrame(() => applyTheme(savedTheme));
 
     // Toggle handler flips between light/dark classes and persists selection
     themeToggleBtn?.addEventListener(EVENTS.CLICK, () => {
-        const nextTheme = bodyEl.classList.contains(CSS_CLASSES.THEME_LIGHT) ? THEMES.DARK : THEMES.LIGHT;
+        const isCurrentlyLight = bodyEl.classList.contains('theme-light');
+        const nextTheme = isCurrentlyLight ? THEMES.DARK : THEMES.LIGHT;
         applyTheme(nextTheme);
     });
 
     // Store instance
-    instances.set(themeToggleBtn || {}, { applyTheme });
+    if (!instances.has(instanceKey)) {
+        instances.set(instanceKey, { applyTheme });
+    }
 
     return { applyTheme };
 }

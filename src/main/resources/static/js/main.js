@@ -4,9 +4,9 @@ import { setupImageFallbacks } from './image-fallbacks.js';
 import { initHistoryFiltersFallback } from './history-filters.js';
 
 // Autofocus on the riotId input field when the page loads
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function initMainAutofocus() {
     initAutofocus();
-});
+}, { once: true });
 
 // Fix any garbled separator characters in template rendering
 try {
@@ -21,6 +21,6 @@ try {
 setupImageFallbacks();
 
 // History filter fallback
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function initHistoryFallback() {
     initHistoryFiltersFallback();
-});
+}, { once: true });

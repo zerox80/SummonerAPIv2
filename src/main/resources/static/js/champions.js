@@ -35,11 +35,23 @@
 
   function initRoleButtons(){
     document.querySelectorAll(ROLE_BUTTON_SELECTOR).forEach(btn => {
+      btn.setAttribute('role', 'radio');
+      btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
       btn.addEventListener('click', function(e){
         e.preventDefault();
-        document.querySelectorAll(ROLE_BUTTON_SELECTOR).forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll(ROLE_BUTTON_SELECTOR).forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         this.classList.add('active');
+        this.setAttribute('aria-pressed', 'true');
         applyFilters();
+      });
+      btn.addEventListener('keydown', function(e) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          this.click();
+        }
       });
     });
   }
@@ -59,6 +71,9 @@
     }
     initRoleButtons();
     applyFilters();
+    window.addEventListener('beforeunload', () => {
+      window.__championsPageInitialized = false;
+    }, { once: true });
   }
   
   // Check if DOM is already loaded

@@ -13,6 +13,9 @@ export function initLoadMore(matchesPageSize = 10) {
     const PAGE = matchesPageSize;
     let loaded = matchList.querySelectorAll('.match-row').length;
     let loadingPlaceholder = null;
+    let loadInFlight = false;
+    let dynamicMatchIndex = 0;
+    let warnedChampSquareBase = false;
 
     function setLoading(v){
         const sp = loadBtn.querySelector('.spinner-border');
@@ -70,7 +73,10 @@ export function initLoadMore(matchesPageSize = 10) {
     function champIcon(p){
         if (!p || !p.championName) return '';
         if (!champSquareBase) {
-            console.warn('champSquareBase is not defined');
+            if (!warnedChampSquareBase) {
+                console.warn('champSquareBase is not defined');
+                warnedChampSquareBase = true;
+            }
             // Fallback to Community Dragon CDN
             return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${p.championId || -1}.png`;
         }
@@ -139,8 +145,9 @@ export function initLoadMore(matchesPageSize = 10) {
         const meta = m.metadata || {}; 
         const parts = Array.isArray(info.participants) ? info.participants : [];
         const me = parts.find(p => p && p.puuid === searchedPuuid) || null;
-        const gd = Number(info.gameDuration||0); 
-        const isRemake = gd > 0 && gd <= 300;
+        const rawDuration = Number(info.gameDuration || 0);
+        const durationSeconds = rawDuration > 900 ? Math.round(rawDuration / 1000) : rawDuration;
+        const isRemake = durationSeconds > 0 && durationSeconds <= 300;
         const row = document.createElement('div');
         row.className = 'list-group-item match-row';
         row.classList.add(isRemake ? 'remake' : (me && me.win ? 'win' : 'loss'));
@@ -169,7 +176,7 @@ export function initLoadMore(matchesPageSize = 10) {
         const h5 = document.createElement('h5'); h5.className='mb-1';
         const qLbl = document.createElement('span'); qLbl.textContent = queueName(info.queueId||0);
         h5.appendChild(qLbl);
-        const dur = document.createElement('span'); dur.textContent = ` (${fmtDur(gd)})`; h5.appendChild(dur);
+        const dur = document.createElement('span'); dur.textContent = ` (${fmtDur(durationSeconds)})`; h5.appendChild(dur);
         top.appendChild(h5);
         const right = document.createElement('div'); right.className='d-flex align-items-center';
         const badge = document.createElement('span'); badge.className = 'badge rounded-pill px-3 py-2 fw-semibold';
@@ -184,7 +191,7 @@ export function initLoadMore(matchesPageSize = 10) {
         right.appendChild(badge);
         if (!isRemake && typeof info.lpChange === 'number'){
             const lp = document.createElement('span');
-            const sign = info.lpChange > 0 ? '+' : '';
+            const sign = info.lpChange > 0 ? '+' : (info.lpChange < 0 ? '' : '±');
             lp.textContent = `${sign}${info.lpChange} LP`;
             lp.className = info.lpChange>0 ? 'lp-badge gain ms-2' : (info.lpChange<0 ? 'lp-badge loss ms-2' : 'lp-badge neutral ms-2');
             right.appendChild(lp);
@@ -223,17 +230,25 @@ export function initLoadMore(matchesPageSize = 10) {
         }
 
         if (parts.length){
-            const details = document.createElement('details'); details.className='mt-2 w-100';
-            const summary = document.createElement('summary'); summary.className='btn btn-sm btn-participants'; 
-            summary.textContent = 'Show All Participants ';
-            const icon = document.createElement('i');
-            icon.className = 'fas fa-users fa-xs';
-            icon.setAttribute('aria-hidden', 'true');
-            summary.appendChild(icon);
-            details.appendChild(summary);
-            
-            // Blue Team with proper table structure
-            const blueH = document.createElement('h6'); blueH.className='mt-3 text-primary'; blueH.textContent='Blue Team'; details.appendChild(blueH);
+            const collapseWrapper = document.createElement('div');
+            collapseWrapper.className = 'mt-2 w-100';
+
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'btn btn-sm btn-participants';
+            toggleBtn.type = 'button';
+            const collapseId = `participants-dyn-${dynamicMatchIndex++}`;
+            toggleBtn.setAttribute('data-bs-toggle', 'collapse');
+            toggleBtn.setAttribute('data-bs-target', `#${collapseId}`);
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.setAttribute('aria-controls', collapseId);
+            toggleBtn.innerHTML = 'Show All Participants <i class="fas fa-users fa-xs" aria-hidden="true"></i>';
+            collapseWrapper.appendChild(toggleBtn);
+
+            const collapse = document.createElement('div');
+            collapse.className = 'collapse mt-3';
+            collapse.id = collapseId;
+
+            const blueH = document.createElement('h6'); blueH.className='text-primary'; blueH.textContent='Blue Team'; collapse.appendChild(blueH);
             const blueDiv = document.createElement('div'); blueDiv.className='table-responsive';
             const blueTable = document.createElement('table'); blueTable.className='table table-sm table-hover mt-2 match-table team-blue-table table-borderless align-middle';
             const blueThead = document.createElement('thead');
@@ -246,15 +261,13 @@ export function initLoadMore(matchesPageSize = 10) {
             });
             blueThead.appendChild(blueHeaderRow);
             blueTable.appendChild(blueThead);
-            const blueTbody = document.createElement('tbody'); 
-            // Normalize teamId to number for consistent comparison
-            parts.filter(p=>p && Number(p.teamId) === 100).forEach(p=>blueTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
+            const blueTbody = document.createElement('tbody');
+            parts.filter(p=>p && Number(p.teamId) === 100).forEach(p=>blueTbody.appendChild(buildParticipantRow(p,searchedPuuid)));
             blueTable.appendChild(blueTbody);
             blueDiv.appendChild(blueTable);
-            details.appendChild(blueDiv);
-            
-            // Red Team with proper table structure
-            const redH = document.createElement('h6'); redH.className='mt-3 text-danger'; redH.textContent='Red Team'; details.appendChild(redH);
+            collapse.appendChild(blueDiv);
+
+            const redH = document.createElement('h6'); redH.className='mt-3 text-danger'; redH.textContent='Red Team'; collapse.appendChild(redH);
             const redDiv = document.createElement('div'); redDiv.className='table-responsive';
             const redTable = document.createElement('table'); redTable.className='table table-sm table-hover mt-2 match-table team-red-table table-borderless align-middle';
             const redThead = document.createElement('thead');
@@ -267,14 +280,14 @@ export function initLoadMore(matchesPageSize = 10) {
             });
             redThead.appendChild(redHeaderRow);
             redTable.appendChild(redThead);
-            const redTbody = document.createElement('tbody'); 
-            // Normalize teamId to number for consistent comparison
-            parts.filter(p=>p && Number(p.teamId) === 200).forEach(p=>redTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
+            const redTbody = document.createElement('tbody');
+            parts.filter(p=>p && Number(p.teamId) === 200).forEach(p=>redTbody.appendChild(buildParticipantRow(p,searchedPuuid)));
             redTable.appendChild(redTbody);
             redDiv.appendChild(redTable);
-            details.appendChild(redDiv);
-            
-            row.appendChild(details);
+            collapse.appendChild(redDiv);
+
+            collapseWrapper.appendChild(collapse);
+            row.appendChild(collapseWrapper);
         }
         return row;
     }
@@ -298,9 +311,11 @@ export function initLoadMore(matchesPageSize = 10) {
             const rows = Array.from(matchList?.querySelectorAll('.match-row') || []);
             const counts = new Map();
             rows.forEach(r => {
-                const nameEl = r.querySelector('.search-index span');
-                const name = (nameEl?.textContent || '').trim();
-                if (name) counts.set(name, (counts.get(name) || 0) + 1);
+                const nameEls = r.querySelectorAll('.search-index span');
+                nameEls.forEach(span => {
+                    const name = (span.textContent || '').trim();
+                    if (name) counts.set(name, (counts.get(name) || 0) + 1);
+                });
             });
             const top = Array.from(counts.entries()).sort((a,b)=>b[1]-a[1]).slice(0,5);
             body.innerHTML = '';
@@ -311,14 +326,15 @@ export function initLoadMore(matchesPageSize = 10) {
                 const ul = document.createElement('ul'); ul.className='list-unstyled mb-0';
                 top.forEach(([name, cnt]) => {
                     const li = document.createElement('li'); li.className='d-flex align-items-center mb-2';
-                    const img = document.createElement('img'); 
-                    // Sanitize champion name for URL
-                    img.src = champSquareBase + encodeURIComponent(name) + '.png'; 
-                    img.alt = name; 
-                    img.className='me-2 rounded recent-champ-icon'; 
-                    img.loading='lazy';
-                    img.addEventListener('error', ()=>{ img.style.display='none'; });
-                    li.appendChild(img);
+                    if (champSquareBase) {
+                        const img = document.createElement('img'); 
+                        img.src = champSquareBase + encodeURIComponent(name) + '.png'; 
+                        img.alt = name; 
+                        img.className='me-2 rounded recent-champ-icon'; 
+                        img.loading='lazy';
+                        img.addEventListener('error', ()=>{ img.style.display='none'; });
+                        li.appendChild(img);
+                    }
                     const sName = document.createElement('span'); sName.className='fw-medium'; sName.textContent = name; li.appendChild(sName);
                     const dot = document.createElement('span'); dot.className='text-muted mx-2'; dot.textContent='•'; li.appendChild(dot);
                     const sCnt = document.createElement('span'); sCnt.textContent = String(cnt); li.appendChild(sCnt);
@@ -349,7 +365,8 @@ export function initLoadMore(matchesPageSize = 10) {
     const MAX_LOAD_ATTEMPTS = 3;
     
     async function loadMore(){
-        if (!riotId) return;
+        if (!riotId || loadInFlight) return;
+        loadInFlight = true;
         setLoading(true);
         try {
             recentUpdateCache = { isValid: false, timestamp: 0 };
@@ -370,7 +387,7 @@ export function initLoadMore(matchesPageSize = 10) {
             matchList.appendChild(frag);
             loaded = matchList.querySelectorAll('.match-row').length;
             loadMoreAttempts = 0; // Reset on success
-            if (typeof window.refreshMatchRows === 'function') window.refreshMatchRows();
+            if (typeof window.refreshMatchRows === 'function') window.refreshMatchRows(true);
             updateRecentFromDom();
         } catch(err){ 
             console.error('Load more failed:', err);
@@ -388,9 +405,13 @@ export function initLoadMore(matchesPageSize = 10) {
             }
         } finally {
             setLoading(false);
+            loadInFlight = false;
         }
     }
 
-    loadBtn.addEventListener('click', function(e){ e.preventDefault(); loadMore(); });
+    loadBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        loadMore();
+    });
     updateRecentFromDom();
 }

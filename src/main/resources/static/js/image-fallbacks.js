@@ -4,9 +4,10 @@
  */
 import { SELECTORS } from './constants.js';
 
+let globalFallbackTick = 0;
+
 export function initImageFallbacks() {
-    if (document.body.hasAttribute('data-img-fallback-installed')) return;
-    document.body.setAttribute('data-img-fallback-installed', 'true');
+    const currentTick = ++globalFallbackTick;
 
     try {
         // 1x1 transparent PNG (data URI) to replace broken images if we prefer not to hide
@@ -16,7 +17,7 @@ export function initImageFallbacks() {
             document.querySelectorAll(selector).forEach(function(img) {
                 // Guard: avoid adding multiple listeners
                 if (img.__fallbackBound) return;
-                img.__fallbackBound = true;
+                img.__fallbackBound = currentTick;
                 img.addEventListener('error', function() {
                     if (mode === 'hide') {
                         img.style.display = 'none';
@@ -51,11 +52,7 @@ export function initImageFallbacks() {
 // Run immediately
 export function setupImageFallbacks() {
     initImageFallbacks();
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            // Re-run for any images added after initial load
-            initImageFallbacks();
-        });
-    }
+    document.addEventListener('DOMContentLoaded', function reapplyFallbacks() {
+        initImageFallbacks();
+    }, { once: true });
 }

@@ -15,6 +15,7 @@ import {
 // Instance tracking using WeakMap for better memory management
 // Ensures the component is only initialized once per input and can be GC'd when DOM nodes go away
 const instances = new WeakMap();
+const suggestionCache = new Map();
 
 /**
  * Initializes search dropdown functionality for a Riot ID input field
@@ -30,6 +31,9 @@ export function initSearchDropdown() {
     if (instances.has(riotIdInput)) {
         return instances.get(riotIdInput);
     }
+
+    // Mark initialization in progress to avoid duplicate listener attachment
+    instances.set(riotIdInput, () => {});
 
     let debounceTimer = null;
     let activeIndex = -1; // Declare at top to avoid hoisting issues
@@ -72,11 +76,18 @@ export function initSearchDropdown() {
         suggestionsContainer.style.removeProperty('left');
         suggestionsContainer.style.removeProperty('top');
         suggestionsContainer.style.removeProperty('width');
+        suggestionsContainer.style.removeProperty('min-width');
         suggestionsContainer.style.removeProperty('max-width');
         suggestionsContainer.style.removeProperty('z-index');
 
         if (suggestionsContainer.style.display === 'block') {
             heroSection?.classList.add(CSS_CLASSES.DROPDOWN_OPEN);
+        }
+
+        const groupRect = searchGroup?.getBoundingClientRect();
+        if (groupRect && groupRect.width) {
+            suggestionsContainer.style.width = `${groupRect.width}px`;
+            suggestionsContainer.style.minWidth = `${groupRect.width}px`;
         }
     }
 
@@ -87,6 +98,7 @@ export function initSearchDropdown() {
         suggestionsContainer.style.removeProperty('left');
         suggestionsContainer.style.removeProperty('top');
         suggestionsContainer.style.removeProperty('width');
+        suggestionsContainer.style.removeProperty('min-width');
         suggestionsContainer.style.removeProperty('max-width');
         suggestionsContainer.style.removeProperty('z-index');
         heroSection?.classList.remove(CSS_CLASSES.DROPDOWN_OPEN);
@@ -141,6 +153,10 @@ export function initSearchDropdown() {
             clearTimeout(debounceTimer);
             debounceTimer = null;
         }
+        if (justOpenedTimer) {
+            clearTimeout(justOpenedTimer);
+            justOpenedTimer = null;
+        }
         hideSuggestions();
     };
 
@@ -187,6 +203,8 @@ export function initSearchDropdown() {
             const hdr = document.createElement('div');
             hdr.className = 'suggestion-section';
             hdr.textContent = 'Recent Searches';
+            hdr.setAttribute('role', 'presentation');
+            hdr.setAttribute('tabindex', '-1');
             suggestionsContainer.appendChild(hdr);
         }
         filtered.forEach(riotId => {
@@ -217,7 +235,7 @@ export function initSearchDropdown() {
                 empty.textContent = 'No entries found';
                 suggestionsContainer.appendChild(empty);
                 suggestionsContainer.style.display = 'block';
-                setExpandedState(false);
+                setExpandedState(true);
             } else {
                 hideSuggestions();
                 return;
@@ -227,6 +245,81 @@ export function initSearchDropdown() {
             setExpandedState(true);
         }
         positionDropdown();
+    }
+
+    function appendRemoteSuggestions(suggestions, normalizedRequestedQuery) {
+        if (isDestroyed) return;
+        const normalizedCurrentValue = (riotIdInput.value ?? '').trim().toLowerCase();
+        if (normalizedCurrentValue !== normalizedRequestedQuery) {
+            return;
+        }
+
+        if (!suggestions || !Array.isArray(suggestions) || suggestions.length === 0) {
+            setExpandedState(suggestionsContainer.querySelectorAll('[role="option"]').length > 0);
+            return;
+        }
+
+        suggestionsContainer.querySelectorAll('.suggestion-empty').forEach(el => el.remove());
+        clearActiveState();
+
+        const hdr = document.createElement('div');
+        hdr.className = 'suggestion-section';
+        hdr.textContent = 'Suggestions';
+        hdr.setAttribute('role', 'presentation');
+        hdr.setAttribute('tabindex', '-1');
+        suggestionsContainer.appendChild(hdr);
+
+        let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
+        suggestions.forEach(suggestion => {
+            if (!suggestion || !suggestion.riotId) return;
+
+            const item = document.createElement('a');
+            item.href = '#';
+            item.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center');
+            item.setAttribute('role', 'option');
+            const optId = `suggestion-opt-${idx++}`;
+            item.id = optId;
+            item.setAttribute('aria-selected', 'false');
+
+            const img = document.createElement('img');
+            const hasValidIcon = suggestion.profileIconUrl && suggestion.profileIconUrl.trim();
+            const hasValidIconId = suggestion.profileIconId && !isNaN(Number(suggestion.profileIconId));
+            const iconUrl = hasValidIcon
+                ? suggestion.profileIconUrl
+                : (hasValidIconId ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg` : '');
+            if (iconUrl) {
+                img.src = iconUrl;
+            } else {
+                img.style.display = 'none';
+            }
+            img.alt = 'Icon';
+            img.classList.add('suggestion-avatar', 'me-2');
+            img.onerror = function () {
+                this.style.display = 'none';
+            };
+            item.appendChild(img);
+
+            const textContainer = document.createElement('div');
+            textContainer.className = 'suggestion-text';
+            const riotIdSpan = document.createElement('span');
+            riotIdSpan.textContent = suggestion.riotId;
+            textContainer.appendChild(riotIdSpan);
+
+            if (suggestion.summonerLevel) {
+                const levelSpan = document.createElement('span');
+                levelSpan.textContent = `(Lvl: ${suggestion.summonerLevel})`;
+                levelSpan.classList.add('level', 'text-muted', 'small');
+                textContainer.appendChild(levelSpan);
+            }
+            item.appendChild(textContainer);
+
+            bindOptionInteraction(item, () => commitSelection(suggestion.riotId));
+            suggestionsContainer.appendChild(item);
+        });
+
+        suggestionsContainer.style.display = 'block';
+        setExpandedState(suggestionsContainer.querySelectorAll('[role="option"]').length > 0);
+        positionDropdown(true);
     }
 
     // Debounced remote fetch layered on top of local history suggestions
@@ -249,7 +342,18 @@ export function initSearchDropdown() {
 
         if (!trimmedQuery) {
             cancelInFlightRequest();
+            setBusyState(false);
             return;
+        }
+
+        const useCache = CACHE_DURATION.SUGGESTIONS > 0;
+        if (useCache) {
+            const cached = suggestionCache.get(normalizedRequestedQuery);
+            if (cached && (Date.now() - cached.timestamp) <= CACHE_DURATION.SUGGESTIONS) {
+                appendRemoteSuggestions(cached.data, normalizedRequestedQuery);
+                setBusyState(false);
+                return;
+            }
         }
 
         debounceTimer = setTimeout(() => {
@@ -269,75 +373,13 @@ export function initSearchDropdown() {
                     return response.json();
                 })
                 .then(suggestions => {
-                    if (isDestroyed) return;
-                    const normalizedCurrentValue = (riotIdInput.value ?? '').trim().toLowerCase();
-                    if (normalizedCurrentValue !== normalizedRequestedQuery) {
-                        return;
+                    if (useCache) {
+                        suggestionCache.set(normalizedRequestedQuery, {
+                            timestamp: Date.now(),
+                            data: Array.isArray(suggestions) ? [...suggestions] : []
+                        });
                     }
-                    if (!suggestions || !Array.isArray(suggestions) || suggestions.length === 0) {
-                        setExpandedState(suggestionsContainer.querySelectorAll('[role="option"]').length > 0);
-                        return;
-                    }
-
-                    suggestionsContainer.querySelectorAll('.suggestion-empty').forEach(el => el.remove());
-
-                    let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
-                    clearActiveState();
-                    const hdr = document.createElement('div');
-                    hdr.className = 'suggestion-section';
-                    hdr.textContent = 'Suggestions';
-                    suggestionsContainer.appendChild(hdr);
-                    suggestions.forEach(suggestion => {
-                        if (!suggestion || !suggestion.riotId) return; // Skip invalid suggestions
-
-                        const item = document.createElement('a');
-                        item.href = '#';
-                        item.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center');
-                        item.setAttribute('role', 'option');
-                        const optId = `suggestion-opt-${idx++}`;
-                        item.id = optId;
-                        item.setAttribute('aria-selected', 'false');
-
-                        const img = document.createElement('img');
-                        // Validate profileIconId before building fallback URL
-                        const hasValidIcon = suggestion.profileIconUrl && suggestion.profileIconUrl.trim();
-                        const hasValidIconId = suggestion.profileIconId && !isNaN(Number(suggestion.profileIconId));
-                        const iconUrl = hasValidIcon
-                            ? suggestion.profileIconUrl
-                            : (hasValidIconId ? `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg` : '');
-                        if (iconUrl) {
-                            img.src = iconUrl;
-                        } else {
-                            img.style.display = 'none';
-                        }
-                        img.alt = 'Icon';
-                        img.classList.add('suggestion-avatar', 'me-2');
-                        img.onerror = function () {
-                            this.style.display = 'none';
-                        };
-                        item.appendChild(img);
-
-                        const textContainer = document.createElement('div');
-                        textContainer.className = 'suggestion-text';
-                        const riotIdSpan = document.createElement('span');
-                        riotIdSpan.textContent = suggestion.riotId;
-                        textContainer.appendChild(riotIdSpan);
-
-                        if (suggestion.summonerLevel) {
-                            const levelSpan = document.createElement('span');
-                            levelSpan.textContent = `(Lvl: ${suggestion.summonerLevel})`;
-                            levelSpan.classList.add('level', 'text-muted', 'small');
-                            textContainer.appendChild(levelSpan);
-                        }
-                        item.appendChild(textContainer);
-
-                        bindOptionInteraction(item, () => commitSelection(suggestion.riotId));
-                        suggestionsContainer.appendChild(item);
-                    });
-
-                    suggestionsContainer.style.display = 'block';
-                    setExpandedState(suggestionsContainer.querySelectorAll('[role="option"]').length > 0);
-                    positionDropdown(true);
+                    appendRemoteSuggestions(suggestions, normalizedRequestedQuery);
                 })
                 .catch(error => {
                     // Ignore AbortError (user is typing quickly)
@@ -356,7 +398,16 @@ export function initSearchDropdown() {
 
     // Finalize selection: populate input, close dropdown, submit form if available
     function commitSelection(value) {
-        const trimmed = (value ?? '').toString();
+        const trimmed = (value ?? '').toString().trim();
+        if (!trimmed) {
+            hideSuggestions();
+            return;
+        }
+        const riotIdPattern = /^[^#\s]+#[A-Za-z0-9]{3,5}$/i;
+        if (!riotIdPattern.test(trimmed)) {
+            hideSuggestions();
+            return;
+        }
         riotIdInput.value = trimmed;
         hideSuggestions();
         if (searchForm) {
@@ -378,7 +429,7 @@ export function initSearchDropdown() {
             onSelect();
         });
         element.addEventListener('keydown', evt => {
-            if (evt.key === 'Enter' || evt.key === ' ') {
+            if (evt.key === 'Enter' || evt.key === ' ' || evt.key === 'Spacebar') {
                 evt.preventDefault();
                 onSelect();
             }
@@ -427,27 +478,28 @@ export function initSearchDropdown() {
         // Use requestAnimationFrame for better timing consistency
         requestAnimationFrame(() => {
             if (isDestroyed) return;
-            if (justOpened) {
-                // If just opened, wait a bit longer
-                setTimeout(() => {
-                    if (isDestroyed) return;
-                    const activeElement = document.activeElement;
-                    if (!activeElement || activeElement === riotIdInput || suggestionsContainer.contains(activeElement)) {
-                        return;
-                    }
+            const evaluateBlur = () => {
+                if (isDestroyed) return;
+                const activeElement = document.activeElement;
+                if (!activeElement) {
                     hideSuggestions();
-                }, 100);
+                    return;
+                }
+                if (activeElement === riotIdInput) return;
+                if (!suggestionsContainer.contains(activeElement)) {
+                    hideSuggestions();
+                }
+            };
+
+            if (justOpened) {
+                setTimeout(() => {
+                    justOpened = false;
+                    evaluateBlur();
+                }, Math.max(DEBOUNCE_DELAYS.JUST_OPENED, 100));
                 return;
             }
-            const activeElement = document.activeElement;
-            if (!activeElement) {
-                hideSuggestions();
-                return;
-            }
-            if (activeElement === riotIdInput) return;
-            if (!suggestionsContainer.contains(activeElement)) {
-                hideSuggestions();
-            }
+
+            evaluateBlur();
         });
     };
 
@@ -515,10 +567,17 @@ export function initSearchDropdown() {
     // Close dropdown when clicking/focusing outside the search experience
     const handleDocumentInteraction = event => {
         const target = event.target;
-        const isInsideInput = target === riotIdInput || riotIdInput.contains(target);
+        const isInsideInput = target === riotIdInput || riotIdInput.contains?.(target);
         const isInsideGroup = searchGroup?.contains(target);
         const isInsideDropdown = suggestionsContainer.contains(target);
-        const isInsideModal = target.closest('.modal');
+        let isInsideModal = false;
+        if (target && typeof target.closest === 'function') {
+            try {
+                isInsideModal = Boolean(target.closest('.modal'));
+            } catch {
+                isInsideModal = false;
+            }
+        }
 
         if (justOpened) return;
         if (!isInsideInput && !isInsideGroup && !isInsideDropdown && !isInsideModal) {

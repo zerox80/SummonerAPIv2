@@ -23,6 +23,8 @@ export function initHistoryFiltersFallback() {
                    q === QUEUE_TYPES.TFT_RANKED;
         }
 
+        let currentMode = 'all';
+
         // Simplified filtering routine used when the primary React/SPA logic isn't available
         function fallbackApply(mode) {
             const rows = Array.from(document.querySelectorAll('.match-row'));
@@ -39,11 +41,6 @@ export function initHistoryFiltersFallback() {
                 queueDropdown.querySelectorAll('button[data-q]').forEach(btn => {
                     btn.classList.remove(CSS_CLASSES.ACTIVE);
                 });
-            }
-
-            // Reset queue toggle label
-            if (queueToggle) {
-                queueToggle.textContent = showRanked ? 'Ranked (any)' : 'All queues';
             }
 
             // Toggle individual matches by queue type while avoiding layout thrash
@@ -98,14 +95,32 @@ export function initHistoryFiltersFallback() {
             }
         }
 
-        // Proxy filters to main handler if available; otherwise use local fallback
-        function setMode(mode) {
+        function syncPrimaryHandler(mode) {
             if (typeof window.setHistoryFilter === 'function') {
-                window.setHistoryFilter(mode);
-            } else {
-                fallbackApply(mode);
+                try {
+                    window.setHistoryFilter(mode);
+                } catch (err) {
+                    console.error('Primary history filter handler failed:', err);
+                }
             }
         }
+
+        // Proxy filters to main handler if available; otherwise use local fallback
+        function setMode(mode) {
+            currentMode = mode === 'ranked' ? 'ranked' : 'all';
+            window.__historyFallbackMode = currentMode;
+            if (typeof window.setHistoryFilter === 'function') {
+                syncPrimaryHandler(currentMode);
+            } else {
+                fallbackApply(currentMode);
+            }
+        }
+
+        window.addEventListener('historyFilters:primaryReady', () => {
+            if (window.__historyFallbackMode && typeof window.setHistoryFilter === 'function') {
+                syncPrimaryHandler(window.__historyFallbackMode);
+            }
+        });
 
         // Wire buttons so UI stays interactive even without the advanced script
         btnAll?.addEventListener(EVENTS.CLICK, (e) => {
@@ -117,9 +132,15 @@ export function initHistoryFiltersFallback() {
             setMode('ranked');
         });
 
-        // If the inline script hasn't installed handlers, initialize summary once
         if (typeof window.setHistoryFilter !== 'function') {
             setMode('all');
+        } else if (window.__historyFallbackMode) {
+            syncPrimaryHandler(window.__historyFallbackMode);
+        }
+
+        // If the inline script hasn't installed handlers, initialize summary once
+        if (typeof window.setHistoryFilter !== 'function') {
+            fallbackApply(currentMode);
         }
     } catch (err) {
         // Never break the page if something goes wrong here
