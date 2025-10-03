@@ -101,7 +101,15 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
     try {
         document.querySelectorAll('.collapse').forEach(el => {
             el.addEventListener('shown.bs.collapse', () => {
-                setTimeout(() => charts.forEach(ch => ch && ch.resize && ch.resize()), 60);
+                setTimeout(() => charts.forEach(ch => {
+                    if (ch && typeof ch.resize === 'function') {
+                        try {
+                            ch.resize();
+                        } catch (e) {
+                            console.debug('Chart resize failed:', e);
+                        }
+                    }
+                }), 60);
             });
         });
     } catch (_) {}
@@ -117,9 +125,18 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
                 if (ch.options?.scales?.y?.ticks) ch.options.scales.y.ticks.color = colors.text;
                 if (ch.options?.scales?.y?.grid) ch.options.scales.y.grid.color = colors.grid;
                 if (ch.options?.plugins?.legend?.labels) ch.options.plugins.legend.labels.color = colors.text;
-                ch.update();
-            } catch (_) {
-                ch.resize();
+                if (typeof ch.update === 'function') {
+                    ch.update();
+                }
+            } catch (e) {
+                // If update fails, try resize as fallback
+                if (typeof ch.resize === 'function') {
+                    try {
+                        ch.resize();
+                    } catch (resizeError) {
+                        console.debug('Chart update/resize failed:', resizeError);
+                    }
+                }
             }
         });
     };

@@ -1,117 +1,11 @@
-(function(){
-    const STORAGE_KEY = 'summonerapi.theme';
-    const THEMES = {
-        dark: {
-            href: 'https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7/darkly/bootstrap.min.css',
-            integrity: 'sha512-p5mHOC7N2BAy1SdoU/f2XD4t7EM05/5b1QowPXdyvqrSFsWQl3HVqY60hvvnOcMVBXBwr3ysopvGgxqbaovv/Q==' ,
-            bodyClass: 'theme-dark',
-            metaColor: '#0b1018'
-        },
-        light: {
-            href: 'https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7/lux/bootstrap.min.css',
-            integrity: 'sha384-ZBEFefafV90B0/GFh9OAL0VvtWyZLTa/hy4drOjpSQeKYQNJyIkw+tztFRqN5jHG',
-            bodyClass: 'theme-light',
-            metaColor: '#f7f7fb'
-        }
-    };
+// Theme toggle is now handled by theme-toggle.js module
+// This section has been removed to avoid conflicts
 
-    function readStoredTheme(){
-        try {
-            const value = localStorage.getItem(STORAGE_KEY);
-            if (value && (value === 'dark' || value === 'light')) {
-                return value;
-            }
-        } catch (err) {
-            console.debug('Unable to read stored theme', err);
-        }
-        return null;
-    }
-
-    function persistTheme(theme){
-        try {
-            localStorage.setItem(STORAGE_KEY, theme);
-        } catch (err) {
-            console.debug('Unable to persist theme', err);
-        }
-    }
-
-    function prefersDarkMode(){
-        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-
-    function applyTheme(theme, {persist = false} = {}){
-        const themeId = theme === 'light' ? 'light' : 'dark';
-        const config = THEMES[themeId];
-        const stylesheet = document.getElementById('themeStylesheet');
-        const body = document.body;
-        const toggle = document.getElementById('themeToggle');
-        const meta = document.getElementById('themeColor');
-
-        if (stylesheet) {
-            stylesheet.setAttribute('href', config.href);
-            stylesheet.setAttribute('integrity', config.integrity);
-        }
-
-        if (body) {
-            body.classList.remove('theme-dark', 'theme-light');
-            body.classList.add(config.bodyClass);
-        }
-
-        if (meta) {
-            meta.setAttribute('content', config.metaColor);
-        }
-
-        if (toggle) {
-            const isLight = themeId === 'light';
-            const label = isLight ? 'Switch to dark theme' : 'Switch to light theme';
-            toggle.setAttribute('aria-pressed', String(isLight));
-            toggle.setAttribute('title', label);
-            toggle.setAttribute('aria-label', label);
-            const icon = toggle.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('fa-moon', !isLight);
-                icon.classList.toggle('fa-sun', isLight);
-            }
-        }
-
-        document.documentElement.setAttribute('data-theme', themeId);
-
-        if (persist) {
-            persistTheme(themeId);
-            persistedTheme = themeId;
-        }
-    }
-
-    let persistedTheme = null;
-
-    document.addEventListener('DOMContentLoaded', function(){
-        persistedTheme = readStoredTheme();
-        const initialTheme = persistedTheme || (prefersDarkMode() ? 'dark' : 'light');
-        applyTheme(initialTheme);
-
-        const toggle = document.getElementById('themeToggle');
-        if (toggle) {
-            toggle.addEventListener('click', function(){
-                const next = (document.documentElement.getAttribute('data-theme') === 'light') ? 'dark' : 'light';
-                applyTheme(next, {persist: true});
-            });
-        }
-    });
-
-    if (window.matchMedia) {
-        const mq = window.matchMedia('(prefers-color-scheme: dark)');
-        mq.addEventListener('change', function(e){
-            if (!persistedTheme) {
-                applyTheme(e.matches ? 'dark' : 'light');
-            }
-        });
-    }
-})();
-
-// Autofocus on the riotId input field when the page loads
+// Autofocus on the riotId input field when the page loads (only if no summoner data is present)
 document.addEventListener('DOMContentLoaded', function() {
     const riotIdInput = document.getElementById('riotId');
-    if (riotIdInput) {
+    // Only autofocus if we're on the home page without search results
+    if (riotIdInput && !document.querySelector('.match-row') && !document.querySelector('.league-entry')) {
         riotIdInput.focus();
     }
 
@@ -163,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 // Optional: Improve collapse icon for match history
 const matchHistoryCollapse = document.getElementById('matchHistoryCollapse');
-if (matchHistoryCollapse) {
+if (matchHistoryCollapse && matchHistoryCollapse.previousElementSibling) {
     const icon = matchHistoryCollapse.previousElementSibling.querySelector('.fa-chevron-down');
     if (icon) {
         matchHistoryCollapse.addEventListener('show.bs.collapse', function () {
@@ -219,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (elCount) elCount.textContent = `Last ${games} game${games===1?'':'s'}`;
 
             const anyVisible = vis.length > 0;
-            // Default CSS hides #noMatchesMsg; explicitly set 'block' to show
+            // Explicitly set 'block' to show message
             if (noMsg) noMsg.style.display = anyVisible ? 'none' : 'block';
 
             // Toggle visual state

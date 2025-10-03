@@ -3,10 +3,11 @@ export function initThemeToggle(chartUpdateCallback) {
     const themeStylesheet = document.getElementById('themeStylesheet');
     const themeToggleBtn = document.getElementById('themeToggle');
     const bodyEl = document.body;
-    const THEMES = { dark: 'darkly', light: 'flatly' };
+    const THEMES = { dark: 'darkly', light: 'lux' };
     const BOOTSWATCH_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7';
     const BOOTSWATCH_SRI = {
-        darkly: 'sha512-p5mHOC7N2BAy1SdoU/f2XD4t7EM05/5b1QowPXdyvqrSFsWQl3HVqY60hvvnOcMVBXBwr3ysopvGgxqbaovv/Q=='
+        darkly: 'sha512-p5mHOC7N2BAy1SdoU/f2XD4t7EM05/5b1QowPXdyvqrSFsWQl3HVqY60hvvnOcMVBXBwr3ysopvGgxqbaovv/Q==',
+        lux: 'sha384-ZBEFefafV90B0/GFh9OAL0VvtWyZLTa/hy4drOjpSQeKYQNJyIkw+tztFRqN5jHG'
     };
 
     function applyTheme(theme) {
@@ -14,7 +15,7 @@ export function initThemeToggle(chartUpdateCallback) {
         const href = `${BOOTSWATCH_BASE}/${themeName}/bootstrap.min.css`;
         const sri = BOOTSWATCH_SRI[themeName];
         themeStylesheet.href = href;
-        if (sri && href.includes('/darkly/')) {
+        if (sri) {
             themeStylesheet.setAttribute('integrity', sri);
             themeStylesheet.setAttribute('crossorigin', 'anonymous');
         } else {

@@ -6,16 +6,19 @@ import { initCharts } from './charts-init.js';
 import { initLoadMore } from './load-more.js';
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Install image error fallbacks for champion images
-    try {
-        document.querySelectorAll('img[src*="/ui/champions/"]').forEach(img => {
-            img.addEventListener('error', function(){
-                this.style.display = 'none';
-                const s = this.nextElementSibling;
-                if (s) { s.textContent = this.alt; s.classList.add('text-muted','small'); }
-            }, { once: true });
-        });
-    } catch (_) {}
+    // Install image error fallbacks for champion images (including dynamic content)
+    // Use event delegation to handle both initial and dynamically added images
+    document.body.addEventListener('error', function(e) {
+        const img = e.target;
+        if (img.tagName === 'IMG' && img.src.includes('/ui/champions/')) {
+            img.style.display = 'none';
+            const s = img.nextElementSibling;
+            if (s) { 
+                s.textContent = img.alt; 
+                s.classList.add('text-muted','small'); 
+            }
+        }
+    }, true); // Use capture phase to catch errors
 
     // Initialize search dropdown with suggestions
     initSearchDropdown();

@@ -107,7 +107,18 @@ export function initLoadMore(matchesPageSize = 10) {
         const pMeta = document.createElement('p'); pMeta.className='mb-2 match-details-summary';
         const small1 = document.createElement('small'); small1.textContent = `Match ID: ${meta?.matchId || 'N/A'}`; pMeta.appendChild(small1);
         const sep = document.createTextNode(' • '); pMeta.appendChild(sep);
-        const small2 = document.createElement('small'); try{ if (info.gameEndTimestamp){ const d = new Date(info.gameEndTimestamp); small2.textContent = d.toLocaleString(); } }catch{}; pMeta.appendChild(small2);
+        const small2 = document.createElement('small'); 
+        try { 
+            if (info.gameEndTimestamp) { 
+                const d = new Date(info.gameEndTimestamp); 
+                small2.textContent = d.toLocaleString(); 
+            } else {
+                small2.textContent = '--';
+            }
+        } catch {
+            small2.textContent = '--';
+        }
+        pMeta.appendChild(small2);
         row.appendChild(pMeta);
 
         if (me){
@@ -121,15 +132,50 @@ export function initLoadMore(matchesPageSize = 10) {
         }
 
         if (parts.length){
-            const details = document.createElement('details'); details.className='mt-2';
+            const details = document.createElement('details'); details.className='mt-2 w-100';
             const summary = document.createElement('summary'); summary.className='btn btn-sm btn-participants'; summary.innerHTML='Show All Participants <i class="fas fa-users fa-xs" aria-hidden="true"></i>';
             details.appendChild(summary);
+            
+            // Blue Team with proper table structure
             const blueH = document.createElement('h6'); blueH.className='mt-3 text-primary'; blueH.textContent='Blue Team'; details.appendChild(blueH);
+            const blueDiv = document.createElement('div'); blueDiv.className='table-responsive';
             const blueTable = document.createElement('table'); blueTable.className='table table-sm table-hover mt-2 match-table team-blue-table table-borderless align-middle';
-            const blueTbody = document.createElement('tbody'); parts.filter(p=>p.teamId===100).forEach(p=>blueTbody.appendChild(buildParticipantRow(p,searchedPuuid))); blueTable.appendChild(blueTbody); details.appendChild(blueTable);
+            const blueThead = document.createElement('thead');
+            const blueHeaderRow = document.createElement('tr');
+            ['Champion', 'Player', 'KDA'].forEach(text => {
+                const th = document.createElement('th');
+                th.scope = 'col';
+                th.textContent = text;
+                blueHeaderRow.appendChild(th);
+            });
+            blueThead.appendChild(blueHeaderRow);
+            blueTable.appendChild(blueThead);
+            const blueTbody = document.createElement('tbody'); 
+            parts.filter(p=>p.teamId===100).forEach(p=>blueTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
+            blueTable.appendChild(blueTbody);
+            blueDiv.appendChild(blueTable);
+            details.appendChild(blueDiv);
+            
+            // Red Team with proper table structure
             const redH = document.createElement('h6'); redH.className='mt-3 text-danger'; redH.textContent='Red Team'; details.appendChild(redH);
+            const redDiv = document.createElement('div'); redDiv.className='table-responsive';
             const redTable = document.createElement('table'); redTable.className='table table-sm table-hover mt-2 match-table team-red-table table-borderless align-middle';
-            const redTbody = document.createElement('tbody'); parts.filter(p=>p.teamId===200).forEach(p=>redTbody.appendChild(buildParticipantRow(p,searchedPuuid))); redTable.appendChild(redTbody); details.appendChild(redTable);
+            const redThead = document.createElement('thead');
+            const redHeaderRow = document.createElement('tr');
+            ['Champion', 'Player', 'KDA'].forEach(text => {
+                const th = document.createElement('th');
+                th.scope = 'col';
+                th.textContent = text;
+                redHeaderRow.appendChild(th);
+            });
+            redThead.appendChild(redHeaderRow);
+            redTable.appendChild(redThead);
+            const redTbody = document.createElement('tbody'); 
+            parts.filter(p=>p.teamId===200).forEach(p=>redTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
+            redTable.appendChild(redTbody);
+            redDiv.appendChild(redTable);
+            details.appendChild(redDiv);
+            
             row.appendChild(details);
         }
         return row;

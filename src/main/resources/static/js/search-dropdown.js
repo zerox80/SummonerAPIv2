@@ -5,6 +5,7 @@ export function initSearchDropdown() {
     if (!riotIdInput || !suggestionsContainer) return;
 
     let debounceTimer;
+    let activeIndex = -1; // Declare at top to avoid hoisting issues
     const heroSection = riotIdInput?.closest('.hero');
     const searchGroup = riotIdInput.closest('.search-group');
 
@@ -175,7 +176,7 @@ export function initSearchDropdown() {
                     }
                 })
                 .catch(error => console.error('Error fetching suggestions:', error));
-        }, query === '' ? 0 : 300);
+        }, 300);
     }
 
     const searchForm = riotIdInput?.closest('form');
@@ -196,7 +197,6 @@ export function initSearchDropdown() {
     });
 
     // Keyboard navigation
-    let activeIndex = -1;
     function updateActive(toIndex) {
         const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
         items.forEach((el,i) => {
@@ -229,7 +229,13 @@ export function initSearchDropdown() {
     });
 
     document.addEventListener('click', function (event) {
-        if (!riotIdInput.contains(event.target) && !suggestionsContainer.contains(event.target)) {
+        // Improved click-outside handler: check for modals and other overlays
+        const target = event.target;
+        const isInsideInput = riotIdInput.contains(target);
+        const isInsideDropdown = suggestionsContainer.contains(target);
+        const isInsideModal = target.closest('.modal');
+        
+        if (!isInsideInput && !isInsideDropdown && !isInsideModal) {
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.style.display = 'none';
             riotIdInput.setAttribute('aria-expanded','false');

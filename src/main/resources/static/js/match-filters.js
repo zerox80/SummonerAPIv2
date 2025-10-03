@@ -89,7 +89,7 @@ export function initMatchFilters() {
         });
         updateSummary();
         const anyVisible = rows.some(r => r.style.display !== 'none');
-        if (noMsg) noMsg.style.display = anyVisible ? 'none' : '';
+        if (noMsg) noMsg.style.display = anyVisible ? 'none' : 'block';
     }
 
     function updateSummary(){
@@ -120,6 +120,7 @@ export function initMatchFilters() {
         apply();
     };
 
+    // Single event listener for filter buttons (removed duplicates)
     filters?.addEventListener('click', (e)=>{
         const btn = e.target.closest('button[data-filter]');
         if (!btn) return;
@@ -127,30 +128,6 @@ export function initMatchFilters() {
         const which = btn.getAttribute('data-filter') === 'ranked' ? 'ranked' : 'all';
         window.setHistoryFilter(which);
     });
-
-    document.getElementById('filterAll')?.addEventListener('click', (e)=>{
-        e.preventDefault();
-        window.setHistoryFilter('all');
-    });
-    
-    document.getElementById('filterRanked')?.addEventListener('click', (e)=>{
-        e.preventDefault();
-        window.setHistoryFilter('ranked');
-    });
-
-    document.addEventListener('click', function(e){
-        const pill = e.target.closest('#filterAll, #filterRanked');
-        if (!pill) return;
-        e.preventDefault();
-        window.setHistoryFilter(pill.id === 'filterRanked' ? 'ranked' : 'all');
-    }, true);
-
-    document.addEventListener('pointerdown', function(e){
-        const pill = e.target.closest('#filterAll, #filterRanked');
-        if (!pill) return;
-        e.preventDefault();
-        window.setHistoryFilter(pill.id === 'filterRanked' ? 'ranked' : 'all');
-    }, true);
 
     queueDropdown?.addEventListener('click', (e)=>{
         const item = e.target.closest('button[data-q]');
