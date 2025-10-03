@@ -3,22 +3,52 @@ export function initLoadMore(matchesPageSize = 10) {
     const matchList = document.getElementById('matchList');
     const loadBtn = document.getElementById('loadMoreBtn');
     if (!matchList || !loadBtn) return;
+
+    loadBtn.setAttribute('aria-live', 'polite');
+    loadBtn.setAttribute('aria-busy', 'false');
     
     const riotId = matchList.getAttribute('data-riotid') || '';
     const searchedPuuid = matchList.getAttribute('data-puuid') || '';
     const champSquareBase = matchList.getAttribute('data-champsquare') || '';
     const PAGE = matchesPageSize;
     let loaded = matchList.querySelectorAll('.match-row').length;
+    let loadingPlaceholder = null;
 
     function setLoading(v){
         const sp = loadBtn.querySelector('.spinner-border');
         if (v) {
             loadBtn.setAttribute('disabled','true');
+            loadBtn.setAttribute('aria-busy','true');
             sp && sp.classList.remove('d-none');
+            showLoadingPlaceholder();
         } else {
             loadBtn.removeAttribute('disabled');
+            loadBtn.setAttribute('aria-busy','false');
             sp && sp.classList.add('d-none');
+            removeLoadingPlaceholder();
         }
+    }
+
+    function showLoadingPlaceholder(){
+        if (loadingPlaceholder || !matchList) return;
+        const skeleton = document.createElement('div');
+        skeleton.className = 'list-group-item match-row match-row-loading';
+        skeleton.setAttribute('aria-hidden','true');
+        skeleton.innerHTML = `
+            <div class="placeholder-glow w-100">
+                <span class="placeholder col-8"></span>
+                <span class="placeholder col-6 mt-2"></span>
+                <span class="placeholder col-5 mt-2"></span>
+            </div>`;
+        matchList.appendChild(skeleton);
+        loadingPlaceholder = skeleton;
+    }
+
+    function removeLoadingPlaceholder(){
+        if (loadingPlaceholder && loadingPlaceholder.parentElement) {
+            loadingPlaceholder.remove();
+        }
+        loadingPlaceholder = null;
     }
 
     function queueName(q){
@@ -28,6 +58,15 @@ export function initLoadMore(matchesPageSize = 10) {
 
     function fmtDur(sec){ const m=Math.floor((sec||0)/60), s=(sec||0)%60; return `${m}m ${s}s`; }
 
+    // Sanitize text to prevent XSS
+    function sanitizeText(text) {
+        if (!text) return '';
+        return String(text).replace(/[<>&"']/g, (char) => {
+            const entities = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
+            return entities[char] || char;
+        });
+    }
+
     function champIcon(p){
         if (!p || !p.championName) return '';
         if (!champSquareBase) {
@@ -35,7 +74,9 @@ export function initLoadMore(matchesPageSize = 10) {
             // Fallback to Community Dragon CDN
             return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${p.championId || -1}.png`;
         }
-        return champSquareBase + p.championName + '.png';
+        // Sanitize champion name for URL safety
+        const safeName = encodeURIComponent(p.championName);
+        return champSquareBase + safeName + '.png';
     }
 
     function buildParticipantRow(p, searched){
@@ -151,7 +192,11 @@ export function initLoadMore(matchesPageSize = 10) {
         top.appendChild(right); row.appendChild(top);
 
         const pMeta = document.createElement('p'); pMeta.className='mb-2 match-details-summary';
-        const small1 = document.createElement('small'); small1.textContent = `Match ID: ${meta?.matchId || 'N/A'}`; pMeta.appendChild(small1);
+        const small1 = document.createElement('small'); 
+        // Sanitize match ID to prevent XSS
+        const sanitizedMatchId = meta?.matchId ? String(meta.matchId).replace(/[<>&"']/g, '') : 'N/A';
+        small1.textContent = `Match ID: ${sanitizedMatchId}`; 
+        pMeta.appendChild(small1);
         const sep = document.createTextNode(' • '); pMeta.appendChild(sep);
         const small2 = document.createElement('small'); 
         try { 
@@ -179,7 +224,12 @@ export function initLoadMore(matchesPageSize = 10) {
 
         if (parts.length){
             const details = document.createElement('details'); details.className='mt-2 w-100';
-            const summary = document.createElement('summary'); summary.className='btn btn-sm btn-participants'; summary.innerHTML='Show All Participants <i class="fas fa-users fa-xs" aria-hidden="true"></i>';
+            const summary = document.createElement('summary'); summary.className='btn btn-sm btn-participants'; 
+            summary.textContent = 'Show All Participants ';
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-users fa-xs';
+            icon.setAttribute('aria-hidden', 'true');
+            summary.appendChild(icon);
             details.appendChild(summary);
             
             // Blue Team with proper table structure
@@ -261,7 +311,12 @@ export function initLoadMore(matchesPageSize = 10) {
                 const ul = document.createElement('ul'); ul.className='list-unstyled mb-0';
                 top.forEach(([name, cnt]) => {
                     const li = document.createElement('li'); li.className='d-flex align-items-center mb-2';
-                    const img = document.createElement('img'); img.src = champSquareBase + name + '.png'; img.alt = name; img.className='me-2 rounded recent-champ-icon'; img.loading='lazy';
+                    const img = document.createElement('img'); 
+                    // Sanitize champion name for URL
+                    img.src = champSquareBase + encodeURIComponent(name) + '.png'; 
+                    img.alt = name; 
+                    img.className='me-2 rounded recent-champ-icon'; 
+                    img.loading='lazy';
                     img.addEventListener('error', ()=>{ img.style.display='none'; });
                     li.appendChild(img);
                     const sName = document.createElement('span'); sName.className='fw-medium'; sName.textContent = name; li.appendChild(sName);
@@ -278,8 +333,15 @@ export function initLoadMore(matchesPageSize = 10) {
             recentUpdateCache = { isValid: true, timestamp: now };
         } catch(err) {
             console.warn('Failed to update recent champions:', err);
-            // Invalidate cache on error
+            // Invalidate cache on error and show fallback
             recentUpdateCache = { isValid: false, timestamp: 0 };
+            if (body) {
+                const errorMsg = document.createElement('p');
+                errorMsg.className = 'text-muted mb-0';
+                errorMsg.textContent = 'Unable to display recent champions.';
+                body.innerHTML = '';
+                body.appendChild(errorMsg);
+            }
         }
     }
 
@@ -290,20 +352,23 @@ export function initLoadMore(matchesPageSize = 10) {
         if (!riotId) return;
         setLoading(true);
         try {
+            recentUpdateCache = { isValid: false, timestamp: 0 };
             const res = await fetch(`/api/matches?riotId=${encodeURIComponent(riotId)}&start=${loaded}&count=${PAGE}`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const arr = await res.json();
             if (!Array.isArray(arr) || arr.length === 0){
                 loadBtn.setAttribute('disabled','true');
+                loadBtn.setAttribute('aria-label', 'No more matches');
                 const label = loadBtn.querySelector('.label');
-                if (label) label.textContent = 'No more matches';
-                // Loading state is already managed by setLoading at the end
+                if (label) {
+                    label.textContent = 'No more matches';
+                }
                 return;
             }
             const frag = document.createDocumentFragment();
             arr.forEach(m => frag.appendChild(buildMatchRowEl(m)));
             matchList.appendChild(frag);
-            loaded += arr.length;
+            loaded = matchList.querySelectorAll('.match-row').length;
             loadMoreAttempts = 0; // Reset on success
             if (typeof window.refreshMatchRows === 'function') window.refreshMatchRows();
             updateRecentFromDom();
@@ -312,8 +377,14 @@ export function initLoadMore(matchesPageSize = 10) {
             loadMoreAttempts++;
             if (loadMoreAttempts >= MAX_LOAD_ATTEMPTS) {
                 loadBtn.setAttribute('disabled','true');
+                loadBtn.setAttribute('aria-label', 'Error loading matches');
                 const label = loadBtn.querySelector('.label');
-                if (label) label.textContent = 'Error loading matches';
+                if (label) {
+                    label.textContent = 'Error loading matches';
+                }
+            } else {
+                // Show retry indicator
+                loadBtn.setAttribute('aria-label', `Load more (attempt ${loadMoreAttempts + 1} of ${MAX_LOAD_ATTEMPTS})`);
             }
         } finally {
             setLoading(false);

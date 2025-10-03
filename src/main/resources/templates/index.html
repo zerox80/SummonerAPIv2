@@ -469,7 +469,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous"></script>
 <script th:src="@{/js/main.js}"></script>
 <!-- Export data to window for use in modules -->
-<script th:inline="javascript" th:attr="nonce=${cspNonce}">
+<script th:inline="javascript" th:if="${cspNonce != null}" th:attr="nonce=${cspNonce}">
     // Chart data
     /*<![CDATA[*/
     window.leagueEntriesData = [

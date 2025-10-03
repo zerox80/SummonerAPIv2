@@ -2,6 +2,7 @@
 export function initThemeToggle(chartUpdateCallback) {
     const themeStylesheet = document.getElementById('themeStylesheet');
     const themeToggleBtn = document.getElementById('themeToggle');
+    const themeMeta = document.getElementById('themeColor');
     const bodyEl = document.body;
     const THEMES = { dark: 'darkly', light: 'lux' };
     const BOOTSWATCH_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7';
@@ -11,16 +12,20 @@ export function initThemeToggle(chartUpdateCallback) {
     };
 
     function applyTheme(theme) {
+        if (!themeStylesheet) {
+            console.warn('Theme stylesheet element not found');
+            return;
+        }
         const themeName = THEMES[theme] || THEMES.dark;
         const href = `${BOOTSWATCH_BASE}/${themeName}/bootstrap.min.css`;
         const sri = BOOTSWATCH_SRI[themeName];
-        themeStylesheet.href = href;
+        themeStylesheet.setAttribute('href', href);
         if (sri) {
             themeStylesheet.setAttribute('integrity', sri);
             themeStylesheet.setAttribute('crossorigin', 'anonymous');
         } else {
             themeStylesheet.removeAttribute('integrity');
-            themeStylesheet.setAttribute('crossorigin', 'anonymous');
+            themeStylesheet.removeAttribute('crossorigin');
         }
         bodyEl.classList.remove('theme-dark', 'theme-light');
         bodyEl.classList.add(theme === 'light' ? 'theme-light' : 'theme-dark');
@@ -51,54 +56,43 @@ export function initThemeToggle(chartUpdateCallback) {
             themeToggleBtn.setAttribute('title', nextLabel);
         }
         
-        const themeMeta = document.getElementById('themeColor');
         if (themeMeta) themeMeta.setAttribute('content', theme === 'light' ? '#f7f7fb' : '#0b1018');
         
         localStorage.setItem('theme', theme);
         
         // Notify charts to update colors after stylesheet loads
-        if (chartUpdateCallback) {
+        if (chartUpdateCallback && themeStylesheet) {
             let callbackExecuted = false;
-            let loadListenerFired = false;
-            let timeoutFired = false;
-            
+
             const executeCallback = () => {
                 if (callbackExecuted) return;
-                // Only execute if both triggers have attempted (or timeout passed)
-                if (!loadListenerFired && !timeoutFired) return;
                 callbackExecuted = true;
                 try {
                     chartUpdateCallback(theme);
-                } catch(e) {
+                } catch (e) {
                     console.error('Chart update callback failed:', e);
                 }
             };
-            
-            // Wait for stylesheet to load and apply
-            themeStylesheet.addEventListener('load', () => {
-                loadListenerFired = true;
+
+            const onLoad = () => {
+                themeStylesheet.removeEventListener('load', onLoad);
                 requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        executeCallback();
-                    });
+                    requestAnimationFrame(executeCallback);
                 });
-            }, { once: true });
-            
-            // Fallback timeout in case load event doesn't fire
-            setTimeout(() => {
-                timeoutFired = true;
-                executeCallback();
-            }, 300);
+            };
+
+            themeStylesheet.addEventListener('load', onLoad);
+            setTimeout(executeCallback, 300);
         }
     }
 
     const savedTheme = localStorage.getItem('theme') || 'dark';
-    applyTheme(savedTheme);
-    
+    requestAnimationFrame(() => applyTheme(savedTheme));
+
     themeToggleBtn?.addEventListener('click', () => {
         const nextTheme = bodyEl.classList.contains('theme-light') ? 'dark' : 'light';
         applyTheme(nextTheme);
     });
-    
+
     return { applyTheme };
 }

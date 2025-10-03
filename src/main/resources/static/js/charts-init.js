@@ -14,6 +14,10 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
     }
     const charts = [];
     window.__chartInstances = charts;
+    if (typeof Chart !== 'function') {
+        console.error('Chart.js is not available');
+        return () => {};
+    }
     const bodyEl = document.body;
     const isDark = () => bodyEl.classList.contains('theme-dark');
     const chartColors = () => ({
@@ -162,11 +166,20 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
                         charts.forEach(ch => {
-                            if (ch && typeof ch.resize === 'function') {
+                            if (!ch) return;
+                            if (typeof ch.resize === 'function') {
                                 try {
                                     ch.resize();
                                 } catch (e) {
                                     console.debug('Chart resize failed:', e);
+                                    // Fallback: try to update instead of resize
+                                    if (typeof ch.update === 'function') {
+                                        try {
+                                            ch.update('none');
+                                        } catch (updateError) {
+                                            console.debug('Chart update fallback also failed:', updateError);
+                                        }
+                                    }
                                 }
                             }
                         });

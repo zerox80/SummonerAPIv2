@@ -18,7 +18,7 @@
   flex-wrap: wrap;
   gap: .5rem;
   position: relative;
-  z-index: var(--z-controls); /* sit above any adjacent borders/overlays */
+  z-index: calc(var(--z-dropdown) - 1); /* keep dropdowns above sticky headers */
   margin-bottom: .5rem;
   background: var(--bs-body-bg);
   overflow: visible; /* ensure dropdowns are never clipped */
@@ -153,7 +153,7 @@ html, body {
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  z-index: var(--z-navbar); /* Below suggestions dropdown to prevent overlap */
+  z-index: var(--z-navbar); /* 1020 - ensures dropdown (1060) renders above navbar */
 }
 .theme-light .glass-nav { background: rgba(255,255,255,0.7) !important; }
 
@@ -348,6 +348,30 @@ img, svg { max-width: 100%; height: auto; }
 .lp-badge.neutral { background: var(--app-surface-muted); color: #cbd5e1; }
 .lp-badge.gain { background: rgba(10,200,185,.18); color: #7eeadf; }
 .lp-badge.loss { background: rgba(255,77,77,.15); color: #ff9a9a; }
+.match-row.match-row-loading {
+  position: relative;
+  min-height: 72px;
+  background: var(--app-surface-muted);
+  border-color: var(--app-surface-muted);
+  overflow: hidden;
+  pointer-events: none;
+}
+.match-row.match-row-loading .placeholder {
+  display: inline-block;
+  height: 0.9rem;
+  background-color: rgba(255,255,255,0.12);
+  border-radius: 999px;
+}
+.theme-light .match-row.match-row-loading {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.06);
+}
+.theme-light .match-row.match-row-loading .placeholder {
+  background-color: rgba(0,0,0,0.06);
+}
+.match-row.match-row-loading .placeholder-glow .placeholder {
+  animation-duration: 1.4s;
+}
 
 @media (max-width: 768px) {
   .match-row {

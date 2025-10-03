@@ -104,6 +104,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     btn.classList.remove('active');
                 });
             }
+            
+            // Reset queue toggle label
+            if (queueToggle) {
+                queueToggle.textContent = showRanked ? 'Ranked (any)' : 'All queues';
+            }
 
             rows.forEach(r => {
                 const q = Number(r.getAttribute('data-q')) || 0;

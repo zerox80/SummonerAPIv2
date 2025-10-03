@@ -8,6 +8,7 @@ export function initSearchDropdown() {
     let activeIndex = -1; // Declare at top to avoid hoisting issues
     const heroSection = riotIdInput?.closest('.hero');
     const searchGroup = riotIdInput.closest('.search-group');
+    const searchForm = riotIdInput.closest('form');
     let isDestroyed = false;
     let currentAbortController = null; // For canceling in-flight requests
     let justOpened = false;
@@ -62,8 +63,10 @@ export function initSearchDropdown() {
             currentAbortController.abort();
         } catch (e) {
             console.debug('AbortController abort failed:', e);
+        } finally {
+            // Ensure cleanup even if abort fails
+            currentAbortController = null;
         }
-        currentAbortController = null;
     }
 
     function clearActiveState() {
@@ -71,6 +74,7 @@ export function initSearchDropdown() {
         suggestionsContainer.querySelectorAll('[role="option"]').forEach(el => {
             el.classList.remove('active');
             el.setAttribute('aria-selected', 'false');
+            el.setAttribute('tabindex', '-1');
         });
         riotIdInput.removeAttribute('aria-activedescendant');
         activeIndex = -1;
@@ -159,11 +163,7 @@ export function initSearchDropdown() {
             text.className = 'suggestion-text';
             text.textContent = riotId;
             item.appendChild(text);
-            item.addEventListener('click', e => {
-                e.preventDefault();
-                riotIdInput.value = riotId;
-                hideSuggestions();
-            });
+            bindOptionInteraction(item, () => commitSelection(riotId));
             suggestionsContainer.appendChild(item);
         });
         const trimmedQuery = (filterTerm ?? '').trim();
@@ -174,13 +174,16 @@ export function initSearchDropdown() {
                 empty.setAttribute('role', 'note');
                 empty.textContent = 'No entries found';
                 suggestionsContainer.appendChild(empty);
+                suggestionsContainer.style.display = 'block';
+                setExpandedState(false);
             } else {
                 hideSuggestions();
                 return;
             }
+        } else {
+            suggestionsContainer.style.display = 'block';
+            setExpandedState(true);
         }
-        suggestionsContainer.style.display = 'block';
-        setExpandedState(true);
         positionDropdown();
     }
 
@@ -285,17 +288,12 @@ export function initSearchDropdown() {
                         }
                         item.appendChild(textContainer);
 
-                        item.addEventListener('click', e => {
-                            e.preventDefault();
-                            riotIdInput.value = suggestion.riotId;
-                            hideSuggestions();
-                        });
-
+                        bindOptionInteraction(item, () => commitSelection(suggestion.riotId));
                         suggestionsContainer.appendChild(item);
                     });
 
                     suggestionsContainer.style.display = 'block';
-                    setExpandedState(true);
+                    setExpandedState(suggestionsContainer.querySelectorAll('[role="option"]').length > 0);
                     positionDropdown(true);
                 })
                 .catch(error => {
@@ -313,7 +311,34 @@ export function initSearchDropdown() {
         }, 300);
     }
 
-    const searchForm = riotIdInput.closest('form');
+    function commitSelection(value) {
+        const trimmed = (value ?? '').toString();
+        riotIdInput.value = trimmed;
+        hideSuggestions();
+        if (searchForm) {
+            if (typeof searchForm.requestSubmit === 'function') {
+                searchForm.requestSubmit();
+            } else {
+                searchForm.submit();
+            }
+        }
+    }
+
+    function bindOptionInteraction(element, onSelect) {
+        if (!element) return;
+        element.setAttribute('aria-selected', 'false');
+        element.setAttribute('tabindex', '-1');
+        element.addEventListener('click', evt => {
+            evt.preventDefault();
+            onSelect();
+        });
+        element.addEventListener('keydown', evt => {
+            if (evt.key === 'Enter' || evt.key === ' ') {
+                evt.preventDefault();
+                onSelect();
+            }
+        });
+    }
 
     const handleFormSubmit = () => {
         const q = riotIdInput?.value || '';
@@ -352,10 +377,19 @@ export function initSearchDropdown() {
     };
 
     const handleBlur = () => {
-        const attemptHide = () => {
+        // Use requestAnimationFrame for better timing consistency
+        requestAnimationFrame(() => {
             if (isDestroyed) return;
             if (justOpened) {
-                setTimeout(attemptHide, 50);
+                // If just opened, wait a bit longer
+                setTimeout(() => {
+                    if (isDestroyed) return;
+                    const activeElement = document.activeElement;
+                    if (!activeElement || activeElement === riotIdInput || suggestionsContainer.contains(activeElement)) {
+                        return;
+                    }
+                    hideSuggestions();
+                }, 100);
                 return;
             }
             const activeElement = document.activeElement;
@@ -367,8 +401,7 @@ export function initSearchDropdown() {
             if (!suggestionsContainer.contains(activeElement)) {
                 hideSuggestions();
             }
-        };
-        setTimeout(attemptHide, 0);
+        });
     };
 
     // Keyboard navigation
@@ -378,10 +411,17 @@ export function initSearchDropdown() {
             if (i === toIndex) {
                 el.classList.add('active');
                 el.setAttribute('aria-selected', 'true');
+                el.setAttribute('tabindex', '0');
                 riotIdInput.setAttribute('aria-activedescendant', el.id);
+                try {
+                    el.focus({ preventScroll: true });
+                } catch {
+                    el.focus();
+                }
             } else {
                 el.classList.remove('active');
                 el.setAttribute('aria-selected', 'false');
+                el.setAttribute('tabindex', '-1');
             }
         });
     }
@@ -393,6 +433,14 @@ export function initSearchDropdown() {
             return;
         }
         if (e.key === 'Tab') {
+            if (!e.shiftKey && items.length) {
+                const indexToUse = activeIndex >= 0 ? activeIndex : 0;
+                if (items[indexToUse]) {
+                    e.preventDefault();
+                    items[indexToUse].click();
+                    return;
+                }
+            }
             hideSuggestions();
             return;
         }
@@ -415,8 +463,7 @@ export function initSearchDropdown() {
         }
     };
 
-    const handleClickOutside = event => {
-        // Improved click-outside handler: check for modals and other overlays
+    const handleDocumentInteraction = event => {
         const target = event.target;
         const isInsideInput = target === riotIdInput || riotIdInput.contains(target);
         const isInsideGroup = searchGroup?.contains(target);
@@ -431,12 +478,19 @@ export function initSearchDropdown() {
 
     // Prevent duplicate initialization
     if (window.__searchDropdownInitialized) {
-        console.warn('Search dropdown already initialized');
-        return window.__searchDropdownCleanup;
+        console.warn('Search dropdown already initialized, cleaning up old instance');
+        if (typeof window.__searchDropdownCleanup === 'function') {
+            try {
+                window.__searchDropdownCleanup();
+            } catch (e) {
+                console.error('Failed to cleanup previous search dropdown instance:', e);
+            }
+        }
     }
     window.__searchDropdownInitialized = true;
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('pointerdown', handleDocumentInteraction);
+    document.addEventListener('focusin', handleDocumentInteraction);
     searchForm?.addEventListener('submit', handleFormSubmit);
     riotIdInput.addEventListener('pointerdown', handlePointerDown);
     riotIdInput.addEventListener('click', handleClick);
@@ -447,7 +501,8 @@ export function initSearchDropdown() {
 
     const fullCleanup = () => {
         cleanup();
-        document.removeEventListener('click', handleClickOutside);
+        document.removeEventListener('pointerdown', handleDocumentInteraction);
+        document.removeEventListener('focusin', handleDocumentInteraction);
         searchForm?.removeEventListener('submit', handleFormSubmit);
         riotIdInput.removeEventListener('pointerdown', handlePointerDown);
         riotIdInput.removeEventListener('click', handleClick);

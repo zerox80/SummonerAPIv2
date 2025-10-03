@@ -38,30 +38,58 @@ export function initMatchFilters() {
     function isRankedQ(q){ return q === 420 || q === 440 || q === 1100; }
     const RANKED_SENTINEL = 'ranked';
 
+    // Helper function to normalize queue ID
+    function normalizeQueueId(qAttr) {
+        if (!qAttr || typeof qAttr !== 'string' || qAttr.trim() === '') return 0;
+        const q = Number(qAttr);
+        return Number.isNaN(q) || q < 0 ? 0 : q;
+    }
+
     // Populate dropdown with present queues
     (function buildQueueMenu(){
         if (!queueDropdown) return;
         const present = Array.from(new Set(rows.map(r => {
             const qAttr = r.getAttribute('data-q');
-            // Better validation: check for null, undefined, empty string
-            if (!qAttr || qAttr === 'null' || qAttr === 'undefined' || qAttr.trim() === '') return 0;
-            const q = Number(qAttr);
-            return Number.isNaN(q) ? 0 : q;
+            return normalizeQueueId(qAttr);
         })));
         const items = present.length ? present : Object.keys(QUEUE_NAMES).map(Number);
         const uniqueSorted = Array.from(new Set(items)).sort((a,b)=>a-b);
         queueDropdown.innerHTML = '';
+        
+        // All queues option
         const allItem = document.createElement('li');
-        allItem.innerHTML = '<button class="dropdown-item" data-q="">All queues</button>';
+        const allBtn = document.createElement('button');
+        allBtn.className = 'dropdown-item';
+        allBtn.setAttribute('data-q', '');
+        allBtn.textContent = 'All queues';
+        allItem.appendChild(allBtn);
         queueDropdown.appendChild(allItem);
+        
+        // Ranked (any) option
         const rankedAny = document.createElement('li');
-        rankedAny.innerHTML = '<button class="dropdown-item" data-q="ranked">Ranked (any)</button>';
+        const rankedBtn = document.createElement('button');
+        rankedBtn.className = 'dropdown-item';
+        rankedBtn.setAttribute('data-q', 'ranked');
+        rankedBtn.textContent = 'Ranked (any)';
+        rankedAny.appendChild(rankedBtn);
         queueDropdown.appendChild(rankedAny);
-        const divider = document.createElement('li'); divider.innerHTML = '<hr class="dropdown-divider">'; queueDropdown.appendChild(divider);
-        uniqueSorted.forEach(q=>{
+        
+        // Divider
+        const divider = document.createElement('li');
+        const hr = document.createElement('hr');
+        hr.className = 'dropdown-divider';
+        divider.appendChild(hr);
+        queueDropdown.appendChild(divider);
+        
+        // Individual queues
+        uniqueSorted.forEach(q => {
             const li = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.className = 'dropdown-item';
+            btn.setAttribute('data-q', String(q));
             const label = QUEUE_NAMES[q] || ('Queue ' + q);
-            li.innerHTML = `<button class="dropdown-item" data-q="${q}">${label}</button>`;
+            btn.textContent = label;
+            li.appendChild(btn);
             queueDropdown.appendChild(li);
         });
         if (queueToggle) queueToggle.textContent = 'All queues';
@@ -80,12 +108,7 @@ export function initMatchFilters() {
 
     function matchesFilter(row){
         const qAttr = row.getAttribute('data-q');
-        // Normalize queue ID: handle null, undefined, empty strings, and invalid values
-        let queueId = 0;
-        if (qAttr && qAttr !== 'null' && qAttr !== 'undefined' && qAttr.trim() !== '') {
-            const parsed = Number(qAttr);
-            queueId = Number.isNaN(parsed) ? 0 : parsed;
-        }
+        const queueId = normalizeQueueId(qAttr);
         
         if (selectedQueue === RANKED_SENTINEL) return isRankedQ(queueId);
         if (selectedQueue !== null) {
@@ -107,12 +130,6 @@ export function initMatchFilters() {
     }
 
     function apply(){
-        // Clear any pending search timer to avoid duplicate calls
-        if (searchTimer) {
-            clearTimeout(searchTimer);
-            searchTimer = null;
-        }
-        
         const term = searchInput?.value?.trim().toLowerCase() || '';
         rows.forEach(r => {
             const show = matchesFilter(r) && matchesSearch(r, term);
@@ -164,7 +181,10 @@ export function initMatchFilters() {
     let searchTimer = null; 
     const handleSearchInput = () => { 
         if (searchTimer) clearTimeout(searchTimer); 
-        searchTimer = setTimeout(apply, 200); 
+        searchTimer = setTimeout(() => {
+            searchTimer = null;
+            apply();
+        }, 200); 
     };
     
     // Event handler references for proper cleanup
