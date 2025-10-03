@@ -287,6 +287,10 @@ public class SummonerController {
             }
             return "index";
         };
+    }
+
+    private Map<String, SummonerSuggestionDTO> getSearchHistoryFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request != null ? request.getCookies() : null;
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -295,7 +299,7 @@ public class SummonerController {
                         String decodedValue = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.name());
                         return objectMapper.readValue(decodedValue, new TypeReference<LinkedHashMap<String, SummonerSuggestionDTO>>() {});
                     } catch (IOException | IllegalArgumentException e) {
-                        logger.error("Error reading search history cookie: " + e.getMessage(), e);
+                        logger.error("Error reading search history cookie: {}", e.getMessage(), e);
                         return new LinkedHashMap<>();
                     }
                 }
