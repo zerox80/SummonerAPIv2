@@ -2,10 +2,10 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  root: 'src/main/resources/static',
+  root: '.',
   build: {
-    outDir: '../../../../src/main/resources/static',
-    emptyOutDir: false, // Don't empty, preserve other static files
+    outDir: 'dist',
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         'js/app': resolve(__dirname, 'src/main/resources/static/js/app.js'),
