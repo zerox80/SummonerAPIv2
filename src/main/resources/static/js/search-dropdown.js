@@ -10,6 +10,8 @@ export function initSearchDropdown() {
     const searchGroup = riotIdInput.closest('.search-group');
     let isDestroyed = false;
     let currentAbortController = null; // For canceling in-flight requests
+    let justOpened = false;
+    let justOpenedTimer = null;
 
     const setExpandedState = (expanded) => {
         riotIdInput.setAttribute('aria-expanded', expanded ? 'true' : 'false');
@@ -82,6 +84,11 @@ export function initSearchDropdown() {
         clearActiveState();
         resetDropdownPlacement();
         setBusyState(false);
+        justOpened = false;
+        if (justOpenedTimer) {
+            clearTimeout(justOpenedTimer);
+            justOpenedTimer = null;
+        }
     }
 
     // Cleanup function to prevent memory leaks
@@ -318,6 +325,14 @@ export function initSearchDropdown() {
         if (isDestroyed) return;
         fetchAndDisplaySuggestions(riotIdInput.value);
         positionDropdown(true);
+        justOpened = true;
+        if (justOpenedTimer) {
+            clearTimeout(justOpenedTimer);
+        }
+        justOpenedTimer = setTimeout(() => {
+            justOpened = false;
+            justOpenedTimer = null;
+        }, 200);
     };
 
     const handleInput = () => {
@@ -337,8 +352,12 @@ export function initSearchDropdown() {
     };
 
     const handleBlur = () => {
-        setTimeout(() => {
+        const attemptHide = () => {
             if (isDestroyed) return;
+            if (justOpened) {
+                setTimeout(attemptHide, 50);
+                return;
+            }
             const activeElement = document.activeElement;
             if (!activeElement) {
                 hideSuggestions();
@@ -348,7 +367,8 @@ export function initSearchDropdown() {
             if (!suggestionsContainer.contains(activeElement)) {
                 hideSuggestions();
             }
-        }, 0);
+        };
+        setTimeout(attemptHide, 0);
     };
 
     // Keyboard navigation
@@ -403,6 +423,7 @@ export function initSearchDropdown() {
         const isInsideDropdown = suggestionsContainer.contains(target);
         const isInsideModal = target.closest('.modal');
 
+        if (justOpened) return;
         if (!isInsideInput && !isInsideGroup && !isInsideDropdown && !isInsideModal) {
             hideSuggestions();
         }
