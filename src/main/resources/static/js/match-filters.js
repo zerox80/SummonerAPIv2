@@ -1,42 +1,33 @@
 // Match filtering + summary widget
+import {
+  DEBOUNCE_DELAYS,
+  QUEUE_TYPES,
+  QUEUE_NAMES,
+  CSS_CLASSES,
+  ARIA,
+  EVENTS,
+  SELECTORS
+} from './constants.js';
+
+// Instance tracking using WeakMap for better memory management
+const instances = new WeakMap();
+
 export function initMatchFilters() {
     let rows = Array.from(document.querySelectorAll('.match-row'));
-    const filters = document.getElementById('historyFilters');
-    const searchInput = document.getElementById('matchSearch');
-    const elWR = document.getElementById('summaryWR');
-    const elKDA = document.getElementById('summaryKDA');
-    const elCount = document.getElementById('summaryCount');
-    const queueToggle = document.getElementById('queueToggle');
-    const queueDropdown = document.getElementById('queueDropdown');
-    const noMsg = document.getElementById('noMatchesMsg');
+    const filters = document.querySelector(SELECTORS.HISTORY_FILTERS);
+    const searchInput = document.querySelector(SELECTORS.MATCH_SEARCH);
+    const elWR = document.querySelector(SELECTORS.SUMMARY_WR);
+    const elKDA = document.querySelector(SELECTORS.SUMMARY_KDA);
+    const elCount = document.querySelector(SELECTORS.SUMMARY_COUNT);
+    const queueToggle = document.querySelector(SELECTORS.QUEUE_TOGGLE);
+    const queueDropdown = document.querySelector(SELECTORS.QUEUE_DROPDOWN);
+    const noMsg = document.querySelector(SELECTORS.NO_MATCHES_MSG);
     if (!rows.length && noMsg) { noMsg.style.display = ''; }
-    
-    // Track if already initialized to prevent duplicate listeners
-    if (window.__matchFiltersInitialized) {
-        console.warn('Match filters already initialized, skipping duplicate init');
-        return window.__matchFiltersCleanup;
-    }
-    window.__matchFiltersInitialized = true;
 
-    const QUEUE_NAMES = {
-        420: 'Ranked Solo/Duo',
-        440: 'Ranked Flex',
-        400: 'Normal Draft',
-        430: 'Normal Blind',
-        450: 'ARAM',
-        700: 'Clash',
-        1700: 'Arena',
-        1900: 'URF',
-        900: 'URF (old)',
-        0: 'Custom',
-        1100: 'TFT Ranked',
-        1090: 'TFT Normal',
-        1130: 'TFT Double Up',
-        1160: 'TFT Hyper Roll'
-    };
-    
-    function isRankedQ(q){ return q === 420 || q === 440 || q === 1100; }
-    const RANKED_SENTINEL = 'ranked';
+    // Check if already initialized
+    if (instances.has(filters || searchInput || {})) {
+        return instances.get(filters || searchInput || {});
+    }
 
     // Helper function to normalize queue ID
     function normalizeQueueId(qAttr) {
@@ -184,7 +175,7 @@ export function initMatchFilters() {
         searchTimer = setTimeout(() => {
             searchTimer = null;
             apply();
-        }, 200); 
+        }, DEBOUNCE_DELAYS.FILTER); 
     };
     
     // Event handler references for proper cleanup
@@ -221,21 +212,20 @@ export function initMatchFilters() {
             clearTimeout(searchTimer);
             searchTimer = null;
         }
-        searchInput?.removeEventListener('input', handleSearchInput);
-        filters?.removeEventListener('click', filterClickHandler);
-        queueDropdown?.removeEventListener('click', queueClickHandler);
-        window.removeEventListener('beforeunload', cleanup);
-        delete window.__matchFiltersInitialized;
-        delete window.__matchFiltersCleanup;
+        searchInput?.removeEventListener(EVENTS.INPUT, handleSearchInput);
+        filters?.removeEventListener(EVENTS.CLICK, filterClickHandler);
+        queueDropdown?.removeEventListener(EVENTS.CLICK, queueClickHandler);
+        window.removeEventListener(EVENTS.BEFOREUNLOAD, cleanup);
+        instances.delete(filters || searchInput || {});
     };
     
-    searchInput?.addEventListener('input', handleSearchInput);
-    filters?.addEventListener('click', filterClickHandler);
-    queueDropdown?.addEventListener('click', queueClickHandler);
-    window.addEventListener('beforeunload', cleanup);
+    searchInput?.addEventListener(EVENTS.INPUT, handleSearchInput);
+    filters?.addEventListener(EVENTS.CLICK, filterClickHandler);
+    queueDropdown?.addEventListener(EVENTS.CLICK, queueClickHandler);
+    window.addEventListener(EVENTS.BEFOREUNLOAD, cleanup);
     
     // Store cleanup function globally for reuse
-    window.__matchFiltersCleanup = cleanup;
+    instances.set(filters || searchInput || {}, cleanup);
     
     apply();
     

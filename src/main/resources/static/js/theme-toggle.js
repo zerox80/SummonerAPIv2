@@ -1,10 +1,28 @@
 // Theme toggle functionality
+import {
+  THEMES,
+  BOOTSWATCH_THEMES,
+  STORAGE_KEYS,
+  CSS_CLASSES,
+  ARIA,
+  EVENTS,
+  SELECTORS
+} from './constants.js';
+
+// Instance tracking using WeakMap for better memory management
+const instances = new WeakMap();
+
 export function initThemeToggle(chartUpdateCallback) {
-    const themeStylesheet = document.getElementById('themeStylesheet');
-    const themeToggleBtn = document.getElementById('themeToggle');
-    const themeMeta = document.getElementById('themeColor');
+    const themeStylesheet = document.querySelector('#themeStylesheet');
+    const themeToggleBtn = document.querySelector(SELECTORS.THEME_TOGGLE);
+    const themeMeta = document.querySelector('#themeColor');
     const bodyEl = document.body;
-    const THEMES = { dark: 'darkly', light: 'lux' };
+
+    // Check if already initialized
+    if (instances.has(themeToggleBtn || {})) {
+        return instances.get(themeToggleBtn || {});
+    }
+
     const BOOTSWATCH_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.7';
     const BOOTSWATCH_SRI = {
         darkly: 'sha512-p5mHOC7N2BAy1SdoU/f2XD4t7EM05/5b1QowPXdyvqrSFsWQl3HVqY60hvvnOcMVBXBwr3ysopvGgxqbaovv/Q==',
@@ -58,7 +76,7 @@ export function initThemeToggle(chartUpdateCallback) {
         
         if (themeMeta) themeMeta.setAttribute('content', theme === 'light' ? '#f7f7fb' : '#0b1018');
         
-        localStorage.setItem('theme', theme);
+        localStorage.setItem(STORAGE_KEYS.THEME, theme);
         
         // Notify charts to update colors after stylesheet loads
         if (chartUpdateCallback && themeStylesheet) {
@@ -75,24 +93,27 @@ export function initThemeToggle(chartUpdateCallback) {
             };
 
             const onLoad = () => {
-                themeStylesheet.removeEventListener('load', onLoad);
+                themeStylesheet.removeEventListener(EVENTS.LOAD, onLoad);
                 requestAnimationFrame(() => {
                     requestAnimationFrame(executeCallback);
                 });
             };
 
-            themeStylesheet.addEventListener('load', onLoad);
+            themeStylesheet.addEventListener(EVENTS.LOAD, onLoad);
             setTimeout(executeCallback, 300);
         }
     }
 
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || THEMES.DARK;
     requestAnimationFrame(() => applyTheme(savedTheme));
 
-    themeToggleBtn?.addEventListener('click', () => {
-        const nextTheme = bodyEl.classList.contains('theme-light') ? 'dark' : 'light';
+    themeToggleBtn?.addEventListener(EVENTS.CLICK, () => {
+        const nextTheme = bodyEl.classList.contains(CSS_CLASSES.THEME_LIGHT) ? THEMES.DARK : THEMES.LIGHT;
         applyTheme(nextTheme);
     });
+
+    // Store instance
+    instances.set(themeToggleBtn || {}, { applyTheme });
 
     return { applyTheme };
 }

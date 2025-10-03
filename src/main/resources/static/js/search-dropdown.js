@@ -1,8 +1,33 @@
 // Search dropdown with suggestions and history
+import {
+  DEBOUNCE_DELAYS,
+  CACHE_DURATION,
+  STORAGE_KEYS,
+  CSS_CLASSES,
+  ARIA,
+  EVENTS,
+  KEYS,
+  SELECTORS,
+  URLS
+} from './constants.js';
+
+// Instance tracking using WeakMap for better memory management
+const instances = new WeakMap();
+
+/**
+ * Initializes search dropdown functionality for a Riot ID input field
+ * @param {HTMLInputElement} riotIdInput - The input element for Riot ID search
+ * @returns {Function|null} Cleanup function to remove event listeners, or null if already initialized
+ */
 export function initSearchDropdown() {
-    const riotIdInput = document.getElementById('riotId');
-    const suggestionsContainer = document.getElementById('suggestions-container');
+    const riotIdInput = document.querySelector(SELECTORS.RIOT_ID_INPUT);
+    const suggestionsContainer = document.querySelector(SELECTORS.SUGGESTIONS_CONTAINER);
     if (!riotIdInput || !suggestionsContainer) return;
+
+    // Check if already initialized for this element
+    if (instances.has(riotIdInput)) {
+        return instances.get(riotIdInput);
+    }
 
     let debounceTimer = null;
     let activeIndex = -1; // Declare at top to avoid hoisting issues
@@ -29,6 +54,10 @@ export function initSearchDropdown() {
         }
     };
 
+    /**
+     * Positions the suggestions dropdown relative to the search input
+     * @param {boolean} force - Force repositioning even if dropdown is not visible
+     */
     function positionDropdown(force = false) {
         if (!suggestionsContainer || !searchGroup) return;
         if (!force && suggestionsContainer.style.display !== 'block') return;
@@ -42,7 +71,7 @@ export function initSearchDropdown() {
         suggestionsContainer.style.removeProperty('z-index');
 
         if (suggestionsContainer.style.display === 'block') {
-            heroSection?.classList.add('search-dropdown-open');
+            heroSection?.classList.add(CSS_CLASSES.DROPDOWN_OPEN);
         }
     }
 
@@ -54,7 +83,7 @@ export function initSearchDropdown() {
         suggestionsContainer.style.removeProperty('width');
         suggestionsContainer.style.removeProperty('max-width');
         suggestionsContainer.style.removeProperty('z-index');
-        heroSection?.classList.remove('search-dropdown-open');
+        heroSection?.classList.remove(CSS_CLASSES.DROPDOWN_OPEN);
     }
 
     function cancelInFlightRequest() {
@@ -106,7 +135,7 @@ export function initSearchDropdown() {
     };
 
     // Local history
-    const LS_KEY = 'searchHistory';
+    const LS_KEY = STORAGE_KEYS.SEARCH_HISTORY;
     function loadLocalHistory() {
         try {
             const raw = localStorage.getItem(LS_KEY);
@@ -124,7 +153,7 @@ export function initSearchDropdown() {
         if (!v || !v.includes('#')) return;
         const parts = v.split('#');
         if (parts.length !== 2 || !parts[0].trim() || !parts[1].trim()) return;
-        const maxSize = 10;
+        const maxSize = STORAGE_KEYS.MAX_HISTORY_SIZE;
         const list = loadLocalHistory().filter(x => x.toLowerCase() !== v.toLowerCase());
         list.unshift(v);
         while (list.length > maxSize) list.pop();
@@ -216,7 +245,7 @@ export function initSearchDropdown() {
             const thisAbortController = currentAbortController;
             setBusyState(true);
 
-            fetch(`/api/summoner-suggestions?query=${encodeURIComponent(requestedQuery)}`, {
+            fetch(`${URLS.API.SUGGESTIONS}?query=${encodeURIComponent(requestedQuery)}`, {
                 signal: thisAbortController.signal
             })
                 .then(response => {
@@ -308,7 +337,7 @@ export function initSearchDropdown() {
                     }
                     setBusyState(false);
                 });
-        }, 300);
+        }, DEBOUNCE_DELAYS.SEARCH);
     }
 
     function commitSelection(value) {
@@ -357,7 +386,7 @@ export function initSearchDropdown() {
         justOpenedTimer = setTimeout(() => {
             justOpened = false;
             justOpenedTimer = null;
-        }, 200);
+        }, DEBOUNCE_DELAYS.JUST_OPENED);
     };
 
     const handleInput = () => {
@@ -477,44 +506,37 @@ export function initSearchDropdown() {
     };
 
     // Prevent duplicate initialization
-    if (window.__searchDropdownInitialized) {
-        console.warn('Search dropdown already initialized, cleaning up old instance');
-        if (typeof window.__searchDropdownCleanup === 'function') {
-            try {
-                window.__searchDropdownCleanup();
-            } catch (e) {
-                console.error('Failed to cleanup previous search dropdown instance:', e);
-            }
-        }
+    if (instances.has(riotIdInput)) {
+        console.warn('Search dropdown already initialized for this element, skipping');
+        return instances.get(riotIdInput);
     }
-    window.__searchDropdownInitialized = true;
 
-    document.addEventListener('pointerdown', handleDocumentInteraction);
-    document.addEventListener('focusin', handleDocumentInteraction);
-    searchForm?.addEventListener('submit', handleFormSubmit);
-    riotIdInput.addEventListener('pointerdown', handlePointerDown);
-    riotIdInput.addEventListener('click', handleClick);
-    riotIdInput.addEventListener('input', handleInput);
-    riotIdInput.addEventListener('focus', handleFocus);
-    riotIdInput.addEventListener('blur', handleBlur);
-    riotIdInput.addEventListener('keydown', handleKeydown);
+    document.addEventListener(EVENTS.POINTERDOWN, handleDocumentInteraction);
+    document.addEventListener(EVENTS.FOCUSIN, handleDocumentInteraction);
+    searchForm?.addEventListener(EVENTS.SUBMIT, handleFormSubmit);
+    riotIdInput.addEventListener(EVENTS.POINTERDOWN, handlePointerDown);
+    riotIdInput.addEventListener(EVENTS.CLICK, handleClick);
+    riotIdInput.addEventListener(EVENTS.INPUT, handleInput);
+    riotIdInput.addEventListener(EVENTS.FOCUS, handleFocus);
+    riotIdInput.addEventListener(EVENTS.BLUR, handleBlur);
+    riotIdInput.addEventListener(EVENTS.KEYDOWN, handleKeydown);
 
     const fullCleanup = () => {
         cleanup();
-        document.removeEventListener('pointerdown', handleDocumentInteraction);
-        document.removeEventListener('focusin', handleDocumentInteraction);
-        searchForm?.removeEventListener('submit', handleFormSubmit);
-        riotIdInput.removeEventListener('pointerdown', handlePointerDown);
-        riotIdInput.removeEventListener('click', handleClick);
-        riotIdInput.removeEventListener('input', handleInput);
-        riotIdInput.removeEventListener('focus', handleFocus);
-        riotIdInput.removeEventListener('blur', handleBlur);
-        riotIdInput.removeEventListener('keydown', handleKeydown);
-        delete window.__searchDropdownInitialized;
-        delete window.__searchDropdownCleanup;
+        document.removeEventListener(EVENTS.POINTERDOWN, handleDocumentInteraction);
+        document.removeEventListener(EVENTS.FOCUSIN, handleDocumentInteraction);
+        searchForm?.removeEventListener(EVENTS.SUBMIT, handleFormSubmit);
+        riotIdInput.removeEventListener(EVENTS.POINTERDOWN, handlePointerDown);
+        riotIdInput.removeEventListener(EVENTS.CLICK, handleClick);
+        riotIdInput.removeEventListener(EVENTS.INPUT, handleInput);
+        riotIdInput.removeEventListener(EVENTS.FOCUS, handleFocus);
+        riotIdInput.removeEventListener(EVENTS.BLUR, handleBlur);
+        riotIdInput.removeEventListener(EVENTS.KEYDOWN, handleKeydown);
+        instances.delete(riotIdInput);
     };
 
-    window.__searchDropdownCleanup = fullCleanup;
+    // Store instance for future reference
+    instances.set(riotIdInput, fullCleanup);
 
     // Return cleanup function to allow proper teardown
     return fullCleanup;

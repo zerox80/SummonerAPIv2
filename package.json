@@ -1,0 +1,40 @@
+{
+  "name": "summonerapi-frontend",
+  "version": "2.0.0",
+  "description": "Frontend build system for SummonerAPI v2",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "lint": "eslint src/main/resources/static/js --ext .js",
+    "lint:fix": "eslint src/main/resources/static/js --ext .js --fix"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@vitest/ui": "^1.3.1",
+    "eslint": "^8.57.0",
+    "jsdom": "^24.0.0",
+    "vite": "^5.2.8",
+    "vitest": "^1.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zerox80/SummonerAPIv2.git"
+  },
+  "keywords": [
+    "league-of-legends",
+    "riot-api",
+    "frontend",
+    "javascript",
+    "vite"
+  ],
+  "author": "Mavi",
+  "license": "MIT"
+}

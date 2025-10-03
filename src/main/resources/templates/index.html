@@ -469,43 +469,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous"></script>
 <script th:src="@{/js/main.js}"></script>
 <!-- Export data to window for use in modules -->
-<script th:inline="javascript" th:if="${cspNonce != null}" th:attr="nonce=${cspNonce}">
-    // Chart data
-    /*<![CDATA[*/
-    window.leagueEntriesData = [
-    /*[# th:each="e, iterStat : ${leagueEntries}"]*/
-    /*[# th:if="${e != null}"]*/
-        { queueType: /*[[${e?.queueType}]]*/'', lp: /*[[${e?.leaguePoints}]]*/0 }/*[[${iterStat.last ? '' : ','}]]*/
-    /*[/]*/
-    /*[/]*/
-    ];
-
-    window.matchesData = [
-    /*[# th:each="m, iterStat : ${matchHistory}"]*/
-    /*[# th:if="${m != null}"]*/
-        { t: /*[[${m?.info?.gameEndTimestamp}]]*/0, q: /*[[${m?.info?.queueId}]]*/0, d: /*[[${m?.info?.lpChange}]]*/null }/*[[${iterStat.last ? '' : ','}]]*/
-    /*[/]*/
-    /*[/]*/
-    ];
-
-    window.champLabelsData = [
-    /*[# th:each="e, iterStat : ${championPlayCounts.entrySet()} "]*/
-    /*[# th:if="${e != null}"]*/
-        /*[[${e?.key}]]*/''/*[[${iterStat.last ? '' : ','}]]*/
-    /*[/]*/
-    /*[/]*/
-    ];
-    window.champValuesData = [
-    /*[# th:each="e, iterStat : ${championPlayCounts.entrySet()} "]*/
-    /*[# th:if="${e != null}"]*/
-        /*[[${e?.value}]]*/0/*[[${iterStat.last ? '' : ','}]]*/
-    /*[/]*/
-    /*[/]*/
-    ];
-
-    window.matchesPageSizeData = /*[[${matchesPageSize}]]*/ 10;
-    /*]]>*/
-</script>
+<script th:src="@{/js/data-init.js}"></script>
 <!-- Main app module -->
 <script type="module" th:src="@{/js/app.js}"></script>
 </body>
