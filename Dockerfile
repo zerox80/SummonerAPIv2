@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build:docker
 
 # Debug: list build output
-RUN ls -la dist/
+RUN ls -la src/main/resources/static/
 
 # ===== Stage 2: Backend Build =====
 FROM maven:3.9-eclipse-temurin-21 AS backend-build
@@ -27,8 +27,8 @@ RUN mvn -q -T 5 -e -DskipTests dependency:go-offline
 
 COPY src ./src
 
-# Copy built frontend assets from dist to static directory
-COPY --from=frontend-build /app/dist/ ./src/main/resources/static/
+# Copy built frontend assets from static directory
+COPY --from=frontend-build /app/src/main/resources/static/ ./src/main/resources/static/
 
 RUN mvn -q -T 5 -DskipTests=${SKIP_TESTS} clean package
 
