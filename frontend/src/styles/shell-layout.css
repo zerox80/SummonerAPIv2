@@ -6,9 +6,6 @@
 }
 
 .app-shell__top {
-  position: sticky;
-  top: 1rem;
-  z-index: 10;
   padding-top: 1rem;
 }
 
