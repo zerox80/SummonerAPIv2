@@ -41,7 +41,7 @@ services:
       # App User-Agent for outbound HTTP calls (maps to app.user-agent)
       APP_USER_AGENT: "${APP_USER_AGENT:-SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)}"
       # Default DDragon locale when no request locale is present (maps to ddragon.default-locale)
-      DDRAGON_DEFAULT_LOCALE: ${DDRAGON_DEFAULT_LOCALE:-de_DE}
+      DDRAGON_DEFAULT_LOCALE: ${DDRAGON_DEFAULT_LOCALE:-en_US}
       # Flyway: baseline existing non-empty schema and then run migrations > baseline version
       SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
       SPRING_FLYWAY_BASELINE_VERSION: "0"

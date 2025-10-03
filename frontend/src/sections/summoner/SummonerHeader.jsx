@@ -21,7 +21,7 @@ export default function SummonerHeader({ profile, derived }) {
     <section className="summoner-header glass-panel">
       <div className="summoner-header__media">
         <span className="summoner-header__avatar" aria-hidden>
-          <img src={iconSrc} alt="Profil Icon" loading="lazy" />
+          <img src={iconSrc} alt="Profile icon" loading="lazy" />
         </span>
         <span className="summoner-header__badge">Level {level ?? 0}</span>
       </div>

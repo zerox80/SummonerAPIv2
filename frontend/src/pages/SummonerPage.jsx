@@ -158,16 +158,16 @@ export default function SummonerPage() {
 
       {!riotIdParam && (
         <EmptyState
-          title="Suche nach einem Riot ID"
-          description="Beispiel: Faker#KR1. Wir zeigen dir eine blitzschnelle Analyse mit u.gg-inspiriertem Dashboard."
+          title="Search for a Riot ID"
+          description="Example: Faker#KR1. Get a blazing-fast analysis dashboard."
         />
       )}
 
-      {profileQuery.isLoading && riotIdParam && <LoadingState message="Profil wird geladen ..." />}
+      {profileQuery.isLoading && riotIdParam && <LoadingState message="Loading profile ..." />}
 
       {profileQuery.isError && riotIdParam && (
         <ErrorState
-          message={profileQuery.error?.message || 'Profil konnte nicht geladen werden'}
+          message={profileQuery.error?.message || 'Failed to load profile'}
           onRetry={profileQuery.refetch}
         />
       )}

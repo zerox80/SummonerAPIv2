@@ -17,7 +17,7 @@ const QUEUE_OPTIONS = [
 ];
 
 const ROLE_OPTIONS = [
-  { label: 'Alle Rollen', value: 'ALL' },
+  { label: 'All Roles', value: 'ALL' },
   { label: 'Top', value: 'TOP' },
   { label: 'Jungle', value: 'JUNGLE' },
   { label: 'Mid', value: 'MIDDLE' },
@@ -57,14 +57,14 @@ export default function ChampionDetailPage() {
   }, [champion]);
 
   if (detailQuery.isLoading) {
-    return <p className="champions-state">Champion wird geladen ...</p>;
+    return <p className="champions-state">Loading champion ...</p>;
   }
 
   if (detailQuery.isError || !champion) {
     return (
       <div className="champions-state error">
-        <p>{detailQuery.error?.message || 'Champion konnte nicht geladen werden.'}</p>
-        <button type="button" className="cta-button" onClick={() => navigate(-1)}>Zurück</button>
+        <p>{detailQuery.error?.message || 'Failed to load champion.'}</p>
+        <button type="button" className="cta-button" onClick={() => navigate(-1)}>Back</button>
       </div>
     );
   }
@@ -88,7 +88,7 @@ export default function ChampionDetailPage() {
 
       <div className="champion-detail__layout">
         <section className="champion-detail__lore glass-panel">
-          <h3>Geschichte</h3>
+          <h3>Lore</h3>
           <p>{champion.lore}</p>
         </section>
 
@@ -96,19 +96,19 @@ export default function ChampionDetailPage() {
       </div>
 
       <BuildItemsTable
-        title="Beliebteste Items"
+        title="Most Popular Items"
         items={build?.items}
         loading={buildQuery.isLoading}
         meta={buildMeta}
       />
       <BuildRunesTable
-        title="Runenpräferenzen"
+        title="Rune Preferences"
         runes={build?.runes}
         loading={buildQuery.isLoading}
         meta={buildMeta}
       />
       <BuildSummonerSpellsTable
-        title="Beschwörerzauber"
+        title="Summoner Spells"
         spells={build?.spells}
         loading={buildQuery.isLoading}
         meta={buildMeta}

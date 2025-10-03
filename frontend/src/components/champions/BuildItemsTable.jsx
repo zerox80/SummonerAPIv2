@@ -14,7 +14,7 @@ export default function BuildItemsTable({ title, items, loading, meta }) {
           <h3>{title}</h3>
           {meta && <span className="champion-build-section__meta">{meta}</span>}
         </header>
-        <p className="champion-build-section__empty">Build-Daten werden geladen ...</p>
+        <p className="champion-build-section__empty">Loading build data ...</p>
       </section>
     );
   }
@@ -26,7 +26,7 @@ export default function BuildItemsTable({ title, items, loading, meta }) {
           <h3>{title}</h3>
           {meta && <span className="champion-build-section__meta">{meta}</span>}
         </header>
-        <p className="champion-build-section__empty">Keine Build-Daten verfügbar.</p>
+        <p className="champion-build-section__empty">No build data available.</p>
       </section>
     );
   }
@@ -42,8 +42,8 @@ export default function BuildItemsTable({ title, items, loading, meta }) {
           <thead>
             <tr>
               <th>Item</th>
-              <th>Spiele</th>
-              <th>Winrate</th>
+              <th>Games</th>
+              <th>Win Rate</th>
             </tr>
           </thead>
           <tbody>

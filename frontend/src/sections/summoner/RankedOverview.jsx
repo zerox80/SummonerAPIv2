@@ -27,7 +27,7 @@ export default function RankedOverview({ entries, bases }) {
       <section className="ranked-overview glass-panel">
         <div className="ranked-overview__empty">
           <p>No Ranked Data</p>
-          <span>Spiele mindestens 10 Spiele, um in der Ladder aufzutauchen.</span>
+          <span>Play at least 10 games to appear on the ladder.</span>
         </div>
       </section>
     );
@@ -37,7 +37,7 @@ export default function RankedOverview({ entries, bases }) {
     <section className="ranked-overview glass-panel">
       <header className="ranked-overview__header">
         <h3>Ranked Performance</h3>
-        <p>Analyse deiner Solo/Duo & Flex Queues mit Live LP Tracking.</p>
+        <p>Analyze your Solo/Duo & Flex queues with live LP tracking.</p>
       </header>
       <div className="ranked-overview__grid">
         {entries.map((entry) => {
@@ -57,8 +57,8 @@ export default function RankedOverview({ entries, bases }) {
                 </div>
                 {(entry.lpGain != null || entry.lpLoss != null) && (
                   <div className="ranked-card__lp">
-                    {entry.lpGain != null && <span className="positive">+{entry.lpGain} LP letzter Sieg</span>}
-                    {entry.lpLoss != null && <span className="negative">-{entry.lpLoss} LP letzte Niederlage</span>}
+                    {entry.lpGain != null && <span className="positive">+{entry.lpGain} LP last win</span>}
+                    {entry.lpLoss != null && <span className="negative">-{entry.lpLoss} LP last loss</span>}
                   </div>
                 )}
               </div>

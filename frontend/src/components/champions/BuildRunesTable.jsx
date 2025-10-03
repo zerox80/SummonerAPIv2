@@ -14,7 +14,7 @@ export default function BuildRunesTable({ title, runes, loading, meta }) {
           <h3>{title}</h3>
           {meta && <span className="champion-build-section__meta">{meta}</span>}
         </header>
-        <p className="champion-build-section__empty">Runen werden geladen ...</p>
+        <p className="champion-build-section__empty">Loading runes ...</p>
       </section>
     );
   }
@@ -26,7 +26,7 @@ export default function BuildRunesTable({ title, runes, loading, meta }) {
           <h3>{title}</h3>
           {meta && <span className="champion-build-section__meta">{meta}</span>}
         </header>
-        <p className="champion-build-section__empty">Keine Runendaten verfügbar.</p>
+        <p className="champion-build-section__empty">No rune data available.</p>
       </section>
     );
   }
@@ -41,10 +41,10 @@ export default function BuildRunesTable({ title, runes, loading, meta }) {
         <table className="table-clean champion-build-table">
           <thead>
             <tr>
-              <th>Primärstil</th>
-              <th>Substil</th>
-              <th>Spiele</th>
-              <th>Winrate</th>
+              <th>Primary Style</th>
+              <th>Sub Style</th>
+              <th>Games</th>
+              <th>Win Rate</th>
             </tr>
           </thead>
           <tbody>

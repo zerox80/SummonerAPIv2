@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import '../styles/load-state.css';
 
-export function LoadingState({ message = 'Lädt Profil ...' }) {
+export function LoadingState({ message = 'Loading ...' }) {
   return (
     <div className="load-state">
       <div className="load-state__spinner" aria-hidden />
@@ -16,7 +16,7 @@ export function ErrorState({ message, onRetry }) {
       <p>{message}</p>
       {onRetry && (
         <button type="button" className="cta-button" onClick={onRetry}>
-          Erneut versuchen
+          Try again
         </button>
       )}
     </div>

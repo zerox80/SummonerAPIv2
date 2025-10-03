@@ -4,18 +4,18 @@ import SegmentedControl from '../components/SegmentedControl.jsx';
 import '../styles/champions/champions-page.css';
 
 const ROLE_OPTIONS = [
-  { label: 'Alle', value: 'ALL' },
-  { label: 'Assassine', value: 'ASSASSIN' },
-  { label: 'Kämpfer', value: 'FIGHTER' },
-  { label: 'Magier', value: 'MAGE' },
-  { label: 'Schütze', value: 'MARKSMAN' },
+  { label: 'All', value: 'ALL' },
+  { label: 'Assassin', value: 'ASSASSIN' },
+  { label: 'Fighter', value: 'FIGHTER' },
+  { label: 'Mage', value: 'MAGE' },
+  { label: 'Marksman', value: 'MARKSMAN' },
   { label: 'Support', value: 'SUPPORT' },
   { label: 'Tank', value: 'TANK' }
 ];
 
 const SORT_OPTIONS = [
-  { label: 'Alphabetisch', value: 'alpha' },
-  { label: 'Rolle', value: 'roles' }
+  { label: 'Alphabetical', value: 'alpha' },
+  { label: 'Role', value: 'roles' }
 ];
 
 export default function ChampionsPage() {
@@ -37,17 +37,17 @@ export default function ChampionsPage() {
       <section className="champions-hero glass-panel">
         <div className="champions-hero__text">
           <p className="badge-soft">Champion Intel</p>
-          <h1>Entdecke den besten Champion für deine nächste Runde</h1>
+          <h1>Discover the best champion for your next game</h1>
           <p className="champions-hero__subtitle">
-            Durchsuche alle Champions, filtere nach Rollen und vergleiche Builds mit Aggregationsdaten wie auf u.gg.
+            Browse all champions, filter by roles, and compare builds with aggregated data.
           </p>
         </div>
         <div className="champions-hero__search">
-          <label htmlFor="champion-search" className="champions-hero__search-label">Champion suchen</label>
+          <label htmlFor="champion-search" className="champions-hero__search-label">Search champions</label>
           <input
             id="champion-search"
             type="search"
-            placeholder="z.B. Ahri, Aatrox, Caitlyn"
+            placeholder="e.g., Ahri, Aatrox, Caitlyn"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
@@ -59,13 +59,13 @@ export default function ChampionsPage() {
       </section>
 
       <section className="champions-grid-section glass-panel">
-        {isLoading && <p className="champions-state">Lade Champions ...</p>}
-        {isError && <p className="champions-state error">{error?.message || 'Champions konnten nicht geladen werden.'}</p>}
+        {isLoading && <p className="champions-state">Loading champions ...</p>}
+        {isError && <p className="champions-state error">{error?.message || 'Failed to load champions.'}</p>}
 
         {!isLoading && !isError && (
           <div className="champions-grid">
             {champions.map((champion) => (
-              <Link key={champion.id} to={`/champions/${champion.id}`} className="champion-card" aria-label={`Öffne Detailseite für ${champion.name}`}>
+              <Link key={champion.id} to={`/champions/${champion.id}`} className="champion-card" aria-label={`Open details for ${champion.name}`}>
                 <div className="champion-card__image">
                   <img src={`https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/${champion.imageFull}`} alt={champion.name} loading="lazy" />
                 </div>
@@ -83,9 +83,10 @@ export default function ChampionsPage() {
           </div>
         )}
         {!isLoading && !isError && champions.length === 0 && (
-          <p className="champions-state">Keine Champions entsprechen deinen Filtern.</p>
+          <p className="champions-state">No champions match your filters.</p>
         )}
       </section>
     </div>
   );
 }
+

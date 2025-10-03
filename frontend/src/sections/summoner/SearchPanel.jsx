@@ -57,12 +57,12 @@ export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) 
   return (
     <section className="summoner-search glass-panel">
       <div className="summoner-search__headline">
-        <p className="badge-soft">Ultra Fast OP.GG Style</p>
+        <p className="badge-soft">Ultra-fast Summoner Lookup</p>
         <h1>
-          Finde dein <span className="gradient-text">Summoner Profil</span>
+          Find your <span className="gradient-text">Summoner Profile</span>
         </h1>
         <p className="summoner-search__subtitle">
-          Analysiere Matches, Ranks und Champion Performance wie auf u.gg – nur schöner.
+          Analyze matches, ranks, and champion performance.
         </p>
       </div>
       <form ref={formRef} className="summoner-search__form" onSubmit={handleSubmit} autoComplete="off">
@@ -76,10 +76,10 @@ export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) 
             type="text"
             placeholder={PLACEHOLDER_IDS[placeholderIndex]}
             spellCheck="false"
-            aria-label="Riot ID eingeben"
+            aria-label="Enter Riot ID"
           />
           <button type="submit" className="cta-button" disabled={isLoading}>
-            {isLoading ? 'Suche ...' : 'Search'}
+            {isLoading ? 'Searching ...' : 'Search'}
           </button>
         </div>
         {focused && suggestions.length > 0 && (
@@ -95,7 +95,7 @@ export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) 
                 <span className="summoner-search__suggestion-icon" aria-hidden>
                   <img
                     src={item.profileIconUrl || `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/profileicon/${item.profileIconId}.png`}
-                    alt="Profil"
+                    alt="Profile icon"
                     loading="lazy"
                   />
                 </span>

@@ -14,7 +14,7 @@ export default function BuildSummonerSpellsTable({ title, spells, loading, meta 
           <h3>{title}</h3>
           {meta && <span className="champion-build-section__meta">{meta}</span>}
         </header>
-        <p className="champion-build-section__empty">Beschwörerzauber werden geladen ...</p>
+        <p className="champion-build-section__empty">Loading summoner spells ...</p>
       </section>
     );
   }
@@ -26,7 +26,7 @@ export default function BuildSummonerSpellsTable({ title, spells, loading, meta 
           <h3>{title}</h3>
           {meta && <span className="champion-build-section__meta">{meta}</span>}
         </header>
-        <p className="champion-build-section__empty">Keine Beschwörerzauber-Daten verfügbar.</p>
+        <p className="champion-build-section__empty">No summoner-spell data available.</p>
       </section>
     );
   }
@@ -41,9 +41,9 @@ export default function BuildSummonerSpellsTable({ title, spells, loading, meta 
         <table className="table-clean champion-build-table">
           <thead>
             <tr>
-              <th>Beschwörerzauber</th>
-              <th>Spiele</th>
-              <th>Winrate</th>
+              <th>Summoner Spells</th>
+              <th>Games</th>
+              <th>Win Rate</th>
             </tr>
           </thead>
           <tbody>

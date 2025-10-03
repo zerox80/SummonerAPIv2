@@ -8,13 +8,13 @@ import { formatDuration, relativeGameTime, formatQueueById, roleLabel } from '..
 import '../../styles/summoner/performance-summary.css';
 
 const RANGE_OPTIONS = [
-  { label: 'Letzte 10', value: '10' },
-  { label: 'Letzte 20', value: '20' },
-  { label: 'Alle', value: 'all' }
+  { label: 'Last 10', value: '10' },
+  { label: 'Last 20', value: '20' },
+  { label: 'All', value: 'all' }
 ];
 
 const QUEUE_OPTIONS = [
-  { label: 'Alle Queues', value: 'ALL' },
+  { label: 'All Queues', value: 'ALL' },
   { label: 'Solo/Duo', value: '420' },
   { label: 'Flex', value: '440' },
   { label: 'ARAM', value: '450' }
@@ -63,7 +63,7 @@ export default function PerformanceSummary({ derived, matches, summoner }) {
       <header className="performance-summary__header">
         <div>
           <p className="badge-soft">Performance Insights</p>
-          <h3>Deine letzten Matches</h3>
+          <h3>Your recent matches</h3>
         </div>
         <div className="performance-summary__controls">
           <SegmentedControl options={RANGE_OPTIONS} value={range} onChange={setRange} size="sm" />
@@ -73,9 +73,9 @@ export default function PerformanceSummary({ derived, matches, summoner }) {
 
       <div className="performance-summary__grid">
         <MetricTile
-          label="Winrate"
+          label="Win Rate"
           value={`${derived.winRate}%`}
-          secondary={`${derived.totalWins} Siege · ${derived.totalLosses} Niederlagen`}
+          secondary={`${derived.totalWins} Wins · ${derived.totalLosses} Losses`}
           icon="🏆"
           emphasize
           trend={<Sparkline data={winSpark} color="rgba(34,197,94,0.8)" />}
@@ -83,21 +83,21 @@ export default function PerformanceSummary({ derived, matches, summoner }) {
         <MetricTile
           label="KDA"
           value={derived.avgKda}
-          secondary={`${derived.kdaRatio === 'Perfect' ? 'Perfekte KDA' : `${derived.kdaRatio}:1`} · ${derived.avgCsPerMin || 0} CS/min`}
+          secondary={`${derived.kdaRatio === 'Perfect' ? 'Perfect KDA' : `${derived.kdaRatio}:1`} · ${derived.avgCsPerMin || 0} CS/min`}
           icon="⚔️"
           trend={<Sparkline data={kdaSpark} color="rgba(236,72,153,0.8)" />}
         />
         <MetricTile
           label="Damage"
           value={derived.avgDamage.toLocaleString()}
-          secondary={`${derived.avgGold.toLocaleString()} Gold pro Spiel`}
+          secondary={`${derived.avgGold.toLocaleString()} Gold per game`}
           icon="🔥"
           trend={<Sparkline data={damageSpark} color="rgba(99,102,241,0.85)" />}
         />
         <MetricTile
           label="Vision & KP"
           value={`${derived.avgVision} VS`}
-          secondary={`Kill-Beteiligung ${derived.killParticipation}%`}
+          secondary={`Kill Participation ${derived.killParticipation}%`}
           icon="👁️"
           trend={timeline.length > 0 ? <Sparkline data={timeline.map((entry) => entry.cs)} color="rgba(45,212,191,0.85)" /> : null}
         />
@@ -111,7 +111,7 @@ export default function PerformanceSummary({ derived, matches, summoner }) {
             </span>
             <h4>{formatQueueById(lastMatch.info.queueId)}</h4>
             <p>
-              Gespielt vor {relativeGameTime(lastMatch.info.gameEndTimestamp || lastMatch.info.gameCreation)} · Dauer {formatDuration(Math.round((lastMatch.info.gameDuration || 0) / 1000))}
+              Played {relativeGameTime(lastMatch.info.gameEndTimestamp || lastMatch.info.gameCreation)} · Duration {formatDuration(Math.round((lastMatch.info.gameDuration || 0) / 1000))}
             </p>
           </div>
           <div className="performance-summary__last-meta">

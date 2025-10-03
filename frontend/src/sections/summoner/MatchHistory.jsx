@@ -6,20 +6,20 @@ import { formatDuration, relativeGameTime, formatQueueById, formatKDA, roleLabel
 import '../../styles/summoner/match-history.css';
 
 const QUEUE_FILTER_OPTIONS = [
-  { label: 'Alle', value: 'ALL' },
+  { label: 'All', value: 'ALL' },
   { label: 'Solo/Duo', value: '420' },
   { label: 'Flex', value: '440' },
   { label: 'ARAM', value: '450' }
 ];
 
 const RESULT_FILTER_OPTIONS = [
-  { label: 'Alle', value: 'ALL' },
-  { label: 'Siege', value: 'WIN' },
-  { label: 'Niederlagen', value: 'LOSS' }
+  { label: 'All', value: 'ALL' },
+  { label: 'Wins', value: 'WIN' },
+  { label: 'Losses', value: 'LOSS' }
 ];
 
 const ROLE_FILTER_OPTIONS = [
-  { label: 'Alle Rollen', value: 'ALL' },
+  { label: 'All Roles', value: 'ALL' },
   { label: 'Top', value: 'TOP' },
   { label: 'Jungle', value: 'JUNGLE' },
   { label: 'Mid', value: 'MIDDLE' },
@@ -52,7 +52,7 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
       <header className="match-history__header">
         <div>
           <p className="badge-soft">Match Timeline</p>
-          <h3>Spielverlauf</h3>
+          <h3>Match History</h3>
         </div>
         <div className="match-history__filters">
           <SegmentedControl 
@@ -78,8 +78,8 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
 
       {filteredMatches.length === 0 && (
         <div className="match-history__empty">
-          <p>Keine Matches gefunden</p>
-          <span>Probiere andere Filter oder spiele mehr Matches</span>
+          <p>No matches found</p>
+          <span>Try changing filters or play more games</span>
         </div>
       )}
 
@@ -103,7 +103,7 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
               <div className="match-card__info">
                 <div className="match-card__queue">
                   <Tag tone={participant.win ? 'success' : 'danger'}>
-                    {participant.win ? 'Sieg' : 'Niederlage'}
+                    {participant.win ? 'Win' : 'Loss'}
                   </Tag>
                   <span>{formatQueueById(match.info.queueId)}</span>
                 </div>
@@ -152,7 +152,7 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
             onClick={fetchMore} 
             disabled={isFetchingMore}
           >
-            {isFetchingMore ? 'Lade weitere Matches ...' : 'Mehr Matches laden'}
+            {isFetchingMore ? 'Loading more matches ...' : 'Load more matches'}
           </button>
         </div>
       )}

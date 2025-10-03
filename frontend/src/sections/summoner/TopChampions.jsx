@@ -54,10 +54,10 @@ export default function TopChampions({ championPlayCounts, matches, summoner, ch
       <section className="top-champions glass-panel">
         <header className="top-champions__header">
           <p className="badge-soft">Champion Pool</p>
-          <h3>Deine Top Champions</h3>
+          <h3>Your Top Champions</h3>
         </header>
         <div className="top-champions__empty">
-          <p>Noch keine Champion-Daten verfügbar</p>
+          <p>No champion data yet</p>
         </div>
       </section>
     );
@@ -67,8 +67,8 @@ export default function TopChampions({ championPlayCounts, matches, summoner, ch
     <section className="top-champions glass-panel">
       <header className="top-champions__header">
         <p className="badge-soft">Champion Pool</p>
-        <h3>Deine Top Champions</h3>
-        <p className="top-champions__subtitle">Die am häufigsten gespielten Champs mit Performance-Insights</p>
+        <h3>Your Top Champions</h3>
+        <p className="top-champions__subtitle">Your most played champs with performance insights</p>
       </header>
       <div className="top-champions__grid">
         {enrichedChampions.map((champ) => (
@@ -79,7 +79,7 @@ export default function TopChampions({ championPlayCounts, matches, summoner, ch
             <div className="champion-card__content">
               <h4>{champ.name}</h4>
               <div className="champion-card__stats">
-                <span>{champ.playCount} Spiele</span>
+                <span>{champ.playCount} games</span>
                 <Tag tone={champ.winrate >= 50 ? 'success' : 'danger'}>{champ.winrate}% WR</Tag>
               </div>
               <div className="champion-card__meta">
