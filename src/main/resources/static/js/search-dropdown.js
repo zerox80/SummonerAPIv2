@@ -7,62 +7,30 @@ export function initSearchDropdown() {
     let debounceTimer;
     const heroSection = riotIdInput?.closest('.hero');
     const searchGroup = riotIdInput.closest('.search-group');
-    const dropdownPlaceholder = document.createElement('div');
-    dropdownPlaceholder.style.display = 'none';
-    dropdownPlaceholder.style.height = '0';
-    dropdownPlaceholder.style.margin = '0';
-    dropdownPlaceholder.style.padding = '0';
-    dropdownPlaceholder.style.border = '0';
-    dropdownPlaceholder.style.pointerEvents = 'none';
-    dropdownPlaceholder.style.flex = '0 0 0';
-    let dropdownMovedToBody = false;
-
-    function moveDropdownToBody(){
-        if (!suggestionsContainer || dropdownMovedToBody || !searchGroup) return;
-        dropdownPlaceholder.style.display = 'none';
-        if (!dropdownPlaceholder.parentElement) {
-            searchGroup.appendChild(dropdownPlaceholder);
-        }
-        document.body.appendChild(suggestionsContainer);
-        dropdownMovedToBody = true;
-    }
-
-    function restoreDropdownParent(){
-        if (!suggestionsContainer || !dropdownMovedToBody || !searchGroup) return;
-        searchGroup.insertBefore(suggestionsContainer, dropdownPlaceholder);
-        dropdownPlaceholder.remove();
-        dropdownMovedToBody = false;
-    }
 
     function positionDropdown(force = false){
         if (!suggestionsContainer || !searchGroup) return;
         if (!force && suggestionsContainer.style.display !== 'block') return;
 
-        moveDropdownToBody();
-        const rect = searchGroup.getBoundingClientRect();
-        suggestionsContainer.style.setProperty('position', 'fixed', 'important');
-        suggestionsContainer.style.left = `${Math.round(rect.left)}px`;
-        suggestionsContainer.style.top = `${Math.round(rect.bottom + 8)}px`;
-        suggestionsContainer.style.width = `${Math.round(rect.width)}px`;
-        suggestionsContainer.style.maxWidth = `${Math.round(rect.width)}px`;
-        suggestionsContainer.style.setProperty('z-index', '999999', 'important');
-        dropdownPlaceholder.style.display = 'none';
-        dropdownPlaceholder.style.height = '0';
+        // rely on CSS (left/right/top in stylesheet) and keep dropdown anchored inside search group
+        suggestionsContainer.style.removeProperty('position');
+        suggestionsContainer.style.removeProperty('left');
+        suggestionsContainer.style.removeProperty('top');
+        suggestionsContainer.style.removeProperty('width');
+        suggestionsContainer.style.removeProperty('max-width');
+        suggestionsContainer.style.removeProperty('z-index');
         heroSection?.classList.add('search-dropdown-open');
     }
 
     function resetDropdownPlacement(){
         if (!suggestionsContainer) return;
         suggestionsContainer.style.removeProperty('position');
-        suggestionsContainer.style.left = '';
-        suggestionsContainer.style.top = '';
-        suggestionsContainer.style.width = '';
-        suggestionsContainer.style.maxWidth = '';
+        suggestionsContainer.style.removeProperty('left');
+        suggestionsContainer.style.removeProperty('top');
+        suggestionsContainer.style.removeProperty('width');
+        suggestionsContainer.style.removeProperty('max-width');
         suggestionsContainer.style.removeProperty('z-index');
         heroSection?.classList.remove('search-dropdown-open');
-        dropdownPlaceholder.style.display = 'none';
-        dropdownPlaceholder.style.height = '0';
-        restoreDropdownParent();
     }
 
     // Local history
