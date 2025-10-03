@@ -1,0 +1,108 @@
+.champion-abilities {
+  display: grid;
+  gap: 1.75rem;
+  padding: 2.25rem;
+}
+
+.champion-abilities__header h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: -0.01em;
+}
+
+.champion-abilities__header p {
+  margin: 0.35rem 0 0;
+  color: var(--text-secondary);
+}
+
+.champion-abilities__grid {
+  display: grid;
+  gap: 1.4rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.ability-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  background: rgba(17, 24, 65, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease;
+}
+
+.ability-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.ability-card--passive {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.06));
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.ability-card__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.28);
+}
+
+.ability-card__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ability-card__content {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ability-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ability-card__hotkey {
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 255, 0.85);
+}
+
+.ability-card__meta-tags {
+  display: inline-flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.ability-card__cooldown,
+.ability-card__cost {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 255, 0.72);
+}
+
+.ability-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.ability-card__notes {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  display: grid;
+  gap: 0.35rem;
+}
