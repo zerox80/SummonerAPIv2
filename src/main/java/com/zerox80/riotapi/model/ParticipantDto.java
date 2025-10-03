@@ -17,6 +17,11 @@ public class ParticipantDto {
     private String riotIdTagline;
     private boolean win;
     private int teamId;
+    private int totalDamageDealtToChampions;
+    private int totalMinionsKilled;
+    private int neutralMinionsKilled;
+    private int goldEarned;
+    private int visionScore;
     // Additional fields for build aggregation
     private int item0;
     private int item1;
@@ -107,6 +112,41 @@ public class ParticipantDto {
     }
     public void setTeamId(int teamId) {
         this.teamId = teamId;
+    }
+
+    public int getTotalDamageDealtToChampions() {
+        return totalDamageDealtToChampions;
+    }
+    public void setTotalDamageDealtToChampions(int totalDamageDealtToChampions) {
+        this.totalDamageDealtToChampions = totalDamageDealtToChampions;
+    }
+
+    public int getTotalMinionsKilled() {
+        return totalMinionsKilled;
+    }
+    public void setTotalMinionsKilled(int totalMinionsKilled) {
+        this.totalMinionsKilled = totalMinionsKilled;
+    }
+
+    public int getNeutralMinionsKilled() {
+        return neutralMinionsKilled;
+    }
+    public void setNeutralMinionsKilled(int neutralMinionsKilled) {
+        this.neutralMinionsKilled = neutralMinionsKilled;
+    }
+
+    public int getGoldEarned() {
+        return goldEarned;
+    }
+    public void setGoldEarned(int goldEarned) {
+        this.goldEarned = goldEarned;
+    }
+
+    public int getVisionScore() {
+        return visionScore;
+    }
+    public void setVisionScore(int visionScore) {
+        this.visionScore = visionScore;
     }
 
     public String getKda() {
