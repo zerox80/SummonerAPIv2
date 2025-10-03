@@ -63,7 +63,7 @@
             <div class="input-group input-group-sm search-group shadow-sm rounded-3">
                 <span class="input-group-text bg-transparent border-0 ps-3"><i class="fas fa-user-tag text-secondary" aria-hidden="true"></i></span>
                 <label for="riotId" class="visually-hidden">Riot ID</label>
-                <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" aria-label="Search for summoner by Riot ID" />
+                <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" aria-label="Search for summoner by Riot ID" th:value="${riotId}" />
                 <button class="btn btn-primary px-4" type="submit"><i class="fas fa-search me-1" aria-hidden="true"></i> Search</button>
                 <div id="suggestions-container" class="list-group suggestions-dropdown w-100" role="listbox" aria-label="Suggestions"></div>
             </div>
@@ -169,7 +169,7 @@
     <div th:if="${
             summoner != null && (
                 (leagueEntries != null && !leagueEntries.isEmpty())
-                or (matchHistory != null && !#lists.isEmpty(matchHistory.?[info.queueId == 420 or info.queueId == 440]))
+                || (matchHistory != null && !#lists.isEmpty(matchHistory.?[info.queueId == 420 || info.queueId == 440]))
             )
         }" class="card section-card glass-card shadow-sm">
         <div class="card-header section-header d-flex align-items-center gap-2">
@@ -192,7 +192,7 @@
     <div th:if="${
             summoner != null && (
                 (leagueEntries == null || leagueEntries.isEmpty())
-                and (matchHistory == null || #lists.isEmpty(matchHistory.?[info.queueId == 420 or info.queueId == 440]))
+                and (matchHistory == null || #lists.isEmpty(matchHistory.?[info.queueId == 420 || info.queueId == 440]))
             )
         }" class="card section-card glass-card shadow-sm">
         <div class="card-header section-header d-flex align-items-center gap-2">
@@ -235,7 +235,7 @@
     <!-- Match History Section -->
     <div th:if="${summoner != null && matchHistory != null}" class="card section-card glass-card shadow-sm">
         <div class="card-header section-header compact d-flex align-items-center">
-            <a data-bs-toggle="collapse" href="#matchHistoryCollapse" role="button" aria-expanded="true" aria-controls="matchHistoryCollapse"
+            <a data-bs-toggle="collapse" href="#matchHistoryCollapse" role="button" aria-expanded="false" aria-controls="matchHistoryCollapse"
                class="d-flex align-items-center gap-2 text-decoration-none text-reset w-100">
                 <i class="fa-solid fa-scroll text-info" aria-hidden="true"></i>
                 <span class="flex-grow-1">Match History <small class="text-muted" th:text="${matchHistory != null && matchHistory.size() > 0 ? '(' + matchHistory.size() + ')' : ''}"></small></span>
@@ -282,7 +282,7 @@
             </div>
 
             <div id="matchList" class="list-group list-group-flush" th:unless="${matchHistory.isEmpty()}"
-                 th:attr="data-puuid=${summoner.puuid}, data-riotid=${riotId}, data-champsquare=${bases.champSquare}">
+                 th:attr="data-puuid=${summoner != null ? summoner.puuid : ''}, data-riotid=${riotId != null ? riotId : ''}, data-champsquare=${bases.champSquare}">
                 <th:block th:each="match, iterStat : ${matchHistory}">
                     <!-- Render only if we have basic match info -->
                     <th:block th:if="${match != null and match.info != null}">
@@ -464,28 +464,36 @@
 <script th:inline="javascript" th:attr="nonce=${cspNonce}">
     // Chart data
     /*<![CDATA[*/
-    window.leagueEntriesData = [];
-    /*[# th:each="e : ${leagueEntries}"]*/
+    window.leagueEntriesData = [
+    /*[# th:each="e, iterStat : ${leagueEntries}"]*/
     /*[# th:if="${e != null}"]*/
-    window.leagueEntriesData.push({ queueType: /*[[${e?.queueType}]]*/'', lp: /*[[${e?.leaguePoints}]]*/0 });
+        { queueType: /*[[${e?.queueType}]]*/'', lp: /*[[${e?.leaguePoints}]]*/0 }/*[[${iterStat.last ? '' : ','}]]*/
     /*[/]*/
     /*[/]*/
+    ];
 
-    window.matchesData = [];
-    /*[# th:each="m : ${matchHistory}"]*/
+    window.matchesData = [
+    /*[# th:each="m, iterStat : ${matchHistory}"]*/
     /*[# th:if="${m != null}"]*/
-    window.matchesData.push({ t: /*[[${m?.info?.gameEndTimestamp}]]*/0, q: /*[[${m?.info?.queueId}]]*/0, d: /*[[${m?.info?.lpChange}]]*/null });
+        { t: /*[[${m?.info?.gameEndTimestamp}]]*/0, q: /*[[${m?.info?.queueId}]]*/0, d: /*[[${m?.info?.lpChange}]]*/null }/*[[${iterStat.last ? '' : ','}]]*/
     /*[/]*/
     /*[/]*/
+    ];
 
-    window.champLabelsData = [];
-    window.champValuesData = [];
-    /*[# th:each="e : ${championPlayCounts.entrySet()} "]*/
+    window.champLabelsData = [
+    /*[# th:each="e, iterStat : ${championPlayCounts.entrySet()} "]*/
     /*[# th:if="${e != null}"]*/
-    window.champLabelsData.push(/*[[${e?.key}]]*/'');
-    window.champValuesData.push(/*[[${e?.value}]]*/0);
+        /*[[${e?.key}]]*/''/*[[${iterStat.last ? '' : ','}]]*/
     /*[/]*/
     /*[/]*/
+    ];
+    window.champValuesData = [
+    /*[# th:each="e, iterStat : ${championPlayCounts.entrySet()} "]*/
+    /*[# th:if="${e != null}"]*/
+        /*[[${e?.value}]]*/0/*[[${iterStat.last ? '' : ','}]]*/
+    /*[/]*/
+    /*[/]*/
+    ];
 
     window.matchesPageSizeData = /*[[${matchesPageSize}]]*/ 10;
     /*]]>*/

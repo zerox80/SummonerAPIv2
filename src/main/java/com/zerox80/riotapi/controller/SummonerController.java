@@ -138,6 +138,7 @@ public class SummonerController {
         model.addAttribute("leagueError", null);
         model.addAttribute("matchHistoryError", null);
         model.addAttribute("error", null);
+        model.addAttribute("riotId", "");
         // Provide DDragon image base URLs (for champion icons, etc.)
         model.addAttribute("bases", dataDragonService.getImageBases(null));
         model.addAttribute("matchesPageSize", matchesPageSize);
@@ -200,6 +201,7 @@ public class SummonerController {
         String normalizedRiotId = riotId != null ? riotId.trim() : null;
         if (!StringUtils.hasText(normalizedRiotId) || !normalizedRiotId.contains("#")) {
             model.addAttribute("error", "Invalid Riot ID. Please use the format Name#TAG.");
+            model.addAttribute("riotId", normalizedRiotId != null ? normalizedRiotId : "");
             return () -> "index";
         }
 
@@ -209,10 +211,12 @@ public class SummonerController {
 
         if (!StringUtils.hasText(gameName) || !StringUtils.hasText(tagLine)) {
             model.addAttribute("error", "Invalid Riot ID. Name and Tagline cannot be empty.");
+            model.addAttribute("riotId", normalizedRiotId);
             return () -> "index";
         }
 
         return () -> {
+            model.addAttribute("riotId", normalizedRiotId);
             try {
                 CompletableFuture<SummonerProfileData> profileDataFuture = riotApiService.getSummonerProfileDataAsync(gameName, tagLine);
                 SummonerProfileData profileData = profileDataFuture.join();
@@ -225,6 +229,7 @@ public class SummonerController {
                     model.addAttribute("championPlayCounts", Collections.emptyMap());
                     model.addAttribute("matchHistoryInfo", profileData.errorMessage());
                     model.addAttribute("bases", dataDragonService.getImageBases(null));
+                    model.addAttribute("riotId", normalizedRiotId);
                     try { model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale)); } catch (Exception ignore) { model.addAttribute("champImgByKey", java.util.Collections.emptyMap()); }
                     return "index";
                 }
@@ -250,13 +255,14 @@ public class SummonerController {
                 if (profileData.summoner() != null && profileData.suggestion() != null) {
                     updateSearchHistoryCookie(request, response, riotId, profileData.suggestion());
                 }
-                
+
                 if (profileData.matchHistory() == null || profileData.matchHistory().isEmpty()) {
                     if (!model.containsAttribute("error")) {
                         model.addAttribute("matchHistoryInfo", "No recent matches found or PUUID not available.");
                     }
                 }
 
+                return "index";
             } catch (CompletionException e) {
                 Throwable cause = e.getCause() != null ? e.getCause() : e;
                 logger.error("Error processing summoner search for Riot ID '{}': {}", riotId, cause.getMessage(), cause);
@@ -267,6 +273,7 @@ public class SummonerController {
                 model.addAttribute("matchHistoryInfo", "An error occurred while fetching data.");
                 model.addAttribute("bases", dataDragonService.getImageBases(null));
                 try { model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale)); } catch (Exception ignore) { model.addAttribute("champImgByKey", java.util.Collections.emptyMap()); }
+                model.addAttribute("riotId", normalizedRiotId);
             } catch (Exception e) {
                 logger.error("Unexpected error during summoner search for Riot ID '{}': {}", riotId, e.getMessage(), e);
                 model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
@@ -276,13 +283,11 @@ public class SummonerController {
                 model.addAttribute("matchHistoryInfo", "An unexpected error occurred.");
                 model.addAttribute("bases", dataDragonService.getImageBases(null));
                 try { model.addAttribute("champImgByKey", dataDragonService.getChampionKeyToSquareUrl(locale)); } catch (Exception ignore) { model.addAttribute("champImgByKey", java.util.Collections.emptyMap()); }
+                model.addAttribute("riotId", normalizedRiotId);
             }
             return "index";
         };
-    }
 
-    private Map<String, SummonerSuggestionDTO> getSearchHistoryFromCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (SEARCH_HISTORY_COOKIE.equals(cookie.getName())) {
