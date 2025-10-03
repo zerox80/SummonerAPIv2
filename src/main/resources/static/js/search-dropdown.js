@@ -120,7 +120,8 @@ export function initSearchDropdown() {
         if (!filtered.length) {
             if (trimmedQuery.length) {
                 const empty = document.createElement('div');
-                empty.className = 'suggestion-section';
+                empty.className = 'suggestion-section suggestion-empty';
+                empty.setAttribute('role', 'note');
                 empty.textContent = 'No entries found';
                 suggestionsContainer.appendChild(empty);
             } else {
@@ -142,9 +143,10 @@ export function initSearchDropdown() {
             clearTimeout(debounceTimer);
             debounceTimer = null;
         }
+        const requestedQuery = typeof query === 'string' ? query : '';
         activeIndex = -1;
         try {
-            renderLocalHistory(query);
+            renderLocalHistory(requestedQuery);
         } catch(e) {
             console.error('Error rendering local history:', e);
             return;
@@ -152,6 +154,7 @@ export function initSearchDropdown() {
 
         debounceTimer = setTimeout(() => {
             if (isDestroyed) return;
+            const normalizedRequestedQuery = requestedQuery.trim().toLowerCase();
             
             // Cancel previous request if still in flight
             if (currentAbortController) {
@@ -162,9 +165,10 @@ export function initSearchDropdown() {
                 }
             }
             currentAbortController = new AbortController();
+            const thisAbortController = currentAbortController;
             
-            fetch(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`, {
-                signal: currentAbortController.signal
+            fetch(`/api/summoner-suggestions?query=${encodeURIComponent(requestedQuery)}`, {
+                signal: thisAbortController.signal
             })
                 .then(response => {
                     if (!response.ok) {
@@ -173,10 +177,17 @@ export function initSearchDropdown() {
                     return response.json();
                 })
                 .then(suggestions => {
+                    if (isDestroyed) return;
+                    const normalizedCurrentValue = (riotIdInput.value ?? '').trim().toLowerCase();
+                    if (normalizedCurrentValue !== normalizedRequestedQuery) {
+                        return;
+                    }
                     // Guard against null/undefined response
                     if (!suggestions || !Array.isArray(suggestions) || suggestions.length === 0) {
                         return;
                     }
+                    
+                    suggestionsContainer.querySelectorAll('.suggestion-empty').forEach(el => el.remove());
                     
                     let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
                     const hdr = document.createElement('div');
@@ -240,12 +251,18 @@ export function initSearchDropdown() {
                     });
                     suggestionsContainer.style.display = 'block';
                     riotIdInput.setAttribute('aria-expanded', 'true');
+                    positionDropdown(true);
                 })
                 .catch(error => {
                     // Ignore AbortError (user is typing quickly)
                     if (error.name === 'AbortError') return;
                     console.error('Error fetching suggestions:', error);
                     // Silently fail - local history is still shown
+                })
+                .finally(() => {
+                    if (currentAbortController === thisAbortController) {
+                        currentAbortController = null;
+                    }
                 });
         }, 300);
     }

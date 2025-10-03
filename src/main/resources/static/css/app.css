@@ -20,14 +20,23 @@
 .history-controls .form-control {
   min-width: 0;
   width: 240px;
-  flex: 0 0 auto;
+  max-width: 100%;
+  flex: 1 1 240px;
 }
 .history-controls .dropdown-toggle { white-space: nowrap; }
 .history-controls .dropdown-menu { margin-top: .25rem; z-index: 1060; }
 .history-controls .nav-pills .nav-link { cursor: pointer; }
 .history-controls + .history-summary { margin-top: .25rem; }
-.history-summary { margin-top: .25rem; position: relative; z-index: 1; }
-.history-summary { pointer-events: none; }
+.history-summary {
+  margin-top: .25rem;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+  pointer-events: auto;
+}
 
 /* Make sure the collapsible header never overlays the controls */
 .section-header { position: relative; z-index: 0; }
@@ -105,6 +114,7 @@ html, body {
 }
 
 .gradient-orb {
+  position: absolute;
   width: 480px; 
   height: 480px; 
   border-radius: 50%;
@@ -138,6 +148,10 @@ html, body {
   background: #1a1f2e;
   isolation: isolate;
   background-clip: padding-box;
+}
+.suggestions-dropdown.show,
+.suggestions-dropdown.is-visible {
+  display: block;
 }
 /* Hard underlay to block any bleed-through from glass backgrounds */
 .suggestions-dropdown::before {
@@ -241,7 +255,11 @@ img, svg { max-width: 100%; height: auto; }
 .lp-badge.loss { background: rgba(255,77,77,.15); color: #ff9a9a; }
 
 @media (max-width: 768px) {
-  .match-row { grid-template-columns: 1fr; margin: .5rem 0; }
+  .match-row {
+    flex-direction: column;
+    align-items: stretch;
+    margin: .5rem 0;
+  }
 }
 
 /* Footer blend */
@@ -278,7 +296,7 @@ img, svg { max-width: 100%; height: auto; }
 .match-search-group {
   width: 320px;
   max-width: 100%;
-  flex: 0 0 320px;
+  flex: 1 1 320px;
 }
 
 .match-search-group .form-control {
@@ -293,12 +311,15 @@ img, svg { max-width: 100%; height: auto; }
 }
 
 .history-controls .ms-auto {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
 }
 
 .history-controls .ms-auto .match-search-group {
-  flex: 0 0 320px;
+  flex: 1 1 320px;
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
@@ -342,10 +363,6 @@ img, svg { max-width: 100%; height: auto; }
 
 /* History controls */
 .history-controls .nav-pills .nav-link { padding: .35rem .75rem; }
-.history-controls .form-control { min-width: 240px; }
-.history-summary { 
-  white-space: nowrap;
-}
 
 @media (max-width: 576px) {
   .history-summary {
