@@ -268,7 +268,9 @@ img, svg { max-width: 100%; height: auto; }
 .section-header.compact { padding: .5rem .75rem; font-size: .95rem; }
 .section-header a { color: inherit; }
 .section-header a .chev { transition: transform .2s ease; }
-.section-header a:not(.collapsed) .chev { transform: rotate(180deg); }
+/* Bootstrap adds .collapsed to the toggle element, we rotate when NOT collapsed */
+.section-header a[aria-expanded="true"] .chev,
+.section-header button[aria-expanded="true"] .chev { transform: rotate(180deg); }
 
 /* History controls */
 .history-controls .nav-pills .nav-link { padding: .35rem .75rem; }

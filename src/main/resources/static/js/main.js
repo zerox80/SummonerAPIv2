@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Global image error fallbacks to avoid broken icons when local assets are missing
-(function setupImageFallbacks(){
+function setupImageFallbacks(){
     if (document.body.hasAttribute('data-img-fallback-installed')) return;
     document.body.setAttribute('data-img-fallback-installed', 'true');
     
@@ -56,12 +56,15 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (e) {
         // no-op; never break UI
     }
-})();
+}
+
+// Run immediately
+setupImageFallbacks();
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
         // Re-run for any images added after initial load
-        if (typeof setupImageFallbacks === 'function') setupImageFallbacks();
+        setupImageFallbacks();
     });
 }
 

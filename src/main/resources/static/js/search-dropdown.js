@@ -9,6 +9,7 @@ export function initSearchDropdown() {
     const heroSection = riotIdInput?.closest('.hero');
     const searchGroup = riotIdInput.closest('.search-group');
     let isDestroyed = false;
+    let currentAbortController = null; // For canceling in-flight requests
     
     // Cleanup function to prevent memory leaks
     const cleanup = () => {
@@ -57,7 +58,10 @@ export function initSearchDropdown() {
     
     function saveLocalHistory(riotId){
         const v = (riotId || '').trim();
+        // Validate format: must contain exactly one '#' and have non-empty parts
         if (!v || !v.includes('#')) return;
+        const parts = v.split('#');
+        if (parts.length !== 2 || !parts[0].trim() || !parts[1].trim()) return;
         const maxSize = 10;
         const list = loadLocalHistory().filter(x=>x.toLowerCase() !== v.toLowerCase());
         list.unshift(v);
@@ -133,14 +137,19 @@ export function initSearchDropdown() {
 
         debounceTimer = setTimeout(() => {
             if (isDestroyed) return;
-            fetch(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`)
+            
+            // Cancel previous request if still in flight
+            if (currentAbortController) {
+                currentAbortController.abort();
+            }
+            currentAbortController = new AbortController();
+            
+            fetch(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`, {
+                signal: currentAbortController.signal
+            })
                 .then(response => {
                     if (!response.ok) {
-                        // For client/server errors, reject the promise
-                        if (response.status >= 400) {
-                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                        }
-                        return null;
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
                     return response.json();
                 })
@@ -205,6 +214,8 @@ export function initSearchDropdown() {
                     riotIdInput.setAttribute('aria-expanded', 'true');
                 })
                 .catch(error => {
+                    // Ignore AbortError (user is typing quickly)
+                    if (error.name === 'AbortError') return;
                     console.error('Error fetching suggestions:', error);
                     // Silently fail - local history is still shown
                 });

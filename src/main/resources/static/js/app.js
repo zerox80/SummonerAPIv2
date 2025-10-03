@@ -32,13 +32,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const champLabels = window.champLabelsData || [];
     const champValues = window.champValuesData || [];
 
-    // Initialize charts and get update callback
-    const updateCharts = initCharts(leagueEntries, matches, champLabels, champValues);
+    // Initialize charts and get update callback with error boundary
+    let updateCharts;
+    try {
+        updateCharts = initCharts(leagueEntries, matches, champLabels, champValues);
+    } catch (error) {
+        console.error('Chart initialization failed:', error);
+        updateCharts = undefined;
+    }
 
     // Initialize theme toggle with chart update callback (may be undefined if no charts)
     // Provide a no-op function if updateCharts is undefined
     const chartCallback = (typeof updateCharts === 'function') ? updateCharts : () => {};
-    initThemeToggle(chartCallback);
+    try {
+        initThemeToggle(chartCallback);
+    } catch (error) {
+        console.error('Theme toggle initialization failed:', error);
+    }
 
     // Initialize load more functionality
     const matchesPageSize = window.matchesPageSizeData || 10;

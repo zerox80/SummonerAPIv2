@@ -32,7 +32,8 @@ export function initLoadMore(matchesPageSize = 10) {
         if (!p || !p.championName) return '';
         if (!champSquareBase) {
             console.warn('champSquareBase is not defined');
-            return '';
+            // Fallback to Community Dragon CDN
+            return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${p.championId || -1}.png`;
         }
         return champSquareBase + p.championName + '.png';
     }
@@ -187,7 +188,7 @@ export function initLoadMore(matchesPageSize = 10) {
             blueThead.appendChild(blueHeaderRow);
             blueTable.appendChild(blueThead);
             const blueTbody = document.createElement('tbody'); 
-            parts.filter(p=>p.teamId===100).forEach(p=>blueTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
+            parts.filter(p=>p && (p.teamId === 100 || String(p.teamId) === '100')).forEach(p=>blueTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
             blueTable.appendChild(blueTbody);
             blueDiv.appendChild(blueTable);
             details.appendChild(blueDiv);
@@ -207,7 +208,7 @@ export function initLoadMore(matchesPageSize = 10) {
             redThead.appendChild(redHeaderRow);
             redTable.appendChild(redThead);
             const redTbody = document.createElement('tbody'); 
-            parts.filter(p=>p.teamId===200).forEach(p=>redTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
+            parts.filter(p=>p && (p.teamId === 200 || String(p.teamId) === '200')).forEach(p=>redTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
             redTable.appendChild(redTbody);
             redDiv.appendChild(redTable);
             details.appendChild(redDiv);
@@ -217,8 +218,7 @@ export function initLoadMore(matchesPageSize = 10) {
         return row;
     }
 
-    let recentUpdateCache = null;
-    let recentUpdateTime = 0;
+    let recentUpdateCache = { isValid: false, timestamp: 0 };
     const CACHE_DURATION = 5000; // 5 seconds
     
     function updateRecentFromDom(){
@@ -229,11 +229,12 @@ export function initLoadMore(matchesPageSize = 10) {
             
             // Use cache if recent enough
             const now = Date.now();
-            if (recentUpdateCache && (now - recentUpdateTime) < CACHE_DURATION) {
+            if (recentUpdateCache.isValid && (now - recentUpdateCache.timestamp) < CACHE_DURATION) {
                 return;
             }
             
-            const rows = Array.from(document.querySelectorAll('#matchList .match-row'));
+            // Use cached reference to avoid re-querying DOM
+            const rows = Array.from(matchList?.querySelectorAll('.match-row') || []);
             const counts = new Map();
             rows.forEach(r => {
                 const nameEl = r.querySelector('.search-index span');
@@ -263,8 +264,7 @@ export function initLoadMore(matchesPageSize = 10) {
             countEl.textContent = String(rows.length);
             
             // Update cache
-            recentUpdateTime = now;
-            recentUpdateCache = true;
+            recentUpdateCache = { isValid: true, timestamp: now };
         } catch(_) {}
     }
 

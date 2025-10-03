@@ -72,17 +72,13 @@ export function initMatchFilters() {
 
     function matchesFilter(row){
         const qAttr = row.getAttribute('data-q');
-        if (!qAttr || qAttr === 'null' || qAttr === 'undefined') {
-            const queueId = 0;
-            if (selectedQueue === RANKED_SENTINEL) return isRankedQ(queueId);
-            if (selectedQueue !== null && typeof selectedQueue === 'number') return queueId === selectedQueue;
-            const f = currentFilter();
-            if (f === 'all') return true;
-            if (f === 'ranked') return isRankedQ(queueId);
-            return true;
+        // Normalize queue ID: handle null, undefined, empty strings, and invalid values
+        let queueId = 0;
+        if (qAttr && qAttr !== 'null' && qAttr !== 'undefined' && qAttr.trim() !== '') {
+            const parsed = Number(qAttr);
+            queueId = Number.isNaN(parsed) ? 0 : parsed;
         }
-        const q = Number(qAttr);
-        const queueId = Number.isNaN(q) ? 0 : q;
+        
         if (selectedQueue === RANKED_SENTINEL) return isRankedQ(queueId);
         if (selectedQueue !== null && typeof selectedQueue === 'number') return queueId === selectedQueue;
         const f = currentFilter();
@@ -170,17 +166,25 @@ export function initMatchFilters() {
         apply();
     });
 
-    let searchTimer; 
+    let searchTimer = null; 
     const handleSearchInput = () => { 
-        clearTimeout(searchTimer); 
+        if (searchTimer) clearTimeout(searchTimer); 
         searchTimer = setTimeout(apply, 200); 
     };
+    
+    // Cleanup on page unload
+    const cleanup = () => {
+        if (searchTimer) {
+            clearTimeout(searchTimer);
+            searchTimer = null;
+        }
+        searchInput?.removeEventListener('input', handleSearchInput);
+    };
+    
     searchInput?.addEventListener('input', handleSearchInput);
+    window.addEventListener('beforeunload', cleanup);
     apply();
     
     // Return cleanup function
-    return () => {
-        if (searchTimer) clearTimeout(searchTimer);
-        searchInput?.removeEventListener('input', handleSearchInput);
-    };
+    return cleanup;
 }
