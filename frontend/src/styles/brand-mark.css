@@ -1,0 +1,41 @@
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transform: translateZ(0);
+  transition: transform var(--duration-fast) ease;
+}
+
+.brand-mark:hover {
+  transform: translateY(-1px);
+}
+
+.brand-mark__glyph {
+  font-size: 1.55rem;
+  background: var(--accent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 8px 18px rgba(99, 102, 241, 0.35));
+}
+
+.brand-mark__text {
+  display: grid;
+  line-height: 1.1;
+}
+
+.brand-mark__title {
+  font-size: 1.05rem;
+}
+
+.brand-mark__subtitle {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}

@@ -1,0 +1,43 @@
+.load-state {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: var(--border-glass);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.load-state__spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 5px solid rgba(99, 102, 241, 0.15);
+  border-top-color: var(--accent-solid);
+  animation: spin 1s linear infinite;
+}
+
+.load-state--error {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+}
+
+.load-state--empty {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.25);
+  color: #0ea5e9;
+}
+
+.load-state__icon {
+  font-size: 2.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,36 +1,39 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
+import react from '@vitejs/plugin-react'
+
+const isProduction = process.env.NODE_ENV === 'production'
 
 export default defineConfig({
-  root: '.',
+  root: 'frontend',
+  plugins: [react()],
+  envDir: '../',
   build: {
-    outDir: 'dist',
+    outDir: '../src/main/resources/static',
     emptyOutDir: true,
+    sourcemap: !isProduction,
+    minify: isProduction ? 'terser' : false,
     rollupOptions: {
       input: {
-        'js/app': resolve(__dirname, 'src/main/resources/static/js/app.js'),
-        'js/main': resolve(__dirname, 'src/main/resources/static/js/main.js'),
-        'js/champions': resolve(__dirname, 'src/main/resources/static/js/champions.js')
+        main: resolve(__dirname, 'frontend/index.html')
       },
       output: {
-        entryFileNames: 'js/[name].js',
-        chunkFileNames: 'js/[name]-[hash].js',
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name?.endsWith('.css')) {
-            return 'css/[name][extname]';
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: ({ name }) => {
+          if (name && name.endsWith('.css')) {
+            return 'assets/[name]-[hash][extname]'
           }
-          return 'assets/[name]-[hash][extname]';
+          return 'assets/[name]-[hash][extname]'
         }
       }
     },
-    minify: process.env.NODE_ENV === 'production' ? 'terser' : false,
     terserOptions: {
       compress: {
-        drop_console: process.env.NODE_ENV === 'production',
-        drop_debugger: process.env.NODE_ENV === 'production'
+        drop_console: isProduction,
+        drop_debugger: isProduction
       }
-    },
-    sourcemap: process.env.NODE_ENV !== 'production'
+    }
   },
   server: {
     port: 3000,
@@ -43,7 +46,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src/main/resources/static/js')
+      '@': resolve(__dirname, 'frontend/src')
     }
   }
 })

@@ -1,0 +1,74 @@
+.metric-tile {
+  position: relative;
+  padding: 1.4rem 1.6rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-card-strong);
+  border: var(--border-glass);
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  gap: 0.55rem;
+  min-height: 140px;
+  overflow: hidden;
+  transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease;
+}
+
+.metric-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 120% -20%, rgba(99, 102, 241, 0.18), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--duration-base) ease;
+  pointer-events: none;
+}
+
+.metric-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.metric-tile:hover::after {
+  opacity: 1;
+}
+
+.metric-tile__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.metric-tile__label {
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.metric-tile__icon {
+  font-size: 1.4rem;
+}
+
+.metric-tile__value {
+  font-size: clamp(1.9rem, 2.5vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.metric-tile__secondary {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.metric-tile__trend {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-solid);
+}
+
+.metric-tile--emphasize {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.22), rgba(236, 72, 153, 0.18));
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}

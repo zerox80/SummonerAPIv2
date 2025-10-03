@@ -1,0 +1,43 @@
+.segmented-control {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  backdrop-filter: blur(14px) saturate(160%);
+}
+
+.segmented-control__option {
+  position: relative;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: rgba(226, 232, 255, 0.76);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+
+.segmented-control__option:hover {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.segmented-control__option.is-active {
+  background: rgba(99, 102, 241, 0.28);
+  color: white;
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.45);
+  transform: translateY(-1px);
+}
+
+.segmented-control--sm .segmented-control__option {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+}
+
+.segmented-control--lg .segmented-control__option {
+  padding: 0.55rem 1.15rem;
+  font-size: 0.95rem;
+}

@@ -1,0 +1,16 @@
+.summoner-page {
+  display: grid;
+  gap: 2.6rem;
+  padding-bottom: 5rem;
+}
+
+.summoner-page__grid {
+  display: grid;
+  gap: 2.4rem;
+}
+
+@media (min-width: 1200px) {
+  .summoner-page__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -4,12 +4,26 @@
     "es2021": true
   },
   "extends": [
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "plugins": [
+    "react",
+    "react-hooks"
+  ],
   "rules": {
     "indent": ["error", 4],
     "linebreak-style": ["error", "unix"],
@@ -23,9 +37,25 @@
   "globals": {
     "Chart": "readonly"
   },
+  "overrides": [
+    {
+      "files": ["frontend/src/**/*.jsx"],
+      "rules": {
+        "indent": ["error", 2],
+        "react/prop-types": "off"
+      }
+    },
+    {
+      "files": ["frontend/src/**/*.js"],
+      "rules": {
+        "indent": ["error", 2]
+      }
+    }
+  ],
   "ignorePatterns": [
     "target/",
     "node_modules/",
-    "dist/"
+    "dist/",
+    "frontend/node_modules/"
   ]
 }

@@ -1,0 +1,105 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.app-shell__top {
+  position: sticky;
+  top: 1.5rem;
+  z-index: 10;
+  padding-top: 1.5rem;
+}
+
+.app-shell__toolbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0.85rem 1.4rem;
+  gap: 1.5rem;
+}
+
+.app-shell__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.35rem;
+  border-radius: 999px;
+  background: var(--transparent-wash);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+
+.app-shell__nav-link {
+  padding: 0.5rem 1.05rem;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+
+.app-shell__nav-link:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.app-shell__nav-link--active {
+  background: rgba(99, 102, 241, 0.18);
+  color: var(--accent-solid);
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.25);
+  transform: translateY(-1px);
+}
+
+.app-shell__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.app-shell__context {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  font-weight: 600;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  letter-spacing: 0.02em;
+}
+
+.app-shell__main {
+  flex: 1 1 auto;
+  padding-bottom: 4rem;
+}
+
+.app-shell__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+.app-shell__footer {
+  margin-top: auto;
+  padding: 2rem 0 3rem;
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 960px) {
+  .app-shell__toolbar {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .app-shell__nav {
+    justify-content: center;
+  }
+
+  .app-shell__actions {
+    justify-content: center;
+  }
+}
