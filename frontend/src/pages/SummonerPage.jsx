@@ -89,7 +89,7 @@ export default function SummonerPage() {
       if (participant.totalDamageDealtToChampions) {
         damage += participant.totalDamageDealtToChampions;
       }
-      if (participant.visionScore) {
+      if (typeof participant.visionScore === 'number') {
         vision += participant.visionScore;
       }
       if (participant.teamId != null) {

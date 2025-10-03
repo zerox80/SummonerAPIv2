@@ -12,7 +12,9 @@ const QUEUE_MAP = {
   NORMAL: 'Normal',
   ARAM: 'ARAM',
   CLASH: 'Clash',
-  BOT: 'Co-op vs AI'
+  BOT: 'Co-op vs AI',
+  ARENA: 'Arena',
+  URF: 'URF'
 };
 
 const QUEUE_ID_MAP = {
@@ -24,7 +26,10 @@ const QUEUE_ID_MAP = {
   700: 'CLASH',
   830: 'BOT',
   840: 'BOT',
-  850: 'BOT'
+  850: 'BOT',
+  490: 'NORMAL',
+  1700: 'ARENA',
+  1900: 'URF'
 };
 
 const ROLE_LABELS = {

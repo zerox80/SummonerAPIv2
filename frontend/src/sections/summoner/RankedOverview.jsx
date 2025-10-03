@@ -42,7 +42,8 @@ export default function RankedOverview({ entries, bases }) {
       <div className="ranked-overview__grid">
         {entries.map((entry) => {
           const crest = crestForTier(entry.tier);
-          const icon = `${bases?.rankedMiniCrest || ''}${crest}.png`;
+          const extension = crest === 'emerald' ? 'svg' : 'png';
+          const icon = `${bases?.rankedMiniCrest || ''}${crest}.${extension}`;
           return (
             <article key={`${entry.queueType}-${entry.tier}-${entry.rank}`} className="ranked-card">
               <div className="ranked-card__crest">
