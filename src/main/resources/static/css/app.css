@@ -17,7 +17,11 @@
 }
 .history-controls, .history-controls * { pointer-events: auto; }
 .history-controls .input-group { max-width: 100%; }
-.history-controls .form-control { min-width: 0; width: 240px; }
+.history-controls .form-control {
+  min-width: 0;
+  width: 240px;
+  flex: 0 0 auto;
+}
 .history-controls .dropdown-toggle { white-space: nowrap; }
 .history-controls .dropdown-menu { margin-top: .25rem; z-index: 1060; }
 .history-controls .nav-pills .nav-link { cursor: pointer; }
@@ -28,7 +32,10 @@
 /* Make sure the collapsible header never overlays the controls */
 .section-header { position: relative; z-index: 0; }
 @media (max-width: 576px) {
-  .history-controls .form-control { width: 100%; }
+  .history-controls .form-control {
+    width: 100%;
+    flex: 1 1 auto;
+  }
 }
 
 .match-row { flex-wrap: wrap; }
@@ -254,7 +261,19 @@ img, svg { max-width: 100%; height: auto; }
 .recent-champ-icon { width: 28px; height: 28px; object-fit: cover; }
 
 /* Match search input max width (replaces inline style) */
-.match-search-group { max-width: 320px; }
+.match-search-group {
+  max-width: 320px;
+  flex: 0 0 auto;
+}
+
+.match-search-group .form-control {
+  width: 100%;
+  transition: none;
+}
+
+.match-search-group .form-control:focus {
+  width: 100%;
+}
 
 /* Default hidden; JS toggles to block/none */
 #noMatchesMsg { display: none; }
