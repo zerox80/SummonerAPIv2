@@ -4,10 +4,18 @@ export function initSearchDropdown() {
     const suggestionsContainer = document.getElementById('suggestions-container');
     if (!riotIdInput || !suggestionsContainer) return;
 
-    let debounceTimer;
+    let debounceTimer = null;
     let activeIndex = -1; // Declare at top to avoid hoisting issues
     const heroSection = riotIdInput?.closest('.hero');
     const searchGroup = riotIdInput.closest('.search-group');
+    
+    // Cleanup function to prevent memory leaks
+    const cleanup = () => {
+        if (debounceTimer) {
+            clearTimeout(debounceTimer);
+            debounceTimer = null;
+        }
+    };
 
     function positionDropdown(force = false){
         if (!suggestionsContainer || !searchGroup) return;
@@ -113,69 +121,86 @@ export function initSearchDropdown() {
     }
 
     function fetchAndDisplaySuggestions(query) {
-        clearTimeout(debounceTimer);
+        if (debounceTimer) {
+            clearTimeout(debounceTimer);
+            debounceTimer = null;
+        }
         activeIndex = -1;
         renderLocalHistory(query);
 
         debounceTimer = setTimeout(() => {
             fetch(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`)
                 .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) {
+                        // For client/server errors, reject the promise
+                        if (response.status >= 400) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        return null;
+                    }
                     return response.json();
                 })
                 .then(suggestions => {
-                    if (Array.isArray(suggestions) && suggestions.length > 0) {
-                        let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
-                        const hdr = document.createElement('div');
-                        hdr.className = 'suggestion-section';
-                        hdr.textContent = 'Vorschläge';
-                        suggestionsContainer.appendChild(hdr);
-                        suggestions.forEach(suggestion => {
-                            const item = document.createElement('a');
-                            item.href = '#';
-                            item.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center');
-                            item.setAttribute('role','option');
-                            const optId = `suggestion-opt-${idx++}`;
-                            item.id = optId;
-                            item.setAttribute('aria-selected','false');
-
-                            const img = document.createElement('img');
-                            img.src = suggestion.profileIconUrl || (`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg`);
-                            img.alt = 'Icon';
-                            img.classList.add('suggestion-avatar','me-2');
-                            img.onerror = function() { this.style.display = 'none'; };
-                            item.appendChild(img);
-
-                            const textContainer = document.createElement('div');
-                            textContainer.className = 'suggestion-text';
-                            const riotIdSpan = document.createElement('span');
-                            riotIdSpan.textContent = suggestion.riotId;
-                            textContainer.appendChild(riotIdSpan);
-
-                            if (suggestion.summonerLevel) {
-                                const levelSpan = document.createElement('span');
-                                levelSpan.textContent = `(Lvl: ${suggestion.summonerLevel})`;
-                                levelSpan.classList.add('level','text-muted','small');
-                                textContainer.appendChild(levelSpan);
-                            }
-                            item.appendChild(textContainer);
-
-                            item.addEventListener('click', function (e) {
-                                e.preventDefault();
-                                riotIdInput.value = suggestion.riotId;
-                                suggestionsContainer.innerHTML = '';
-                                suggestionsContainer.style.display = 'none';
-                                riotIdInput.setAttribute('aria-expanded', 'false');
-                                riotIdInput.removeAttribute('aria-activedescendant');
-                            });
-
-                            suggestionsContainer.appendChild(item);
-                        });
-                        suggestionsContainer.style.display = 'block';
-                        riotIdInput.setAttribute('aria-expanded', 'true');
+                    // Guard against null/undefined response
+                    if (!suggestions || !Array.isArray(suggestions) || suggestions.length === 0) {
+                        return;
                     }
+                    
+                    let idx = suggestionsContainer.querySelectorAll('[role="option"]').length;
+                    const hdr = document.createElement('div');
+                    hdr.className = 'suggestion-section';
+                    hdr.textContent = 'Vorschläge';
+                    suggestionsContainer.appendChild(hdr);
+                    suggestions.forEach(suggestion => {
+                        if (!suggestion || !suggestion.riotId) return; // Skip invalid suggestions
+                        
+                        const item = document.createElement('a');
+                        item.href = '#';
+                        item.classList.add('list-group-item', 'list-group-item-action', 'd-flex', 'align-items-center');
+                        item.setAttribute('role','option');
+                        const optId = `suggestion-opt-${idx++}`;
+                        item.id = optId;
+                        item.setAttribute('aria-selected','false');
+
+                        const img = document.createElement('img');
+                        img.src = suggestion.profileIconUrl || (`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/${suggestion.profileIconId}.jpg`);
+                        img.alt = 'Icon';
+                        img.classList.add('suggestion-avatar','me-2');
+                        img.onerror = function() { this.style.display = 'none'; };
+                        item.appendChild(img);
+
+                        const textContainer = document.createElement('div');
+                        textContainer.className = 'suggestion-text';
+                        const riotIdSpan = document.createElement('span');
+                        riotIdSpan.textContent = suggestion.riotId;
+                        textContainer.appendChild(riotIdSpan);
+
+                        if (suggestion.summonerLevel) {
+                            const levelSpan = document.createElement('span');
+                            levelSpan.textContent = `(Lvl: ${suggestion.summonerLevel})`;
+                            levelSpan.classList.add('level','text-muted','small');
+                            textContainer.appendChild(levelSpan);
+                        }
+                        item.appendChild(textContainer);
+
+                        item.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            riotIdInput.value = suggestion.riotId;
+                            suggestionsContainer.innerHTML = '';
+                            suggestionsContainer.style.display = 'none';
+                            riotIdInput.setAttribute('aria-expanded', 'false');
+                            riotIdInput.removeAttribute('aria-activedescendant');
+                        });
+
+                        suggestionsContainer.appendChild(item);
+                    });
+                    suggestionsContainer.style.display = 'block';
+                    riotIdInput.setAttribute('aria-expanded', 'true');
                 })
-                .catch(error => console.error('Error fetching suggestions:', error));
+                .catch(error => {
+                    console.error('Error fetching suggestions:', error);
+                    // Silently fail - local history is still shown
+                });
         }, 300);
     }
 
@@ -228,7 +253,7 @@ export function initSearchDropdown() {
         }
     });
 
-    document.addEventListener('click', function (event) {
+    const handleClickOutside = function (event) {
         // Improved click-outside handler: check for modals and other overlays
         const target = event.target;
         const isInsideInput = riotIdInput.contains(target);
@@ -243,5 +268,13 @@ export function initSearchDropdown() {
             activeIndex = -1;
             resetDropdownPlacement();
         }
-    });
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    
+    // Return cleanup function to allow proper teardown
+    return () => {
+        cleanup();
+        document.removeEventListener('click', handleClickOutside);
+    };
 }

@@ -103,6 +103,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script th:src="@{/js/main.js}"></script>
+<script type="module">
+    // Initialize theme toggle for champions page
+    import { initThemeToggle } from './js/theme-toggle.js';
+    // No charts on this page, so pass no-op callback
+    initThemeToggle(() => {});
+</script>
 <script th:src="@{/js/champions.js}"></script>
 </body>
 </html>

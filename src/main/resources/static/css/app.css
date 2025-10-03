@@ -92,7 +92,7 @@ html, body {
 }
 
 /* Hero */
-.hero { position: relative; z-index: 20; }.gradient-orb {
+.hero { position: relative; z-index: 5; }.gradient-orb {
   width: 480px; height: 480px; border-radius: 50%;
   filter: blur(40px); opacity: .35; pointer-events: none;
 }
@@ -111,7 +111,7 @@ html, body {
   top: 100%; /* Position below the input group */
   left: 0;
   right: 0;
-  z-index: 1050 !important; /* High z-index, but not fixed-level */
+  z-index: 1060 !important; /* Higher than Bootstrap modals (1055) to prevent overlap */
   margin-top: 0.5rem; /* Add a small gap below the search input */
   max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
   border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);

@@ -34,7 +34,10 @@ export function initMatchFilters() {
     // Populate dropdown with present queues
     (function buildQueueMenu(){
         if (!queueDropdown) return;
-        const present = Array.from(new Set(rows.map(r => Number(r.getAttribute('data-q'))).filter(q => !Number.isNaN(q))));
+        const present = Array.from(new Set(rows.map(r => {
+            const q = Number(r.getAttribute('data-q'));
+            return (Number.isNaN(q) || q === null) ? 0 : q;
+        })));
         const items = present.length ? present : Object.keys(QUEUE_NAMES).map(Number);
         const uniqueSorted = Array.from(new Set(items)).sort((a,b)=>a-b);
         queueDropdown.innerHTML = '';
@@ -66,12 +69,14 @@ export function initMatchFilters() {
     function currentFilter(){ return forcedFilter; }
 
     function matchesFilter(row){
-        const q = Number(row.getAttribute('data-q')) || 0;
-        if (selectedQueue === RANKED_SENTINEL) return isRankedQ(q);
-        if (selectedQueue !== null && typeof selectedQueue === 'number') return q === selectedQueue;
+        const qAttr = row.getAttribute('data-q');
+        const q = Number(qAttr);
+        const queueId = (Number.isNaN(q) || q === null) ? 0 : q;
+        if (selectedQueue === RANKED_SENTINEL) return isRankedQ(queueId);
+        if (selectedQueue !== null && typeof selectedQueue === 'number') return queueId === selectedQueue;
         const f = currentFilter();
         if (f === 'all') return true;
-        if (f === 'ranked') return isRankedQ(q);
+        if (f === 'ranked') return isRankedQ(queueId);
         return true;
     }
 
@@ -103,7 +108,13 @@ export function initMatchFilters() {
         });
         const games = vis.length;
         const wr = games ? Math.round((wins/games)*100) : 0;
-        const kda = (d>0) ? (((k+a)/d).toFixed(2)) : (k+a).toFixed(2);
+        // Improved KDA calculation: show "Perfect" for 0 deaths with kills/assists
+        let kda;
+        if (d === 0) {
+            kda = (k + a > 0) ? 'Perfect' : '0.00';
+        } else {
+            kda = ((k + a) / d).toFixed(2);
+        }
         if (elWR) elWR.textContent = 'WR: ' + (games ? (wr + '%') : '-');
         if (elKDA) elKDA.textContent = 'KDA: ' + (games ? kda : '-');
         if (elCount) elCount.textContent = `Last ${games} game${games===1?'':'s'}`;

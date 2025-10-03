@@ -44,12 +44,21 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
+  // Use a more robust initialization pattern that handles both scenarios
+  function initChampionsPage() {
     const input = document.getElementById('champSearch');
     if (input) {
       input.addEventListener('input', applyFilters);
     }
     initRoleButtons();
     applyFilters();
-  });
+  }
+  
+  // Check if DOM is already loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChampionsPage);
+  } else {
+    // DOM is already ready, execute immediately
+    initChampionsPage();
+  }
 })();

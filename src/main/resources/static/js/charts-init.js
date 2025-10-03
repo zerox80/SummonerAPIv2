@@ -101,40 +101,53 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
     try {
         document.querySelectorAll('.collapse').forEach(el => {
             el.addEventListener('shown.bs.collapse', () => {
-                setTimeout(() => charts.forEach(ch => {
-                    if (ch && typeof ch.resize === 'function') {
-                        try {
-                            ch.resize();
-                        } catch (e) {
-                            console.debug('Chart resize failed:', e);
-                        }
-                    }
-                }), 60);
+                // Use requestAnimationFrame for better timing with CSS transitions
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        charts.forEach(ch => {
+                            if (ch && typeof ch.resize === 'function') {
+                                try {
+                                    ch.resize();
+                                } catch (e) {
+                                    console.debug('Chart resize failed:', e);
+                                }
+                            }
+                        });
+                    });
+                });
             });
         });
-    } catch (_) {}
+    } catch (e) {
+        console.debug('Failed to attach collapse listeners:', e);
+    }
 
     // Return update function for theme changes
     return function updateChartsTheme() {
+        if (!charts || charts.length === 0) return;
+        
         const colors = chartColors();
         charts.forEach(ch => {
             if (!ch) return;
             try {
+                // Safely update chart options
                 if (ch.options?.scales?.x?.ticks) ch.options.scales.x.ticks.color = colors.text;
                 if (ch.options?.scales?.x?.grid) ch.options.scales.x.grid.color = colors.grid;
                 if (ch.options?.scales?.y?.ticks) ch.options.scales.y.ticks.color = colors.text;
                 if (ch.options?.scales?.y?.grid) ch.options.scales.y.grid.color = colors.grid;
                 if (ch.options?.plugins?.legend?.labels) ch.options.plugins.legend.labels.color = colors.text;
+                
+                // Use update with 'none' mode for immediate effect without animation
                 if (typeof ch.update === 'function') {
-                    ch.update();
+                    ch.update('none');
                 }
             } catch (e) {
+                console.warn('Chart theme update failed:', e);
                 // If update fails, try resize as fallback
                 if (typeof ch.resize === 'function') {
                     try {
                         ch.resize();
                     } catch (resizeError) {
-                        console.debug('Chart update/resize failed:', resizeError);
+                        console.debug('Chart resize fallback also failed:', resizeError);
                     }
                 }
             }

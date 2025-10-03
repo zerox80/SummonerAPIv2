@@ -34,10 +34,10 @@
         <div class="collapse navbar-collapse" id="navbarDefault">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link" th:classappend="${activePage == null || activePage == 'home'} ? 'active' : ''" th:attr="aria-current=${activePage == null || activePage == 'home'} ? 'page' : null" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/champions">Champions</a>
+                    <a class="nav-link" th:classappend="${activePage == 'champions'} ? 'active' : ''" th:attr="aria-current=${activePage == 'champions'} ? 'page' : null" href="/champions">Champions</a>
                 </li>
             </ul>
             <span class="navbar-text me-3">

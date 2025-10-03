@@ -35,8 +35,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize charts and get update callback
     const updateCharts = initCharts(leagueEntries, matches, champLabels, champValues);
 
-    // Initialize theme toggle with chart update callback
-    initThemeToggle(updateCharts);
+    // Initialize theme toggle with chart update callback (may be undefined if no charts)
+    // Provide a no-op function if updateCharts is undefined
+    const chartCallback = (typeof updateCharts === 'function') ? updateCharts : () => {};
+    initThemeToggle(chartCallback);
 
     // Initialize load more functionality
     const matchesPageSize = window.matchesPageSizeData || 10;

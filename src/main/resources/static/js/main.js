@@ -107,7 +107,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const games = vis.length;
             const wr = games ? Math.round((wins/games)*100) : 0;
-            const kda = (d>0) ? (((k+a)/d).toFixed(2)) : (k+a).toFixed(2);
+            // Improved KDA calculation: show "Perfect" for 0 deaths with kills/assists
+            let kda;
+            if (d === 0) {
+                kda = (k + a > 0) ? 'Perfect' : '0.00';
+            } else {
+                kda = ((k + a) / d).toFixed(2);
+            }
             if (elWR) elWR.textContent = 'WR: ' + (games ? (wr + '%') : '-');
             if (elKDA) elKDA.textContent = 'KDA: ' + (games ? kda : '-');
             if (elCount) elCount.textContent = `Last ${games} game${games===1?'':'s'}`;

@@ -29,18 +29,34 @@ export function initLoadMore(matchesPageSize = 10) {
     function fmtDur(sec){ const m=Math.floor((sec||0)/60), s=(sec||0)%60; return `${m}m ${s}s`; }
 
     function champIcon(p){
-        const name = (p && p.championName) ? p.championName : 'Unknown';
-        return champSquareBase + name + '.png';
+        if (!p || !p.championName) return '';
+        if (!champSquareBase) {
+            console.warn('champSquareBase is not defined');
+            return '';
+        }
+        return champSquareBase + p.championName + '.png';
     }
 
     function buildParticipantRow(p, searched){
+        if (!p) {
+            console.warn('Invalid participant data');
+            return document.createElement('tr');
+        }
+        
         const tr = document.createElement('tr');
         if (p.puuid === searched) tr.classList.add('table-info','self-row');
         const td1 = document.createElement('td');
         const img = document.createElement('img');
-        img.src = champIcon(p); img.alt = p.championName || 'Champion'; img.width=24; img.height=24; img.className='me-1 align-middle rounded';
-        img.addEventListener('error', ()=>{ img.style.display='none'; });
-        td1.appendChild(img);
+        const iconSrc = champIcon(p);
+        if (iconSrc) {
+            img.src = iconSrc;
+            img.alt = p.championName || 'Champion';
+            img.width=24;
+            img.height=24;
+            img.className='me-1 align-middle rounded';
+            img.addEventListener('error', ()=>{ img.style.display='none'; });
+            td1.appendChild(img);
+        }
         const spanName = document.createElement('span'); spanName.textContent = p.championName || 'Champion'; td1.appendChild(spanName);
         const td2 = document.createElement('td');
         if (p.riotIdGameName && p.riotIdTagline && !(p.riotIdGameName.trim()==='' && p.riotIdTagline.trim()==='')){
@@ -60,9 +76,20 @@ export function initLoadMore(matchesPageSize = 10) {
     }
 
     function buildMatchRowEl(m){
-        const info = m?.info || {}; const meta = m?.metadata || {}; const parts = Array.isArray(info.participants)?info.participants:[];
+        if (!m || !m.info) {
+            console.warn('Invalid match data provided to buildMatchRowEl');
+            const errorRow = document.createElement('div');
+            errorRow.className = 'list-group-item match-row';
+            errorRow.textContent = 'Invalid match data';
+            return errorRow;
+        }
+        
+        const info = m.info || {}; 
+        const meta = m.metadata || {}; 
+        const parts = Array.isArray(info.participants) ? info.participants : [];
         const me = parts.find(p => p && p.puuid === searchedPuuid) || null;
-        const gd = Number(info.gameDuration||0); const isRemake = gd>0 && gd<300;
+        const gd = Number(info.gameDuration||0); 
+        const isRemake = gd>0 && gd<300;
         const row = document.createElement('div');
         row.className = 'list-group-item match-row';
         row.classList.add(isRemake ? 'remake' : (me && me.win ? 'win' : 'loss'));
