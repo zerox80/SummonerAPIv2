@@ -4,6 +4,21 @@ import '../../styles/champions/champion-abilities.css';
 
 const KEY_MAP = ['Q', 'W', 'E', 'R'];
 
+function AbilityDescription({ text }) {
+  if (!text) return null;
+
+  return (
+    <p
+      className="ability-card__description"
+      dangerouslySetInnerHTML={{ __html: text.replace(/\n/g, '<br />') }}
+    />
+  );
+}
+
+AbilityDescription.propTypes = {
+  text: PropTypes.string
+};
+
 export default function AbilityList({ passive, spells }) {
   return (
     <section className="champion-abilities glass-panel">
@@ -22,7 +37,14 @@ export default function AbilityList({ passive, spells }) {
                 <span className="ability-card__hotkey">Passive</span>
                 <h4>{passive.name}</h4>
               </div>
-              <p>{passive.description}</p>
+              <AbilityDescription text={passive.description || passive.tooltip} />
+              {passive.notes?.length > 0 && (
+                <ul className="ability-card__notes">
+                  {passive.notes.map((note) => (
+                    <li key={note}>{note}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           </article>
         )}
@@ -35,20 +57,35 @@ export default function AbilityList({ passive, spells }) {
               <div className="ability-card__meta">
                 <span className="ability-card__hotkey">{KEY_MAP[index] || ''}</span>
                 <h4>{spell.name}</h4>
-                <div className="ability-card__meta-tags">
-                  {spell.cooldown && (
-                    <Tooltip label="Abklingzeit">
-                      <span className="ability-card__cooldown">CD: {spell.cooldown}</span>
-                    </Tooltip>
-                  )}
-                  {spell.cost && (
-                    <Tooltip label="Kosten">
-                      <span className="ability-card__cost">Kosten: {spell.cost}</span>
-                    </Tooltip>
-                  )}
-                </div>
               </div>
-              <p>{spell.tooltip || spell.description}</p>
+              <div className="ability-card__stats">
+                {spell.cooldown && (
+                  <Tooltip label="Abklingzeit">
+                    <span><strong>CD</strong> {spell.cooldown}</span>
+                  </Tooltip>
+                )}
+                {spell.cost && (
+                  <Tooltip label="Ressourcenkosten">
+                    <span><strong>Kosten</strong> {spell.cost}</span>
+                  </Tooltip>
+                )}
+                {spell.range && (
+                  <Tooltip label="Reichweite">
+                    <span><strong>Reichweite</strong> {spell.range}</span>
+                  </Tooltip>
+                )}
+                {spell.damage && (
+                  <Tooltip label="Schaden">
+                    <span><strong>Schaden</strong> {spell.damage}</span>
+                  </Tooltip>
+                )}
+                {spell.scaling && (
+                  <Tooltip label="Skalierung">
+                    <span><strong>Skalierung</strong> {spell.scaling}</span>
+                  </Tooltip>
+                )}
+              </div>
+              <AbilityDescription text={spell.tooltip || spell.description} />
               {spell.notes?.length > 0 && (
                 <ul className="ability-card__notes">
                   {spell.notes.map((note) => (
@@ -78,6 +115,9 @@ AbilityList.propTypes = {
     cooldown: PropTypes.string,
     cost: PropTypes.string,
     imageFull: PropTypes.string,
+    range: PropTypes.string,
+    damage: PropTypes.string,
+    scaling: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.string)
   }))
 };

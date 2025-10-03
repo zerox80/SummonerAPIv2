@@ -1,0 +1,349 @@
+{
+  "aatrox": {
+    "passive": {
+      "name": "Tödlicher Stahl",
+      "description": "Aatrox verstärkt in regelmäßigen Abständen seinen nächsten Angriff, verursacht zusätzlichen physischen Schaden in einem Kegel und heilt sich basierend auf dem getroffenen Schaden.",
+      "notes": [
+        "Verkürzt sich durch Angriffe und Fähigkeiten",
+        "Füllt Lebensleistungs-Anzeige für längere Kämpfe"
+      ]
+    },
+    "spells": [
+      {
+        "id": "AatroxQ",
+        "name": "Die Klinge der Düsteren",
+        "description": "Aatrox schwingt seine Klinge drei Mal nach vorne. Jeder Schlag verursacht Flächenschaden und besitzt einen Sweetspot an der Klingenspitze, der erhöhten Schaden und einen kurzen Luftstoß verursacht.",
+        "cooldown": "14/12/10/8/6 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Trefferzone verändert sich mit jedem Schwung",
+          "Sweetspot schleudert Gegner hoch"
+        ]
+      },
+      {
+        "id": "AatroxW",
+        "name": "Infernalische Ketten",
+        "description": "Aatrox peitscht in gerader Linie aus. Der erste getroffene Champion wird verlangsamt und markiert. Bleibt das Ziel in der Zone, wird es nach kurzer Verzögerung zur Mitte gezogen.",
+        "cooldown": "20/18.5/17/15.5/14 s",
+        "cost": "Keine Kosten",
+        "range": "825",
+        "notes": [
+          "Zieht auch Monster an",
+          "Gegner können durch Verlassen der Zone entkommen"
+        ]
+      },
+      {
+        "id": "AatroxE",
+        "name": "Schatten-Schicht",
+        "description": "Aktiv: Aatrox dashte in eine Richtung und verstärkt kurz seine Selbstheilung. Passiv: Basisangriffe und Q heilen ihn, wenn sie Champions treffen.",
+        "cooldown": "9/8/7/6/5 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Zwei Aufladungen",
+          "Kann während Q genutzt werden, um Sweetspots zu repositionieren"
+        ]
+      },
+      {
+        "id": "AatroxR",
+        "name": "Weltenvernichter",
+        "description": "Aatrox entfesselt seine dämonische Form, erhält Angriffsschaden, Lauftempo und vergrößerte Heilung. Besiegte Champions verlängern die Dauer und heilen ihn stark.",
+        "cooldown": "120/100/80 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Erster Aktivierung gewährt kurzzeitige Verdrängung",
+          "Tötet Aatrox während der Dauer, verzögert der Effekt sein tatsächliches Ableben"
+        ]
+      }
+    ]
+  },
+  "ahri": {
+    "passive": {
+      "name": "Essenzdiebin",
+      "description": "Ahri lädt Essenz mit Fähigkeiten auf. Nach neun Kugeltreffern heilt sie sich. Jeder gegnerische Champion, den Ahri ausschaltet, erlaubt ihr eine zusätzliche Hast auf der Ulti.",
+      "notes": [
+        "Kugelarceus gewährt pro Treffer eine Essenz",
+        "Essenz von Champions gibt dreifachen Fortschritt"
+      ]
+    },
+    "spells": [
+      {
+        "id": "AhriQ",
+        "name": "Kugel der Täuschung",
+        "description": "Ahri wirft ihre Kugel nach vorne und zieht sie wieder zurück. Der Hinweg verursacht magischen Schaden, der Rückweg wahren Schaden.",
+        "cooldown": "7 s",
+        "cost": "55/70/85/100/115 Mana",
+        "range": "880",
+        "damage": "40/65/90/115/140 (+35% AP) hin • 40/65/90/115/140 (+35% AP) zurück",
+        "notes": [
+          "Lauftempo während des Rückrufs",
+          "Trifft Einheiten zweimal, wenn sie zentral stehen"
+        ]
+      },
+      {
+        "id": "AhriW",
+        "name": "Fuchsfeuer",
+        "description": "Ahri beschwört drei Flammen, die automatisch Ziele in der Nähe anvisieren. Mehrere Flammen können denselben Champion treffen.",
+        "cooldown": "9/8/7/6/5 s",
+        "cost": "40 Mana",
+        "notes": [
+          "Bevorzugt Champions mit kürzlichem Charme-Debuff",
+          "Gewährt kurz Lauftempo"
+        ]
+      },
+      {
+        "id": "AhriE",
+        "name": "Liebesrausch",
+        "description": "Ahri verschießt einen Kuss, der den ersten getroffenen Gegner bezaubert, Schaden verursacht und andere Fähigkeiten verstärkt.",
+        "cooldown": "12 s",
+        "cost": "70 Mana",
+        "range": "975",
+        "notes": [
+          "Getroffene Gegner laufen Ahri langsam entgegen",
+          "Fähigkeiten verursachen danach zusätzlichen Schaden"
+        ]
+      },
+      {
+        "id": "AhriR",
+        "name": "Geisterhast",
+        "description": "Ahri stürmt bis zu drei Mal vorwärts und feuert Essenzbolts auf nahe Gegner. Jeder Dash kann Champions treffen und Schaden verursachen. Champion-Kills verlängern die Aktivierung.",
+        "cooldown": "130/105/80 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Nach Champion-Elimination erhält Ahri zusätzlichen Dash",
+          "Projektile bevorzugen Champions"
+        ]
+      }
+    ]
+  },
+  "akali": {
+    "passive": {
+      "name": "Zeichen der Assassine",
+      "description": "Akali markiert Gegner nach Fähigkeits-Treffern. Verlässt sie den Ring, verstärkt sich ihr nächster Nahkampfangriff mit zusätzlichem Schaden, Reichweite und Lauftempo.",
+      "notes": [
+        "Ring verschwindet nach 4 s",
+        "Verstärkter Angriff gewährt kurz Lauftempo"
+      ]
+    },
+    "spells": [
+      {
+        "id": "AkaliQ",
+        "name": "Fünf-Punkte-Schlag",
+        "description": "Akali wirft fünf Kunai fächerförmig. Gegner am Rand erleiden erhöhten Schaden und werden stark verlangsamt.",
+        "cooldown": "1.5 s",
+        "cost": "130/115/100/85/70 Energie",
+        "damage": "30/55/80/105/130 (+60% AP) Innen • +25% Außen",
+        "notes": [
+          "Heilt bei niedrigen Gegnerleben",
+          "Verlangsamt am Rand bis zu 90%"
+        ]
+      },
+      {
+        "id": "AkaliW",
+        "name": "Zwielichtschleier",
+        "description": "Akali spannt eine Rauchwolke auf, wird uneinsehbar und regeneriert Energie. Im Schleier erhält sie kurz Lauftempo und kann nicht anvisiert werden.",
+        "cooldown": "20/18.5/17/15.5/14 s",
+        "cost": "40 Energie",
+        "notes": [
+          "Dauer steigt mit Rang",
+          "Angriffe oder Fähigkeiten enthüllen sie kurz"
+        ]
+      },
+      {
+        "id": "AkaliE",
+        "name": "Shuriken-Flip",
+        "description": "Akali springt zurück und wirft ein Shuriken, das den ersten Gegner markiert. Reaktivierung stürmt zum Ziel und verursacht erneut Schaden.",
+        "cooldown": "16/14.5/13/11.5/10 s",
+        "cost": "30 Energie",
+        "range": "Shuriken 825 • Rückkehr bis 2500",
+        "notes": [
+          "Zweite Aktivierung innerhalb von 3 s",
+          "Markiert auch Wards und Monster"
+        ]
+      },
+      {
+        "id": "AkaliR",
+        "name": "Perfekte Ausführung",
+        "description": "Akali dashte nach vorne und stößt Gegner beiseite. Nach kurzer Verzögerung kann sie erneut dashen und hohen Schaden verursachen, der gegen Ziele mit wenig Leben ansteigt.",
+        "cooldown": "100/85/70 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Zweiter Dash frühestens nach 2.5 s",
+          "Dash 1 verursacht physischen, Dash 2 magischen Schaden"
+        ]
+      }
+    ]
+  },
+  "anivia": {
+    "passive": {
+      "name": "Wiedergeburt",
+      "description": "Anivia verwandelt sich beim Sterben in ein Ei und wird nach vier Sekunden mit einem Teil ihrer Lebenspunkte wiedergeboren, sofern das Ei nicht zerstört wird.",
+      "notes": [
+        "Ei hat dieselben Resistenzen wie Anivia",
+        "Lange Abklingzeit, skaliert mit Stufe"
+      ]
+    },
+    "spells": [
+      {
+        "id": "FlashFrost",
+        "name": "Blitzeis",
+        "description": "Anivia schickt einen Frostball geradeaus, der Gegner verlangsamt. Reaktivierung oder maximale Reichweite lassen ihn explodieren und betäuben.",
+        "cooldown": "11/10/9/8/7 s",
+        "cost": "80/90/100/110/120 Mana",
+        "range": "1075",
+        "notes": [
+          "Projektile reist langsam",
+          "Explosion verursacht doppelten Schaden"
+        ]
+      },
+      {
+        "id": "Crystallize",
+        "name": "Kristallisieren",
+        "description": "Anivia erschafft eine Eiswand, die Bewegung blockiert und kurzzeitig Sicht bietet.",
+        "cooldown": "17 s",
+        "cost": "70/90/110/130/150 Mana",
+        "notes": [
+          "Wandbreite steigt mit Rang",
+          "Kann Gegner komplett vom Weg abschneiden"
+        ]
+      },
+      {
+        "id": "Frostbite",
+        "name": "Frostbiss",
+        "description": "Anivia schickt einen Eisblitz, der Schaden verursacht. Gegner, die kürzlich von Kälte betroffen wurden, erleiden doppelten Schaden.",
+        "cooldown": "4 s",
+        "cost": "50/60/70/80/90 Mana",
+        "notes": [
+          "Doppelter Schaden nach Q- oder R-Treffer",
+          "Skaliert stark mit Fähigkeitsstärke"
+        ]
+      },
+      {
+        "id": "GlacialStorm",
+        "name": "Gletschersturm",
+        "description": "Anivia ruft einen Schneesturm herbei, der Gegner verlangsamt und kontinuierlich Schaden verursacht. Die Zone verstärkt Frostbiss und bleibt bestehen, bis sie erneut aktiviert oder Anivia sich entfernt.",
+        "cooldown": "6 s",
+        "cost": "60 Mana + 40/50/60 Mana pro Sekunde",
+        "notes": [
+          "Verstärkte Verlangsamung nach 1.5 s",
+          "Kann beliebig lange gehalten werden"
+        ]
+      }
+    ]
+  },
+  "caitlyn": {
+    "passive": {
+      "name": "Kopfgeldjägerin",
+      "description": "Caitlyns nächste Schussfolge wird in regelmäßigen Abständen verstärkt und verursacht Bonus-Schaden. Kopfschüsse auf markierte Ziele verursachen noch mehr Schaden.",
+      "notes": [
+        "Headshot-Reichweite höher aus Büschen",
+        "Fallen und Netz geben sichere Kopfschüsse"
+      ]
+    },
+    "spells": [
+      {
+        "id": "CaitlynQ",
+        "name": "Pilitzer",
+        "description": "Caitlyn feuert einen großkalibrigen Schuss ab, der allen Gegnern in einer Linie Schaden zufügt. Der Schaden nimmt nach dem ersten getroffenen Ziel ab.",
+        "cooldown": "10/9/8/7/6 s",
+        "cost": "50/60/70/80/90 Mana",
+        "range": "1250",
+        "notes": [
+          "Schuss kann durch Minions gecleart werden",
+          "Volle Stärke nach kurzer Vorbereitung"
+        ]
+      },
+      {
+        "id": "CaitlynW",
+        "name": "Yordle-Falle",
+        "description": "Caitlyn platziert eine Falle. Gegner, die sie auslösen, werden festgehalten und für einen verstärkten Kopfschuss markiert.",
+        "cooldown": "30/28/26/24/22 s",
+        "cost": "20 Mana",
+        "notes": [
+          "Bis zu drei Fallen aktiv",
+          "Fallen gewähren kurzzeitig Sicht"
+        ]
+      },
+      {
+        "id": "CaitlynE",
+        "name": "90-Caliber-Netz",
+        "description": "Caitlyn schießt ein Netz ab, das verlangsamt und sie rückwärts stößt. Der Rückstoß kann genutzt werden, um über Wände zu springen.",
+        "cooldown": "16/14.5/13/11.5/10 s",
+        "cost": "75 Mana",
+        "notes": [
+          "Markiert Ziele für Kopfschüsse",
+          "Rückstoßrichtung entgegengesetzt zur Flugbahn"
+        ]
+      },
+      {
+        "id": "CaitlynR",
+        "name": "Ass im Ärmel",
+        "description": "Caitlyn zielt auf einen gegnerischen Champion und feuert einen Langstreckenschuss, der massiven Schaden verursacht und von anderen Champions blockiert werden kann.",
+        "cooldown": "90/75/60 s",
+        "cost": "100 Mana",
+        "range": "3500/4000/4500",
+        "notes": [
+          "Schäden erhöht sich mit fehlender Gesundheit",
+          "Kann durch Verbündete geblockt werden"
+        ]
+      }
+    ]
+  },
+  "lux": {
+    "passive": {
+      "name": "Illumination",
+      "description": "Lux markiert Gegner mit Lichtenergie. Der nächste Angriff oder eine Fähigkeit verbraucht die Markierung und verursacht zusätzlichen magischen Schaden.",
+      "notes": [
+        "Trifft auch durch Ultimate",
+        "Auch Verbündete können Markierung durch Angriffe auslösen"
+      ]
+    },
+    "spells": [
+      {
+        "id": "LuxLightBinding",
+        "name": "Lichtfessel",
+        "description": "Lux feuert eine Kugel aus Licht, die bis zu zwei Gegner verwurzelt und Schaden zufügt.",
+        "cooldown": "13/12/11/10/9 s",
+        "cost": "50/55/60/65/70 Mana",
+        "range": "1175",
+        "notes": [
+          "Kann zwei Ziele gleichzeitig treffen",
+          "Verlangsamt Gegner minimal"
+        ]
+      },
+      {
+        "id": "LuxPrismaticWave",
+        "name": "Prismatische Barriere",
+        "description": "Lux wirft ihren Zauberstab wie einen Bumerang. Verbündete, die vom Stab getroffen werden, erhalten einen Schild, der bei der Rückkehr verstärkt wird.",
+        "cooldown": "14/13/12/11/10 s",
+        "cost": "60 Mana",
+        "notes": [
+          "Schild stapelt beim Hin- und Rückweg",
+          "Kann alle Verbündeten auf der Flugbahn treffen"
+        ]
+      },
+      {
+        "id": "LuxLucentSingularity",
+        "name": "Lichtsingularität",
+        "description": "Lux erschafft eine Lichtzone, die Gegner verlangsamt und nach kurzer Verzögerung explodiert. Sie kann die Explosion früher auslösen.",
+        "cooldown": "10 s",
+        "cost": "70/80/90/100/110 Mana",
+        "notes": [
+          "Gewährt Sicht in der Zone",
+          "Explosion verbraucht Illumination"
+        ]
+      },
+      {
+        "id": "LuxR",
+        "name": "Finale Funkeln",
+        "description": "Lux entfesselt einen massiven Laserstrahl über eine große Distanz, der hohen Schaden verursacht und Illumination sofort auslöst.",
+        "cooldown": "80/70/60 s",
+        "cost": "100 Mana",
+        "range": "3250",
+        "notes": [
+          "Channelzeit ist minimal",
+          "Sichtbare Linie vor Aktivierung warnt Gegner"
+        ]
+      }
+    ]
+  }
+}

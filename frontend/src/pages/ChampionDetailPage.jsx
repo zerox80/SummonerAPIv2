@@ -8,6 +8,7 @@ import BuildRunesTable from '../components/champions/BuildRunesTable.jsx';
 import BuildSummonerSpellsTable from '../components/champions/BuildSummonerSpellsTable.jsx';
 import { useChampionDetail, useChampionBuild } from '../hooks/useChampionDetail.js';
 import { formatQueueById, roleLabel } from '../utils/formatters.js';
+import { mergeChampionAbilities } from '../utils/championSpells.js';
 import '../styles/champions/champion-detail-page.css';
 
 const QUEUE_OPTIONS = [
@@ -56,6 +57,8 @@ export default function ChampionDetailPage() {
     return `${IMAGE_BASE}${champion.imageFull}`;
   }, [champion]);
 
+  const abilities = useMemo(() => mergeChampionAbilities(champion), [champion]);
+
   if (detailQuery.isLoading) {
     return <p className="champions-state">Loading champion ...</p>;
   }
@@ -92,7 +95,7 @@ export default function ChampionDetailPage() {
           <p>{champion.lore}</p>
         </section>
 
-        <AbilityList passive={champion.passive} spells={champion.spells} />
+        <AbilityList passive={abilities.passive} spells={abilities.spells} />
       </div>
 
       <BuildItemsTable

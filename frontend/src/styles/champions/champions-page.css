@@ -1,36 +1,36 @@
 .champions-page {
   display: grid;
-  gap: 2.5rem;
-  padding-bottom: 3.5rem;
+  gap: clamp(2rem, 5vw, 3.25rem);
+  padding-bottom: clamp(3rem, 6vw, 4rem);
 }
 
 .champions-hero {
   display: grid;
-  gap: 1.25rem;
-  padding: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1.2rem, 3vw, 1.8rem);
+  padding: clamp(1.8rem, 4vw, 2.6rem);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   align-items: center;
 }
 
 .champions-hero__text h1 {
   margin: 0.35rem 0 0;
-  font-size: clamp(1.9rem, 3.5vw, 2.7rem);
+  font-size: clamp(2rem, 4vw, 2.8rem);
   letter-spacing: -0.02em;
 }
 
 .champions-hero__subtitle {
   margin: 0.65rem 0 0;
-  max-width: 70ch;
+  max-width: 60ch;
   color: var(--text-secondary);
 }
 
 .champions-hero__search {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.45rem;
 }
 
 .champions-hero__search-label {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -38,10 +38,10 @@
 }
 
 .champions-hero__search input {
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  padding: 0.6rem 0.9rem;
-  background: rgba(15, 23, 42, 0.3);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  padding: 0.7rem 1rem;
+  background: rgba(15, 23, 42, 0.45);
   color: var(--text-primary);
   font-size: 1rem;
   transition: border var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
@@ -55,27 +55,27 @@
 
 .champions-hero__controls {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
   flex-wrap: wrap;
 }
 
 .champions-grid-section {
-  padding: 1.5rem;
+  padding: clamp(1.4rem, 4vw, 2rem);
   display: grid;
-  gap: 1.75rem;
+  gap: 1.9rem;
 }
 
 .champions-grid {
   display: grid;
-  gap: 1.25rem;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: clamp(1rem, 3vw, 1.5rem);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 
 .champion-card {
   display: grid;
-  gap: 0.85rem;
-  padding: 1.1rem;
-  border-radius: var(--radius-md);
+  gap: 0.95rem;
+  padding: clamp(1rem, 3vw, 1.35rem);
+  border-radius: var(--radius-lg);
   background: rgba(17, 24, 65, 0.62);
   border: 1px solid rgba(99, 102, 241, 0.22);
   transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease, border-color var(--duration-base) ease;
@@ -89,10 +89,11 @@
 
 .champion-card__image {
   width: 100%;
-  aspect-ratio: 1;
-  border-radius: var(--radius-sm);
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md);
   overflow: hidden;
   border: 2px solid rgba(99, 102, 241, 0.25);
+  background: rgba(15, 23, 42, 0.4);
 }
 
 .champion-card__image img {
@@ -101,14 +102,19 @@
   object-fit: cover;
 }
 
+.champion-card__content {
+  display: grid;
+  gap: 0.35rem;
+}
+
 .champion-card__content h3 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   letter-spacing: -0.01em;
 }
 
 .champion-card__content p {
-  margin: 0.25rem 0 0;
+  margin: 0;
   color: var(--text-secondary);
   font-size: 0.85rem;
 }
@@ -116,15 +122,15 @@
 .champion-card__tags {
   margin-top: 0.6rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.45rem;
   flex-wrap: wrap;
 }
 
 .champion-card__tags span {
-  padding: 0.3rem 0.65rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(226, 232, 255, 0.8);
@@ -142,10 +148,11 @@
 
 @media (max-width: 960px) {
   .champions-hero {
-    padding: 2rem;
+    padding: 1.9rem;
   }
 
-  .champions-grid-section {
-    padding: 1.6rem;
+  .champion-card:hover {
+    transform: none;
+    box-shadow: 0 16px 28px rgba(99, 102, 241, 0.15);
   }
 }
