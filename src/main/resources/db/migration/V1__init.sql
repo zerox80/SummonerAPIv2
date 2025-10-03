@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS player_lp_records (
     id BIGSERIAL PRIMARY KEY,
     puuid VARCHAR(128) NOT NULL,
     queue_type VARCHAR(32) NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     league_points INTEGER NOT NULL,
     tier VARCHAR(32),
     rank VARCHAR(8)

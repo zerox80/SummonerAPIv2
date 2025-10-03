@@ -4,18 +4,8 @@
 -- Drop old index if it exists (works for PostgreSQL and H2 in PostgreSQL mode)
 DROP INDEX IF EXISTS idx_puuid_queuetype_timestamp;
 
--- Rename the column if it exists with the old name
-DO $$
-BEGIN
-    IF EXISTS (
-        SELECT 1
-        FROM information_schema.columns
-        WHERE table_name = 'player_lp_records'
-          AND column_name = 'timestamp'
-    ) THEN
-        EXECUTE 'ALTER TABLE player_lp_records RENAME COLUMN timestamp TO lp_timestamp';
-    END IF;
-END $$;
+-- Rename the column. This is safe because Flyway ensures this script only runs once.
+ALTER TABLE player_lp_records RENAME COLUMN timestamp TO lp_timestamp;
 
 -- Create the new index on the renamed column (idempotent)
 CREATE INDEX IF NOT EXISTS idx_puuid_queuetype_timestamp

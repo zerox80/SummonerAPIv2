@@ -43,7 +43,6 @@ export function initSearchDropdown() {
     const searchForm = riotIdInput.closest('form');
     let isDestroyed = false;
     let currentAbortController = null; // For canceling in-flight requests
-
     const announceStatus = (message) => {
         if (!statusRegion) return;
         statusRegion.textContent = message || '';
@@ -458,10 +457,6 @@ export function initSearchDropdown() {
     // Centralized open routine used by multiple event sources
     const openSuggestions = () => {
         if (isDestroyed) return;
-        // Avoid re-opening if already open and the user is just clicking/focusing
-        if (suggestionsContainer.style.display === 'block') {
-            return;
-        }
         fetchAndDisplaySuggestions(riotIdInput.value);
         positionDropdown(true);
     };
@@ -474,18 +469,26 @@ export function initSearchDropdown() {
         openSuggestions();
     };
 
+    const handlePointerDown = () => {
+        openSuggestions();
+    };
+
+    const handleClick = () => {
+        openSuggestions();
+    };
+
     const handleBlur = () => {
-        // Use requestAnimationFrame to allow the next element to receive focus before we check it.
-        // This prevents the dropdown from closing when a suggestion item is clicked.
-        requestAnimationFrame(() => {
+        // Use a brief timeout to allow click events on suggestions to be processed before hiding.
+        // This is a classic solution for race conditions between blur and click events.
+        setTimeout(() => {
             if (isDestroyed) return;
 
-            // If focus moves to an element that is NOT the input and NOT inside the dropdown, hide it.
             const activeElement = document.activeElement;
+            // If focus has moved to an element that is NOT the input and NOT inside the dropdown, hide it.
             if (activeElement !== riotIdInput && !suggestionsContainer.contains(activeElement)) {
                 hideSuggestions();
             }
-        });
+        }, 200); // A delay slightly longer than a typical click event.
     };
 
     // Keyboard navigation
@@ -578,6 +581,8 @@ export function initSearchDropdown() {
     document.addEventListener(EVENTS.POINTERDOWN, handleDocumentInteraction);
     document.addEventListener(EVENTS.FOCUSIN, handleDocumentInteraction);
     searchForm?.addEventListener(EVENTS.SUBMIT, handleFormSubmit);
+    riotIdInput.addEventListener(EVENTS.POINTERDOWN, handlePointerDown);
+    riotIdInput.addEventListener(EVENTS.CLICK, handleClick);
     riotIdInput.addEventListener(EVENTS.INPUT, handleInput);
     riotIdInput.addEventListener(EVENTS.FOCUS, handleFocus);
     riotIdInput.addEventListener(EVENTS.BLUR, handleBlur);
@@ -589,6 +594,8 @@ export function initSearchDropdown() {
         document.removeEventListener(EVENTS.POINTERDOWN, handleDocumentInteraction);
         document.removeEventListener(EVENTS.FOCUSIN, handleDocumentInteraction);
         searchForm?.removeEventListener(EVENTS.SUBMIT, handleFormSubmit);
+        riotIdInput.removeEventListener(EVENTS.POINTERDOWN, handlePointerDown);
+        riotIdInput.removeEventListener(EVENTS.CLICK, handleClick);
         riotIdInput.removeEventListener(EVENTS.INPUT, handleInput);
         riotIdInput.removeEventListener(EVENTS.FOCUS, handleFocus);
         riotIdInput.removeEventListener(EVENTS.BLUR, handleBlur);
