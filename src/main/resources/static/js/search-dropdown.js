@@ -18,6 +18,10 @@ export function initSearchDropdown() {
             clearTimeout(debounceTimer);
             debounceTimer = null;
         }
+        if (currentAbortController) {
+            currentAbortController.abort();
+            currentAbortController = null;
+        }
     };
 
     function positionDropdown(force = false){
@@ -257,8 +261,18 @@ export function initSearchDropdown() {
     riotIdInput.addEventListener('keydown', function(e){
         const items = Array.from(suggestionsContainer.querySelectorAll('[role="option"]'));
         if (!items.length) return;
-        if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = (activeIndex + 1) % items.length; updateActive(activeIndex); }
-        else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = (activeIndex - 1 + items.length) % items.length; updateActive(activeIndex); }
+        if (e.key === 'ArrowDown') { 
+            e.preventDefault(); 
+            e.stopPropagation();
+            activeIndex = (activeIndex + 1) % items.length; 
+            updateActive(activeIndex); 
+        }
+        else if (e.key === 'ArrowUp') { 
+            e.preventDefault(); 
+            e.stopPropagation();
+            activeIndex = (activeIndex - 1 + items.length) % items.length; 
+            updateActive(activeIndex); 
+        }
         else if (e.key === 'Enter') {
             if (activeIndex >= 0 && items[activeIndex]) { e.preventDefault(); items[activeIndex].click(); }
         } else if (e.key === 'Escape') {

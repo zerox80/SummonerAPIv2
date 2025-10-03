@@ -68,21 +68,9 @@ if (document.readyState === 'loading') {
     });
 }
 
-// Optional: Improve collapse icon for match history
-const matchHistoryCollapse = document.getElementById('matchHistoryCollapse');
-if (matchHistoryCollapse && matchHistoryCollapse.previousElementSibling) {
-    const icon = matchHistoryCollapse.previousElementSibling.querySelector('.fa-chevron-down');
-    if (icon) {
-        matchHistoryCollapse.addEventListener('show.bs.collapse', function () {
-            icon.classList.remove('fa-chevron-down');
-            icon.classList.add('fa-chevron-up');
-        });
-        matchHistoryCollapse.addEventListener('hide.bs.collapse', function () {
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
-        });
-    }
-} 
+// Chevron icon rotation is handled by CSS via [aria-expanded] selector
+// See app.css lines 270-273 for the implementation
+// Removed redundant JavaScript listeners to prevent duplicate handling 
 
 // Fallback wiring for Match History filter (All/Ranked)
 // Ensures the buttons work even if inline script in index.html fails or is blocked by CSP

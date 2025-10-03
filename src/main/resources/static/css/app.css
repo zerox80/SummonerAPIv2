@@ -79,7 +79,7 @@ html, body {
   background: rgba(0, 0, 0, 0.35) !important;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  z-index: 1030; /* Below suggestions dropdown (1060) but above other content */
+  z-index: 1020; /* Below suggestions dropdown (1060) to prevent overlap */
 }
 .theme-light .glass-nav { background: rgba(255,255,255,0.7) !important; }
 
@@ -111,7 +111,7 @@ html, body {
   top: 100%; /* Position below the input group */
   left: 0;
   right: 0;
-  z-index: 1060 !important; /* Higher than Bootstrap modals (1055) to prevent overlap */
+  z-index: 1060 !important; /* Higher than nav (1020) and modals (1055) to prevent overlap */
   margin-top: 0.5rem; /* Add a small gap below the search input */
   max-height: 320px; overflow: auto; display: none; /* JS toggles to block */
   border-radius: .75rem; border: 1px solid rgba(20,20,30,.9);

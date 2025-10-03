@@ -60,20 +60,25 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
         if (solo) ds.push({ label: 'Solo/Duo', data: align(solo), borderColor: '#C8AA6E', backgroundColor: 'rgba(200,170,110,0.2)', tension: .25, spanGaps: true });
         if (flex) ds.push({ label: 'Flex', data: align(flex), borderColor: '#0AC8B9', backgroundColor: 'rgba(10,200,185,0.2)', tension: .25, spanGaps: true });
 
-        const lpChart = new Chart(lpCtx, {
-            type: 'line',
-            data: { labels, datasets: ds },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { ticks: { color: colors.text }, grid: { color: colors.grid } },
-                    y: { ticks: { color: colors.text }, grid: { color: colors.grid } }
-                },
-                plugins: { legend: { labels: { color: colors.text } } }
-            }
-        });
-        charts.push(lpChart);
+        try {
+            const lpChart = new Chart(lpCtx, {
+                type: 'line',
+                data: { labels, datasets: ds },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: colors.text }, grid: { color: colors.grid } },
+                        y: { ticks: { color: colors.text }, grid: { color: colors.grid } }
+                    },
+                    plugins: { legend: { labels: { color: colors.text } } }
+                }
+            });
+            if (lpChart) charts.push(lpChart);
+        } catch (error) {
+            console.error('Failed to create LP chart:', error);
+            lpCtx.parentElement?.insertAdjacentHTML('beforeend', '<p class="text-danger small mt-2">Chart rendering failed</p>');
+        }
     }
 
     const champCtx = document.getElementById('championChart');
@@ -85,19 +90,24 @@ export function initCharts(leagueEntries, matches, champLabels, champValues) {
         const otherTotal = combined.slice(8).reduce((s,c)=>s+c.value,0);
         if (otherTotal>0) top.push({ label:'Other', value: otherTotal });
         const palette = ['#C8AA6E','#0AC8B9','#1E90FF','#A78BFA','#34D399','#F59E0B','#F472B6','#60A5FA','#FFD166','#06D6A0'];
-        const champChart = new Chart(champCtx, {
-            type: 'doughnut',
-            data: { labels: top.map(x=>x.label), datasets: [{ data: top.map(x=>x.value), backgroundColor: top.map((_,i)=>palette[i%palette.length]) }] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                radius: '80%',
-                cutout: '65%',
-                layout: { padding: 8 },
-                plugins: { legend: { labels: { color: colors.text } } }
-            }
-        });
-        charts.push(champChart);
+        try {
+            const champChart = new Chart(champCtx, {
+                type: 'doughnut',
+                data: { labels: top.map(x=>x.label), datasets: [{ data: top.map(x=>x.value), backgroundColor: top.map((_,i)=>palette[i%palette.length]) }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    radius: '80%',
+                    cutout: '65%',
+                    layout: { padding: 8 },
+                    plugins: { legend: { labels: { color: colors.text } } }
+                }
+            });
+            if (champChart) charts.push(champChart);
+        } catch (error) {
+            console.error('Failed to create champion chart:', error);
+            champCtx.parentElement?.insertAdjacentHTML('beforeend', '<p class="text-danger small mt-2">Chart rendering failed</p>');
+        }
     }
 
     // Resize charts when collapsible sections are shown

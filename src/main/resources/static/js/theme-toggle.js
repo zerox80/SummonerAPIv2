@@ -56,17 +56,25 @@ export function initThemeToggle(chartUpdateCallback) {
         
         // Notify charts to update colors after stylesheet loads
         if (chartUpdateCallback) {
+            let callbackExecuted = false;
+            
+            const executeCallback = () => {
+                if (callbackExecuted) return;
+                callbackExecuted = true;
+                chartUpdateCallback(theme);
+            };
+            
             // Wait for stylesheet to load and apply
             themeStylesheet.addEventListener('load', () => {
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
-                        chartUpdateCallback(theme);
+                        executeCallback();
                     });
                 });
             }, { once: true });
             
             // Fallback timeout in case load event doesn't fire
-            setTimeout(() => chartUpdateCallback(theme), 300);
+            setTimeout(() => executeCallback(), 300);
         }
     }
 

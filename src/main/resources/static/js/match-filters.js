@@ -10,6 +10,13 @@ export function initMatchFilters() {
     const queueDropdown = document.getElementById('queueDropdown');
     const noMsg = document.getElementById('noMatchesMsg');
     if (!rows.length && noMsg) { noMsg.style.display = ''; }
+    
+    // Track if already initialized to prevent duplicate listeners
+    if (window.__matchFiltersInitialized) {
+        console.warn('Match filters already initialized, skipping duplicate init');
+        return window.__matchFiltersCleanup;
+    }
+    window.__matchFiltersInitialized = true;
 
     const QUEUE_NAMES = {
         420: 'Ranked Solo/Duo',
@@ -36,7 +43,8 @@ export function initMatchFilters() {
         if (!queueDropdown) return;
         const present = Array.from(new Set(rows.map(r => {
             const qAttr = r.getAttribute('data-q');
-            if (!qAttr || qAttr === 'null' || qAttr === 'undefined') return 0;
+            // Better validation: check for null, undefined, empty string
+            if (!qAttr || qAttr === 'null' || qAttr === 'undefined' || qAttr.trim() === '') return 0;
             const q = Number(qAttr);
             return Number.isNaN(q) ? 0 : q;
         })));
@@ -138,16 +146,24 @@ export function initMatchFilters() {
         apply();
     };
 
-    // Single event listener for filter buttons (removed duplicates)
-    filters?.addEventListener('click', (e)=>{
+    // Event listeners are now attached above in the cleanup section
+
+    let searchTimer = null; 
+    const handleSearchInput = () => { 
+        if (searchTimer) clearTimeout(searchTimer); 
+        searchTimer = setTimeout(apply, 200); 
+    };
+    
+    // Event handler references for proper cleanup
+    const filterClickHandler = (e) => {
         const btn = e.target.closest('button[data-filter]');
         if (!btn) return;
         e.preventDefault();
         const which = btn.getAttribute('data-filter') === 'ranked' ? 'ranked' : 'all';
         window.setHistoryFilter(which);
-    });
-
-    queueDropdown?.addEventListener('click', (e)=>{
+    };
+    
+    const queueClickHandler = (e) => {
         const item = e.target.closest('button[data-q]');
         if (!item) return;
         e.preventDefault();
@@ -164,12 +180,6 @@ export function initMatchFilters() {
             if (allBtn) allBtn.classList.add('active');
         }
         apply();
-    });
-
-    let searchTimer = null; 
-    const handleSearchInput = () => { 
-        if (searchTimer) clearTimeout(searchTimer); 
-        searchTimer = setTimeout(apply, 200); 
     };
     
     // Cleanup on page unload
@@ -179,10 +189,21 @@ export function initMatchFilters() {
             searchTimer = null;
         }
         searchInput?.removeEventListener('input', handleSearchInput);
+        filters?.removeEventListener('click', filterClickHandler);
+        queueDropdown?.removeEventListener('click', queueClickHandler);
+        window.removeEventListener('beforeunload', cleanup);
+        delete window.__matchFiltersInitialized;
+        delete window.__matchFiltersCleanup;
     };
     
     searchInput?.addEventListener('input', handleSearchInput);
+    filters?.addEventListener('click', filterClickHandler);
+    queueDropdown?.addEventListener('click', queueClickHandler);
     window.addEventListener('beforeunload', cleanup);
+    
+    // Store cleanup function globally for reuse
+    window.__matchFiltersCleanup = cleanup;
+    
     apply();
     
     // Return cleanup function

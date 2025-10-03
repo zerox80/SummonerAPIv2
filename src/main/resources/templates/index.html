@@ -413,7 +413,7 @@
                     </th:block>
                     <!-- Fallback row if match.info is missing (won't break page) -->
                     <th:block th:if="${match == null or match.info == null}">
-                    <div class="list-group-item match-row" th:attr="data-q=0, data-k=0, data-d=0, data-a=0, data-win=false">
+                    <div class="list-group-item match-row" th:attr="data-q=0, data-k=0, data-d=0, data-a=0, data-win=false, data-remake=false">
                         <div class="small">
                             <strong th:text="${'Match ID: ' + (match != null && match.metadata != null ? match.metadata.matchId : 'N/A')}">Match ID: N/A</strong>
                             <span class="text-muted ms-2">Unsupported match data</span>

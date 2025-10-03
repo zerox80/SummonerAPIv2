@@ -71,9 +71,11 @@ export function initLoadMore(matchesPageSize = 10) {
             const span = document.createElement('span'); span.className='text-break'; span.textContent = p.summonerName || 'Unknown Player';
             td2.appendChild(span);
         }
-        const td3 = document.createElement('td'); td3.className='fw-medium'; td3.textContent = `${p.kills ?? 0}/${p.deaths ?? 0}/${p.assists ?? 0}`;
+        const td3 = document.createElement('td'); 
+        td3.className='fw-medium'; 
+        // Use p.kda if available (from server), otherwise construct it
+        td3.textContent = p.kda || `${p.kills ?? 0}/${p.deaths ?? 0}/${p.assists ?? 0}`;
         tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
-        return tr;
     }
 
     function buildMatchRowEl(m){
@@ -81,6 +83,12 @@ export function initLoadMore(matchesPageSize = 10) {
             console.warn('Invalid match data provided to buildMatchRowEl');
             const errorRow = document.createElement('div');
             errorRow.className = 'list-group-item match-row';
+            errorRow.setAttribute('data-q', '0');
+            errorRow.setAttribute('data-k', '0');
+            errorRow.setAttribute('data-d', '0');
+            errorRow.setAttribute('data-a', '0');
+            errorRow.setAttribute('data-win', 'false');
+            errorRow.setAttribute('data-remake', 'false');
             errorRow.textContent = 'Invalid match data';
             return errorRow;
         }
@@ -188,7 +196,8 @@ export function initLoadMore(matchesPageSize = 10) {
             blueThead.appendChild(blueHeaderRow);
             blueTable.appendChild(blueThead);
             const blueTbody = document.createElement('tbody'); 
-            parts.filter(p=>p && (p.teamId === 100 || String(p.teamId) === '100')).forEach(p=>blueTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
+            // Normalize teamId to number for consistent comparison
+            parts.filter(p=>p && Number(p.teamId) === 100).forEach(p=>blueTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
             blueTable.appendChild(blueTbody);
             blueDiv.appendChild(blueTable);
             details.appendChild(blueDiv);
@@ -208,7 +217,8 @@ export function initLoadMore(matchesPageSize = 10) {
             redThead.appendChild(redHeaderRow);
             redTable.appendChild(redThead);
             const redTbody = document.createElement('tbody'); 
-            parts.filter(p=>p && (p.teamId === 200 || String(p.teamId) === '200')).forEach(p=>redTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
+            // Normalize teamId to number for consistent comparison
+            parts.filter(p=>p && Number(p.teamId) === 200).forEach(p=>redTbody.appendChild(buildParticipantRow(p,searchedPuuid))); 
             redTable.appendChild(redTbody);
             redDiv.appendChild(redTable);
             details.appendChild(redDiv);
@@ -222,11 +232,11 @@ export function initLoadMore(matchesPageSize = 10) {
     const CACHE_DURATION = 5000; // 5 seconds
     
     function updateRecentFromDom(){
+        const body = document.getElementById('recentChampsBody');
+        const countEl = document.getElementById('recentCount');
+        if (!body || !countEl) return;
+        
         try {
-            const body = document.getElementById('recentChampsBody');
-            const countEl = document.getElementById('recentCount');
-            if (!body || !countEl) return;
-            
             // Use cache if recent enough
             const now = Date.now();
             if (recentUpdateCache.isValid && (now - recentUpdateCache.timestamp) < CACHE_DURATION) {
@@ -265,7 +275,11 @@ export function initLoadMore(matchesPageSize = 10) {
             
             // Update cache
             recentUpdateCache = { isValid: true, timestamp: now };
-        } catch(_) {}
+        } catch(err) {
+            console.warn('Failed to update recent champions:', err);
+            // Invalidate cache on error
+            recentUpdateCache = { isValid: false, timestamp: 0 };
+        }
     }
 
     let loadMoreAttempts = 0;
@@ -281,7 +295,7 @@ export function initLoadMore(matchesPageSize = 10) {
             if (!Array.isArray(arr) || arr.length === 0){
                 loadBtn.setAttribute('disabled','true');
                 loadBtn.querySelector('.label').textContent = 'No more matches';
-                setLoading(false);
+                // Loading state is already managed by setLoading at the end
                 return;
             }
             const frag = document.createDocumentFragment();
