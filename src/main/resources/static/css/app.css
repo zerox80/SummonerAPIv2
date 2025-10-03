@@ -13,6 +13,59 @@
   --z-dropdown: 1060;
 }
 
+.skip-link {
+  position: absolute;
+  top: -200px;
+  left: 1rem;
+  z-index: var(--z-navbar);
+  padding: .5rem 1rem;
+  background: #0b1018;
+  color: #fff;
+  border-radius: .5rem;
+  box-shadow: 0 12px 30px rgba(0,0,0,.3);
+  transition: top .2s ease;
+}
+
+.theme-light .skip-link {
+  background: #f7f7fb;
+  color: #111827;
+  box-shadow: 0 12px 30px rgba(17,24,39,.15);
+}
+
+.skip-link:focus {
+  top: 1rem;
+  outline: 2px solid var(--app-accent-2);
+  outline-offset: 2px;
+}
+
+.navbar-nav .nav-link:focus-visible,
+.navbar-nav .nav-link:hover {
+  color: var(--app-accent-2);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--app-accent-2);
+  outline-offset: 2px;
+}
+
+.btn[disabled],
+.btn:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Responsive improvements to avoid horizontal scrolling */
 .history-controls {
   flex-wrap: wrap;
@@ -119,6 +172,11 @@ html, body {
   overflow-x: hidden; /* avoid global horizontal scroll */
 }
 
+main[tabindex="-1"]:focus {
+  outline: 3px solid var(--app-accent-2);
+  outline-offset: 4px;
+}
+
 .app-body.theme-dark, .theme-dark.app-body, .app-body {
   padding-top: 5rem; /* fixed navbar offset */
   background:
@@ -191,6 +249,11 @@ html, body {
 .hero { 
   position: relative; 
   z-index: 5; 
+}
+
+.hero .display-5,
+.hero .display-6 {
+  font-size: clamp(2rem, 2.5vw + 1rem, 3rem);
 }
 
 .gradient-orb {
@@ -485,6 +548,20 @@ img, svg { max-width: 100%; height: auto; }
   display: flex;
   justify-content: flex-end;
   gap: .5rem;
+}
+
+.history-summary[role="status"] {
+  min-height: 1.5rem;
+}
+
+.navbar .btn-outline-light[disabled] {
+  border-color: rgba(255,255,255,.4);
+  color: rgba(255,255,255,.75);
+}
+
+.theme-light .navbar .btn-outline-light[disabled] {
+  border-color: rgba(17,23,41,.2);
+  color: rgba(17,23,41,.6);
 }
 
 .history-controls .ms-auto .match-search-group {

@@ -25,6 +25,7 @@ const suggestionCache = new Map();
 export function initSearchDropdown() {
     const riotIdInput = document.querySelector(SELECTORS.RIOT_ID_INPUT);
     const suggestionsContainer = document.querySelector(SELECTORS.SUGGESTIONS_CONTAINER);
+    const statusRegion = document.querySelector(SELECTORS.SEARCH_STATUS);
     if (!riotIdInput || !suggestionsContainer) return;
 
     // Check if already initialized for this element
@@ -45,6 +46,11 @@ export function initSearchDropdown() {
     let justOpened = false;
     let justOpenedTimer = null;
 
+    const announceStatus = (message) => {
+        if (!statusRegion) return;
+        statusRegion.textContent = message || '';
+    };
+
     // Flag input for screen readers to know suggestion list visibility
     const setExpandedState = (expanded) => {
         riotIdInput.setAttribute('aria-expanded', expanded ? 'true' : 'false');
@@ -57,6 +63,7 @@ export function initSearchDropdown() {
     const setBusyState = (busy) => {
         if (busy) {
             riotIdInput.setAttribute('aria-busy', 'true');
+            announceStatus('Searching suggestions…');
         } else {
             riotIdInput.removeAttribute('aria-busy');
         }
@@ -138,6 +145,7 @@ export function initSearchDropdown() {
         clearActiveState();
         resetDropdownPlacement();
         setBusyState(false);
+        announceStatus('Suggestions hidden');
         justOpened = false;
         if (justOpenedTimer) {
             clearTimeout(justOpenedTimer);
@@ -236,13 +244,16 @@ export function initSearchDropdown() {
                 suggestionsContainer.appendChild(empty);
                 suggestionsContainer.style.display = 'block';
                 setExpandedState(true);
+                announceStatus('No recent searches match your query');
             } else {
                 hideSuggestions();
+                announceStatus('No recent searches saved yet');
                 return;
             }
         } else {
             suggestionsContainer.style.display = 'block';
             setExpandedState(true);
+            announceStatus(`${filtered.length} recent ${filtered.length === 1 ? 'search' : 'searches'} found`);
         }
         positionDropdown();
     }
@@ -318,7 +329,13 @@ export function initSearchDropdown() {
         });
 
         suggestionsContainer.style.display = 'block';
-        setExpandedState(suggestionsContainer.querySelectorAll('[role="option"]').length > 0);
+        const totalOptions = suggestionsContainer.querySelectorAll('[role="option"]').length;
+        setExpandedState(totalOptions > 0);
+        if (totalOptions > 0) {
+            announceStatus(`${totalOptions} suggestion${totalOptions === 1 ? '' : 's'} available`);
+        } else {
+            announceStatus('No suggestions available');
+        }
         positionDropdown(true);
     }
 
@@ -343,6 +360,7 @@ export function initSearchDropdown() {
         if (!trimmedQuery) {
             cancelInFlightRequest();
             setBusyState(false);
+            announceStatus('Type a Riot ID to see suggestions');
             return;
         }
 
@@ -350,6 +368,7 @@ export function initSearchDropdown() {
         if (useCache) {
             const cached = suggestionCache.get(normalizedRequestedQuery);
             if (cached && (Date.now() - cached.timestamp) <= CACHE_DURATION.SUGGESTIONS) {
+                announceStatus('Loaded cached suggestions');
                 appendRemoteSuggestions(cached.data, normalizedRequestedQuery);
                 setBusyState(false);
                 return;
@@ -386,6 +405,7 @@ export function initSearchDropdown() {
                     if (error.name === 'AbortError') return;
                     console.error('Error fetching suggestions:', error);
                     // Silently fail - local history is still shown
+                    announceStatus('Unable to load suggestions');
                 })
                 .finally(() => {
                     if (currentAbortController === thisAbortController) {
@@ -406,10 +426,12 @@ export function initSearchDropdown() {
         const riotIdPattern = /^[^#\s]+#[A-Za-z0-9]{3,5}$/i;
         if (!riotIdPattern.test(trimmed)) {
             hideSuggestions();
+            announceStatus('Invalid Riot ID format. Use Name#TAG');
             return;
         }
         riotIdInput.value = trimmed;
         hideSuggestions();
+        announceStatus(`Searching for ${trimmed}`);
         if (searchForm) {
             if (typeof searchForm.requestSubmit === 'function') {
                 searchForm.requestSubmit();
@@ -441,6 +463,7 @@ export function initSearchDropdown() {
         const q = riotIdInput?.value || '';
         saveLocalHistory(q);
         setBusyState(false);
+        if (q) announceStatus(`Submitted search for ${q}`);
     };
 
     // Centralized open routine used by multiple event sources

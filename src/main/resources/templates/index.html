@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="SummonerAPI - Search League of Legends summoners, view ranks, recent matches and champion stats.">
+    <meta name="color-scheme" content="dark light">
     <meta name="theme-color" id="themeColor" content="#0b1018">
     <title>SummonerAPI - League Stats</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -22,9 +23,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" crossorigin="anonymous">
     <!-- App Styles (versioned via ResourceUrlEncodingFilter) -->
+    <link rel="preload" as="style" th:href="@{/css/app.css}" href="/css/app.css">
     <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
 </head>
 <body class="app-body">
+<a class="skip-link" href="#mainContent">Skip to main content</a>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top glass-nav border-bottom border-secondary-subtle">
     <div class="container-fluid">
         <a class="navbar-brand fw-semibold" href="/"><i class="fas fa-chart-line" aria-hidden="true"></i> SummonerAPI</a>
@@ -32,7 +35,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarDefault">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0" aria-label="Primary navigation">
                 <li class="nav-item">
                     <a class="nav-link" th:classappend="${activePage == null || activePage == 'home'} ? 'active' : ''" th:attr="aria-current=${activePage == null || activePage == 'home'} ? 'page' : null" href="/">Home</a>
                 </li>
@@ -40,17 +43,19 @@
                     <a class="nav-link" th:classappend="${activePage == 'champions'} ? 'active' : ''" th:attr="aria-current=${activePage == 'champions'} ? 'page' : null" href="/champions">Champions</a>
                 </li>
             </ul>
-            <span class="navbar-text me-3">
-                Currently only <span th:text="${platformRegion != null ? #strings.toUpperCase(platformRegion) : 'EUW1'}">EUW1</span> is supported.
-            </span>
-            <button id="themeToggle" class="btn btn-sm btn-outline-secondary" type="button" title="Toggle theme" aria-label="Switch to light mode" aria-pressed="false">
-                <i class="fa-regular fa-moon" aria-hidden="true"></i>
-            </button>
+            <div class="d-flex align-items-center gap-3">
+                <span class="navbar-text">Currently only <span th:text="${platformRegion != null ? #strings.toUpperCase(platformRegion) : 'EUW1'}">EUW1</span> is supported.</span>
+                <button class="btn btn-sm btn-outline-light" type="button" aria-label="Language selection coming soon" disabled>EN</button>
+                <button id="themeToggle" class="btn btn-sm btn-outline-secondary" type="button" title="Toggle theme" aria-label="Switch to light mode" aria-pressed="false">
+                    <span class="visually-hidden">Toggle dark and light theme</span>
+                    <i class="fa-regular fa-moon" aria-hidden="true"></i>
+                </button>
+            </div>
         </div>
     </div>
 </nav>
 
-<main class="container mt-5">
+<main id="mainContent" class="container mt-5" role="main" tabindex="-1">
     <!-- Hero/Search -->
     <section class="hero glass-card rounded-4 p-4 mb-4 shadow-lg position-relative">
         <div class="position-absolute gradient-orb orb-1"></div>
@@ -66,6 +71,7 @@
                 <input type="text" id="riotId" name="riotId" class="form-control bg-transparent border-0 text-light" placeholder="Enter Riot ID (e.g., Name#TAG)" required autocomplete="off" spellcheck="false" autocapitalize="off" role="combobox" aria-autocomplete="list" aria-controls="suggestions-container" aria-expanded="false" aria-haspopup="listbox" aria-label="Search for summoner by Riot ID" aria-describedby="riotIdHelp" pattern="^[^#]+#[A-Za-z0-9]{3,5}$" title="Use the format Name#TAG (tagline 3-5 letters or numbers)" th:value="${riotId}" />
                 <button class="btn btn-primary px-4" type="submit"><i class="fas fa-search me-1" aria-hidden="true"></i> Search</button>
                 <div id="suggestions-container" class="list-group suggestions-dropdown w-100" role="listbox" aria-label="Suggestions"></div>
+                <div id="searchStatus" class="visually-hidden" role="status" aria-live="polite"></div>
             </div>
             <div id="riotIdHelp" class="form-text text-secondary ps-1">Format: Name#TAG (tagline must be 3-5 letters or numbers, for example <span class="fw-semibold">Player#EUW</span>).</div>
             
@@ -120,9 +126,9 @@
                         <small th:text="${(entry.tier != null ? entry.tier.toLowerCase() : 'Unranked') + ' ' + (entry.rank != null ? entry.rank : '-')}" class="text-capitalize">Tier Rank</small>
                     </div>
                     <div class="mb-1 d-flex flex-wrap gap-2">
-                        <span class="badge rounded-pill bg-secondary-subtle text-light-emphasis" th:text="${entry.leaguePoints + ' LP'}">0 LP</span>
-                        <span class="badge rounded-pill bg-success-subtle text-success-emphasis" th:text="${'W ' + entry.wins}">W 0</span>
-                        <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis" th:text="${'L ' + entry.losses}">L 0</span>
+                        <span class="badge rounded-pill bg-secondary-subtle text-light-emphasis" th:text="${entry.leaguePoints + ' LP'}" aria-label="League Points">0 LP</span>
+                        <span class="badge rounded-pill bg-success-subtle text-success-emphasis" th:text="${'W ' + entry.wins}" aria-label="Wins">W 0</span>
+                        <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis" th:text="${'L ' + entry.losses}" aria-label="Losses">L 0</span>
                         <span class="badge rounded-pill bg-info-subtle text-info-emphasis" th:if="${entry.wins + entry.losses > 0}" th:text="${'WR ' + T(java.lang.Math).round((entry.wins * 1.0 / (entry.wins + entry.losses)) * 100.0) + '%'}">WR 0%</span>
                     </div>
                     <small th:if="${entry.wins + entry.losses > 0}">
@@ -255,13 +261,14 @@
             </div>
 
             <div class="ms-auto">
-                <div class="input-group input-group-sm match-search-group">
+                <div class="input-group input-group-sm match-search-group" role="search">
                     <span class="input-group-text bg-transparent border-0"><i class="fas fa-search"></i></span>
-                    <input type="search" id="matchSearch" class="form-control" placeholder="Search champion or player" aria-label="Search matches">
+                    <input type="search" id="matchSearch" class="form-control" placeholder="Search champion or player" aria-label="Search matches" aria-describedby="matchSearchStatus">
                 </div>
+                <div id="matchSearchStatus" class="visually-hidden" role="status" aria-live="polite"></div>
             </div>
         </div>
-        <div class="px-3 py-2 history-summary text-secondary small">
+        <div class="px-3 py-2 history-summary text-secondary small" role="status" aria-live="polite" aria-atomic="true">
             <span id="summaryWR">WR: -</span>
             <span class="mx-2">&bull;</span>
             <span id="summaryKDA">KDA: -</span>
@@ -278,7 +285,7 @@
             </div>
 
             <!-- Empty-state message for when filters/search hide all rows -->
-            <div id="noMatchesMsg" class="text-muted small px-3 py-2">
+            <div id="noMatchesMsg" class="text-muted small px-3 py-2" role="status" aria-live="polite">
                 No matches found for your current filters or search.
             </div>
 

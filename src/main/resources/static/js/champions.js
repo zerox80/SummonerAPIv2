@@ -22,6 +22,7 @@
     const role = activeBtn ? normalize(activeBtn.getAttribute('data-role')) : 'all';
 
     const cards = document.querySelectorAll('#champList > [data-name]');
+    let visible = 0;
     cards.forEach(card => {
       const name = normalize(card.getAttribute('data-name'));
       const title = normalize(card.getAttribute('data-title'));
@@ -29,28 +30,56 @@
 
       const matchText = !q || name.includes(q) || title.includes(q);
       const matchRole = (role === 'all') || hasTag(tags, role);
-      card.style.display = (matchText && matchRole) ? '' : 'none';
+      const show = (matchText && matchRole);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
     });
+
+    const statusRegion = document.querySelector('#champSearchStatus');
+    if (statusRegion) {
+      const base = visible === 0 ? 'No champions match your filters.' : `Showing ${visible} champion${visible === 1 ? '' : 's'}.`;
+      const roleMsg = role === 'all' ? '' : ` Role filter: ${role}.`;
+      statusRegion.textContent = `${base}${roleMsg}`.trim();
+    }
+  }
+
+  function focusButtonAt(index, buttons){
+    if (index < 0) index = buttons.length - 1;
+    if (index >= buttons.length) index = 0;
+    const btn = buttons[index];
+    btn.focus();
+    btn.click();
   }
 
   function initRoleButtons(){
-    document.querySelectorAll(ROLE_BUTTON_SELECTOR).forEach(btn => {
+    const buttons = Array.from(document.querySelectorAll(ROLE_BUTTON_SELECTOR));
+    buttons.forEach((btn, idx) => {
       btn.setAttribute('role', 'radio');
-      btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+      const isActive = btn.classList.contains('active');
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
       btn.addEventListener('click', function(e){
         e.preventDefault();
-        document.querySelectorAll(ROLE_BUTTON_SELECTOR).forEach(b => {
+        buttons.forEach(b => {
           b.classList.remove('active');
           b.setAttribute('aria-pressed', 'false');
+          b.setAttribute('aria-checked', 'false');
         });
         this.classList.add('active');
         this.setAttribute('aria-pressed', 'true');
+        this.setAttribute('aria-checked', 'true');
         applyFilters();
       });
       btn.addEventListener('keydown', function(e) {
         if (e.key === ' ' || e.key === 'Enter') {
           e.preventDefault();
           this.click();
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          focusButtonAt(idx + 1, buttons);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          focusButtonAt(idx - 1, buttons);
         }
       });
     });

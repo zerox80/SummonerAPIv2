@@ -3,8 +3,6 @@ import {
   DEBOUNCE_DELAYS,
   QUEUE_TYPES,
   QUEUE_NAMES,
-  CSS_CLASSES,
-  ARIA,
   EVENTS,
   SELECTORS
 } from './constants.js';
@@ -29,6 +27,7 @@ export function initMatchFilters() {
     const queueToggle = document.querySelector(SELECTORS.QUEUE_TOGGLE);
     const queueDropdown = document.querySelector(SELECTORS.QUEUE_DROPDOWN);
     const noMsg = document.querySelector(SELECTORS.NO_MATCHES_MSG);
+    const searchStatusRegion = document.querySelector(SELECTORS.MATCH_SEARCH_STATUS);
     if (!rows.length && noMsg) { noMsg.style.display = ''; }
 
     // Check if already initialized
@@ -37,73 +36,95 @@ export function initMatchFilters() {
         return instances.get(instanceKey);
     }
 
-    // Helper function to normalize queue ID
     function normalizeQueueId(qAttr) {
         if (!qAttr || typeof qAttr !== 'string' || qAttr.trim() === '') return 0;
         const q = Number(qAttr);
         return Number.isNaN(q) || q < 0 ? 0 : q;
     }
 
-    function buildQueueMenu(){
+    function buildQueueMenu() {
         if (!queueDropdown) return;
-        const present = Array.from(new Set(rows.map(r => {
-            const qAttr = r.getAttribute('data-q');
-            return normalizeQueueId(qAttr);
-        })));
+        queueDropdown.setAttribute('role', 'menu');
+        const present = Array.from(new Set(rows.map(r => normalizeQueueId(r.getAttribute('data-q')))));
         const defaultQueues = Object.keys(QUEUE_NAMES)
             .map(key => Number(key))
             .filter(num => Number.isFinite(num) && num >= 0);
         const items = present.length ? present : defaultQueues;
-        const uniqueSorted = Array.from(new Set(items)).sort((a,b)=>a-b);
+        const uniqueSorted = Array.from(new Set(items)).sort((a, b) => a - b);
         queueDropdown.innerHTML = '';
-        
-        // All queues option
+
         const allItem = document.createElement('li');
         const allBtn = document.createElement('button');
         allBtn.className = 'dropdown-item';
         allBtn.setAttribute('data-q', '');
+        allBtn.setAttribute('role', 'menuitemradio');
+        allBtn.setAttribute('aria-checked', 'true');
         allBtn.textContent = 'All queues';
         allItem.appendChild(allBtn);
         queueDropdown.appendChild(allItem);
-        
-        // Ranked (any) option
+
         const rankedAny = document.createElement('li');
         const rankedBtn = document.createElement('button');
         rankedBtn.className = 'dropdown-item';
         rankedBtn.setAttribute('data-q', 'ranked');
+        rankedBtn.setAttribute('role', 'menuitemradio');
+        rankedBtn.setAttribute('aria-checked', 'false');
         rankedBtn.textContent = 'Ranked (any)';
         rankedAny.appendChild(rankedBtn);
         queueDropdown.appendChild(rankedAny);
-        
-        // Divider
+
         const divider = document.createElement('li');
         const hr = document.createElement('hr');
         hr.className = 'dropdown-divider';
         divider.appendChild(hr);
         queueDropdown.appendChild(divider);
-        
-        // Individual queues
+
         uniqueSorted.forEach(q => {
             const li = document.createElement('li');
             const btn = document.createElement('button');
             btn.className = 'dropdown-item';
             btn.setAttribute('data-q', String(q));
+            btn.setAttribute('role', 'menuitemradio');
+            btn.setAttribute('aria-checked', 'false');
             const label = QUEUE_NAMES[q] || ('Queue ' + q);
             btn.textContent = label;
             li.appendChild(btn);
             queueDropdown.appendChild(li);
         });
-        if (queueToggle) queueToggle.textContent = 'All queues';
+
+        if (queueToggle) {
+            queueToggle.textContent = 'All queues';
+            queueToggle.setAttribute('aria-label', 'Filter matches by queue');
+            queueToggle.setAttribute('aria-live', 'polite');
+        }
+    }
+
+    function updateQueueControls() {
+        if (queueDropdown) {
+            queueDropdown.querySelectorAll('button[data-q]').forEach(btn => {
+                const btnVal = btn.getAttribute('data-q');
+                const isMatch = (btnVal === '' && selectedQueue === null) ||
+                    (btnVal === 'ranked' && selectedQueue === RANKED_SENTINEL) ||
+                    (btnVal !== '' && btnVal !== 'ranked' && Number(btnVal) === selectedQueue);
+                btn.setAttribute('aria-checked', isMatch ? 'true' : 'false');
+            });
+        }
+        if (queueToggle) {
+            if (selectedQueue === null) queueToggle.textContent = 'All queues';
+            else if (selectedQueue === RANKED_SENTINEL) queueToggle.textContent = 'Ranked (any)';
+            else queueToggle.textContent = QUEUE_NAMES[selectedQueue] || ('Queue ' + selectedQueue);
+            queueToggle.setAttribute('aria-label', `Current queue filter: ${queueToggle.textContent}`);
+        }
     }
 
     buildQueueMenu();
 
-    // Expose a helper to refresh internal row cache after DOM changes
-    const refreshMatchRows = function(forceMenuRefresh = false){
+    const refreshMatchRows = function (forceMenuRefresh = false) {
         rows = Array.from(document.querySelectorAll('.match-row'));
         if (forceMenuRefresh) {
             buildQueueMenu();
         }
+        updateQueueControls();
         apply();
     };
     window.refreshMatchRows = refreshMatchRows;
@@ -111,12 +132,12 @@ export function initMatchFilters() {
     let selectedQueue = null;
     let forcedFilter = 'all';
 
-    function currentFilter(){ return forcedFilter; }
+    function currentFilter() {
+        return forcedFilter;
+    }
 
-    function matchesFilter(row){
-        const qAttr = row.getAttribute('data-q');
-        const queueId = normalizeQueueId(qAttr);
-        
+    function matchesFilter(row) {
+        const queueId = normalizeQueueId(row.getAttribute('data-q'));
         if (selectedQueue === RANKED_SENTINEL) return isRankedQueue(queueId);
         if (selectedQueue !== null) {
             const normalizedQueue = typeof selectedQueue === 'number' ? selectedQueue : Number(selectedQueue);
@@ -130,41 +151,55 @@ export function initMatchFilters() {
         return true;
     }
 
-    function matchesSearch(row, term){
+    function matchesSearch(row, term) {
         if (!term) return true;
         const hay = (row.querySelector('.search-index')?.innerText || '').toLowerCase();
         return hay.includes(term.toLowerCase());
     }
 
-    function apply(){
+    function apply() {
         const term = searchInput?.value?.trim().toLowerCase() || '';
         rows.forEach(r => {
             const show = matchesFilter(r) && matchesSearch(r, term);
             r.style.display = show ? '' : 'none';
         });
-        updateSummary();
-        const anyVisible = rows.some(r => r.style.display !== 'none');
+        const summaryText = updateSummary();
+        const visibleRows = rows.filter(r => r.style.display !== 'none');
+        const anyVisible = visibleRows.length > 0;
         if (noMsg) noMsg.style.display = anyVisible ? 'none' : 'block';
+        if (searchStatusRegion) {
+            const baseMessage = anyVisible
+                ? `Showing ${visibleRows.length} match${visibleRows.length === 1 ? '' : 'es'}.`
+                : 'No matches are visible for the current filters.';
+            const queueMessage = selectedQueue === RANKED_SENTINEL
+                ? ' Ranked queues only.'
+                : (selectedQueue !== null ? ` Queue filter: ${queueToggle?.textContent || 'Custom queue'}.` : '');
+            const modeMessage = forcedFilter === 'ranked' && selectedQueue !== RANKED_SENTINEL
+                ? ' Ranked mode enabled.'
+                : '';
+            searchStatusRegion.textContent = summaryText
+                ? `${baseMessage} ${summaryText}${queueMessage}${modeMessage}`.trim()
+                : `${baseMessage}${queueMessage}${modeMessage}`.trim();
+        }
     }
 
-    function updateSummary(){
+    function updateSummary() {
         const vis = rows.filter(r => {
             if (r.style.display === 'none') return false;
             const attr = r.getAttribute('data-remake');
             const isRemake = attr === 'true' || attr === true;
             return !isRemake;
         });
-        let wins=0, k=0, d=0, a=0;
+        let wins = 0, k = 0, d = 0, a = 0;
         vis.forEach(r => {
             const winAttr = r.getAttribute('data-win');
             if (winAttr === 'true' || winAttr === true) wins++;
-            k += Number(r.getAttribute('data-k'))||0;
-            d += Number(r.getAttribute('data-d'))||0;
-            a += Number(r.getAttribute('data-a'))||0;
+            k += Number(r.getAttribute('data-k')) || 0;
+            d += Number(r.getAttribute('data-d')) || 0;
+            a += Number(r.getAttribute('data-a')) || 0;
         });
         const games = vis.length;
-        const wr = games ? Math.round((wins/games)*100) : 0;
-        // Improved KDA calculation: show "Perfect" for 0 deaths with kills/assists
+        const wr = games ? Math.round((wins / games) * 100) : 0;
         let kda;
         if (d === 0 && (k > 0 || a > 0)) {
             kda = 'Perfect';
@@ -175,32 +210,41 @@ export function initMatchFilters() {
         }
         if (elWR) elWR.textContent = 'WR: ' + (games ? (wr + '%') : '-');
         if (elKDA) elKDA.textContent = 'KDA: ' + (games ? kda : '-');
-        if (elCount) elCount.textContent = `Last ${games} game${games===1?'':'s'}`;
+        if (elCount) elCount.textContent = `Last ${games} game${games === 1 ? '' : 's'}`;
+        if (!games) {
+            return '';
+        }
+        return `Win rate ${wr}% with ${kda === 'Perfect' ? 'a perfect KDA' : `a ${kda} KDA`}.`;
     }
 
-    window.setHistoryFilter = function(name){
+    window.setHistoryFilter = function (name) {
         if (!filters) return;
-        const target = (name === 'ranked') ? document.getElementById('filterRanked') : document.getElementById('filterAll');
-        filters.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
-        target && target.classList.add('active');
+        const target = (name === 'ranked')
+            ? document.getElementById('filterRanked')
+            : document.getElementById('filterAll');
+        filters.querySelectorAll('.nav-link').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+        });
+        if (target) {
+            target.classList.add('active');
+            target.setAttribute('aria-pressed', 'true');
+        }
         forcedFilter = (name === 'ranked') ? 'ranked' : 'all';
         selectedQueue = (name === 'ranked') ? RANKED_SENTINEL : null;
-        if (queueToggle) queueToggle.textContent = (selectedQueue === RANKED_SENTINEL ? 'Ranked (any)' : 'All queues');
+        updateQueueControls();
         apply();
     };
 
-    // Event listeners are now attached above in the cleanup section
-
-    let searchTimer = null; 
-    const handleSearchInput = () => { 
-        if (searchTimer) clearTimeout(searchTimer); 
+    let searchTimer = null;
+    const handleSearchInput = () => {
+        if (searchTimer) clearTimeout(searchTimer);
         searchTimer = setTimeout(() => {
             searchTimer = null;
             apply();
-        }, DEBOUNCE_DELAYS.FILTER); 
+        }, DEBOUNCE_DELAYS.FILTER);
     };
-    
-    // Event handler references for proper cleanup
+
     const filterClickHandler = (e) => {
         const btn = e.target.closest('button[data-filter]');
         if (!btn) return;
@@ -208,27 +252,28 @@ export function initMatchFilters() {
         const which = btn.getAttribute('data-filter') === 'ranked' ? 'ranked' : 'all';
         window.setHistoryFilter(which);
     };
-    
+
     const queueClickHandler = (e) => {
         const item = e.target.closest('button[data-q]');
         if (!item) return;
         e.preventDefault();
         const v = item.getAttribute('data-q');
         selectedQueue = (v === '' ? null : (v === 'ranked' ? RANKED_SENTINEL : Number(v)));
-        if (queueToggle) {
-            if (selectedQueue === null) queueToggle.textContent = 'All queues';
-            else if (selectedQueue === RANKED_SENTINEL) queueToggle.textContent = 'Ranked (any)';
-            else queueToggle.textContent = (QUEUE_NAMES[selectedQueue] || ('Queue ' + selectedQueue));
-        }
         if (filters) {
-            filters.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+            filters.querySelectorAll('.nav-link').forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-pressed', 'false');
+            });
             const allBtn = filters.querySelector('[data-filter="all"]');
-            if (allBtn) allBtn.classList.add('active');
+            if (allBtn) {
+                allBtn.classList.add('active');
+                allBtn.setAttribute('aria-pressed', 'true');
+            }
         }
+        updateQueueControls();
         apply();
     };
-    
-    // Cleanup on page unload
+
     const cleanup = () => {
         if (searchTimer) {
             clearTimeout(searchTimer);
@@ -249,9 +294,9 @@ export function initMatchFilters() {
     queueDropdown?.addEventListener(EVENTS.CLICK, queueClickHandler);
     window.addEventListener(EVENTS.BEFOREUNLOAD, cleanup);
 
-    // Store cleanup function globally for reuse
     instances.set(instanceKey, cleanup);
 
+    updateQueueControls();
     apply();
 
     return cleanup;

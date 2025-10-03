@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Browse League of Legends champions with stats and details.">
+    <meta name="color-scheme" content="dark light">
     <meta name="theme-color" id="themeColor" content="#0b1018">
     <title>Champions - SummonerAPI</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -15,9 +16,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha384-PPIZEGYM1v8zp5Py7UjFb79S58UeqCL9pYVnVPURKEqvioPROaVAJKKLzvH2rDnI" crossorigin="anonymous">
+    <link rel="preload" as="style" th:href="@{/css/app.css}" href="/css/app.css">
     <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
 </head>
 <body class="app-body">
+<a class="skip-link" href="#championsMain">Skip to main content</a>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top glass-nav border-bottom border-secondary-subtle">
     <div class="container-fluid">
         <a class="navbar-brand fw-semibold" href="/"><i class="fas fa-chart-line" aria-hidden="true"></i> SummonerAPI</a>
@@ -41,7 +44,7 @@
     </div>
 </nav>
 
-<main class="container mt-5">
+<main id="championsMain" class="container mt-5" role="main" tabindex="-1">
     <section class="hero glass-card rounded-4 p-4 p-md-5 mb-4 shadow-lg position-relative">
         <div class="text-center mb-3">
             <h1 class="display-6 fw-bold mb-2">Champions</h1>
@@ -53,12 +56,13 @@
                 <div class="input-group input-group-lg search-group shadow-sm rounded-3 overflow-hidden">
                     <span class="input-group-text bg-transparent border-0 ps-3"><i class="fas fa-search text-secondary" aria-hidden="true"></i></span>
                     <label class="visually-hidden" for="champSearch">Search champions</label>
-                    <input id="champSearch" type="search" class="form-control bg-transparent border-0" placeholder="Search by name, title or role..." autocomplete="off"/>
+                    <input id="champSearch" type="search" class="form-control bg-transparent border-0" placeholder="Search by name, title or role..." autocomplete="off" aria-describedby="champSearchStatus"/>
                 </div>
             </div>
         </div>
+        <div id="champSearchStatus" class="visually-hidden" role="status" aria-live="polite"></div>
         <div class="text-center mt-3">
-            <div class="btn-group" role="group" aria-label="Role filters">
+            <div class="btn-group" role="group" aria-label="Role filters" aria-live="polite">
                 <button class="btn btn-sm btn-outline-secondary active" data-role="all">All</button>
                 <button class="btn btn-sm btn-outline-secondary" data-role="Assassin">Assassin</button>
                 <button class="btn btn-sm btn-outline-secondary" data-role="Fighter">Fighter</button>
