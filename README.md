@@ -25,6 +25,13 @@
 
 SummonerAPI v2 is a full-stack web application that provides comprehensive League of Legends player statistics, match history, champion analytics, and live build aggregation. Built with modern technologies and best practices, it offers a fast, responsive, and intuitive interface for analyzing player performance.
 
+> **⚠️ LEGAL NOTICE**  
+> **SummonerAPI v2** was created under Riot Games' ["Legal Jibber Jabber"](https://www.riotgames.com/en/legal) policy using assets owned by Riot Games. **Riot Games does not endorse or sponsor this project.**
+>
+> This project is **not affiliated with, endorsed by, or sponsored by Riot Games**. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.  
+> 
+> **You must have your own Riot Games API key and comply with their [Terms of Service](https://developer.riotgames.com/terms) to use this application.**
+
 ### Why SummonerAPI v2?
 
 - **⚡ Lightning Fast**: Powered by Spring Boot 3.5, React 18, and Vite for optimal performance
@@ -108,6 +115,9 @@ SummonerAPI v2 is a full-stack web application that provides comprehensive Leagu
 - **Docker** and **Docker Compose** (for containerized deployment)
 - **PostgreSQL 16** (if running without Docker)
 - **Riot Games API Key** ([Get one here](https://developer.riotgames.com/))
+  - ⚠️ **Required**: You must have your own API key to use this application
+  - ⚠️ **Never commit your API key** to version control or share it publicly
+  - ⚠️ Read and comply with [Riot's API Terms of Service](https://developer.riotgames.com/terms)
 
 ### 🐳 Docker Deployment (Recommended)
 
@@ -585,28 +595,82 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ---
 
+## ⚖️ Legal & Compliance
+
+### Riot Games API Terms
+
+**This project is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.**
+
+By using this application, you acknowledge and agree to the following:
+
+- This project uses the **Riot Games API** under their Developer Terms of Service
+- All game data, assets, and content are property of **Riot Games, Inc.**
+- This is an **unofficial, third-party application** and is not affiliated with, endorsed by, or sponsored by Riot Games
+- Users must comply with the [Riot Games API Terms of Service](https://developer.riotgames.com/terms)
+- Users must comply with the [Riot Games Terms of Service](https://www.riotgames.com/en/terms-of-service)
+
+### API Key Requirements
+
+**IMPORTANT**: To use this application, you must:
+
+1. Obtain your own Riot Games API key from [https://developer.riotgames.com/](https://developer.riotgames.com/)
+2. Comply with Riot's [API Usage Policy](https://developer.riotgames.com/api-usage)
+3. **Never share or expose your API key publicly**
+4. Respect rate limits imposed by Riot Games
+5. Use the API only for non-commercial, educational, or personal purposes (unless you have a production API key)
+
+⚠️ **Development API keys** are intended for personal use only. For production deployments serving third parties, you must apply for a production API key from Riot Games.
+
+### Data Privacy & Usage
+
+- This application **does not collect, store, or sell personal user data**
+- Match and summoner data is cached temporarily for performance optimization
+- All data is sourced directly from the Riot Games API
+- No analytics, tracking, or third-party data sharing is performed
+- Users are responsible for their own API key security and usage
+
+### Disclaimer of Warranty
+
+This software is provided "as is", without warranty of any kind, express or implied. The authors and contributors are not liable for any damages or issues arising from the use of this software.
+
+- ⚠️ The application may stop working if Riot Games changes their API
+- ⚠️ Your API key may be rate-limited or revoked if you violate Riot's terms
+- ⚠️ The accuracy of data depends on the Riot Games API
+- ⚠️ This is a personal project and may contain bugs or incomplete features
+
+---
+
 ## 📝 License
 
 This project is licensed under the **GNU General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
 
 ### What this means:
 
-- ✅ **Freedom to use**: Use this software for any purpose
+- ✅ **Freedom to use**: Use this software for any purpose (subject to API terms above)
 - ✅ **Freedom to study**: Examine and modify the source code
 - ✅ **Freedom to share**: Redistribute copies to help others
 - ✅ **Freedom to improve**: Distribute your modified versions
 - ⚠️ **Share-alike**: Derivative works must also be GPL-licensed
+- ⚠️ **No warranty**: Software is provided "as is" without warranty
+
+**Note**: While this code is GPL-licensed, you must still comply with Riot Games' API Terms of Service when using their API.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **[Riot Games](https://developer.riotgames.com/)** - For providing the League of Legends API
-- **[Community Dragon](https://www.communitydragon.org/)** - For additional game assets
+- **[Riot Games](https://developer.riotgames.com/)** - For providing the League of Legends API and game data
+- **[Community Dragon](https://www.communitydragon.org/)** - For additional game assets and resources
 - **[Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon)** - For champion, item, and spell data
 - **[Spring Boot](https://spring.io/projects/spring-boot)** - For the amazing backend framework
 - **[React](https://react.dev)** - For the powerful frontend library
 - **[Vite](https://vitejs.dev/)** - For the blazing-fast build tool
+
+### Legal Attribution
+
+League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
+
+All game assets, data, and content displayed in this application are the intellectual property of Riot Games, Inc. and are used in accordance with their API Terms of Service.
 
 ---
 
@@ -615,6 +679,14 @@ This project is licensed under the **GNU General Public License v3.0** - see the
 - **Author**: Mavi
 - **Repository**: [github.com/zerox80/SummonerAPIv2](https://github.com/zerox80/SummonerAPIv2)
 - **Issues**: [Report a bug or request a feature](https://github.com/zerox80/SummonerAPIv2/issues)
+
+### Support Guidelines
+
+- For **bugs** or **feature requests**: Open an issue on GitHub
+- For **API-related issues**: Contact [Riot Games Developer Support](https://developer.riotgames.com/)
+- For **security vulnerabilities**: Please report privately via GitHub Security Advisories
+
+**Note**: This is a personal project maintained in spare time. Response times may vary.
 
 ---
 
@@ -647,8 +719,21 @@ This project is licensed under the **GNU General Public License v3.0** - see the
 
 <div align="center">
 
+---
+
 **Made with ❤️ for the League of Legends community**
 
 ⭐ **Star this repo if you find it helpful!** ⭐
+
+---
+
+### Final Notes
+
+This is an **educational, open-source project** created for personal use and learning purposes.  
+All League of Legends data, assets, and content are property of **Riot Games, Inc.**  
+
+**Always respect the [Riot Games API Terms of Service](https://developer.riotgames.com/terms) and [Terms of Service](https://www.riotgames.com/en/terms-of-service).**
+
+*League of Legends © Riot Games, Inc.*
 
 </div>
