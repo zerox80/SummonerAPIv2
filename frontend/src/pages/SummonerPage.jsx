@@ -65,6 +65,10 @@ export default function SummonerPage() {
         killParticipation: 0
       };
     }
+    
+    const targetCount = range === 'all' ? matches.length : Number(range);
+    const filteredMatches = matches.slice(0, targetCount);
+    
     let wins = 0;
     let losses = 0;
     let kills = 0;
@@ -76,7 +80,7 @@ export default function SummonerPage() {
     let damage = 0;
     let vision = 0;
     let killParticipation = 0;
-    matches.forEach((match) => {
+    filteredMatches.forEach((match) => {
       const { info } = match;
       if (!info || !info.participants) return;
       const participant = info.participants.find((p) => p && p.puuid === profileQuery.data?.summoner?.puuid);
@@ -124,7 +128,7 @@ export default function SummonerPage() {
       avgVision,
       killParticipation: kp
     };
-  }, [matches, profileQuery.data]);
+  }, [matches, profileQuery.data, range]);
 
   const handleLoadMore = async () => {
     if (!riotIdResolved || isFetchingMore || !hasMoreMatches) return;
