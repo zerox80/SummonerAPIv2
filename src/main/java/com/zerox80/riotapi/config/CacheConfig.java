@@ -35,7 +35,7 @@ public class CacheConfig {
                 .buildAsync());
         cacheManager.registerCustomCache("matchIds",
             Caffeine.newBuilder()
-                .expireAfterAccess(30, TimeUnit.MINUTES)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
                 .maximumSize(5000)
                 .buildAsync());
         cacheManager.registerCustomCache("matchDetails",
@@ -45,7 +45,7 @@ public class CacheConfig {
                 .buildAsync());
         cacheManager.registerCustomCache("matchHistory",
             Caffeine.newBuilder()
-                .expireAfterAccess(30, TimeUnit.MINUTES)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
                 .maximumSize(2000)
                 .buildAsync());
         // Static data (Data Dragon): cache generously, these change only per patch
