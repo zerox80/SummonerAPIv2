@@ -146,6 +146,10 @@ export default function SummonerPage() {
     }
   };
 
+  const handleRangeChange = (newRange) => {
+    setRange(newRange);
+  };
+
   useEffect(() => {
     setHasMoreMatches(false);
     if (!riotIdParam) {
@@ -153,6 +157,35 @@ export default function SummonerPage() {
       setMatches([]);
     }
   }, [queryClient, riotIdParam]);
+
+  useEffect(() => {
+    const autoLoadMatches = async () => {
+      if (!riotIdResolved || isFetchingMore) return;
+      
+      const targetCount = range === '100' ? 100 : (range === 'all' ? 999999 : Number(range));
+      if (matches.length >= targetCount || !hasMoreMatches) return;
+      
+      setIsFetchingMore(true);
+      const start = matches.length;
+      const count = profileQuery.data?.matchesPageSize || 40;
+      
+      try {
+        const more = await api.matches({ riotId: riotIdResolved, start, count });
+        if (Array.isArray(more) && more.length > 0) {
+          setMatches((prev) => [...prev, ...more]);
+          setHasMoreMatches(more.length >= count);
+        } else {
+          setHasMoreMatches(false);
+        }
+      } catch (error) {
+        setHasMoreMatches(false);
+      } finally {
+        setIsFetchingMore(false);
+      }
+    };
+
+    autoLoadMatches();
+  }, [range, matches.length, hasMoreMatches, riotIdResolved, isFetchingMore, profileQuery.data]);
 
   return (
     <div className="summoner-page">
@@ -183,7 +216,7 @@ export default function SummonerPage() {
             matches={matches}
             summoner={profileQuery.data.summoner}
             range={range}
-            onRangeChange={setRange}
+            onRangeChange={handleRangeChange}
           />
           <TopChampions
             championPlayCounts={profileQuery.data.championPlayCounts}
