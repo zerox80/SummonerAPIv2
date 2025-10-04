@@ -16,6 +16,7 @@ export default function SummonerPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const riotIdParam = (searchParams.get('riotId') || '').trim();
   const [matches, setMatches] = useState([]);
+  const [range, setRange] = useState('40');
   const [filters, setFilters] = useState({ queue: 'ALL', result: 'ALL', role: 'ALL' });
   const [hasMoreMatches, setHasMoreMatches] = useState(false);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
@@ -29,9 +30,10 @@ export default function SummonerPage() {
 
   useEffect(() => {
     if (profileQuery.data?.matchHistory) {
-      setMatches(profileQuery.data.matchHistory);
-      const size = profileQuery.data.matchHistory.length;
-      const pageSize = profileQuery.data.matchesPageSize || 10;
+      const initialMatches = profileQuery.data.matchHistory;
+      setMatches(initialMatches);
+      const size = initialMatches.length;
+      const pageSize = profileQuery.data.matchesPageSize || 40;
       setHasMoreMatches(size >= pageSize);
     } else {
       setMatches([]);
@@ -128,7 +130,7 @@ export default function SummonerPage() {
     if (!riotIdResolved || isFetchingMore || !hasMoreMatches) return;
     setIsFetchingMore(true);
     const start = matches.length;
-    const count = profileQuery.data?.matchesPageSize || 10;
+    const count = profileQuery.data?.matchesPageSize || 40;
     try {
       const more = await api.matches({ riotId: riotIdResolved, start, count });
       if (Array.isArray(more) && more.length > 0) {
@@ -176,7 +178,13 @@ export default function SummonerPage() {
         <div className="summoner-page__grid">
           <SummonerHeader profile={profileQuery.data} derived={derived} />
           <RankedOverview entries={profileQuery.data.leagueEntries} bases={profileQuery.data.bases} />
-          <PerformanceSummary derived={derived} matches={matches} summoner={profileQuery.data.summoner} />
+          <PerformanceSummary
+            derived={derived}
+            matches={matches}
+            summoner={profileQuery.data.summoner}
+            range={range}
+            onRangeChange={setRange}
+          />
           <TopChampions
             championPlayCounts={profileQuery.data.championPlayCounts}
             matches={matches}

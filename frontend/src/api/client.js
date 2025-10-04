@@ -39,7 +39,7 @@ async function request(path, { method = 'GET', body, headers, signal } = {}) {
 export const api = {
   profile: ({ riotId, includeMatches = true, signal }) =>
     request(`/api/profile?riotId=${encodeURIComponent(riotId)}&includeMatches=${includeMatches}`, { signal }),
-  matches: ({ riotId, start = 0, count = 10, signal }) =>
+  matches: ({ riotId, start = 0, count = 40, signal }) =>
     request(`/api/matches?riotId=${encodeURIComponent(riotId)}&start=${start}&count=${count}`, { signal }),
   suggestions: ({ query, signal }) =>
     request(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`, { signal }),

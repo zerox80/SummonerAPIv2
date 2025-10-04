@@ -8,8 +8,8 @@ import { formatDuration, relativeGameTime, formatQueueById, roleLabel } from '..
 import '../../styles/summoner/performance-summary.css';
 
 const RANGE_OPTIONS = [
-  { label: 'Last 10', value: '10' },
-  { label: 'Last 20', value: '20' },
+  { label: 'Last 40', value: '40' },
+  { label: 'Last 100', value: '100' },
   { label: 'All', value: 'all' }
 ];
 
@@ -44,11 +44,30 @@ function buildTimeline(matches, puuid, queueFilter, rangeFilter) {
     });
 }
 
-export default function PerformanceSummary({ derived, matches, summoner }) {
-  const [range, setRange] = useState('10');
+export default function PerformanceSummary({ derived, matches, summoner, range = '40', onRangeChange }) {
   const [queue, setQueue] = useState('ALL');
+  const [internalRange, setInternalRange] = useState(range || '40');
+  const isControlled = typeof onRangeChange === 'function';
+  const activeRange = isControlled ? (range || '40') : internalRange;
 
-  const timeline = useMemo(() => buildTimeline(matches, summoner?.puuid, queue, range), [matches, summoner?.puuid, queue, range]);
+  const handleRangeChange = (value) => {
+    if (isControlled) {
+      onRangeChange(value);
+    } else {
+      setInternalRange(value);
+    }
+  };
+
+  const timeline = useMemo(() => buildTimeline(matches, summoner?.puuid, queue, activeRange), [matches, summoner?.puuid, queue, activeRange]);
+
+  const rangeSummary = useMemo(() => {
+    if (activeRange === 'all') {
+      return 'Showing all recorded matches';
+    }
+    return `Showing the last ${activeRange} matches`;
+  }, [activeRange]);
+
+  const rangeQualifier = activeRange === 'all' ? 'All matches' : `Last ${activeRange}`;
 
   const winSpark = timeline.map((entry) => (entry.win ? 1 : -1));
   const kdaSpark = timeline.map((entry) => Number(entry.kda.toFixed(2)) || 0);
@@ -64,9 +83,10 @@ export default function PerformanceSummary({ derived, matches, summoner }) {
         <div>
           <p className="badge-soft">Performance Insights</p>
           <h3>Your recent matches</h3>
+          <p className="performance-summary__description">{rangeSummary}</p>
         </div>
         <div className="performance-summary__controls">
-          <SegmentedControl options={RANGE_OPTIONS} value={range} onChange={setRange} size="sm" />
+          <SegmentedControl options={RANGE_OPTIONS} value={activeRange} onChange={handleRangeChange} size="sm" />
           <SegmentedControl options={QUEUE_OPTIONS} value={queue} onChange={setQueue} size="sm" />
         </div>
       </header>
@@ -75,7 +95,7 @@ export default function PerformanceSummary({ derived, matches, summoner }) {
         <MetricTile
           label="Win Rate"
           value={`${derived.winRate}%`}
-          secondary={`${derived.totalWins} Wins · ${derived.totalLosses} Losses`}
+          secondary={`${derived.totalWins} Wins · ${derived.totalLosses} Losses · ${rangeQualifier}`}
           icon="🏆"
           emphasize
           trend={<Sparkline data={winSpark} color="rgba(34,197,94,0.8)" />}
@@ -147,5 +167,7 @@ PerformanceSummary.propTypes = {
   matches: PropTypes.arrayOf(PropTypes.object),
   summoner: PropTypes.shape({
     puuid: PropTypes.string
-  })
+  }),
+  range: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onRangeChange: PropTypes.func
 };
