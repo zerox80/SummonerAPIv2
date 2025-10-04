@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎮 SummonerAPI v2
+<img width="1203" height="851" alt="image" src="https://github.com/user-attachments/assets/e893494c-886f-49be-948f-d387ac8602a3" />
 
 **A modern, high-performance League of Legends statistics and analytics platform**
 
