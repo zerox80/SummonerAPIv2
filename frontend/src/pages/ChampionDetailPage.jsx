@@ -11,12 +11,6 @@ import { formatQueueById, roleLabel } from '../utils/formatters.js';
 import { mergeChampionAbilities } from '../utils/championSpells.js';
 import '../styles/champions/champion-detail-page.css';
 
-const QUEUE_OPTIONS = [
-  { label: 'Solo/Duo', value: '420' },
-  { label: 'Flex', value: '440' },
-  { label: 'ARAM', value: '450' }
-];
-
 const ROLE_OPTIONS = [
   { label: 'All Roles', value: 'ALL' },
   { label: 'Top', value: 'TOP' },
@@ -31,12 +25,12 @@ const IMAGE_BASE = 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion
 export default function ChampionDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [queue, setQueue] = useState('420');
   const [role, setRole] = useState('ALL');
+  const queueId = 420;
 
   const detailQuery = useChampionDetail(id);
   const buildQuery = useChampionBuild(id, {
-    queueId: queue === 'ALL' ? undefined : Number(queue),
+    queueId,
     role: role === 'ALL' ? undefined : role
   });
 
@@ -83,7 +77,6 @@ export default function ChampionDetailPage() {
         imageSrc={heroImage}
         actions={(
           <div className="champion-detail__controls">
-            <SegmentedControl options={QUEUE_OPTIONS} value={queue} onChange={setQueue} />
             <SegmentedControl options={ROLE_OPTIONS} value={role} onChange={setRole} />
           </div>
         )}
