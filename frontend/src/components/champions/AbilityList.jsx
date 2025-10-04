@@ -23,8 +23,8 @@ export default function AbilityList({ passive, spells }) {
   return (
     <section className="champion-abilities glass-panel">
       <header className="champion-abilities__header">
-        <h3>Fähigkeitenübersicht</h3>
-        <p>Verstehe das Kit und die Spielweise des Champions.</p>
+        <h3>Ability Overview</h3>
+        <p>Understand the champion kit and how it plays.</p>
       </header>
       <div className="champion-abilities__grid">
         {passive && (
@@ -60,28 +60,28 @@ export default function AbilityList({ passive, spells }) {
               </div>
               <div className="ability-card__stats">
                 {spell.cooldown && (
-                  <Tooltip label="Abklingzeit">
+                  <Tooltip label="Cooldown">
                     <span><strong>CD</strong> {spell.cooldown}</span>
                   </Tooltip>
                 )}
                 {spell.cost && (
-                  <Tooltip label="Ressourcenkosten">
-                    <span><strong>Kosten</strong> {spell.cost}</span>
+                  <Tooltip label="Resource Cost">
+                    <span><strong>Cost</strong> {spell.cost}</span>
                   </Tooltip>
                 )}
                 {spell.range && (
-                  <Tooltip label="Reichweite">
-                    <span><strong>Reichweite</strong> {spell.range}</span>
+                  <Tooltip label="Range">
+                    <span><strong>Range</strong> {spell.range}</span>
                   </Tooltip>
                 )}
                 {spell.damage && (
-                  <Tooltip label="Schaden">
-                    <span><strong>Schaden</strong> {spell.damage}</span>
+                  <Tooltip label="Damage">
+                    <span><strong>Damage</strong> {spell.damage}</span>
                   </Tooltip>
                 )}
                 {spell.scaling && (
-                  <Tooltip label="Skalierung">
-                    <span><strong>Skalierung</strong> {spell.scaling}</span>
+                  <Tooltip label="Scaling">
+                    <span><strong>Scaling</strong> {spell.scaling}</span>
                   </Tooltip>
                 )}
               </div>
