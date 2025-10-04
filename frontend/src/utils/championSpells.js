@@ -1,9 +1,15 @@
-import curatedData from '../data/championSpells.de.json';
+let curatedById = {};
 
-const curatedById = Object.entries(curatedData).reduce((accumulator, [key, value]) => {
-  accumulator[key.toLowerCase()] = value;
-  return accumulator;
-}, {});
+try {
+  // eslint-disable-next-line global-require, import/no-unresolved
+  const curatedData = require('../data/championSpells.de.json');
+  curatedById = Object.entries(curatedData).reduce((accumulator, [key, value]) => {
+    accumulator[key.toLowerCase()] = value;
+    return accumulator;
+  }, {});
+} catch (error) {
+  curatedById = {};
+}
 
 function mergeNotes(baseNotes = [], curatedNotes = []) {
   const normalized = [...baseNotes, ...curatedNotes]
