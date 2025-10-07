@@ -5,6 +5,11 @@ import Tag from '../../components/Tag.jsx';
 import { formatDuration, relativeGameTime, formatQueueById, formatKDA, roleLabel } from '../../utils/formatters.js';
 import '../../styles/summoner/match-history.css';
 
+const DEFAULT_DDRAGON_VERSION = '15.20.1';
+const DEFAULT_ITEM_BASE = `https://ddragon.leagueoflegends.com/cdn/${DEFAULT_DDRAGON_VERSION}/img/item/`;
+const DEFAULT_SPELL_BASE = `https://ddragon.leagueoflegends.com/cdn/${DEFAULT_DDRAGON_VERSION}/img/spell/`;
+const DEFAULT_CHAMPION_BASE = `https://ddragon.leagueoflegends.com/cdn/${DEFAULT_DDRAGON_VERSION}/img/champion/`;
+
 const QUEUE_FILTER_OPTIONS = [
   { label: 'All', value: 'ALL' },
   { label: 'Solo/Duo', value: '420' },
@@ -136,11 +141,11 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
   const filteredMatches = useMemo(() => applyFilters(matches, summoner, filters), [matches, summoner, filters]);
   const [expandedMatchId, setExpandedMatchId] = useState(null);
 
-  const itemBase = bases?.item || 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/item/';
-  const spellBase = bases?.spell || 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/spell/';
+  const itemBase = bases?.item || DEFAULT_ITEM_BASE;
+  const spellBase = bases?.spell || DEFAULT_SPELL_BASE;
   const runeBase = bases?.img || 'https://ddragon.leagueoflegends.com/cdn/img/';
   const championBase = bases?.champSquare
-    || (bases?.img ? `${bases.img}champion/` : 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/');
+    || (bases?.img ? `${bases.img}champion/` : DEFAULT_CHAMPION_BASE);
 
   const handleToggle = useCallback((matchId) => {
     setExpandedMatchId((prev) => (prev === matchId ? null : matchId));
