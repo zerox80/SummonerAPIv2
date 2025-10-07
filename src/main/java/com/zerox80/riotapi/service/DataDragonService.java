@@ -325,7 +325,7 @@ public class DataDragonService {
         }
         if (generated != null && (generated.passive != null || (generated.spells != null && !generated.spells.isEmpty()))) {
             applyChampionSpecificTooltipOverrides(id, generated.localeTag, generated.spells);
-            String finalLore = preferString(local != null ? local.lore : null, lore);
+            String finalLore = selectPreferredString(local != null ? local.lore : null, lore);
             return new ChampionDetail(id, name, title, finalLore, tags, imageFull,
                     generated.passive, generated.spells == null ? java.util.Collections.emptyList() : generated.spells);
         }
@@ -617,7 +617,15 @@ public class DataDragonService {
         if (passive == null && spells.isEmpty()) {
             return null;
         }
-        return new LocalAbilities(passive, spells, localeTag);
+        String lore = championData.path("lore").asText("");
+        return new LocalAbilities(lore.isBlank() ? null : sanitizeHtml(lore), passive, spells, localeTag);
+    }
+
+    private static String selectPreferredString(String primary, String fallback) {
+        if (primary != null && !primary.isBlank()) {
+            return primary;
+        }
+        return fallback;
     }
 
     private InputStream openLocalizedAbilityStream(String locale, String cidLower) {
