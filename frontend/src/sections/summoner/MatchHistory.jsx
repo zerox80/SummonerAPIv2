@@ -50,24 +50,35 @@ const SUMMONER_SPELL_DATA = {
   39: { key: 'SummonerUnleashedSmite', name: 'Unleashed Smite' }
 };
 
+const KEYSTONE_BASE_URL = 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles';
+
 const KEYSTONE_DATA = {
-  8005: { icon: 'perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png', name: 'Press the Attack' },
-  8008: { icon: 'perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png', name: 'Lethal Tempo' },
-  8010: { icon: 'perk-images/Styles/Precision/Conqueror/Conqueror.png', name: 'Conqueror' },
-  8021: { icon: 'perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png', name: 'Fleet Footwork' },
-  8112: { icon: 'perk-images/Styles/Domination/Electrocute/Electrocute.png', name: 'Electrocute' },
-  8124: { icon: 'perk-images/Styles/Domination/Predator/Predator.png', name: 'Predator' },
-  8128: { icon: 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png', name: 'Dark Harvest' },
-  8214: { icon: 'perk-images/Styles/Sorcery/SummonAery/SummonAery.png', name: 'Summon Aery' },
-  8229: { icon: 'perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png', name: 'Arcane Comet' },
-  8230: { icon: 'perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png', name: 'Phase Rush' },
-  8437: { icon: 'perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png', name: 'Grasp of the Undying' },
-  8439: { icon: 'perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png', name: 'Aftershock' },
-  8465: { icon: 'perk-images/Styles/Resolve/Guardian/Guardian.png', name: 'Guardian' },
-  8351: { icon: 'perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png', name: 'Glacial Augment' },
-  8360: { icon: 'perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png', name: 'Unsealed Spellbook' },
-  8369: { icon: 'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png', name: 'First Strike' }
+  8005: { icon: `${KEYSTONE_BASE_URL}/Precision/PressTheAttack/PressTheAttack.png`, name: 'Press the Attack' },
+  8008: { icon: `${KEYSTONE_BASE_URL}/Precision/LethalTempo/LethalTempoTemp.png`, name: 'Lethal Tempo' },
+  8010: { icon: `${KEYSTONE_BASE_URL}/Precision/Conqueror/Conqueror.png`, name: 'Conqueror' },
+  8021: { icon: `${KEYSTONE_BASE_URL}/Precision/FleetFootwork/FleetFootwork.png`, name: 'Fleet Footwork' },
+  8112: { icon: `${KEYSTONE_BASE_URL}/Domination/Electrocute/Electrocute.png`, name: 'Electrocute' },
+  8124: { icon: `${KEYSTONE_BASE_URL}/Domination/Predator/Predator.png`, name: 'Predator' },
+  8128: { icon: `${KEYSTONE_BASE_URL}/Domination/DarkHarvest/DarkHarvest.png`, name: 'Dark Harvest' },
+  8214: { icon: `${KEYSTONE_BASE_URL}/Sorcery/SummonAery/SummonAery.png`, name: 'Summon Aery' },
+  8229: { icon: `${KEYSTONE_BASE_URL}/Sorcery/ArcaneComet/ArcaneComet.png`, name: 'Arcane Comet' },
+  8230: { icon: `${KEYSTONE_BASE_URL}/Sorcery/PhaseRush/PhaseRush.png`, name: 'Phase Rush' },
+  8437: { icon: `${KEYSTONE_BASE_URL}/Resolve/GraspOfTheUndying/GraspOfTheUndying.png`, name: 'Grasp of the Undying' },
+  8439: { icon: `${KEYSTONE_BASE_URL}/Resolve/VeteranAftershock/VeteranAftershock.png`, name: 'Aftershock' },
+  8465: { icon: `${KEYSTONE_BASE_URL}/Resolve/Guardian/Guardian.png`, name: 'Guardian' },
+  8351: { icon: `${KEYSTONE_BASE_URL}/Inspiration/GlacialAugment/GlacialAugment.png`, name: 'Glacial Augment' },
+  8360: { icon: `${KEYSTONE_BASE_URL}/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png`, name: 'Unsealed Spellbook' },
+  8369: { icon: `${KEYSTONE_BASE_URL}/Inspiration/FirstStrike/FirstStrike.png`, name: 'First Strike' }
 };
+
+function resolveChampionImage(championSquares, championBase, championName, championId) {
+  if (!championName) return null;
+  const championByName = championSquares?.[championName];
+  if (championByName) return championByName;
+  const idKey = championId != null ? String(championId) : null;
+  if (idKey && championSquares?.[idKey]) return championSquares[idKey];
+  return `${championBase}${championName}.png`;
+}
 
 function applyFilters(matches, summoner, filters) {
   if (!Array.isArray(matches)) return [];
@@ -109,10 +120,21 @@ function getKeystoneAsset(perks, runeBase) {
   const keystoneId = perks?.styles?.[0]?.selections?.[0]?.perk;
   const keystone = KEYSTONE_DATA[keystoneId];
   if (!keystone) return null;
+  const icon = typeof keystone.icon === 'string' ? keystone.icon : '';
+  const isAbsolute = icon.startsWith('http://') || icon.startsWith('https://');
   return {
-    src: `${runeBase}${keystone.icon}`,
+    src: isAbsolute ? icon : `${runeBase}${icon}`,
     name: keystone.name
   };
+}
+
+function resolveChampionImage(championSquares, championBase, championName, championId) {
+  if (!championName) return null;
+  const byName = championSquares?.[championName];
+  if (byName) return byName;
+  const idKey = championId != null ? String(championId) : null;
+  if (idKey && championSquares?.[idKey]) return championSquares[idKey];
+  return `${championBase}${championName}.png`;
 }
 
 function sumTeamStat(participants = [], extractor) {
@@ -126,6 +148,8 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
   const itemBase = bases?.item || 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/item/';
   const spellBase = bases?.spell || 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/spell/';
   const runeBase = bases?.img || 'https://ddragon.leagueoflegends.com/cdn/img/';
+  const championBase = bases?.champSquare
+    || (bases?.img ? `${bases.img}champion/` : 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/');
 
   const handleToggle = useCallback((matchId) => {
     setExpandedMatchId((prev) => (prev === matchId ? null : matchId));
@@ -179,7 +203,12 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
           const participant = match.info.participants.find((p) => p?.puuid === summoner?.puuid);
           if (!participant) return null;
 
-          const championImg = championSquares?.[participant.championName] || `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/${participant.championName}.png`;
+          const championImg = resolveChampionImage(
+            championSquares,
+            championBase,
+            participant.championName,
+            participant.championId
+          );
           const gameTime = relativeGameTime(match.info.gameEndTimestamp || match.info.gameCreation);
           const duration = formatDuration(Math.round((match.info.gameDuration || 0) / 1000));
           const kda = formatKDA(participant.kills, participant.deaths, participant.assists);
@@ -322,7 +351,12 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
                       </div>
                       <div className="match-card__team-body">
                         {team.players.map((player) => {
-                          const playerChampionImg = championSquares?.[player.championName] || `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/${player.championName}.png`;
+                          const playerChampionImg = resolveChampionImage(
+                            championSquares,
+                            championBase,
+                            player.championName,
+                            player.championId
+                          );
                           const playerSpells = [
                             getSpellAsset(player.summoner1Id, spellBase),
                             getSpellAsset(player.summoner2Id, spellBase)

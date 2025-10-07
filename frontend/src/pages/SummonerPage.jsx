@@ -237,9 +237,9 @@ export default function SummonerPage() {
             fetchMore={handleLoadMore}
             hasMore={hasMoreMatches}
             isFetchingMore={isFetchingMore}
-            bases={profileQuery.data.bases}
             championSquares={profileQuery.data.championSquares}
-            matchesPageSize={profileQuery.data.matchesPageSize}
+            bases={profileQuery.data?.bases}
+            matchesPageSize={profileQuery.data?.matchesPageSize}
           />
         </div>
       )}

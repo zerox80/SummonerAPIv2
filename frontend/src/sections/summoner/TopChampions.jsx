@@ -3,10 +3,22 @@ import PropTypes from 'prop-types';
 import Tag from '../../components/Tag.jsx';
 import '../../styles/summoner/top-champions.css';
 
-export default function TopChampions({ championPlayCounts, matches, summoner, championSquares }) {
+function resolveChampionImage(championSquares, championBase, championName, championId) {
+  if (!championName) return null;
+  const byName = championSquares?.[championName];
+  if (byName) return byName;
+  const idKey = championId != null ? String(championId) : null;
+  if (idKey && championSquares?.[idKey]) return championSquares[idKey];
+  return `${championBase}${championName}.png`;
+}
+
+export default function TopChampions({ championPlayCounts, matches, summoner, championSquares, bases }) {
   const enrichedChampions = useMemo(() => {
     if (!championPlayCounts || !matches || !summoner) return [];
     
+    const championBase = bases?.champSquare
+      || (bases?.img ? `${bases.img}champion/` : 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/');
+
     const result = Object.entries(championPlayCounts).map(([championName, playCount]) => {
       const championMatches = matches.filter((match) => {
         if (!match?.info?.participants) return false;
@@ -33,7 +45,13 @@ export default function TopChampions({ championPlayCounts, matches, summoner, ch
       const totalGames = wins + losses;
       const winrate = totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
       const avgKda = totalGames > 0 ? ((kills + assists) / Math.max(deaths, 1)).toFixed(2) : '0.00';
-      const imageUrl = championSquares?.[championName] || `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/${championName}.png`;
+      const sampleParticipant = championMatches[0]?.info?.participants?.find((p) => p?.puuid === summoner.puuid);
+      const imageUrl = resolveChampionImage(
+        championSquares,
+        championBase,
+        championName,
+        sampleParticipant?.championId
+      );
 
       return {
         name: championName,
@@ -100,5 +118,6 @@ TopChampions.propTypes = {
   summoner: PropTypes.shape({
     puuid: PropTypes.string
   }),
-  championSquares: PropTypes.object
+  championSquares: PropTypes.object,
+  bases: PropTypes.object
 };
