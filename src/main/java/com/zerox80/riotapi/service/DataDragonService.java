@@ -1200,7 +1200,7 @@ public class DataDragonService {
     }
 
     private String cdragonLocale(String ddragonLocale) {
-        if (ddragonLocale == null || ddragonLocale.isBlank()) return "de_de";
+        if (ddragonLocale == null || ddragonLocale.isBlank()) return "en_us";
         // Convert e.g., de_DE -> de_de
         return ddragonLocale.toLowerCase(Locale.ROOT).replace('-', '_');
     }
