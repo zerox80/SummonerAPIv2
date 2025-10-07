@@ -301,10 +301,11 @@ public class DataDragonService {
 
         // Try to load local, versioned abilities (e.g., abilities/<locale>/anivia.json)
         LocalAbilities local = loadLocalAbilities(id, localeTag);
-        if (local != null && localeEquals(localeTag, local.localeTag)
-                && (local.passive != null || (local.spells != null && !local.spells.isEmpty()))) {
-            applyChampionSpecificTooltipOverrides(id, localeTag, local.spells);
-            return new ChampionDetail(id, name, title, lore, tags, imageFull,
+        if (local != null && (local.passive != null || (local.spells != null && !local.spells.isEmpty()))) {
+            applyChampionSpecificTooltipOverrides(id, local.localeTag, local.spells);
+            // Prefer curated lore if available, otherwise use DDragon lore
+            String curatedLore = (local.lore != null && !local.lore.isBlank()) ? local.lore : lore;
+            return new ChampionDetail(id, name, title, curatedLore, tags, imageFull,
                     local.passive, local.spells == null ? java.util.Collections.emptyList() : local.spells);
         }
 
