@@ -4,6 +4,13 @@
   padding: 2.25rem;
   position: relative;
   overflow: visible;
+  z-index: 5;
+  transition: padding var(--duration-fast) ease;
+}
+
+.summoner-search.is-showing-suggestions {
+  padding-bottom: 3.75rem;
+  z-index: 15;
 }
 
 .summoner-search::after {
@@ -38,7 +45,7 @@
 
 .summoner-search__form {
   position: relative;
-  z-index: 2;
+  z-index: 8;
 }
 
 .summoner-search__input {
@@ -86,11 +93,11 @@
   padding: 0.8rem;
   min-width: min(420px, 100%);
   border-radius: var(--radius-md);
-  background: rgba(9, 14, 28, 0.88);
-  border: 1px solid rgba(99, 102, 241, 0.25);
-  backdrop-filter: blur(20px) saturate(200%);
-  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.35);
-  z-index: 3;
+  background: rgba(9, 14, 28, 0.94);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  backdrop-filter: blur(22px) saturate(210%);
+  box-shadow: 0 26px 55px rgba(5, 12, 32, 0.48);
+  z-index: 12;
 }
 
 .summoner-search__suggestion {

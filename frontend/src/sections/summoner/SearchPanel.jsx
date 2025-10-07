@@ -39,6 +39,8 @@ export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) 
     return suggestionsQuery.data.slice(0, 5);
   }, [suggestionsQuery.data]);
 
+  const suggestionsVisible = focused && suggestions.length > 0;
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const value = input.trim();
@@ -53,7 +55,7 @@ export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) 
   };
 
   return (
-    <section className="summoner-search glass-panel">
+    <section className={`summoner-search glass-panel ${suggestionsVisible ? 'is-showing-suggestions' : ''}`}>
       <div className="summoner-search__headline">
         <p className="badge-soft">Ultra-fast Summoner Lookup</p>
         <h1>
@@ -75,12 +77,14 @@ export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) 
             placeholder={PLACEHOLDER_IDS[placeholderIndex]}
             spellCheck="false"
             aria-label="Enter Riot ID"
+            aria-haspopup="listbox"
+            aria-expanded={suggestionsVisible}
           />
           <button type="submit" className="cta-button" disabled={isLoading}>
             {isLoading ? 'Searching ...' : 'Search'}
           </button>
         </div>
-        {focused && suggestions.length > 0 && (
+        {suggestionsVisible && (
           <div className="summoner-search__suggestions" role="listbox">
             {suggestions.map((item) => (
               <button
