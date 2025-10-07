@@ -1,0 +1,390 @@
+{
+  "aatrox": {
+    "lore": "Aatrox is a Darkin bruiser who excels in extended fights. With sweeping blade strikes, displacement, and his demonic form, he dominates melee teamfights.",
+    "passive": {
+      "name": "Blood Well",
+      "description": "Periodically empowers his next basic attack to deal bonus physical damage in a cone and heal based on damage dealt.",
+      "imageFull": "Aatrox_P.png",
+      "notes": [
+        "Cooldown reduced by attacks and abilities",
+        "Sustains heavily in prolonged skirmishes"
+      ]
+    },
+    "spells": [
+      {
+        "id": "AatroxQ",
+        "name": "The Darkin Blade",
+        "description": "Aatrox swings his blade three times, each with a different hit shape. Hitting with the blade's edge deals increased damage and knocks up.",
+        "imageFull": "AatroxQ.png",
+        "cooldown": "14/12/10/8/6 s",
+        "cost": "No cost",
+        "notes": [
+          "Hitbox changes with each cast",
+          "Edge (sweetspot) knocks up"
+        ]
+      },
+      {
+        "id": "AatroxW",
+        "name": "Infernal Chains",
+        "description": "Aatrox lashes forward, damaging and slowing the first champion hit. If the target stays in the zone, they are pulled to the center and damaged again.",
+        "imageFull": "AatroxW.png",
+        "cooldown": "20/18.5/17/15.5/14 s",
+        "cost": "No cost",
+        "range": "825",
+        "notes": [
+          "Also pulls monsters",
+          "Targets can escape by leaving the zone"
+        ]
+      },
+      {
+        "id": "AatroxE",
+        "name": "Umbral Dash",
+        "description": "Aatrox dashes, briefly increasing self-healing. Stores two charges. Passive: attacks and Q heal him when hitting champions.",
+        "imageFull": "AatroxE.png",
+        "cooldown": "9/8/7/6/5 s",
+        "cost": "No cost",
+        "notes": [
+          "Two charges",
+          "Can be used during Q to land sweetspots"
+        ]
+      },
+      {
+        "id": "AatroxR",
+        "name": "World Ender",
+        "description": "Aatrox unleashes his demonic form, gaining AD, Move Speed, and amplified healing. Takedowns extend the duration and heal him heavily.",
+        "imageFull": "AatroxR.png",
+        "cooldown": "120/100/80 s",
+        "cost": "No cost",
+        "notes": [
+          "Initial cast slightly displaces enemies",
+          "Delays death while active"
+        ]
+      }
+    ]
+  },
+  "ahri": {
+    "lore": "Ahri is a mobile mage-assassin who charms and bursts targets. Her ultimate grants agile dashes to engage, reposition, or escape.",
+    "passive": {
+      "name": "Essence Theft",
+      "description": "Abilities generate essence; on reaching stacks Ahri heals. Champion takedowns grant additional essence and refresh her ultimate casts.",
+      "imageFull": "Ahri_P.png",
+      "notes": [
+        "Orb hits ramp essence faster",
+        "Takedowns grant instant healing and an extra ult dash"
+      ]
+    },
+    "spells": [
+      {
+        "id": "AhriQ",
+        "name": "Orb of Deception",
+        "description": "Ahri sends her orb forward and pulls it back. Outbound deals magic damage; return deals true damage.",
+        "imageFull": "AhriQ.png",
+        "cooldown": "7 s",
+        "cost": "55/70/85/100/115 Mana",
+        "range": "880",
+        "damage": "40/65/90/115/140 (+35% AP) each way",
+        "notes": [
+          "Grants movement speed while the orb travels",
+          "Can hit targets twice if centered"
+        ]
+      },
+      {
+        "id": "AhriW",
+        "name": "Fox-Fire",
+        "description": "Ahri summons three flames that seek nearby enemies. Multiple flames can strike the same champion.",
+        "imageFull": "AhriW.png",
+        "cooldown": "9/8/7/6/5 s",
+        "cost": "40 Mana",
+        "notes": [
+          "Prefers charmed targets",
+          "Brief movement speed on cast"
+        ]
+      },
+      {
+        "id": "AhriE",
+        "name": "Charm",
+        "description": "Ahri blows a kiss that charms, damaging and causing the first enemy hit to walk harmlessly towards her. Empowers her other abilities.",
+        "imageFull": "AhriE.png",
+        "cooldown": "12 s",
+        "cost": "70 Mana",
+        "range": "975",
+        "notes": [
+          "Sets up picks and combos",
+          "Empowered follow-up damage"
+        ]
+      },
+      {
+        "id": "AhriR",
+        "name": "Spirit Rush",
+        "description": "Ahri dashes up to three times, firing essence bolts at nearby enemies. Champion takedowns extend the window for additional dashes.",
+        "imageFull": "AhriR.png",
+        "cooldown": "130/105/80 s",
+        "cost": "No cost",
+        "notes": [
+          "Bolts prioritize champions",
+          "Extra dash on each takedown"
+        ]
+      }
+    ]
+  },
+  "akali": {
+    "lore": "Akali is a nimble assassin who strikes with mobility and burst. Her shroud enables creative engages and escapes, while dashes close gaps.",
+    "passive": {
+      "name": "Assassin's Mark",
+      "description": "Hitting an enemy with an ability creates a ring around them. Leaving the ring empowers Akali's next melee attack with bonus range, damage, and movement speed.",
+      "imageFull": "Akali_P.png"
+    },
+    "spells": [
+      {
+        "id": "AkaliQ",
+        "name": "Five Point Strike",
+        "description": "Akali throws five kunai in a cone, dealing magic damage. Enemies at the edge take increased damage and are briefly slowed.",
+        "imageFull": "AkaliQ.png",
+        "cooldown": "1.5 s",
+        "cost": "130 Energy",
+        "range": "~550 cone",
+        "damage": "30/55/80/105/130 (+60% AP) • Edge +25%",
+        "notes": [
+          "Strong edge slow",
+          "Light heal vs low-health targets"
+        ]
+      },
+      {
+        "id": "AkaliW",
+        "name": "Twilight Shroud",
+        "description": "Akali creates a smoke shroud, becomes obscured, regenerates energy, and gains movement speed entering or leaving the shroud.",
+        "imageFull": "AkaliW.png",
+        "cooldown": "20/18.5/17/15.5/14 s",
+        "cost": "40 Energy",
+        "range": "Self",
+        "notes": [
+          "Duration scales with rank",
+          "Attacking or casting briefly reveals her"
+        ]
+      },
+      {
+        "id": "AkaliE",
+        "name": "Shuriken Flip",
+        "description": "Akali backflips and throws a shuriken, marking the first enemy hit. Reactivate to dash to the marked target and deal damage again.",
+        "imageFull": "AkaliE.png",
+        "cooldown": "16/14.5/13/11.5/10 s",
+        "cost": "30 Energy",
+        "range": "Shuriken 825 • Return ~2500",
+        "notes": [
+          "Reactivate within 3 s",
+          "Can mark wards and monsters"
+        ]
+      },
+      {
+        "id": "AkaliR",
+        "name": "Perfect Execution",
+        "description": "Akali dashes forward, slightly knocking aside enemies (1st cast). After a short delay, dash again through a target dealing high damage, increased vs low-health enemies (2nd cast).",
+        "imageFull": "AkaliR.png",
+        "cooldown": "100/85/70 s",
+        "cost": "No cost",
+        "range": "Dash1 ~675 • Dash2 ~775",
+        "notes": [
+          "Second cast available after ~2.5 s",
+          "1st cast physical, 2nd mostly magic"
+        ]
+      }
+    ]
+  },
+  "anivia": {
+    "lore": "Anivia controls fights with zoning and pick tools. Her wall and stun enable precise setups, while her storm controls space in extended skirmishes.",
+    "passive": {
+      "name": "Rebirth",
+      "description": "Upon taking fatal damage, Anivia transforms into an egg at her location. If the egg survives, she is revived with health.",
+      "imageFull": "Anivia_P.png",
+      "notes": [
+        "Egg inherits Anivia's resistances",
+        "Long cooldown scaling with level"
+      ]
+    },
+    "spells": [
+      {
+        "id": "FlashFrost",
+        "name": "Flash Frost",
+        "description": "Anivia sends a slow-moving projectile that chills and slows. Reactivating or reaching max range detonates it, stunning and dealing damage.",
+        "imageFull": "FlashFrost.png",
+        "cooldown": "12/11/10/9/8 s",
+        "cost": "80/85/90/95/100 Mana",
+        "range": "1100",
+        "damage": "Initial + detonation each 60/90/120/150/180 (+45% AP)",
+        "notes": [
+          "Manual detonation available",
+          "Brief stun on detonation"
+        ]
+      },
+      {
+        "id": "Crystallize",
+        "name": "Crystallize",
+        "description": "Anivia creates an ice wall that blocks movement, shapes terrain, and grants brief vision.",
+        "imageFull": "Crystallize.png",
+        "cooldown": "17/16/15/14/13 s",
+        "cost": "70 Mana",
+        "range": "1000",
+        "notes": [
+          "Duration ~5 s",
+          "Wall length scales with rank"
+        ]
+      },
+      {
+        "id": "Frostbite",
+        "name": "Frostbite",
+        "description": "Anivia blasts a target for magic damage. Chilled enemies take double damage.",
+        "imageFull": "Frostbite.png",
+        "cooldown": "4 s",
+        "cost": "50 Mana",
+        "range": "650",
+        "damage": "80/120/160/200/240 (+60% AP) • Double vs chilled",
+        "notes": [
+          "Empowered if Q or R recently hit",
+          "Strong AP scaling"
+        ]
+      },
+      {
+        "id": "GlacialStorm",
+        "name": "Glacial Storm",
+        "description": "Anivia summons a storm that slows and deals magic damage per second. Reactivate to end the storm.",
+        "imageFull": "GlacialStorm.png",
+        "cooldown": "1 s recast",
+        "cost": "Initial 60/70/80 Mana + 40/50/60 Mana per second",
+        "range": "Cast 750 • Radius 400",
+        "damage": "40/60/80 (+25% AP) per second",
+        "notes": [
+          "Slow 20/30/40%",
+          "Larger and more ticks at the center"
+        ]
+      }
+    ]
+  },
+  "caitlyn": {
+    "lore": "Caitlyn is a long-range marksman who controls lanes with range, traps, and precise headshots. She keeps enemies at bay and finishes fights with her sniper ultimate.",
+    "passive": {
+      "name": "Headshot",
+      "description": "Caitlyn's attacks periodically deal bonus damage. Trapped or netted enemies are marked for an empowered headshot.",
+      "imageFull": "Caitlyn_P.png",
+      "notes": [
+        "Extended headshot range from brush",
+        "Traps and net guarantee headshots"
+      ]
+    },
+    "spells": [
+      {
+        "id": "CaitlynQ",
+        "name": "Piltover Peacemaker",
+        "description": "Caitlyn fires a piercing shot that damages all enemies in a line, dealing reduced damage after the first target.",
+        "imageFull": "CaitlynQ.png",
+        "cooldown": "10/9/8/7/6 s",
+        "cost": "50/60/70/80/90 Mana",
+        "range": "1250",
+        "notes": [
+          "Winds up for full damage",
+          "Strong waveclear tool"
+        ]
+      },
+      {
+        "id": "CaitlynW",
+        "name": "Yordle Snap Trap",
+        "description": "Caitlyn places a trap that roots the first enemy to spring it, grants vision, and marks them for a headshot.",
+        "imageFull": "CaitlynW.png",
+        "cooldown": "30/28/26/24/22 s",
+        "cost": "20 Mana",
+        "notes": [
+          "Up to three traps active",
+          "Great for chokes and ally combos"
+        ]
+      },
+      {
+        "id": "CaitlynE",
+        "name": "90 Caliber Net",
+        "description": "Caitlyn fires a net that slows and knocks her backward. The recoil can be used to cross walls.",
+        "imageFull": "CaitlynE.png",
+        "cooldown": "16/14.5/13/11.5/10 s",
+        "cost": "75 Mana",
+        "notes": [
+          "Marks targets for headshots",
+          "Recoil opposite to net direction"
+        ]
+      },
+      {
+        "id": "CaitlynR",
+        "name": "Ace in the Hole",
+        "description": "Caitlyn locks onto a champion and fires a long-range shot that deals heavy damage but can be blocked by other champions.",
+        "imageFull": "CaitlynR.png",
+        "cooldown": "90/75/60 s",
+        "cost": "100 Mana",
+        "range": "3500/4000/4500",
+        "notes": [
+          "Higher damage to low-health targets",
+          "Allies can body block"
+        ]
+      }
+    ]
+  },
+  "lux": {
+    "lore": "Lux is a long-range mage blending crowd control and shields. She can decide fights with her massive light laser.",
+    "passive": {
+      "name": "Illumination",
+      "description": "Lux's abilities mark enemies with light energy. Her next attack or ability consumes the mark for bonus magic damage.",
+      "imageFull": "LuxP.png",
+      "notes": [
+        "Allies can help consume the mark",
+        "Ultimate immediately triggers Illumination"
+      ]
+    },
+    "spells": [
+      {
+        "id": "LuxLightBinding",
+        "name": "Light Binding",
+        "description": "Lux fires a light sphere that roots up to two enemies and deals damage.",
+        "imageFull": "LuxLightBinding.png",
+        "cooldown": "13/12/11/10/9 s",
+        "cost": "50/55/60/65/70 Mana",
+        "range": "1175",
+        "notes": [
+          "Can hit two targets",
+          "Slight slow on hit"
+        ]
+      },
+      {
+        "id": "LuxPrismaticWave",
+        "name": "Prismatic Barrier",
+        "description": "Lux throws her wand like a boomerang. Allies hit gain a shield that is strengthened on the return.",
+        "imageFull": "LuxPrismaticWave.png",
+        "cooldown": "14/13/12/11/10 s",
+        "cost": "60 Mana",
+        "notes": [
+          "Shields on both outbound and return",
+          "Can hit all allies along the path"
+        ]
+      },
+      {
+        "id": "LuxLightStrikeKugel",
+        "name": "Lucent Singularity",
+        "description": "Lux creates a light zone that slows enemies and explodes after a short delay. She can detonate early.",
+        "imageFull": "LuxLightStrikeKugel.png",
+        "cooldown": "10 s",
+        "cost": "70/80/90/100/110 Mana",
+        "notes": [
+          "Grants vision in the area",
+          "Explosion consumes Illumination"
+        ]
+      },
+      {
+        "id": "LuxR",
+        "name": "Final Spark",
+        "description": "Lux channels briefly and fires a huge laser across a long distance, dealing heavy damage and triggering Illumination.",
+        "imageFull": "LuxR.png",
+        "cooldown": "80/70/60 s",
+        "cost": "100 Mana",
+        "range": "3250",
+        "notes": [
+          "Visible warning line before firing",
+          "Massive range finisher"
+        ]
+      }
+    ]
+  }
+}

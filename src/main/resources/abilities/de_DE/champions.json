@@ -1,0 +1,390 @@
+{
+  "aatrox": {
+    "lore": "Aatrox ist ein Darkin-Bruiser, der durch lange Kämpfe immer stärker wird. Mit gewaltigen Klingenhieben, Anziehungseffekten und seiner dämonischen Gestalt dominiert er Teamkämpfe im Nahkampf.",
+    "passive": {
+      "name": "Tödlicher Stahl",
+      "description": "Aatrox verstärkt in regelmäßigen Abständen seinen nächsten Angriff, verursacht zusätzlichen physischen Schaden in einem Kegel und heilt sich basierend auf dem verursachten Schaden.",
+      "imageFull": "Aatrox_P.png",
+      "notes": [
+        "Abklingzeit verkürzt sich durch Angriffe und Fähigkeiten",
+        "Füllt die Blut-Durst-Anzeige für längere Kämpfe"
+      ]
+    },
+    "spells": [
+      {
+        "id": "AatroxQ",
+        "name": "Die Klinge der Düsteren",
+        "description": "Aatrox schwingt seine Klinge dreimal. Jeder Schlag trifft in einer anderen Form, wobei die Spitze erhöhten Schaden verursacht und Gegner kurz anhebt.",
+        "imageFull": "AatroxQ.png",
+        "cooldown": "14/12/10/8/6 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Trefferzone variiert mit jedem Hieb",
+          "Sweetspot schleudert Gegner hoch"
+        ]
+      },
+      {
+        "id": "AatroxW",
+        "name": "Infernalische Ketten",
+        "description": "Aatrox peitscht nach vorn. Der erste getroffene Gegner wird verlangsamt und markiert; bleibt er im Bereich, wird er zur Mitte gezogen und erleidet Schaden.",
+        "imageFull": "AatroxW.png",
+        "cooldown": "20/18,5/17/15,5/14 s",
+        "cost": "Keine Kosten",
+        "range": "825",
+        "notes": [
+          "Zieht auch Monster an",
+          "Gegner können entkommen, wenn sie den Bereich verlassen"
+        ]
+      },
+      {
+        "id": "AatroxE",
+        "name": "Schatten-Schicht",
+        "description": "Aatrox dashte in eine Richtung, verstärkt seine Selbstheilung und speichert zwei Aufladungen. Passive Treffer mit Angriffen oder Q heilen ihn zusätzlich.",
+        "imageFull": "AatroxE.png",
+        "cooldown": "9/8/7/6/5 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Zwei Aufladungen",
+          "Kann während Q genutzt werden, um Sweetspots neu zu positionieren"
+        ]
+      },
+      {
+        "id": "AatroxR",
+        "name": "Weltenvernichter",
+        "description": "Aatrox entfesselt seine dämonische Form, erhält Angriffsschaden, Lauftempo und verstärkte Heilung. Tödliche Treffer gegen Champions verlängern die Dauer und heilen ihn stark.",
+        "imageFull": "AatroxR.png",
+        "cooldown": "120/100/80 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Erste Aktivierung verdrängt Gegner kurz",
+          "Wenn Aatrox während der Dauer stirbt, verlängert sich sein Ableben"
+        ]
+      }
+    ]
+  },
+  "ahri": {
+    "lore": "Ahri ist eine mobile Magier-Assassine, die Gegner mit Charms kontrolliert und in schnellen Bursts ausschaltet. Ihre Ult erlaubt flexible Dashes, um Kämpfe zu eröffnen oder zu entkommen.",
+    "passive": {
+      "name": "Essenzdiebin",
+      "description": "Ahri sammelt Essenz durch Fähigkeiten. Nach genug Treffern heilt sie sich; Champion-Eliminierungen setzen zusätzliche Essenz frei und erfrischen ihre Ult.",
+      "imageFull": "Ahri_P.png",
+      "notes": [
+        "Kugeltreffer laden Essenz schneller auf",
+        "Champion-Kills geben sofortige Heilung und Ult-Ladung"
+      ]
+    },
+    "spells": [
+      {
+        "id": "AhriQ",
+        "name": "Kugel der Täuschung",
+        "description": "Ahri wirft ihre Kugel nach vorne und zieht sie zurück. Der Hinweg verursacht magischen, der Rückweg wahren Schaden.",
+        "imageFull": "AhriQ.png",
+        "cooldown": "7 s",
+        "cost": "55/70/85/100/115 Mana",
+        "range": "880",
+        "damage": "40/65/90/115/140 (+35% AP) je Richtung",
+        "notes": [
+          "Ahri erhält Lauftempo, solange die Kugel unterwegs ist",
+          "Trifft Ziele zweimal, wenn sie zentral stehen"
+        ]
+      },
+      {
+        "id": "AhriW",
+        "name": "Fuchsfeuer",
+        "description": "Ahri beschwört drei Flammenkugeln, die automatisch nahe Gegner anvisieren. Mehrere Projektile können denselben Champion treffen.",
+        "imageFull": "AhriW.png",
+        "cooldown": "9/8/7/6/5 s",
+        "cost": "40 Mana",
+        "notes": [
+          "Bevorzugt kürzlich bezauberte Champions",
+          "Gewährt kurzzeitig Lauftempo"
+        ]
+      },
+      {
+        "id": "AhriE",
+        "name": "Liebesrausch",
+        "description": "Ahri verschießt einen Kuss, der den ersten getroffenen Gegner bezaubert, Schaden verursacht und andere Fähigkeiten verstärkt.",
+        "imageFull": "AhriE.png",
+        "cooldown": "12 s",
+        "cost": "70 Mana",
+        "range": "975",
+        "notes": [
+          "Getroffene Gegner laufen betört auf Ahri zu",
+          "Erhöht den Schaden ihrer anderen Fähigkeiten"
+        ]
+      },
+      {
+        "id": "AhriR",
+        "name": "Geisterhast",
+        "description": "Ahri stürmt bis zu dreimal vorwärts und feuert Essenzbolts auf nahen Gegner. Champion-Kills verlängern die Dauer und erlauben zusätzliche Dashes.",
+        "imageFull": "AhriR.png",
+        "cooldown": "130/105/80 s",
+        "cost": "Keine Kosten",
+        "notes": [
+          "Projektile priorisieren Champions",
+          "Jede Eliminierung gewährt eine weitere Aktivierung"
+        ]
+      }
+    ]
+  },
+  "akali": {
+    "lore": "Akali ist eine flexible Assassine, die mit Mobilität und Burst Schaden austeilt. Ihre Rauchbombe erlaubt kreative Angriffe und Ausweichmanöver, während Dashes Lücken schließen.",
+    "passive": {
+      "name": "Zeichen der Assassine",
+      "description": "Trifft Akali einen Gegner mit einer Fähigkeit, entsteht ein Ring. Verlässt sie den Ring, verstärkt ihr nächster Nahkampfangriff Reichweite, Schaden und Lauftempo.",
+      "imageFull": "Akali_P.png"
+    },
+    "spells": [
+      {
+        "id": "AkaliQ",
+        "name": "Fünf-Punkte-Schlag",
+        "description": "Akali schleudert fünf Kunai fächerförmig und verursacht magischen Schaden. Gegner am Rand erleiden zusätzlichen Schaden und werden verlangsamt.",
+        "imageFull": "AkaliQ.png",
+        "cooldown": "1,5 s",
+        "cost": "130 Energie",
+        "range": "Fächerreichweite ~550",
+        "damage": "30/55/80/105/130 (+60% AP) • Kante: +25%",
+        "notes": [
+          "Verlangsamt am Rand stark",
+          "Heilt Akali leicht gegen Ziele mit wenig Leben"
+        ]
+      },
+      {
+        "id": "AkaliW",
+        "name": "Zwielichtschleier",
+        "description": "Akali erzeugt eine Rauchwolke, wird darin verborgen, regeneriert Energie und erhält Lauftempo beim Betreten oder Verlassen.",
+        "imageFull": "AkaliW.png",
+        "cooldown": "20/18,5/17/15,5/14 s",
+        "cost": "40 Energie",
+        "range": "Selbst",
+        "notes": [
+          "Dauer steigt mit Rang",
+          "Angreifen oder Fähigkeiten enthüllen sie kurz"
+        ]
+      },
+      {
+        "id": "AkaliE",
+        "name": "Shuriken-Flip",
+        "description": "Akali springt rückwärts und wirft ein Shuriken, das den ersten Gegner markiert. Reaktivierung stürmt sie zum Ziel und verursacht erneut Schaden.",
+        "imageFull": "AkaliE.png",
+        "cooldown": "16/14,5/13/11,5/10 s",
+        "cost": "30 Energie",
+        "range": "Shuriken 825 • Rückkehr bis ~2500",
+        "notes": [
+          "Reaktivierung bis zu 3 s nach Markierung",
+          "Markiert auch Wards und Monster"
+        ]
+      },
+      {
+        "id": "AkaliR",
+        "name": "Perfekte Ausführung",
+        "description": "Akali dashte nach vorn und stößt Gegner beiseite. Nach kurzer Verzögerung kann sie erneut dashen und hohen, gegen niedrige Ziele verstärkten Schaden verursachen.",
+        "imageFull": "AkaliR.png",
+        "cooldown": "100/85/70 s",
+        "cost": "Keine Kosten",
+        "range": "1. Dash ~675 • 2. Dash ~775",
+        "notes": [
+          "Zweite Aktivierung erst nach ~2,5 s verfügbar",
+          "Erster Dash physisch, zweiter Dash überwiegend magisch"
+        ]
+      }
+    ]
+  },
+  "anivia": {
+    "lore": "Anivia ist eine kontrollorientierte Magierin, die Teamkämpfe mit Zonen-Kontrolle dominiert. Ihre Eiswand und Betäubung erlauben präzise Setups, während ihr Sturm Flächen kontrolliert.",
+    "passive": {
+      "name": "Wiedergeburt",
+      "description": "Erleidet Anivia tödlichen Schaden, verwandelt sie sich am Ort in ein Ei. Überlebt das Ei, wird sie mit Leben wiedergeboren.",
+      "imageFull": "Anivia_P.png",
+      "notes": [
+        "Das Ei übernimmt Anivias Resistenzen",
+        "Lange Abklingzeit skaliert mit Stufe"
+      ]
+    },
+    "spells": [
+      {
+        "id": "FlashFrost",
+        "name": "Blitzeis",
+        "description": "Anivia schleudert ein langsam fliegendes Geschoss, das Gegner verlangsamt. Bei Reaktivierung oder maximaler Reichweite explodiert es, betäubt kurz und verursacht Schaden.",
+        "imageFull": "FlashFrost.png",
+        "cooldown": "12/11/10/9/8 s",
+        "cost": "80/85/90/95/100 Mana",
+        "range": "1100",
+        "damage": "Initial+Explosion je 60/90/120/150/180 (+45% AP)",
+        "notes": [
+          "Explosion kann manuell ausgelöst werden",
+          "Getroffene Gegner werden kurz betäubt"
+        ]
+      },
+      {
+        "id": "Crystallize",
+        "name": "Kristallisieren",
+        "description": "Anivia erschafft eine Eiswand, die kurzzeitig Bewegung blockiert, Gelände formt und Sicht gewährt.",
+        "imageFull": "Crystallize.png",
+        "cooldown": "17/16/15/14/13 s",
+        "cost": "70 Mana",
+        "range": "1000",
+        "notes": [
+          "Dauer: 5 s",
+          "Länge steigt mit Fähigkeitsrang"
+        ]
+      },
+      {
+        "id": "Frostbite",
+        "name": "Frostbiss",
+        "description": "Anivia fügt einem Ziel magischen Schaden zu. Unterkühlte Gegner erleiden doppelten Schaden.",
+        "imageFull": "Frostbite.png",
+        "cooldown": "4 s",
+        "cost": "50 Mana",
+        "range": "650",
+        "damage": "80/120/160/200/240 (+60% AP) • Unterkühlte Ziele: doppelter Schaden",
+        "notes": [
+          "Verstärkt durch Q oder R verlangsamt",
+          "Skaliert stark mit Fähigkeitsstärke"
+        ]
+      },
+      {
+        "id": "GlacialStorm",
+        "name": "Eissturm",
+        "description": "Anivia beschwört einen Sturm, der Gegner verlangsamt und pro Sekunde Schaden verursacht. Reaktivierung beendet den Sturm.",
+        "imageFull": "GlacialStorm.png",
+        "cooldown": "1 s Reaktivierung",
+        "cost": "Initial 60/70/80 Mana + 40/50/60 Mana pro Sekunde",
+        "range": "Anvisierung 750 • Radius 400",
+        "damage": "40/60/80 (+25% AP) pro Sekunde",
+        "notes": [
+          "Verlangsamt 20/30/40%",
+          "Wird größer und tickt häufiger im Zentrum"
+        ]
+      }
+    ]
+  },
+  "caitlyn": {
+    "lore": "Caitlyn ist ein Fernkampf-Schütze, der mit Reichweite, Fallen und präzisen Kopfschüssen die Lane kontrolliert. Sie hält Gegner auf Distanz und beendet Kämpfe mit ihrem ultimativen Schniperschuss.",
+    "passive": {
+      "name": "Kopfgeldjägerin",
+      "description": "Caitlyns nächste Schussfolge wird regelmäßig verstärkt und verursacht zusätzlichen Schaden. Kopfschüsse auf markierte Ziele treffen besonders hart.",
+      "imageFull": "Caitlyn_P.png",
+      "notes": [
+        "Headshot-Reichweite erhöht sich aus Büschen",
+        "Fallen und Netz garantieren Kopfschüsse"
+      ]
+    },
+    "spells": [
+      {
+        "id": "CaitlynQ",
+        "name": "Pilitzer",
+        "description": "Caitlyn feuert einen großkalibrigen Schuss ab, der allen Gegnern in einer Linie Schaden zufügt. Der Schaden reduziert sich nach dem ersten Treffer.",
+        "imageFull": "CaitlynQ.png",
+        "cooldown": "10/9/8/7/6 s",
+        "cost": "50/60/70/80/90 Mana",
+        "range": "1250",
+        "notes": [
+          "Lange Vorbereitungszeit voller Schaden",
+          "Kann Minion-Wellen effizient räumen"
+        ]
+      },
+      {
+        "id": "CaitlynW",
+        "name": "Yordle-Falle",
+        "description": "Caitlyn platziert eine Falle, die Gegner festhält, Sicht gewährt und sie für einen verstärkten Kopfschuss markiert.",
+        "imageFull": "CaitlynW.png",
+        "cooldown": "30/28/26/24/22 s",
+        "cost": "20 Mana",
+        "notes": [
+          "Bis zu drei Fallen gleichzeitig",
+          "Perfekt für Engstellen und Kombos mit Verbündeten"
+        ]
+      },
+      {
+        "id": "CaitlynE",
+        "name": "90-Caliber-Netz",
+        "description": "Caitlyn schießt ein Netz ab, das verlangsamt und sie rückwärts stößt. Der Rückstoß kann zum Überqueren von Wänden genutzt werden.",
+        "imageFull": "CaitlynE.png",
+        "cooldown": "16/14,5/13/11,5/10 s",
+        "cost": "75 Mana",
+        "notes": [
+          "Markiert Ziele für Kopfschüsse",
+          "Rückstoßrichtung entgegengesetzt zum Netz"
+        ]
+      },
+      {
+        "id": "CaitlynR",
+        "name": "Ass im Ärmel",
+        "description": "Caitlyn kanalisiert kurz und feuert einen Langstreckenschuss auf einen Champion, der hohen Schaden verursacht, aber von Verbündeten geblockt werden kann.",
+        "imageFull": "CaitlynR.png",
+        "cooldown": "90/75/60 s",
+        "cost": "100 Mana",
+        "range": "3500/4000/4500",
+        "notes": [
+          "Schaden steigt mit fehlender Gesundheit",
+          "Projektile verfolgen das primäre Ziel"
+        ]
+      }
+    ]
+  },
+  "lux": {
+    "lore": "Lux ist eine Fernkampf-Magierin, die mit Bindungen und Schilden Kontrolle und Nutzen vereint. Sie kann Kämpfe mit gewaltigen Licht-Lasers beenden.",
+    "passive": {
+      "name": "Illumination",
+      "description": "Lux markiert Gegner mit Lichtenergie. Der nächste Angriff oder eine Fähigkeit verbraucht die Markierung und verursacht zusätzlichen magischen Schaden.",
+      "imageFull": "LuxP.png",
+      "notes": [
+        "Auch Verbündete können die Markierung auslösen",
+        "Ultimate löst Illumination sofort aus"
+      ]
+    },
+    "spells": [
+      {
+        "id": "LuxLightBinding",
+        "name": "Lichtfessel",
+        "description": "Lux feuert eine Kugel aus Licht, die bis zu zwei Gegner verwurzelt und Schaden zufügt.",
+        "imageFull": "LuxLightBinding.png",
+        "cooldown": "13/12/11/10/9 s",
+        "cost": "50/55/60/65/70 Mana",
+        "range": "1175",
+        "notes": [
+          "Trifft zwei Ziele gleichzeitig",
+          "Verlangsamt Gegner leicht"
+        ]
+      },
+      {
+        "id": "LuxPrismaticWave",
+        "name": "Prismatische Barriere",
+        "description": "Lux wirft ihren Zauberstab wie einen Bumerang. Verbündete erhalten beim Hin- und Rückweg einen Schild, der sich stapelt.",
+        "imageFull": "LuxPrismaticWave.png",
+        "cooldown": "14/13/12/11/10 s",
+        "cost": "60 Mana",
+        "notes": [
+          "Kann alle Verbündeten auf der Flugbahn treffen",
+          "Rückweg verstärkt den Schild"
+        ]
+      },
+      {
+        "id": "LuxLightStrikeKugel",
+        "name": "Lichtsingularität",
+        "description": "Lux erschafft eine Lichtzone, die Gegner verlangsamt und nach kurzer Verzögerung explodiert. Sie kann die Explosion früher auslösen.",
+        "imageFull": "LuxLightStrikeKugel.png",
+        "cooldown": "10 s",
+        "cost": "70/80/90/100/110 Mana",
+        "notes": [
+          "Gewährt Sicht in der Zone",
+          "Explosion verbraucht Illumination"
+        ]
+      },
+      {
+        "id": "LuxR",
+        "name": "Finale Funkeln",
+        "description": "Lux kanalisiert kurz und entlädt einen riesigen Laserstrahl, der hohen Schaden verursacht und Illumination sofort auslöst.",
+        "imageFull": "LuxR.png",
+        "cooldown": "80/70/60 s",
+        "cost": "100 Mana",
+        "range": "3250",
+        "notes": [
+          "Kann über verrückte Distanzen treffen",
+          "Zeigt vor Aktivierung eine sichtbare Linie"
+        ]
+      }
+    ]
+  }
+}

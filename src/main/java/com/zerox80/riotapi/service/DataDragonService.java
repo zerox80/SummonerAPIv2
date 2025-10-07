@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 public class DataDragonService {
@@ -52,6 +54,9 @@ public class DataDragonService {
     private final ObjectProvider<DataDragonService> selfProvider;
     private volatile String lastKnownVersion;
 
+    private static final String CURATED_BUNDLE_NAME = "champions.json";
+    private final ConcurrentMap<String, Map<String, LocalAbilities>> curatedChampionCache = new ConcurrentHashMap<>();
+
     // Conservative HTML sanitization policy for tooltips/descriptions from DDragon/CDragon.
     // Allow common inline formatting and a small set of known game-specific tags used in tooltips
     // (e.g., <magicDamage>, <physicalDamage>, <trueDamage>, <status>, <br>), without any attributes.
@@ -66,7 +71,7 @@ public class DataDragonService {
     private static final Pattern TAG_STRIP_PATTERN = Pattern.compile("<[^>]+>");
 
     public DataDragonService(HttpClient riotApiHttpClient,
-                             @Value("${ddragon.default-locale:de_DE}") String defaultLocale,
+                             @Value("${ddragon.default-locale:en_US}") String defaultLocale,
                              @Value("${app.user-agent:SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)}") String userAgent,
                              ObjectProvider<DataDragonService> selfProvider) {
         this.httpClient = riotApiHttpClient;
@@ -74,7 +79,7 @@ public class DataDragonService {
                 .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
-        this.defaultLocale = (defaultLocale == null || defaultLocale.isBlank()) ? "de_DE" : defaultLocale;
+        this.defaultLocale = (defaultLocale == null || defaultLocale.isBlank()) ? "en_US" : defaultLocale;
         this.userAgent = (userAgent == null || userAgent.isBlank()) ? "SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)" : userAgent;
         this.selfProvider = selfProvider;
     }
@@ -320,7 +325,8 @@ public class DataDragonService {
         }
         if (generated != null && (generated.passive != null || (generated.spells != null && !generated.spells.isEmpty()))) {
             applyChampionSpecificTooltipOverrides(id, generated.localeTag, generated.spells);
-            return new ChampionDetail(id, name, title, lore, tags, imageFull,
+            String finalLore = preferString(local != null ? local.lore : null, lore);
+            return new ChampionDetail(id, name, title, finalLore, tags, imageFull,
                     generated.passive, generated.spells == null ? java.util.Collections.emptyList() : generated.spells);
         }
 
@@ -329,10 +335,12 @@ public class DataDragonService {
     }
 
     private static class LocalAbilities {
+        final String lore;
         final PassiveSummary passive;
         final List<SpellSummary> spells;
         final String localeTag;
-        LocalAbilities(PassiveSummary p, List<SpellSummary> s, String localeTag) {
+        LocalAbilities(String lore, PassiveSummary p, List<SpellSummary> s, String localeTag) {
+            this.lore = lore;
             this.passive = p;
             this.spells = s;
             this.localeTag = localeTag;
@@ -340,6 +348,13 @@ public class DataDragonService {
     }
 
     private LocalAbilities loadLocalAbilities(String championId, String ddragonLocale) {
+        LocalAbilities curated = loadCuratedAbilitiesFromBundle(championId, ddragonLocale);
+        if (curated == null && !localeEquals(ddragonLocale, defaultLocale)) {
+            curated = loadCuratedAbilitiesFromBundle(championId, defaultLocale);
+        }
+        if (curated != null) {
+            return curated;
+        }
         try {
             String loc = (ddragonLocale == null || ddragonLocale.isBlank()) ? defaultLocale : ddragonLocale;
             String cid = championId == null ? "" : championId.trim();
@@ -387,10 +402,118 @@ public class DataDragonService {
                     spells.add(sum);
                 }
             }
-            return new LocalAbilities(passive, spells, loc);
+            return new LocalAbilities(null, passive, spells, loc);
         } catch (Exception ignore) {
             return null;
         }
+    }
+
+    private LocalAbilities loadCuratedAbilitiesFromBundle(String championId, String localeTag) {
+        if (championId == null || championId.isBlank()) return null;
+        String canonicalLocale = normalizeLocaleTag(localeTag);
+        String cacheKey = canonicalLocale.toLowerCase(Locale.ROOT);
+        Map<String, LocalAbilities> byChampion = curatedChampionCache.computeIfAbsent(cacheKey, key -> loadCuratedLocaleMap(canonicalLocale));
+        if (byChampion == null || byChampion.isEmpty()) return null;
+        return byChampion.get(championId.toLowerCase(Locale.ROOT));
+    }
+
+    private Map<String, LocalAbilities> loadCuratedLocaleMap(String canonicalLocale) {
+        String path = String.format("abilities/%s/%s", canonicalLocale, CURATED_BUNDLE_NAME);
+        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+        if (stream == null) {
+            String lowerLocale = canonicalLocale.toLowerCase(Locale.ROOT);
+            path = String.format("abilities/%s/%s", lowerLocale, CURATED_BUNDLE_NAME);
+            stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+        }
+        if (stream == null) {
+            return Collections.emptyMap();
+        }
+        try (InputStream is = stream) {
+            JsonNode root = mapper.readTree(is);
+            if (root == null || !root.isObject()) {
+                return Collections.emptyMap();
+            }
+            Map<String, LocalAbilities> map = new HashMap<>();
+            Iterator<Map.Entry<String, JsonNode>> fields = root.fields();
+            while (fields.hasNext()) {
+                Map.Entry<String, JsonNode> entry = fields.next();
+                String champKey = entry.getKey();
+                JsonNode node = entry.getValue();
+                LocalAbilities abilities = parseCuratedChampionNode(node, canonicalLocale);
+                if (abilities != null) {
+                    map.put(champKey.toLowerCase(Locale.ROOT), abilities);
+                }
+            }
+            return map;
+        } catch (Exception ex) {
+            logger.warn("Failed to parse curated abilities bundle for locale {}", canonicalLocale, ex);
+            return Collections.emptyMap();
+        }
+    }
+
+    private LocalAbilities parseCuratedChampionNode(JsonNode node, String localeTag) {
+        if (node == null || !node.isObject()) return null;
+
+        String lore = sanitizeHtml(node.path("lore").asText(null));
+        if (lore != null && lore.isBlank()) lore = null;
+
+        PassiveSummary passive = null;
+        JsonNode passiveNode = node.path("passive");
+        if (passiveNode != null && passiveNode.isObject()) {
+            String pName = passiveNode.path("name").asText("");
+            String pDesc = sanitizeHtml(passiveNode.path("description").asText(""));
+            String pImg = passiveNode.path("imageFull").asText("");
+            if (!pName.isBlank() || !pDesc.isBlank() || !pImg.isBlank()) {
+                passive = new PassiveSummary(pName, pDesc, pImg);
+            }
+        }
+
+        List<SpellSummary> spells = new ArrayList<>();
+        JsonNode spellsNode = node.path("spells");
+        if (spellsNode != null && spellsNode.isArray()) {
+            for (JsonNode spellNode : spellsNode) {
+                if (spellNode == null || !spellNode.isObject()) continue;
+                String sid = spellNode.path("id").asText("");
+                if (sid.isBlank()) continue;
+                String sname = spellNode.path("name").asText("");
+                String tooltip = sanitizeHtml(spellNode.path("description").asText(""));
+                String img = spellNode.path("imageFull").asText("");
+                SpellSummary summary = new SpellSummary(sid, sname, tooltip, img);
+                String cooldown = spellNode.path("cooldown").asText("");
+                if (!cooldown.isBlank()) summary.setCooldown(cooldown);
+                String cost = spellNode.path("cost").asText("");
+                if (!cost.isBlank()) summary.setCost(cost);
+                String range = spellNode.path("range").asText("");
+                if (!range.isBlank()) summary.setRange(range);
+                String damage = spellNode.path("damage").asText("");
+                if (!damage.isBlank()) summary.setDamage(damage);
+                String scaling = spellNode.path("scaling").asText("");
+                if (!scaling.isBlank()) summary.setScaling(scaling);
+                JsonNode notesNode = spellNode.path("notes");
+                if (notesNode != null && notesNode.isArray()) {
+                    List<String> notes = new ArrayList<>();
+                    notesNode.forEach(n -> {
+                        String text = sanitizeHtml(n.asText(""));
+                        if (!text.isBlank()) notes.add(text);
+                    });
+                    if (!notes.isEmpty()) {
+                        summary.setNotes(notes);
+                    }
+                }
+                spells.add(summary);
+            }
+        }
+
+        if (lore == null && passive == null && spells.isEmpty()) {
+            return null;
+        }
+
+        return new LocalAbilities(lore, passive, spells, localeTag);
+    }
+
+    private String normalizeLocaleTag(String localeTag) {
+        String loc = (localeTag == null || localeTag.isBlank()) ? defaultLocale : localeTag;
+        return loc.replace('-', '_');
     }
 
     private LocalAbilities buildChampionAbilities(JsonNode championData, String localeTag) {
