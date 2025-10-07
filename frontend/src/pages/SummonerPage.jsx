@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
@@ -9,11 +9,7 @@ import RankedOverview from '../sections/summoner/RankedOverview.jsx';
 import PerformanceSummary from '../sections/summoner/PerformanceSummary.jsx';
 import TopChampions from '../sections/summoner/TopChampions.jsx';
 import MatchHistory from '../sections/summoner/MatchHistory.jsx';
-import RecentProfiles from '../sections/summoner/RecentProfiles.jsx';
 import '../styles/page-summoner.css';
-
-const RECENT_PROFILES_STORAGE_KEY = 'summonerapi:recent-profiles';
-const RECENT_PROFILES_LIMIT = 8;
 
 export default function SummonerPage() {
   const queryClient = useQueryClient();
@@ -24,7 +20,6 @@ export default function SummonerPage() {
   const [filters, setFilters] = useState({ queue: 'ALL', result: 'ALL', role: 'ALL' });
   const [hasMoreMatches, setHasMoreMatches] = useState(false);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const [recentProfiles, setRecentProfiles] = useState([]);
 
   const profileQuery = useQuery({
     queryKey: ['profile', riotIdParam],
@@ -32,55 +27,6 @@ export default function SummonerPage() {
     enabled: riotIdParam.length > 0,
     staleTime: 60_000
   });
-
-  const upsertRecentProfile = useCallback((entry) => {
-    if (!entry || !entry.riotId) return;
-    const normalized = entry.riotId.toLowerCase();
-    setRecentProfiles((prev) => {
-      const filtered = prev.filter((item) => (item?.riotId || '').toLowerCase() !== normalized);
-      const next = [{ ...entry }, ...filtered];
-      return next.slice(0, RECENT_PROFILES_LIMIT);
-    });
-  }, []);
-
-  const handleSelectRecentProfile = useCallback((riotId) => {
-    if (!riotId) return;
-    const existing = recentProfiles.find((profile) => profile.riotId.toLowerCase() === riotId.toLowerCase());
-    if (existing) {
-      upsertRecentProfile({ ...existing, lastViewed: Date.now() });
-    }
-    setSearchParams({ riotId });
-  }, [recentProfiles, setSearchParams, upsertRecentProfile]);
-
-  const handleClearRecentProfiles = useCallback(() => {
-    setRecentProfiles([]);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const stored = window.localStorage.getItem(RECENT_PROFILES_STORAGE_KEY);
-      if (!stored) return;
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        const sanitized = parsed.filter((item) => item && typeof item.riotId === 'string');
-        if (sanitized.length > 0) {
-          setRecentProfiles(sanitized.slice(0, RECENT_PROFILES_LIMIT));
-        }
-      }
-    } catch (error) {
-      console.error('Failed to parse recent profiles from storage', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (!recentProfiles.length) {
-      window.localStorage.removeItem(RECENT_PROFILES_STORAGE_KEY);
-      return;
-    }
-    window.localStorage.setItem(RECENT_PROFILES_STORAGE_KEY, JSON.stringify(recentProfiles));
-  }, [recentProfiles]);
 
   useEffect(() => {
     if (profileQuery.data?.matchHistory) {
@@ -102,27 +48,6 @@ export default function SummonerPage() {
   };
 
   const riotIdResolved = profileQuery.data?.riotId || riotIdParam;
-
-  useEffect(() => {
-    if (!profileQuery.isSuccess) return;
-    const data = profileQuery.data;
-    if (!data || data.error) return;
-    const riotId = data.riotId || data?.suggestion?.riotId || data?.summoner?.name || riotIdResolved;
-    if (!riotId) return;
-    const profileIconUrl = data.profileIconUrl
-      || (data?.suggestion?.profileIconId != null
-        ? `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/profileicon/${data.suggestion.profileIconId}.png`
-        : null);
-    const entry = {
-      riotId,
-      profileIconUrl,
-      profileIconId: data?.suggestion?.profileIconId ?? null,
-      summonerLevel: data?.summoner?.summonerLevel ?? data?.suggestion?.summonerLevel ?? null,
-      region: data?.summoner?.region ?? null,
-      lastViewed: Date.now()
-    };
-    upsertRecentProfile(entry);
-  }, [profileQuery.isSuccess, profileQuery.data, riotIdResolved, upsertRecentProfile]);
 
   const derived = useMemo(() => {
     if (!profileQuery.data || matches.length === 0) {
@@ -269,13 +194,6 @@ export default function SummonerPage() {
   return (
     <div className="summoner-page">
       <SearchPanel onSubmit={handleSubmitRiotId} initialValue={riotIdParam} isLoading={profileQuery.isFetching} />
-
-      <RecentProfiles
-        profiles={recentProfiles}
-        onSelect={handleSelectRecentProfile}
-        onClear={recentProfiles.length ? handleClearRecentProfiles : undefined}
-        currentRiotId={riotIdResolved}
-      />
 
       {!riotIdParam && (
         <EmptyState
