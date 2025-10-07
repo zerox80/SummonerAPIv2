@@ -128,15 +128,6 @@ function getKeystoneAsset(perks, runeBase) {
   };
 }
 
-function resolveChampionImage(championSquares, championBase, championName, championId) {
-  if (!championName) return null;
-  const byName = championSquares?.[championName];
-  if (byName) return byName;
-  const idKey = championId != null ? String(championId) : null;
-  if (idKey && championSquares?.[idKey]) return championSquares[idKey];
-  return `${championBase}${championName}.png`;
-}
-
 function sumTeamStat(participants = [], extractor) {
   return participants.reduce((total, current) => total + (extractor(current) || 0), 0);
 }
