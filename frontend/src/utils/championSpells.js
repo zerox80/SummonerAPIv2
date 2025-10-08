@@ -1,14 +1,18 @@
 let curatedById = {};
 
-try {
-  // eslint-disable-next-line global-require, import/no-unresolved
-  const curatedData = require('../data/championSpells.de.json');
-  curatedById = Object.entries(curatedData).reduce((accumulator, [key, value]) => {
+const curatedModules = import.meta.glob('../data/championSpells.*.json', {
+  eager: true,
+  import: 'default'
+});
+
+const curatedEnglish = Object.entries(curatedModules)
+  .find(([path]) => path.endsWith('.en.json'))?.[1];
+
+if (curatedEnglish && typeof curatedEnglish === 'object' && curatedEnglish !== null) {
+  curatedById = Object.entries(curatedEnglish).reduce((accumulator, [key, value]) => {
     accumulator[key.toLowerCase()] = value;
     return accumulator;
   }, {});
-} catch (error) {
-  curatedById = {};
 }
 
 function mergeNotes(baseNotes = [], curatedNotes = []) {
