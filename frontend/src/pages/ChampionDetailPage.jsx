@@ -6,9 +6,11 @@ import AbilityList from '../components/champions/AbilityList.jsx';
 import BuildItemsTable from '../components/champions/BuildItemsTable.jsx';
 import BuildRunesTable from '../components/champions/BuildRunesTable.jsx';
 import BuildSummonerSpellsTable from '../components/champions/BuildSummonerSpellsTable.jsx';
+import CuratedItemGroups from '../components/champions/CuratedItemGroups.jsx';
 import { useChampionDetail, useChampionBuild } from '../hooks/useChampionDetail.js';
 import { formatQueueById, roleLabel } from '../utils/formatters.js';
 import { mergeChampionAbilities } from '../utils/championSpells.js';
+import { CURATED_BUILDS } from '../data/curatedBuilds.js';
 import '../styles/champions/champion-detail-page.css';
 
 const ROLE_OPTIONS = [
@@ -27,6 +29,7 @@ export default function ChampionDetailPage() {
   const navigate = useNavigate();
   const [role, setRole] = useState('ALL');
   const queueId = 420;
+  const normalizedId = (id || '').toLowerCase();
 
   const detailQuery = useChampionDetail(id);
   const buildQuery = useChampionBuild(id, {
@@ -36,6 +39,7 @@ export default function ChampionDetailPage() {
 
   const champion = detailQuery.data;
   const build = buildQuery.data;
+  const curatedBuild = CURATED_BUILDS[normalizedId];
 
   const buildMeta = useMemo(() => {
     if (!build) return null;
@@ -88,6 +92,10 @@ export default function ChampionDetailPage() {
             <h3>Lore</h3>
             <p>{champion.lore}</p>
           </section>
+
+          {curatedBuild && (
+            <CuratedItemGroups title={curatedBuild.title} groups={curatedBuild.groups} />
+          )}
 
           <BuildItemsTable
             title="Most Popular Items"
