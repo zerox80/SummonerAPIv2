@@ -43,8 +43,10 @@ export const api = {
     request(`/api/matches?riotId=${encodeURIComponent(riotId)}&start=${start}&count=${count}`, { signal }),
   suggestions: ({ query, signal }) =>
     request(`/api/summoner-suggestions?query=${encodeURIComponent(query)}`, { signal }),
-  champions: ({ signal } = {}) => request('/api/champions', { signal }),
-  champion: ({ id, signal }) => request(`/api/champions/${encodeURIComponent(id)}`, { signal }),
+  champions: ({ signal, locale = 'en_US' } = {}) =>
+    request(`/api/champions?locale=${encodeURIComponent(locale)}`, { signal }),
+  champion: ({ id, signal, locale = 'en_US' }) =>
+    request(`/api/champions/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { signal }),
   championBuild: ({ id, signal, queueId, role } = {}) => {
     const params = new URLSearchParams();
     if (queueId) params.set('queueId', queueId);

@@ -83,26 +83,30 @@ export default function ChampionDetailPage() {
       />
 
       <div className="champion-detail__layout">
-        <section className="champion-detail__lore glass-panel">
-          <h3>Lore</h3>
-          <p>{champion.lore}</p>
-        </section>
+        <div className="champion-detail__main-column">
+          <section className="champion-detail__lore glass-panel">
+            <h3>Lore</h3>
+            <p>{champion.lore}</p>
+          </section>
+
+          <BuildItemsTable
+            title="Most Popular Items"
+            items={build?.items}
+            loading={buildQuery.isLoading}
+            meta={buildMeta}
+          />
+        </div>
 
         <AbilityList passive={abilities.passive} spells={abilities.spells} />
       </div>
 
-      <BuildItemsTable
-        title="Most Popular Items"
-        items={build?.items}
-        loading={buildQuery.isLoading}
-        meta={buildMeta}
-      />
       <BuildRunesTable
         title="Rune Preferences"
         runes={build?.runes}
         loading={buildQuery.isLoading}
         meta={buildMeta}
       />
+
       <BuildSummonerSpellsTable
         title="Summoner Spells"
         spells={build?.spells}
