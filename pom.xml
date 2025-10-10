@@ -86,7 +86,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
-            <version>11.13.2</version>
+            <version>11.14.0</version>
         </dependency>
         <!-- API documentation (Swagger UI) -->
         <dependency>
