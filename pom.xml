@@ -21,7 +21,7 @@
         <java.version>21</java.version>
         <lombok.version>1.18.42</lombok.version>
         <caffeine.version>3.2.2</caffeine.version>
-        <jacoco.version>0.8.13</jacoco.version>
+        <jacoco.version>0.8.14</jacoco.version>
     </properties>
 
     <dependencies>
