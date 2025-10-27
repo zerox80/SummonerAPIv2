@@ -1,8 +1,8 @@
 .summoner-header {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 2rem;
-  padding: 1.85rem;
+  gap: 1.5rem;
+  padding: 1.35rem;
   align-items: center;
 }
 
@@ -14,9 +14,9 @@
 
 .summoner-header__avatar {
   display: inline-block;
-  width: 92px;
-  height: 92px;
-  border-radius: 26px;
+  width: 80px;
+  height: 80px;
+  border-radius: 22px;
   padding: 5px;
   background: var(--accent);
   box-shadow: 0 16px 36px rgba(99, 102, 241, 0.32);
@@ -25,7 +25,7 @@
 .summoner-header__avatar img {
   width: 100%;
   height: 100%;
-  border-radius: 22px;
+  border-radius: 18px;
   border: 2px solid rgba(255, 255, 255, 0.28);
   object-fit: cover;
 }
@@ -50,7 +50,7 @@
 
 .summoner-header__meta {
   display: grid;
-  gap: 1.25rem;
+  gap: 0.95rem;
   align-self: center;
 }
 
@@ -65,14 +65,14 @@
 
 .summoner-header h2 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   letter-spacing: -0.01em;
 }
 
 .summoner-header__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
+  gap: 0.85rem;
 }
 
 .summoner-header__grid .label {
@@ -85,15 +85,15 @@
 
 .summoner-header__grid .value {
   margin: 0.3rem 0 0;
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 600;
 }
 
 .summoner-header__highlight {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 0.85rem 1.2rem;
+  gap: 1.2rem;
+  padding: 0.7rem 1rem;
   border-radius: var(--radius-md);
   background: rgba(10, 22, 53, 0.9);
   border: 1px solid rgba(148, 163, 255, 0.18);
@@ -101,7 +101,7 @@
   box-shadow: 0 16px 34px rgba(15, 23, 42, 0.26);
   justify-self: end;
   align-self: center;
-  min-width: 228px;
+  min-width: 200px;
   flex-wrap: nowrap;
 }
 
