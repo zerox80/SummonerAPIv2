@@ -325,7 +325,7 @@ export default function ChampionDetailPage() {
                 <h3>Ability Overview</h3>
               </div>
             </div>
-            <AbilityList passive={abilities.passive} spells={abilities.spells} />
+            <AbilityList passive={abilities.passive} spells={abilities.spells} showHeader={false} />
           </section>
 
           {baseStats.length > 0 && (
