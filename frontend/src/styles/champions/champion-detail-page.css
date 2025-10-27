@@ -37,6 +37,24 @@
   justify-content: flex-start;
 }
 
+.champion-detail__main-column {
+  display: grid;
+  gap: clamp(1.6rem, 3.5vw, 2.2rem);
+  align-content: start;
+}
+
+.champion-detail__build-grid {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2rem);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.champion-detail__sidebar {
+  display: grid;
+  gap: clamp(1.6rem, 3.5vw, 2.2rem);
+  align-content: start;
+}
+
 @media (min-width: 1080px) {
   .champion-detail__layout {
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
@@ -47,10 +65,19 @@
     position: sticky;
     top: 1.5rem;
   }
+
+  .champion-detail__sidebar {
+    position: sticky;
+    top: 1.5rem;
+  }
 }
 
 @media (max-width: 720px) {
   .champion-detail__controls {
     justify-content: flex-start;
+  }
+
+  .champion-detail__build-grid {
+    grid-template-columns: 1fr;
   }
 }

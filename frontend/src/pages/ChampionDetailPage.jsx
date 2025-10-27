@@ -97,30 +97,34 @@ export default function ChampionDetailPage() {
             <CuratedItemGroups title={curatedBuild.title} groups={curatedBuild.groups} />
           )}
 
-          <BuildItemsTable
-            title="Most Popular Items"
-            items={build?.items}
-            loading={buildQuery.isLoading}
-            meta={buildMeta}
-          />
+          <div className="champion-detail__build-grid">
+            <BuildItemsTable
+              title="Most Popular Items"
+              items={build?.items}
+              loading={buildQuery.isLoading}
+              meta={buildMeta}
+            />
+
+            <BuildRunesTable
+              title="Rune Preferences"
+              runes={build?.runes}
+              loading={buildQuery.isLoading}
+              meta={buildMeta}
+            />
+
+            <BuildSummonerSpellsTable
+              title="Summoner Spells"
+              spells={build?.spells}
+              loading={buildQuery.isLoading}
+              meta={buildMeta}
+            />
+          </div>
         </div>
 
-        <AbilityList passive={abilities.passive} spells={abilities.spells} />
+        <div className="champion-detail__sidebar">
+          <AbilityList passive={abilities.passive} spells={abilities.spells} />
+        </div>
       </div>
-
-      <BuildRunesTable
-        title="Rune Preferences"
-        runes={build?.runes}
-        loading={buildQuery.isLoading}
-        meta={buildMeta}
-      />
-
-      <BuildSummonerSpellsTable
-        title="Summoner Spells"
-        spells={build?.spells}
-        loading={buildQuery.isLoading}
-        meta={buildMeta}
-      />
     </div>
   );
 }
