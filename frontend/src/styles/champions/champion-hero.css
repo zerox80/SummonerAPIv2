@@ -2,9 +2,9 @@
 .champion-hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(220px, 1.1fr) minmax(200px, 1fr);
-  gap: clamp(1rem, 2.5vw, 1.8rem);
-  padding: clamp(1.25rem, 2.8vw, 2rem);
+  grid-template-columns: minmax(200px, 1fr) minmax(200px, 1fr);
+  gap: clamp(0.75rem, 2vw, 1.4rem);
+  padding: clamp(1rem, 2.2vw, 1.6rem);
   align-items: center;
   overflow: hidden;
 }
@@ -12,13 +12,13 @@
 .champion-hero__media {
   position: relative;
   width: 100%;
-  max-width: clamp(200px, 22vw, 320px);
+  max-width: clamp(170px, 18vw, 260px);
   border-radius: var(--radius-xl);
   overflow: hidden;
   border: 1px solid rgba(99, 102, 241, 0.28);
   box-shadow: 0 14px 28px rgba(13, 20, 44, 0.42);
   isolation: isolate;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   justify-self: center;
   background: rgba(15, 23, 42, 0.85);
 }
