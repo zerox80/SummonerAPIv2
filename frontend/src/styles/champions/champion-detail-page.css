@@ -24,9 +24,42 @@
   letter-spacing: -0.01em;
 }
 
-.champion-detail__lore p {
+.champion-detail__lore-text {
   margin: 0;
   color: var(--text-secondary);
+  transition: max-height var(--duration-base) ease;
+}
+
+.champion-detail__lore-text.is-clamped {
+  max-height: 11.5rem;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0));
+}
+
+.champion-detail__lore-toggle {
+  margin-top: 1rem;
+  border: 1px solid rgba(129, 140, 248, 0.45);
+  background: rgba(79, 70, 229, 0.18);
+  color: rgba(226, 232, 255, 0.9);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.3rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.champion-detail__lore-toggle:hover,
+.champion-detail__lore-toggle:focus-visible {
+  background: rgba(99, 102, 241, 0.32);
+  border-color: rgba(129, 140, 248, 0.75);
+  color: white;
+}
+
+.champion-detail__lore-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.55);
 }
 
 .champion-detail__controls {

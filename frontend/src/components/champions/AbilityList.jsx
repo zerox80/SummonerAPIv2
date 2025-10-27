@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '../Tooltip.jsx';
 import '../../styles/champions/champion-abilities.css';
@@ -20,6 +21,54 @@ AbilityDescription.propTypes = {
 };
 
 export default function AbilityList({ passive, spells }) {
+  const [expandedAbilities, setExpandedAbilities] = useState(() => new Set());
+
+  const toggleAbility = (key) => {
+    setExpandedAbilities((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
+  const isExpanded = (key) => expandedAbilities.has(key);
+
+  const renderAbilityDetails = (key, description, notes) => {
+    const hasNotes = Array.isArray(notes) && notes.length > 0;
+    const descriptionLength = description ? description.replace(/<[^>]*>/g, '').length : 0;
+    const hasExtendedContent = descriptionLength > 260 || hasNotes;
+    const expanded = isExpanded(key);
+
+    return (
+      <>
+        <div className={`ability-card__details${expanded ? ' is-expanded' : ' is-collapsed'}`}>
+          <AbilityDescription text={description} />
+          {hasNotes && (
+            <ul className="ability-card__notes">
+              {notes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+        {hasExtendedContent && (
+          <button
+            type="button"
+            className="ability-card__toggle"
+            onClick={() => toggleAbility(key)}
+            aria-expanded={expanded}
+          >
+            {expanded ? 'Show less' : 'Show more'}
+          </button>
+        )}
+      </>
+    );
+  };
+
   return (
     <section className="champion-abilities glass-panel">
       <header className="champion-abilities__header">
@@ -37,14 +86,7 @@ export default function AbilityList({ passive, spells }) {
                 <span className="ability-card__hotkey">Passive</span>
                 <h4>{passive.name}</h4>
               </div>
-              <AbilityDescription text={passive.description || passive.tooltip} />
-              {passive.notes?.length > 0 && (
-                <ul className="ability-card__notes">
-                  {passive.notes.map((note) => (
-                    <li key={note}>{note}</li>
-                  ))}
-                </ul>
-              )}
+              {renderAbilityDetails('passive', passive.description || passive.tooltip, passive.notes)}
             </div>
           </article>
         )}
@@ -85,14 +127,7 @@ export default function AbilityList({ passive, spells }) {
                   </Tooltip>
                 )}
               </div>
-              <AbilityDescription text={spell.tooltip || spell.description} />
-              {spell.notes?.length > 0 && (
-                <ul className="ability-card__notes">
-                  {spell.notes.map((note) => (
-                    <li key={note}>{note}</li>
-                  ))}
-                </ul>
-              )}
+              {renderAbilityDetails(spell.id, spell.tooltip || spell.description, spell.notes)}
             </div>
           </article>
         ))}

@@ -66,6 +66,23 @@
   gap: 0.65rem;
 }
 
+.ability-card__details {
+  display: grid;
+  gap: 0.65rem;
+  transition: max-height var(--duration-base) ease, opacity var(--duration-base) ease;
+}
+
+.ability-card__details.is-collapsed {
+  max-height: 9.5rem;
+  overflow: hidden;
+  opacity: 0.94;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0));
+}
+
+.ability-card__details.is-expanded {
+  max-height: none;
+}
+
 .ability-card__meta {
   display: flex;
   align-items: center;
@@ -124,6 +141,34 @@
 
 .ability-card__notes li::marker {
   color: rgba(165, 180, 252, 0.7);
+}
+
+.ability-card__toggle {
+  justify-self: flex-start;
+  padding: 0.35rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(129, 140, 248, 0.35);
+  background: rgba(99, 102, 241, 0.18);
+  color: rgba(226, 232, 255, 0.88);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+
+.ability-card__toggle:hover,
+.ability-card__toggle:focus-visible {
+  background: rgba(129, 140, 248, 0.3);
+  border-color: rgba(129, 140, 248, 0.6);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.ability-card__toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.55);
 }
 
 @media (max-width: 720px) {

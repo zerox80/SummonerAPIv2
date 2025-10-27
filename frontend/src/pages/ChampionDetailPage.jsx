@@ -28,6 +28,7 @@ export default function ChampionDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [role, setRole] = useState('ALL');
+  const [loreExpanded, setLoreExpanded] = useState(false);
   const queueId = 420;
   const normalizedId = (id || '').toLowerCase();
 
@@ -71,6 +72,7 @@ export default function ChampionDetailPage() {
   }
 
   const tagline = champion.tags?.join(' • ');
+  const shouldClampLore = champion.lore && champion.lore.length > 420;
 
   return (
     <div className="champion-detail-page">
@@ -90,7 +92,17 @@ export default function ChampionDetailPage() {
         <div className="champion-detail__main-column">
           <section className="champion-detail__lore glass-panel">
             <h3>Lore</h3>
-            <p>{champion.lore}</p>
+            <p className={`champion-detail__lore-text${shouldClampLore && !loreExpanded ? ' is-clamped' : ''}`}>{champion.lore}</p>
+            {shouldClampLore && (
+              <button
+                type="button"
+                className="champion-detail__lore-toggle"
+                onClick={() => setLoreExpanded((prev) => !prev)}
+                aria-expanded={loreExpanded}
+              >
+                {loreExpanded ? 'Show less' : 'Show more'}
+              </button>
+            )}
           </section>
 
           {curatedBuild && (
