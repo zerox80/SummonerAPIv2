@@ -1,6 +1,60 @@
 import PropTypes from 'prop-types';
 import '../styles/components/metric-tile.css';
 
+/**
+ * Component for displaying metric data in a styled tile format.
+ * 
+ * <p>This component renders a metric tile with a label, primary value, and optional
+ * secondary information, icon, and trend indicator. It's designed to display
+ * key performance indicators, statistics, and other important metrics in a
+ * clean, consistent format throughout the application.</p>
+ * 
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Flexible content display with optional secondary information</li>
+ *   <li>Icon support for visual context and branding</li>
+ *   <li>Trend indicators for showing changes over time</li>
+ *   <li>Emphasis mode for highlighting important metrics</li>
+ *   <li>Responsive design that works across all screen sizes</li>
+ *   <li>Semantic HTML structure for accessibility</li>
+ * </ul>
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.label - The metric label displayed in the header
+ * @param {string|number} props.value - The primary metric value to display
+ * @param {string|React.ReactNode} [props.secondary] - Optional secondary information below the main value
+ * @param {React.ReactNode} [props.icon] - Optional icon to display next to the label
+ * @param {React.ReactNode} [props.trend] - Optional trend indicator (e.g., arrow, percentage change)
+ * @param {boolean} [props.emphasize=false] - Whether to apply emphasis styling to make the tile stand out
+ * @returns {React.Element} Rendered metric tile component
+ * 
+ * @example
+ * // Basic metric tile
+ * <MetricTile 
+ *   label="Win Rate"
+ *   value="67%"
+ *   secondary="15W / 5L"
+ * />
+ * 
+ * @example
+ * // Metric tile with icon and trend
+ * <MetricTile 
+ *   label="Rank"
+ *   value="Gold II"
+ *   icon="🏆"
+ *   trend="↑ 25 LP"
+ *   emphasize={true}
+ * />
+ * 
+ * @example
+ * // Metric with complex secondary content
+ * <MetricTile 
+ *   label="KDA"
+ *   value="3.5"
+ *   secondary={<span>10/2/8</span>}
+ *   icon="⚔️"
+ * />
+ */
 export default function MetricTile({
   label,
   value,

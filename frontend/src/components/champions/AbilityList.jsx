@@ -3,8 +3,26 @@ import PropTypes from 'prop-types';
 import Tooltip from '../Tooltip.jsx';
 import '../../styles/champions/champion-abilities.css';
 
+/**
+ * Mapping array for spell hotkeys in order.
+ * 
+ * @constant
+ * @type {Array<string>}
+ * @default ['Q', 'W', 'E', 'R']
+ */
 const KEY_MAP = ['Q', 'W', 'E', 'R'];
 
+/**
+ * Component for rendering ability descriptions with HTML support.
+ * 
+ * <p>This component handles the rendering of ability descriptions, converting
+ * newline characters to HTML breaks and safely rendering HTML content.
+ * It returns null if no text is provided.</p>
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.text - The ability description text to render
+ * @returns {React.Element|null} Rendered description paragraph or null
+ */
 function AbilityDescription({ text }) {
   if (!text) return null;
 
@@ -20,9 +38,70 @@ AbilityDescription.propTypes = {
   text: PropTypes.string
 };
 
+/**
+ * Component for displaying champion abilities in an interactive grid layout.
+ * 
+ * <p>This component renders both passive and active abilities for a champion,
+ * with expandable descriptions, ability statistics, and interactive tooltips.
+ * It supports collapsible content for long descriptions and includes comprehensive
+ * ability information like cooldown, cost, range, damage, and scaling.</p>
+ * 
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Interactive ability cards with expand/collapse functionality</li>
+ *   <li>Automatic content length detection for optimal display</li>
+ *   <li>Tooltip support for ability statistics</li>
+ *   <li>Responsive grid layout for all screen sizes</li>
+ *   <li>Accessibility support with proper ARIA attributes</li>
+ *   <li>Lazy loading for ability images</li>
+ * </ul>
+ * 
+ * @param {Object} props - Component props
+ * @param {Object} props.passive - Passive ability data
+ * @param {string} props.passive.name - Passive ability name
+ * @param {string} [props.passive.description] - Passive ability description
+ * @param {string} [props.passive.tooltip] - Passive ability tooltip (fallback for description)
+ * @param {string} props.passive.imageFull - Passive ability image filename
+ * @param {Array<string>} [props.passive.notes] - Additional notes about the passive ability
+ * @param {Array<Object>} props.spells - Array of active spell data
+ * @param {string} props.spells[].id - Unique spell identifier
+ * @param {string} props.spells[].name - Spell name
+ * @param {string} [props.spells[].description] - Spell description
+ * @param {string} [props.spells[].tooltip] - Spell tooltip (fallback for description)
+ * @param {string} props.spells[].imageFull - Spell image filename
+ * @param {string} [props.spells[].cooldown] - Spell cooldown information
+ * @param {string} [props.spells[].cost] - Spell resource cost
+ * @param {string} [props.spells[].range] - Spell range information
+ * @param {string} [props.spells[].damage] - Spell damage information
+ * @param {string} [props.spells[].scaling] - Spell scaling information
+ * @param {Array<string>} [props.spells[].notes] - Additional notes about the spell
+ * @param {boolean} [props.showHeader=true] - Whether to show the section header
+ * @returns {React.Element} Rendered abilities section
+ * 
+ * @example
+ * // Basic usage with passive and spells
+ * <AbilityList 
+ *   passive={passiveData}
+ *   spells={spellData}
+ *   showHeader={true}
+ * />
+ * 
+ * @example
+ * // Minimal usage without header
+ * <AbilityList 
+ *   passive={passiveData}
+ *   spells={spellData}
+ *   showHeader={false}
+ * />
+ */
 export default function AbilityList({ passive, spells, showHeader = true }) {
   const [expandedAbilities, setExpandedAbilities] = useState(() => new Set());
 
+  /**
+   * Toggles the expanded state of an ability.
+   * 
+   * @param {string} key - The ability key to toggle ('passive' or spell ID)
+   */
   const toggleAbility = (key) => {
     setExpandedAbilities((prev) => {
       const next = new Set(prev);
@@ -35,8 +114,22 @@ export default function AbilityList({ passive, spells, showHeader = true }) {
     });
   };
 
+  /**
+   * Checks if an ability is currently expanded.
+   * 
+   * @param {string} key - The ability key to check
+   * @returns {boolean} Whether the ability is expanded
+   */
   const isExpanded = (key) => expandedAbilities.has(key);
 
+  /**
+   * Renders detailed ability information with expand/collapse functionality.
+   * 
+   * @param {string} key - The ability identifier
+   * @param {string} description - The ability description text
+   * @param {Array<string>} notes - Additional ability notes
+   * @returns {React.Element} Rendered ability details
+   */
   const renderAbilityDetails = (key, description, notes) => {
     const hasNotes = Array.isArray(notes) && notes.length > 0;
     const descriptionLength = description ? description.replace(/<[^>]*>/g, '').length : 0;

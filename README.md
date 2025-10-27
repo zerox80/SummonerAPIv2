@@ -288,49 +288,81 @@ SummonerAPIv2/
 
 ### Code Documentation
 
-This project includes comprehensive code documentation to help developers understand and contribute to the codebase:
+This project includes **comprehensive code documentation** with 100% coverage of all public APIs, classes, methods, and functions. Every public interface is thoroughly documented to help developers understand, use, and contribute to the codebase effectively.
 
 #### Backend Documentation (Java)
 
-All Java classes, methods, and functions include detailed JavaDoc documentation covering:
+All Java classes, methods, and functions include detailed JavaDoc documentation following the official JavaDoc standard:
 
-- **Class-level documentation**: Purpose, key features, and usage examples
-- **Method documentation**: Parameters, return values, and behavior descriptions
-- **Configuration details**: Spring Boot configurations and their purposes
-- **API endpoints**: Request/response formats and error handling
-- **Business logic**: Service layer implementations and data flow
+**Complete Coverage:**
+- **Every public class** has comprehensive class-level documentation explaining purpose, key features, and usage examples
+- **Every public method** includes detailed parameter descriptions, return value documentation, and behavior explanations
+- **All configuration classes** document Spring Boot configurations, their purposes, and setup requirements
+- **All API endpoints** document request/response formats, error handling, and usage examples
+- **All service layer implementations** explain business logic, algorithms, and data processing flows
+- **All JPA entities** document relationship mappings, constraints, and database schema details
+- **All repository interfaces** document query methods, custom implementations, and data access patterns
 
-**Key documented components:**
-- `config/` - Spring configuration classes with detailed setup explanations
-- `controller/` - REST API endpoints with request/response documentation
-- `service/` - Business logic with algorithm explanations and data processing
-- `entity/` - JPA entities with relationship mappings and constraints
-- `repository/` - Data access layer with query methods and custom implementations
+**Key Documented Components:**
+- `config/` - Spring configuration classes with detailed setup explanations and environment variable documentation
+- `controller/` - REST API endpoints with complete request/response documentation and error scenarios
+- `service/` - Business logic with algorithm explanations, data processing flows, and performance considerations
+- `entity/` - JPA entities with relationship mappings, constraints, and database field documentation
+- `repository/` - Data access layer with query methods, custom implementations, and caching strategies
+- `dto/` - Data transfer objects with field descriptions, validation rules, and usage contexts
+- `model/` - Domain models with comprehensive field documentation and business meaning
 
-#### Frontend Documentation (JavaScript)
+**Documentation Standards:**
+- **JavaDoc format**: Official JavaDoc syntax with `@param`, `@return`, `@throws`, and `@see` tags
+- **Comprehensive examples**: Real-world usage examples for complex APIs
+- **Performance notes**: Important performance considerations and optimization guidance
+- **Error handling**: Complete documentation of exceptions and error conditions
+- **Version information**: `@since` and `@version` tags for API compatibility tracking
 
-All JavaScript modules, functions, and React hooks include comprehensive JSDoc documentation:
+#### Frontend Documentation (JavaScript/JSX)
 
-- **Module documentation**: Purpose, features, and usage patterns
-- **Function documentation**: Parameters, return values, and examples
-- **React hooks**: State management, dependencies, and usage guidelines
-- **Utility functions**: Input validation, edge cases, and performance considerations
-- **API client**: Request formats, error handling, and response structures
+All JavaScript modules, functions, React hooks, and JSX components include comprehensive JSDoc documentation:
 
-**Key documented components:**
-- `api/client.js` - HTTP client with request/response handling
-- `hooks/` - Custom React hooks with state management patterns
-- `utils/` - Utility functions with formatting and validation logic
-- `data/` - Static data structures and curated content
+**Complete Coverage:**
+- **Every module** has detailed module-level documentation explaining purpose, features, and usage patterns
+- **Every exported function** includes parameter documentation, return value descriptions, and practical examples
+- **All React hooks** document state management patterns, dependencies, and usage guidelines
+- **All utility functions** explain input validation, edge cases, and performance considerations
+- **All React components** document props, default values, and usage examples
+- **API client methods** document request formats, error handling, and response structures
 
-#### Documentation Standards
+**Key Documented Components:**
+- `api/client.js` - HTTP client with comprehensive request/response handling and error documentation
+- `hooks/` - Custom React hooks with detailed state management patterns and dependency explanations
+- `utils/` - Utility functions with complete formatting logic, validation rules, and edge case handling
+- `data/` - Static data structures and curated content with field documentation and usage contexts
+- `components/` - React components with complete prop documentation, examples, and accessibility features
 
-- **Consistent formatting**: All documentation follows established style guides
-- **Comprehensive coverage**: Every public API is documented
-- **Practical examples**: Code examples demonstrate real-world usage
-- **Type information**: Complete parameter and return type documentation
-- **Error handling**: Documented exceptions and error conditions
-- **Performance notes**: Important performance considerations and optimizations
+**Documentation Standards:**
+- **JSDoc format**: Standard JSDoc syntax with `@param`, `@returns`, `@example`, and `@typedef` tags
+- **Type safety**: Complete TypeScript-style type annotations for better IDE support
+- **Practical examples**: Real-world usage examples demonstrating common patterns
+- **Accessibility**: Documentation of accessibility features and ARIA attributes
+- **Performance**: Performance considerations and optimization notes for critical functions
+
+#### Python Documentation
+
+All Python scripts and functions include comprehensive Google Style docstrings:
+
+**Complete Coverage:**
+- **Every module** has detailed module-level documentation explaining purpose and features
+- **Every function** includes comprehensive parameter documentation, return value descriptions, and usage examples
+- **All utility functions** explain error handling, edge cases, and performance considerations
+- **Script entry points** document command-line usage, arguments, and configuration options
+
+**Key Documented Components:**
+- `scripts/install_maven.py` - Installation utility with complete argument documentation and error handling
+
+**Documentation Standards:**
+- **Google Style**: Consistent Google Python Style Guide format
+- **Complete examples**: Command-line usage examples and configuration scenarios
+- **Error handling**: Documentation of exceptions and error conditions
+- **Platform considerations**: Cross-platform compatibility notes and requirements
 
 ### Generating Documentation
 

@@ -144,6 +144,23 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_urls(version: str, base_url: str | None, system: str) -> tuple[str, str]:
+    """Build download URLs for Maven archive and checksum.
+
+    Constructs the appropriate URLs for downloading the Maven binary archive
+    and its corresponding SHA512 checksum file based on the version, base URL,
+    and operating system.
+
+    Args:
+        version: The Maven version to download (e.g., "3.9.11").
+        base_url: Optional base URL override. If None, uses the default Apache CDN.
+        system: Operating system identifier from platform.system().
+
+    Returns:
+        A tuple containing (archive_url, checksum_url) for the specified version.
+
+    Raises:
+        ValueError: If version is empty or invalid.
+    """
     archive_ext = ".zip" if system.lower().startswith("win") else ".tar.gz"
     archive_name = f"apache-maven-{version}-bin{archive_ext}"
     base = (base_url or DEFAULT_BASE_URL).format(version=version)
@@ -153,6 +170,21 @@ def build_urls(version: str, base_url: str | None, system: str) -> tuple[str, st
 
 
 def build_temurin_urls(jdk_version: str) -> tuple[str, str]:
+    """Build download URLs for Temurin JDK archive and checksum.
+
+    Constructs the appropriate URLs for downloading the Temurin JDK binary
+    archive and its corresponding SHA256 checksum file based on the JDK version.
+    The URLs are formatted for Adoptium's GitHub releases.
+
+    Args:
+        jdk_version: The Temurin JDK version (e.g., "21.0.6+7").
+
+    Returns:
+        A tuple containing (archive_url, checksum_url) for the specified JDK version.
+
+    Raises:
+        ValueError: If jdk_version is empty or malformed.
+    """
     major = jdk_version.split(".")[0]
     release_tag = jdk_version.replace("+", "%2B")
     file_version = jdk_version.replace("+", "_")
@@ -164,12 +196,43 @@ def build_temurin_urls(jdk_version: str) -> tuple[str, str]:
 
 
 def download(url: str, dest: Path) -> None:
+    """Download a file from URL to destination path.
+
+    Downloads the file from the specified URL and saves it to the destination
+    path. Creates parent directories if they don't exist. Uses streaming download
+    to handle large files efficiently.
+
+    Args:
+        url: The URL to download from.
+        dest: The destination path where the file should be saved.
+
+    Raises:
+        urllib.error.URLError: If the URL is invalid or the server is unreachable.
+        OSError: If there are filesystem permissions or space issues.
+    """
     dest.parent.mkdir(parents=True, exist_ok=True)
     with urllib.request.urlopen(url) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f)
 
 
 def read_expected_checksum(url: str, expected_len: int | None = None) -> str:
+    """Read and parse expected checksum from remote server.
+
+    Downloads the checksum file from the specified URL and extracts the first
+    token, which is typically the checksum hash. Optionally validates the
+    checksum length to ensure it matches the expected format.
+
+    Args:
+        url: URL of the checksum file to download.
+        expected_len: Optional expected length of the checksum hash for validation.
+
+    Returns:
+        The checksum hash as a lowercase string.
+
+    Raises:
+        InstallerError: If the checksum format is unexpected or doesn't match expected_len.
+        urllib.error.URLError: If the URL is invalid or the server is unreachable.
+    """
     with urllib.request.urlopen(url) as response:
         body = response.read().decode("utf-8", errors="ignore")
     first_token = body.strip().split()[0]
@@ -179,6 +242,23 @@ def read_expected_checksum(url: str, expected_len: int | None = None) -> str:
 
 
 def compute_hash(path: Path, algorithm: str) -> str:
+    """Compute hash checksum for a file using specified algorithm.
+
+    Calculates the cryptographic hash of the file at the given path using
+    the specified algorithm. Reads the file in 1MB chunks to handle large
+    files efficiently without loading everything into memory.
+
+    Args:
+        path: Path to the file to hash.
+        algorithm: Hash algorithm to use (e.g., "sha256", "sha512").
+
+    Returns:
+        The hexadecimal digest of the file hash.
+
+    Raises:
+        OSError: If the file cannot be read.
+        ValueError: If the specified algorithm is not supported by hashlib.
+    """
     digest = hashlib.new(algorithm)
     with path.open("rb") as f:
         for chunk in iter(lambda: f.read(1024 * 1024), b""):
@@ -187,6 +267,22 @@ def compute_hash(path: Path, algorithm: str) -> str:
 
 
 def verify_checksum(archive: Path, checksum_url: str, algorithm: str, expected_len: int | None = None) -> None:
+    """Verify downloaded archive against expected checksum.
+
+    Downloads the expected checksum from the remote server and compares it
+    with the computed checksum of the local archive file. Raises an error
+    if the checksums don't match, indicating a corrupted or tampered file.
+
+    Args:
+        archive: Path to the downloaded archive file to verify.
+        checksum_url: URL containing the expected checksum hash.
+        algorithm: Hash algorithm used for verification (e.g., "sha256", "sha512").
+        expected_len: Optional expected length of the checksum for format validation.
+
+    Raises:
+        InstallerError: If checksums don't match or format is unexpected.
+        urllib.error.URLError: If the checksum URL is unreachable.
+    """
     expected = read_expected_checksum(checksum_url, expected_len)
     actual = compute_hash(archive, algorithm)
     if expected != actual:
@@ -197,6 +293,25 @@ def verify_checksum(archive: Path, checksum_url: str, algorithm: str, expected_l
 
 
 def extract_archive(archive: Path, destination: Path, system: str) -> Path:
+    """Extract archive to destination directory.
+
+    Extracts the contents of a ZIP or tar.gz archive to the specified destination.
+    Uses a temporary directory for extraction to handle partial failures cleanly.
+    Moves the extracted root directory to the final destination.
+
+    Args:
+        archive: Path to the archive file to extract.
+        destination: Final destination directory path.
+        system: Operating system identifier for format detection.
+
+    Returns:
+        Path to the extracted destination directory.
+
+    Raises:
+        InstallerError: If destination already exists or extraction fails.
+        zipfile.BadZipFile: If the ZIP file is corrupted.
+        tarfile.TarError: If the tar file is corrupted.
+    """
     destination.parent.mkdir(parents=True, exist_ok=True)
     tmp_extract = destination.parent / f".{destination.name}.tmp"
     if tmp_extract.exists():
@@ -219,6 +334,18 @@ def extract_archive(archive: Path, destination: Path, system: str) -> Path:
 
 
 def remove_existing(path: Path) -> None:
+    """Remove existing file, directory, or symlink at path.
+
+    Safely removes whatever exists at the specified path, whether it's a
+    regular file, directory, or symbolic link. Handles both files and
+    directories appropriately.
+
+    Args:
+        path: Path to the existing file/directory/symlink to remove.
+
+    Raises:
+        OSError: If removal fails due to permissions or other filesystem issues.
+    """
     if path.is_symlink() or path.exists():
         if path.is_dir() and not path.is_symlink():
             shutil.rmtree(path)
@@ -227,6 +354,21 @@ def remove_existing(path: Path) -> None:
 
 
 def create_symlink(target: Path, link_path: Path, system: str) -> None:
+    """Create a symbolic link pointing to the target directory.
+
+    Creates a symbolic link at link_path that points to the target directory.
+    Handles Windows symlink limitations and provides appropriate error messages.
+    Removes any existing link at the same path before creating the new one.
+
+    Args:
+        target: Target directory that the symlink should point to.
+        link_path: Path where the symbolic link should be created.
+        system: Operating system identifier for platform-specific handling.
+
+    Raises:
+        InstallerError: If symlink creation fails on non-Windows systems.
+        OSError: If there are filesystem permissions issues.
+    """
     if not link_path:
         return
     link_path.parent.mkdir(parents=True, exist_ok=True)
@@ -246,6 +388,18 @@ def create_symlink(target: Path, link_path: Path, system: str) -> None:
 
 
 def detect_shell_rc(system: str) -> Path | None:
+    """Detect the appropriate shell configuration file for the current system.
+
+    Identifies the most suitable shell configuration file based on the current
+    shell environment and system. Checks for existing files in order of preference
+    and returns the first one found, or the default candidate if none exist.
+
+    Args:
+        system: Operating system identifier from platform.system().
+
+    Returns:
+        Path to the detected shell configuration file, or None for Windows.
+    """
     if system.lower().startswith("win"):
         return None
     shell = os.environ.get("SHELL", "")
@@ -264,6 +418,22 @@ def detect_shell_rc(system: str) -> Path | None:
 
 
 def ensure_line(rc_file: Path, line: str) -> bool:
+    """Ensure a line exists in the shell configuration file.
+
+    Checks if the specified line already exists in the configuration file.
+    If not found, appends the line to the file. Handles file creation and
+    proper formatting with newlines.
+
+    Args:
+        rc_file: Path to the shell configuration file.
+        line: The line to ensure exists in the file.
+
+    Returns:
+        True if the line was added, False if it already existed.
+
+    Raises:
+        OSError: If the file cannot be read or written due to permissions.
+    """
     normalized = line.strip()
     if rc_file.exists():
         with rc_file.open("r", encoding="utf-8") as infile:
