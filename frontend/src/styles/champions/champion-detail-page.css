@@ -1,26 +1,26 @@
 .champion-detail-page {
   display: grid;
-  gap: clamp(1.4rem, 4vw, 2.4rem);
-  padding-bottom: clamp(3rem, 6vw, 4rem);
+  gap: clamp(1rem, 3vw, 1.8rem);
+  padding-bottom: clamp(2.4rem, 5vw, 3.2rem);
 }
 
 .champion-detail__layout {
   display: grid;
-  gap: clamp(1.4rem, 3vw, 2rem);
+  gap: clamp(1rem, 2.5vw, 1.6rem);
 }
 
 .champion-detail__lore {
-  padding: clamp(1.4rem, 3vw, 2rem);
+  padding: clamp(1.1rem, 2.5vw, 1.6rem);
   border-radius: var(--radius-xl);
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(99, 102, 241, 0.28);
   box-shadow: 0 22px 40px rgba(15, 23, 42, 0.35);
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .champion-detail__lore h3 {
-  margin: 0 0 0.85rem;
-  font-size: clamp(1.35rem, 3vw, 1.6rem);
+  margin: 0 0 0.7rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   letter-spacing: -0.01em;
 }
 
@@ -31,20 +31,20 @@
 }
 
 .champion-detail__lore-text.is-clamped {
-  max-height: 11.5rem;
+  max-height: 10rem;
   overflow: hidden;
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0));
 }
 
 .champion-detail__lore-toggle {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
   border: 1px solid rgba(129, 140, 248, 0.45);
   background: rgba(79, 70, 229, 0.18);
   color: rgba(226, 232, 255, 0.9);
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 0.5rem 1.3rem;
+  padding: 0.45rem 1.2rem;
   border-radius: 999px;
   cursor: pointer;
   transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
@@ -72,19 +72,19 @@
 
 .champion-detail__main-column {
   display: grid;
-  gap: clamp(1.3rem, 3vw, 1.8rem);
+  gap: clamp(1rem, 2.4vw, 1.5rem);
   align-content: start;
 }
 
 .champion-detail__build-grid {
   display: grid;
-  gap: clamp(1.3rem, 2.6vw, 1.8rem);
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: clamp(1rem, 2.2vw, 1.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 .champion-detail__sidebar {
   display: grid;
-  gap: clamp(1.3rem, 3vw, 1.9rem);
+  gap: clamp(1rem, 2.4vw, 1.6rem);
   align-content: start;
 }
 
@@ -96,12 +96,12 @@
 
   .champion-detail__lore {
     position: sticky;
-    top: 1.5rem;
+    top: 1.1rem;
   }
 
   .champion-detail__sidebar {
     position: sticky;
-    top: 1.5rem;
+    top: 1.1rem;
   }
 }
 
