@@ -286,6 +286,88 @@ SummonerAPIv2/
 └── package.json       # NPM dependencies
 ```
 
+### Code Documentation
+
+This project includes comprehensive code documentation to help developers understand and contribute to the codebase:
+
+#### Backend Documentation (Java)
+
+All Java classes, methods, and functions include detailed JavaDoc documentation covering:
+
+- **Class-level documentation**: Purpose, key features, and usage examples
+- **Method documentation**: Parameters, return values, and behavior descriptions
+- **Configuration details**: Spring Boot configurations and their purposes
+- **API endpoints**: Request/response formats and error handling
+- **Business logic**: Service layer implementations and data flow
+
+**Key documented components:**
+- `config/` - Spring configuration classes with detailed setup explanations
+- `controller/` - REST API endpoints with request/response documentation
+- `service/` - Business logic with algorithm explanations and data processing
+- `entity/` - JPA entities with relationship mappings and constraints
+- `repository/` - Data access layer with query methods and custom implementations
+
+#### Frontend Documentation (JavaScript)
+
+All JavaScript modules, functions, and React hooks include comprehensive JSDoc documentation:
+
+- **Module documentation**: Purpose, features, and usage patterns
+- **Function documentation**: Parameters, return values, and examples
+- **React hooks**: State management, dependencies, and usage guidelines
+- **Utility functions**: Input validation, edge cases, and performance considerations
+- **API client**: Request formats, error handling, and response structures
+
+**Key documented components:**
+- `api/client.js` - HTTP client with request/response handling
+- `hooks/` - Custom React hooks with state management patterns
+- `utils/` - Utility functions with formatting and validation logic
+- `data/` - Static data structures and curated content
+
+#### Documentation Standards
+
+- **Consistent formatting**: All documentation follows established style guides
+- **Comprehensive coverage**: Every public API is documented
+- **Practical examples**: Code examples demonstrate real-world usage
+- **Type information**: Complete parameter and return type documentation
+- **Error handling**: Documented exceptions and error conditions
+- **Performance notes**: Important performance considerations and optimizations
+
+### Generating Documentation
+
+#### Java Documentation
+
+```bash
+# Generate JavaDoc HTML documentation
+./mvnw javadoc:javadoc
+# Output: target/site/apidocs/index.html
+
+# Generate documentation with custom options
+./mvnw javadoc:javadoc -DadditionalJOption=-Xdoclint:none
+```
+
+#### JavaScript Documentation
+
+```bash
+# Install documentation generator
+npm install -g jsdoc
+
+# Generate JSDoc HTML documentation
+jsdoc frontend/src/**/*.js -d docs/jsdoc
+# Output: docs/jsdoc/index.html
+
+# Generate documentation with custom template
+jsdoc -c jsdoc.conf.json frontend/src/**/*.js
+```
+
+### IDE Integration
+
+Most modern IDEs will automatically display the inline documentation:
+
+- **IntelliJ IDEA**: Hover over methods/classes to see JavaDoc/JSDoc
+- **VS Code**: Install "Document This" extension for enhanced documentation
+- **WebStorm**: Built-in JSDoc support with type hints and examples
+- **Eclipse**: JavaDoc integration with hover tooltips
+
 ---
 
 ## 🔌 API Documentation

@@ -43,6 +43,33 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.time.Duration;
 
+/**
+ * REST controller for handling summoner-related API endpoints.
+ * 
+ * <p>This controller provides endpoints for retrieving summoner information,
+ * match history, league statistics, and player profiles. It integrates with
+ * the Riot Games API through the service layer and provides RESTful responses
+ * with appropriate caching and error handling.</p>
+ * 
+ * <p>Endpoints provided:</p>
+ * <ul>
+ *   <li>GET /api/profile - Complete summoner profile with ranked stats</li>
+ *   <li>GET /api/matches - Paginated match history</li>
+ *   <li>GET /api/summoner-suggestions - Autocomplete suggestions</li>
+ * </ul>
+ * 
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Response caching for performance</li>
+ *   <li>Cookie-based session management</li>
+ *   <li>Error handling with appropriate HTTP status codes</li>
+ *   <li>Request validation and sanitization</li>
+ * </ul>
+ * 
+ * @author zerox80
+ * @version 2.0
+ * @since 2.0
+ */
 @RestController
 public class SummonerController {
 
@@ -56,8 +83,20 @@ public class SummonerController {
     private static final String SEARCH_HISTORY_COOKIE = "searchHistory";
     private static final int MAX_HISTORY_SIZE = 10;
 
+    /**
+     * Constructs a new SummonerController with the required dependencies.
+     * 
+     * @param riotApiService Service for Riot API interactions
+     * @param dataDragonService Service for Data Dragon assets
+     * @param objectMapper Jackson object mapper for JSON processing
+     * @param matchesPageSize Maximum number of matches to return per request
+     * @param maxMatchesPageSize Maximum page size for match history requests
+     * @param maxMatchesStartOffset Maximum start offset for match history requests
+     */
     @Autowired
-    public SummonerController(RiotApiService riotApiService, DataDragonService dataDragonService, ObjectMapper objectMapper,
+    public SummonerController(RiotApiService riotApiService,
+                              DataDragonService dataDragonService,
+                              ObjectMapper objectMapper,
                               @Value("${ui.matches.page-size:10}") int matchesPageSize,
                               @Value("${ui.matches.max-page-size:40}") int maxMatchesPageSize,
                               @Value("${ui.matches.max-start-offset:1000}") int maxMatchesStartOffset) {

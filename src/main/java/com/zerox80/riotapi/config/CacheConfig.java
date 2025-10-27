@@ -9,9 +9,38 @@ import org.springframework.context.annotation.Primary;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Configuration class for application caching using Caffeine cache.
+ * 
+ * <p>This configuration sets up multiple cache instances with different expiration policies
+ * and size limits optimized for the specific data types used in the SummonerAPI. It uses
+ * Caffeine as the underlying cache implementation for high-performance in-memory caching.</p>
+ * 
+ * <p>Cache configurations:</p>
+ * <ul>
+ *   <li><strong>Accounts/Summoners</strong>: 12 hours expiration, 2000 entries max</li>
+ *   <li><strong>League Entries</strong>: 10 minutes expiration, 2000 entries max</li>
+ *   <li><strong>Match IDs</strong>: 5 minutes expiration, 5000 entries max</li>
+ *   <li><strong>Match Details</strong>: 7 days expiration, 10000 entries max</li>
+ *   <li><strong>Data Dragon</strong>: 12 hours expiration, various size limits</li>
+ * </ul>
+ * 
+ * @author zerox80
+ * @version 2.0
+ * @since 2.0
+ */
 @Configuration
 public class CacheConfig {
 
+    /**
+     * Creates and configures the primary cache manager using Caffeine.
+     * 
+     * <p>This cache manager is configured with multiple custom caches, each optimized
+     * for specific data types with appropriate expiration policies and size limits.
+     * All caches are configured in async mode for better performance.</p>
+     * 
+     * @return A configured CaffeineCacheManager instance with all custom caches registered
+     */
     @Primary
     @Bean("caffeineCacheManager")
     public CaffeineCacheManager cacheManager() {

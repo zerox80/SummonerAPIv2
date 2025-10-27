@@ -27,6 +27,27 @@ import java.util.Optional;
 import java.util.Locale;
 import com.zerox80.riotapi.util.ListUtils;
 
+/**
+ * Service layer for interacting with the Riot Games API and processing game data.
+ * 
+ * <p>This service provides high-level methods for fetching and processing League of Legends
+ * data from the Riot API, including summoner information, match history, league entries,
+ * and player statistics. It handles data aggregation, caching, and business logic
+ * transformations.</p>
+ * 
+ * <p>Key responsibilities:</p>
+ * <ul>
+ *   <li>Orchestrating API calls to multiple Riot endpoints</li>
+ *   <li>Aggregating and transforming match data</li>
+ *   <li>Managing player LP tracking and statistics</li>
+ *   <li>Providing cached responses for performance</li>
+ *   <li>Handling error scenarios and fallbacks</li>
+ * </ul>
+ * 
+ * @author zerox80
+ * @version 2.0
+ * @since 2.0
+ */
 @Service
 public class RiotApiService {
 
@@ -34,6 +55,12 @@ public class RiotApiService {
     private final RiotApiClient riotApiClient;
     private final PlayerLpRecordService playerLpRecordService;
 
+    /**
+     * Constructs a new RiotApiService with the required dependencies.
+     * 
+     * @param riotApiClient The client for making Riot API requests
+     * @param playerLpRecordService Service for tracking player LP changes over time
+     */
     @Autowired
     public RiotApiService(RiotApiClient riotApiClient,
                           PlayerLpRecordService playerLpRecordService) {
@@ -42,8 +69,18 @@ public class RiotApiService {
     }
 
     /**
-     * Paged variant: fetch match history with offset (start) and count.
-     * Uses Riot API's start/count parameters for the ID list and then hydrates details in small batches.
+     * Retrieves paginated match history for a player with detailed match information.
+     * 
+     * <p>This method fetches match IDs using the Riot API's pagination parameters
+     * and then hydrates each match with full details. It processes matches in batches
+     * to optimize API usage and provides comprehensive match data including
+     * participant information, timeline events, and statistics.</p>
+     * 
+     * @param puuid The Player Universally Unique Identifier
+     * @param start The starting index for pagination (0-based)
+     * @param count The number of matches to retrieve (max 100 recommended)
+     * @return CompletableFuture containing the list of detailed match data
+     * @throws IllegalArgumentException if puuid is null or empty
      */
     public CompletableFuture<List<MatchV5Dto>> getMatchHistoryPaged(String puuid, int start, int count) {
         if (!StringUtils.hasText(puuid)) {
