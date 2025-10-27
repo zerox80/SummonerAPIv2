@@ -32,6 +32,19 @@ export default function ChampionsPage() {
     setSort
   } = useChampions();
 
+  const championCount = Array.isArray(champions) ? champions.length : 0;
+  const activeRoleLabel = ROLE_OPTIONS.find((option) => option.value === role)?.label ?? 'All';
+  const activeSortLabel = SORT_OPTIONS.find((option) => option.value === sort)?.label ?? 'Alphabetical';
+  const hasSearch = Boolean(search?.trim());
+  const filterChips = [];
+
+  if (hasSearch) {
+    filterChips.push({ key: 'search', label: `Search: "${search.trim()}"` });
+  }
+
+  filterChips.push({ key: 'role', label: role === 'ALL' ? 'All roles' : activeRoleLabel });
+  filterChips.push({ key: 'sort', label: `Sort: ${activeSortLabel}` });
+
   return (
     <div className="champions-page">
       <section className="champions-hero glass-panel">
@@ -63,27 +76,45 @@ export default function ChampionsPage() {
         {isError && <p className="champions-state error">{error?.message || 'Failed to load champions.'}</p>}
 
         {!isLoading && !isError && (
-          <div className="champions-grid">
-            {champions.map((champion) => (
-              <Link key={champion.id} to={`/champions/${champion.id}`} className="champion-card" aria-label={`Open details for ${champion.name}`}>
-                <div className="champion-card__image">
-                  <img src={`https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/${champion.imageFull}`} alt={champion.name} loading="lazy" />
-                </div>
-                <div className="champion-card__content">
-                  <h3>{champion.name}</h3>
-                  <p>{champion.title}</p>
-                  <div className="champion-card__tags">
-                    {champion.tags?.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-        {!isLoading && !isError && champions.length === 0 && (
-          <p className="champions-state">No champions match your filters.</p>
+          <>
+            <header className="champions-grid__header">
+              <div className="champions-grid__summary">
+                <h2>
+                  Showing {championCount} champion{championCount === 1 ? '' : 's'}
+                </h2>
+                <p>
+                  Tailor the roster with precise filters and discover your next main.
+                </p>
+              </div>
+              <div className="champions-grid__filters" aria-live="polite">
+                {filterChips.map((chip) => (
+                  <span key={chip.key}>{chip.label}</span>
+                ))}
+              </div>
+            </header>
+            {championCount > 0 ? (
+              <div className="champions-grid">
+                {champions.map((champion) => (
+                  <Link key={champion.id} to={`/champions/${champion.id}`} className="champion-card" aria-label={`Open details for ${champion.name}`}>
+                    <div className="champion-card__image">
+                      <img src={`https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/${champion.imageFull}`} alt={champion.name} loading="lazy" />
+                    </div>
+                    <div className="champion-card__content">
+                      <h3>{champion.name}</h3>
+                      <p>{champion.title}</p>
+                      <div className="champion-card__tags">
+                        {champion.tags?.map((tag) => (
+                          <span key={tag}>{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="champions-state">No champions match your filters.</p>
+            )}
+          </>
         )}
       </section>
     </div>
