@@ -445,21 +445,25 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
                     <span className="match-card__champion-name">{participant.championName}</span>
                   </div>
                 </div>
-                <div className="match-card__meta">
-                  <span className="match-card__queue">{formatQueueById(match.info.queueId)}</span>
-                  <span className="match-card__separator" aria-hidden="true">·</span>
-                  <span className="match-card__time">{gameTime}</span>
-                  <span className="match-card__separator" aria-hidden="true">·</span>
-                  <span className="match-card__duration">{duration}</span>
-                </div>
-                <div className="match-card__stat match-card__stat--kda">
-                  <span className="label">KDA</span>
-                  <span className="value">{participant.kills}/{participant.deaths}/{participant.assists}</span>
-                  <span className="sub">{participant.deaths === 0 ? 'Perfect' : `${((participant.kills + participant.assists) / Math.max(participant.deaths, 1)).toFixed(2)}:1`}</span>
-                </div>
-                <div className="match-card__stat match-card__stat--cs">
-                  <span className="label">CS</span>
-                  <span className="value">{cs}</span>
+                <div className="match-card__summary-body">
+                  <div className="match-card__meta">
+                    <span className="match-card__queue">{formatQueueById(match.info.queueId)}</span>
+                    <span className="match-card__separator" aria-hidden="true">·</span>
+                    <span className="match-card__time">{gameTime}</span>
+                    <span className="match-card__separator" aria-hidden="true">·</span>
+                    <span className="match-card__duration">{duration}</span>
+                  </div>
+                  <div className="match-card__stat-group">
+                    <div className="match-card__stat match-card__stat--kda">
+                      <span className="label">KDA</span>
+                      <span className="value">{participant.kills}/{participant.deaths}/{participant.assists}</span>
+                      <span className="sub">{participant.deaths === 0 ? 'Perfect' : `${((participant.kills + participant.assists) / Math.max(participant.deaths, 1)).toFixed(2)}:1`}</span>
+                    </div>
+                    <div className="match-card__stat match-card__stat--cs">
+                      <span className="label">CS</span>
+                      <span className="value">{cs}</span>
+                    </div>
+                  </div>
                 </div>
                 <div className="match-card__toggle" aria-hidden="true">
                   <svg className={`match-card__chevron ${isExpanded ? 'is-open' : ''}`} width="18" height="18" viewBox="0 0 24 24" fill="none">
