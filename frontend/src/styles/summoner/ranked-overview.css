@@ -1,7 +1,7 @@
 .ranked-overview {
   display: grid;
-  gap: 2rem;
-  padding: 2.25rem;
+  gap: 1.75rem;
+  padding: 1.9rem;
 }
 
 .ranked-overview__header {
@@ -11,18 +11,18 @@
 
 .ranked-overview__header h3 {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.6rem;
   letter-spacing: -0.01em;
 }
 
 .ranked-overview__header p {
   margin: 0;
   color: var(--text-secondary);
-  max-width: 60ch;
+  max-width: 56ch;
 }
 
 .ranked-overview__empty {
-  padding: 3rem 1.5rem;
+  padding: 2.5rem 1.35rem;
   text-align: center;
   border-radius: var(--radius-md);
   background: rgba(15, 23, 42, 0.35);
@@ -41,16 +41,16 @@
 
 .ranked-overview__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.35rem;
 }
 
 .ranked-card {
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1.5rem;
-  padding: 1.75rem;
+  gap: 1.35rem;
+  padding: 1.55rem;
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg, rgba(17, 24, 65, 0.75), rgba(24, 34, 84, 0.65));
   border: 1px solid rgba(99, 102, 241, 0.25);
