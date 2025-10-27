@@ -69,8 +69,7 @@
   background:
     radial-gradient(120% 120% at 0% 0%, var(--match-accent) 0%, rgba(15, 23, 42, 0) 58%),
     radial-gradient(140% 140% at 100% 100%, rgba(96, 165, 250, 0.25) 0%, rgba(15, 23, 42, 0) 62%);
-  opacity: 0.55;
-  mix-blend-mode: screen;
+  opacity: 0.35;
   pointer-events: none;
   transition: opacity var(--duration-base) ease;
 }
@@ -100,7 +99,7 @@
 }
 
 .match-card:hover::before {
-  opacity: 0.85;
+  opacity: 0.55;
 }
 
 .match-card.is-expanded {
