@@ -7,6 +7,8 @@
 
 .app-shell__top {
   padding-top: 1rem;
+  position: relative;
+  z-index: 40;
 }
 
 .app-shell__toolbar {
