@@ -20,7 +20,7 @@ AbilityDescription.propTypes = {
   text: PropTypes.string
 };
 
-export default function AbilityList({ passive, spells }) {
+export default function AbilityList({ passive, spells, showHeader = true }) {
   const [expandedAbilities, setExpandedAbilities] = useState(() => new Set());
 
   const toggleAbility = (key) => {
@@ -71,10 +71,12 @@ export default function AbilityList({ passive, spells }) {
 
   return (
     <section className="champion-abilities glass-panel">
-      <header className="champion-abilities__header">
-        <h3>Ability Overview</h3>
-        <p>Understand the champion kit and how it plays.</p>
-      </header>
+      {showHeader && (
+        <header className="champion-abilities__header">
+          <h3>Ability Overview</h3>
+          <p>Understand the champion kit and how it plays.</p>
+        </header>
+      )}
       <div className="champion-abilities__grid">
         {passive && (
           <article className="ability-card ability-card--passive">
@@ -154,5 +156,6 @@ AbilityList.propTypes = {
     damage: PropTypes.string,
     scaling: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.string)
-  }))
+  })),
+  showHeader: PropTypes.bool
 };
