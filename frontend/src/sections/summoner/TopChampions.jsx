@@ -12,15 +12,19 @@ function resolveChampionImage(championSquares, championBase, championName, champ
   return `${championBase}${championName}.png`;
 }
 
-export default function TopChampions({ championPlayCounts, matches, summoner, championSquares, bases }) {
+export default function TopChampions({ championPlayCounts, matches, summoner, championSquares, bases, range }) {
   const enrichedChampions = useMemo(() => {
     if (!championPlayCounts || !matches || !summoner) return [];
+    
+    // Filter matches based on range (same logic as derived stats in SummonerPage)
+    const targetCount = range === 'all' ? matches.length : Number(range);
+    const filteredMatches = matches.slice(0, targetCount);
     
     const championBase = bases?.champSquare
       || (bases?.img ? `${bases.img}champion/` : 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/');
 
     const result = Object.entries(championPlayCounts).map(([championName, playCount]) => {
-      const championMatches = matches.filter((match) => {
+      const championMatches = filteredMatches.filter((match) => {
         if (!match?.info?.participants) return false;
         const participant = match.info.participants.find((p) => p?.puuid === summoner.puuid);
         return participant && participant.championName === championName;
@@ -65,7 +69,7 @@ export default function TopChampions({ championPlayCounts, matches, summoner, ch
     });
 
     return result.sort((a, b) => b.playCount - a.playCount).slice(0, 6);
-  }, [championPlayCounts, matches, summoner, championSquares]);
+  }, [championPlayCounts, matches, summoner, championSquares, range]);
 
   if (enrichedChampions.length === 0) {
     return (
@@ -119,5 +123,6 @@ TopChampions.propTypes = {
     puuid: PropTypes.string
   }),
   championSquares: PropTypes.object,
-  bases: PropTypes.object
+  bases: PropTypes.object,
+  range: PropTypes.string
 };

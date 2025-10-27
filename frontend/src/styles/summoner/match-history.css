@@ -119,6 +119,7 @@
   letter-spacing: -0.01em;
 }
 
+
 .match-card__toggle {
   display: flex;
   align-items: center;
@@ -126,9 +127,11 @@
   width: 2rem;
   height: 2rem;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.35);
-  color: rgba(255, 255, 255, 0.7);
-  transition: transform var(--duration-base) ease, background var(--duration-base) ease;
+  background: rgba(148, 163, 184, 0.24);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+  transition: transform var(--duration-base) ease, background var(--duration-base) ease, border-color var(--duration-base) ease;
 }
 
 .match-card__chevron {
@@ -140,7 +143,8 @@
 }
 
 .match-card__summary:hover .match-card__toggle {
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(148, 163, 184, 0.35);
+  border-color: rgba(226, 232, 240, 0.45);
 }
 
 .match-card__details {
@@ -236,13 +240,18 @@
 }
 
 .match-card__items {
-  display: grid;
-  grid-template-columns: repeat(6, 48px) 48px;
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  align-items: center;
+}
+
+.match-card__items::after {
+  content: '';
+  flex: auto;
 }
 
 .match-card__item-slot {
+  flex: 0 0 48px;
   width: 48px;
   height: 48px;
   border-radius: 12px;

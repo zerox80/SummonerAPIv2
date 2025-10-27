@@ -26,8 +26,10 @@ export default function SummonerHeader({ profile, derived }) {
         <span className="summoner-header__badge">Level {level ?? 0}</span>
       </div>
       <div className="summoner-header__meta">
-        <p className="summoner-header__eyebrow">Summoner Snapshot</p>
-        <h2>{tagline}</h2>
+        <div>
+          <p className="summoner-header__eyebrow">Summoner Snapshot</p>
+          <h2>{tagline}</h2>
+        </div>
         <div className="summoner-header__grid">
           <div>
             <p className="label">Account Region</p>
@@ -46,19 +48,19 @@ export default function SummonerHeader({ profile, derived }) {
             <p className="value">{capitalize(profile?.primaryRole) || '—'}</p>
           </div>
         </div>
-      </div>
-      <div className="summoner-header__highlight">
-        <div>
-          <span className="summoner-header__highlight-label">Perf. KDA Ratio</span>
-          <span className="summoner-header__highlight-value">{derived.kdaRatio}</span>
-        </div>
-        <div>
-          <span className="summoner-header__highlight-label">Avg CS / Min</span>
-          <span className="summoner-header__highlight-value">{derived.avgCsPerMin || '0.0'}</span>
-        </div>
-        <div>
-          <span className="summoner-header__highlight-label">Avg Gold</span>
-          <span className="summoner-header__highlight-value">{derived.avgGold.toLocaleString()}</span>
+        <div className="summoner-header__highlight">
+          <div>
+            <span className="summoner-header__highlight-label">Perf. KDA Ratio</span>
+            <span className="summoner-header__highlight-value">{derived.kdaRatio}</span>
+          </div>
+          <div>
+            <span className="summoner-header__highlight-label">Avg CS / Min</span>
+            <span className="summoner-header__highlight-value">{derived.avgCsPerMin || '0.0'}</span>
+          </div>
+          <div>
+            <span className="summoner-header__highlight-label">Avg Gold</span>
+            <span className="summoner-header__highlight-value">{derived.avgGold.toLocaleString()}</span>
+          </div>
         </div>
       </div>
     </section>

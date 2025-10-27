@@ -243,6 +243,7 @@ export default function SummonerPage() {
               summoner={profileQuery.data.summoner}
               bases={profileQuery.data.bases}
               championSquares={profileQuery.data.championSquares}
+              range={range}
             />
           </aside>
         </div>
