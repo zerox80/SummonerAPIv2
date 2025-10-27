@@ -73,7 +73,7 @@
 
 .match-card__summary {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(220px, 1fr) minmax(320px, 1fr) auto;
   gap: 1.75rem;
   padding: 1.5rem;
   padding-right: 4.5rem;
@@ -500,6 +500,7 @@
   gap: 0.5rem;
   font-size: 0.9rem;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .match-card__time {
@@ -508,17 +509,20 @@
   gap: 0.45rem;
   font-size: 0.82rem;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .match-card__stats {
-  display: flex;
-  gap: 1.75rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(80px, 1fr));
+  gap: 1.25rem;
+  align-items: center;
 }
 
 .match-card__stat {
   display: grid;
   gap: 0.25rem;
-  text-align: center;
+  text-align: left;
 }
 
 .match-card__stat .label {
