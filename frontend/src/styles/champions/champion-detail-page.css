@@ -1,16 +1,16 @@
 .champion-detail-page {
   display: grid;
-  gap: clamp(2rem, 5vw, 3rem);
-  padding-bottom: clamp(4rem, 7vw, 5rem);
+  gap: clamp(1.4rem, 4vw, 2.4rem);
+  padding-bottom: clamp(3rem, 6vw, 4rem);
 }
 
 .champion-detail__layout {
   display: grid;
-  gap: clamp(1.8rem, 4vw, 2.4rem);
+  gap: clamp(1.4rem, 3vw, 2rem);
 }
 
 .champion-detail__lore {
-  padding: clamp(1.6rem, 3.5vw, 2.2rem);
+  padding: clamp(1.4rem, 3vw, 2rem);
   border-radius: var(--radius-xl);
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(99, 102, 241, 0.28);
@@ -72,19 +72,19 @@
 
 .champion-detail__main-column {
   display: grid;
-  gap: clamp(1.6rem, 3.5vw, 2.2rem);
+  gap: clamp(1.3rem, 3vw, 1.8rem);
   align-content: start;
 }
 
 .champion-detail__build-grid {
   display: grid;
-  gap: clamp(1.5rem, 3vw, 2rem);
+  gap: clamp(1.3rem, 2.6vw, 1.8rem);
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
 .champion-detail__sidebar {
   display: grid;
-  gap: clamp(1.6rem, 3.5vw, 2.2rem);
+  gap: clamp(1.3rem, 3vw, 1.9rem);
   align-content: start;
 }
 
