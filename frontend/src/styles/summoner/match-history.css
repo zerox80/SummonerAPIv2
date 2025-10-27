@@ -101,7 +101,7 @@
 
 .match-card__champion {
   display: grid;
-  gap: 0.65rem;
+  gap: 0.75rem;
   align-items: center;
   grid-template-columns: auto 1fr;
 }
@@ -112,6 +112,12 @@
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.22);
   object-fit: cover;
+}
+
+.match-card__champion-meta {
+  display: grid;
+  gap: 0.4rem;
+  align-items: start;
 }
 
 .match-card__champion-name {
@@ -485,13 +491,13 @@
 
 .match-card__info {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .match-card__queue {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.5rem;
   font-size: 0.9rem;
   color: var(--text-secondary);
 }

@@ -436,13 +436,15 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
               >
                 <div className="match-card__champion">
                   <img src={championImg} alt={participant.championName} loading="lazy" />
-                  <span className="match-card__champion-name">{participant.championName}</span>
-                </div>
-                <div className="match-card__info">
-                  <div className="match-card__queue">
+                  <div className="match-card__champion-meta">
                     <Tag tone={participant.win ? 'success' : 'danger'}>
                       {participant.win ? 'Win' : 'Loss'}
                     </Tag>
+                    <span className="match-card__champion-name">{participant.championName}</span>
+                  </div>
+                </div>
+                <div className="match-card__info">
+                  <div className="match-card__queue">
                     <span>{formatQueueById(match.info.queueId)}</span>
                   </div>
                   <div className="match-card__time">
