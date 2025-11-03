@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -269,7 +270,9 @@ public class DataDragonService {
             list.add(new ChampionSummary(id, name, title, tags, imageFull));
         }
         // Sort by name
-        return list.stream().sorted((a,b) -> a.getName().compareToIgnoreCase(b.getName())).collect(Collectors.toList());
+        return list.stream()
+                .sorted(Comparator.comparing(ChampionSummary::getName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
     }
 
     public ChampionDetail getChampionDetail(String championId, Locale locale) throws IOException, InterruptedException {
@@ -1345,13 +1348,20 @@ public class DataDragonService {
 
     @Cacheable(cacheNames = "ddragonImageBases", key = "#version == null || #version.isBlank() ? 'latest' : #version")
     public Map<String, String> getImageBases(String version) {
-        String ver = version;
-        if (ver == null || ver.isBlank() || "latest".equalsIgnoreCase(ver)) {
+        String requested = version;
+        boolean needsResolve = requested == null || requested.isBlank() || "latest".equalsIgnoreCase(requested);
+        String ver;
+        if (needsResolve) {
             String fallback = lastKnownVersion;
             if (fallback == null || fallback.isBlank()) {
                 fallback = getLatestVersion();
             }
-            ver = (fallback == null || fallback.isBlank()) ? "latest" : fallback;
+            ver = (fallback == null || fallback.isBlank()) ? getLatestVersion() : fallback;
+        } else {
+            ver = requested;
+        }
+        if (ver == null || ver.isBlank() || "latest".equalsIgnoreCase(ver)) {
+            ver = getLatestVersion();
         }
         lastKnownVersion = ver;
         Map<String,String> map = new LinkedHashMap<>();

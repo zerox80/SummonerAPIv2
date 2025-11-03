@@ -225,13 +225,20 @@ public class BuildAggregationService {
             uniqueSummonerIds = new ArrayList<>(summonerIds);
         }
 
-        List<String> puuids = uniqueSummonerIds.stream().limit(maxSummoners).map(id -> riot.getSummonerById(id)
-                .thenApply(s -> s != null ? s.getPuuid() : null)
-                .exceptionally(ex -> null))
-            .collect(Collectors.toList())
-            .stream().map(CompletableFuture::join)
-            .filter(StringUtils::hasText)
-            .collect(Collectors.toList());
+        List<String> puuids = uniqueSummonerIds.stream()
+                .limit(maxSummoners)
+                .map(id -> riot.getSummonerById(id)
+                        .thenApply(s -> s != null ? s.getPuuid() : null)
+                        .exceptionally(ex -> null))
+                .map(cf -> {
+                    try {
+                        return cf.join();
+                    } catch (CompletionException ex) {
+                        return null;
+                    }
+                })
+                .filter(StringUtils::hasText)
+                .collect(Collectors.toList());
 
         Map<String, Map<Integer, int[]>> itemCounts = new java.util.concurrent.ConcurrentHashMap<>();
         Map<String, Map<String, int[]>> runeCounts = new java.util.concurrent.ConcurrentHashMap<>();

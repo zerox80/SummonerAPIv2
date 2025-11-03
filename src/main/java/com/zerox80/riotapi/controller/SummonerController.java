@@ -111,56 +111,61 @@ public class SummonerController {
 
     @GetMapping("/api/matches")
     @ResponseBody
-    public ResponseEntity<?> getMoreMatches(@RequestParam("riotId") String riotId,
-                                            @RequestParam(value = "start", defaultValue = "0") int start,
-                                            @RequestParam(value = "count", defaultValue = "10") int count) {
-        try {
-            String trimmedRiotId = riotId != null ? riotId.trim() : null;
-            if (!StringUtils.hasText(trimmedRiotId) || !trimmedRiotId.contains("#")) {
-                return ResponseEntity.badRequest()
-                        .cacheControl(CacheControl.noStore())
-                        .body(Map.of("error", "Invalid riotId format. Expected Name#TAG"));
-            }
-            String[] parts = trimmedRiotId.split("#", 2);
-            String gameName = parts[0].trim();
-            String tagLine = parts[1].trim();
-            if (!StringUtils.hasText(gameName) || !StringUtils.hasText(tagLine)) {
-                return ResponseEntity.badRequest()
-                        .cacheControl(CacheControl.noStore())
-                        .body(Map.of("error", "Invalid riotId format. Expected Name#TAG"));
-            }
-            if (count <= 0) {
-                return ResponseEntity.badRequest()
-                        .cacheControl(CacheControl.noStore())
-                        .body(Map.of("error", "Parameter 'count' must be positive."));
-            }
-            if (count > maxMatchesPageSize) {
-                return ResponseEntity.badRequest()
-                        .cacheControl(CacheControl.noStore())
-                        .body(Map.of("error", "Maximum matches per request is " + maxMatchesPageSize + "."));
-            }
-            int sanitizedStart = Math.max(0, start);
-            if (maxMatchesStartOffset > 0 && sanitizedStart > maxMatchesStartOffset) {
-                return ResponseEntity.badRequest()
-                        .cacheControl(CacheControl.noStore())
-                        .body(Map.of("error", "Parameter 'start' exceeds allowed offset of " + maxMatchesStartOffset + "."));
-            }
-            Summoner summoner = riotApiService.getSummonerByRiotId(gameName, tagLine).join();
-            if (summoner == null || !StringUtils.hasText(summoner.getPuuid())) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .cacheControl(CacheControl.noStore())
-                        .body(Map.of("error", "Summoner not found."));
-            }
-            List<MatchV5Dto> list = riotApiService.getMatchHistoryPaged(summoner.getPuuid(), sanitizedStart, count).join();
-            return ResponseEntity.ok()
+    public CompletableFuture<ResponseEntity<?>> getMoreMatches(@RequestParam("riotId") String riotId,
+                                                               @RequestParam(value = "start", defaultValue = "0") int start,
+                                                               @RequestParam(value = "count", defaultValue = "10") int count) {
+        String trimmedRiotId = riotId != null ? riotId.trim() : null;
+        if (!StringUtils.hasText(trimmedRiotId) || !trimmedRiotId.contains("#")) {
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest()
                     .cacheControl(CacheControl.noStore())
-                    .body(list != null ? list : Collections.emptyList());
-        } catch (Exception e) {
-            logger.error("/api/matches error: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .cacheControl(CacheControl.noStore())
-                    .body(Map.of("error", "Failed to load matches."));
+                    .body(Map.of("error", "Invalid riotId format. Expected Name#TAG")));
         }
+
+        String[] parts = trimmedRiotId.split("#", 2);
+        String gameName = parts[0].trim();
+        String tagLine = parts[1].trim();
+        if (!StringUtils.hasText(gameName) || !StringUtils.hasText(tagLine)) {
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest()
+                    .cacheControl(CacheControl.noStore())
+                    .body(Map.of("error", "Invalid riotId format. Expected Name#TAG")));
+        }
+        if (count <= 0) {
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest()
+                    .cacheControl(CacheControl.noStore())
+                    .body(Map.of("error", "Parameter 'count' must be positive.")));
+        }
+        if (count > maxMatchesPageSize) {
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest()
+                    .cacheControl(CacheControl.noStore())
+                    .body(Map.of("error", "Maximum matches per request is " + maxMatchesPageSize + ".")));
+        }
+
+        final int sanitizedStart = Math.max(0, start);
+        if (maxMatchesStartOffset > 0 && sanitizedStart > maxMatchesStartOffset) {
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest()
+                    .cacheControl(CacheControl.noStore())
+                    .body(Map.of("error", "Parameter 'start' exceeds allowed offset of " + maxMatchesStartOffset + ".")));
+        }
+
+        return riotApiService.getSummonerByRiotId(gameName, tagLine)
+                .thenCompose(summoner -> {
+                    if (summoner == null || !StringUtils.hasText(summoner.getPuuid())) {
+                        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .cacheControl(CacheControl.noStore())
+                                .body(Map.of("error", "Summoner not found.")));
+                    }
+                    return riotApiService.getMatchHistoryPaged(summoner.getPuuid(), sanitizedStart, count)
+                            .thenApply(list -> ResponseEntity.ok()
+                                    .cacheControl(CacheControl.noStore())
+                                    .body(list != null ? list : Collections.emptyList()));
+                })
+                .exceptionally(ex -> {
+                    Throwable cause = (ex instanceof CompletionException && ex.getCause() != null) ? ex.getCause() : ex;
+                    logger.error("/api/matches error: {}", cause.getMessage(), cause);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .cacheControl(CacheControl.noStore())
+                            .body(Map.of("error", "Failed to load matches."));
+                });
     }
 
     @GetMapping("/api/summoner-suggestions")
@@ -334,9 +339,17 @@ public class SummonerController {
         try {
             String jsonHistory = objectMapper.writeValueAsString(history);
             String encodedValue = URLEncoder.encode(jsonHistory, StandardCharsets.UTF_8.name());
+            boolean secure = request.isSecure();
+            if (!secure) {
+                String forwardedProto = request.getHeader("X-Forwarded-Proto");
+                if (StringUtils.hasText(forwardedProto)) {
+                    secure = forwardedProto.trim().equalsIgnoreCase("https");
+                }
+            }
+
             ResponseCookie cookie = ResponseCookie.from(SEARCH_HISTORY_COOKIE, encodedValue)
                     .httpOnly(true)
-                    .secure(request.isSecure())
+                    .secure(secure)
                     .path("/")
                     .sameSite("Lax")
                     .maxAge(Duration.ofDays(30))
