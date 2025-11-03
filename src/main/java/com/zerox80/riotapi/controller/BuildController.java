@@ -123,7 +123,11 @@ public class BuildController {
         if (!triggerToken.equals(providedToken)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid aggregation trigger token");
         }
-        agg.aggregateChampion(id, queueId, pages, matchesPerSummoner, maxSummoners, locale);
+        if (queueId != null && queueId != 420 && queueId != 440) {
+            return ResponseEntity.badRequest().body("Unsupported queueId. Allowed values are 420 (Solo/Duo) or 440 (Flex).");
+        }
+        Integer effectiveQueueId = (queueId != null) ? queueId : 420;
+        agg.aggregateChampion(id, effectiveQueueId, pages, matchesPerSummoner, maxSummoners, locale);
         return ResponseEntity.accepted().body("Aggregation started for " + id);
     }
 }

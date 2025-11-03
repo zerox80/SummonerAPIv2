@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import java.util.Set;
 public class PlayerLpRecordService {
 
     private static final Logger logger = LoggerFactory.getLogger(PlayerLpRecordService.class);
+    private static final Duration MATCH_END_TOLERANCE = Duration.ofMinutes(10);
     private final PlayerLpRecordRepository playerLpRecordRepository;
 
     @Autowired
@@ -92,10 +94,13 @@ public class PlayerLpRecordService {
                     continue;
                 }
 
-                if (recordAfter.getTimestamp().isBefore(matchEndTime)) {
-                    logger.debug("LP record after match {} for PUUID {} (queue {}) occurs before match end time {}.",
-                            safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery, matchEndTime);
-                    continue;
+                if (!recordAfter.getTimestamp().isAfter(matchEndTime)) {
+                    Duration gap = Duration.between(recordAfter.getTimestamp(), matchEndTime);
+                    if (gap.compareTo(MATCH_END_TOLERANCE) > 0) {
+                        logger.debug("LP record after match {} for PUUID {} (queue {}) is {} minutes before match end time {} – skipping.",
+                                safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery, gap.toMinutes(), matchEndTime);
+                        continue;
+                    }
                 }
 
                 int lpBefore = recordBefore.getLeaguePoints();

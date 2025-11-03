@@ -129,8 +129,13 @@ public class RiotApiService {
             return CompletableFuture.completedFuture(null);
         }
 
-        logger.info("Searching for account: {}#{}...", trimmedGameName, trimmedTagLine);
-        return riotApiClient.getAccountByRiotId(trimmedGameName, trimmedTagLine)
+        String normalizedGameName = trimmedGameName.replaceAll("\\s+", " ");
+        String normalizedTagLine = trimmedTagLine.replaceAll("\\s+", " ");
+        String cacheFriendlyGameName = normalizedGameName.toLowerCase(Locale.ROOT);
+        String cacheFriendlyTagLine = normalizedTagLine.toLowerCase(Locale.ROOT);
+
+        logger.info("Searching for account: {}#{}...", normalizedGameName, normalizedTagLine);
+        return riotApiClient.getAccountByRiotId(cacheFriendlyGameName, cacheFriendlyTagLine)
                 .thenCompose(account -> {
                     if (account != null && StringUtils.hasText(account.getPuuid())) {
                         logger.info("Account found, PUUID: {}. Fetching summoner data...", maskPuuid(account.getPuuid()));
@@ -140,7 +145,7 @@ public class RiotApiService {
                                         if (StringUtils.hasText(account.getGameName())) {
                                             summoner.setName(account.getGameName());
                                         } else {
-                                            summoner.setName(trimmedGameName);
+                                            summoner.setName(normalizedGameName);
                                             logger.warn("Warning: gameName is missing from AccountDto for PUUID: {}. Using provided gameName for Summoner object.", maskPuuid(account.getPuuid()));
                                         }
                                     }
@@ -151,7 +156,7 @@ public class RiotApiService {
                         return CompletableFuture.completedFuture(null);
                     }
                 }).exceptionally(ex -> {
-                    logger.error("Error fetching summoner data for {}#{}: {}", trimmedGameName, trimmedTagLine, ex.getMessage(), ex);
+                    logger.error("Error fetching summoner data for {}#{}: {}", normalizedGameName, normalizedTagLine, ex.getMessage(), ex);
                     return null;
                 });
     }
@@ -268,8 +273,13 @@ public class RiotApiService {
         // Enrich missing icon URLs to satisfy frontend expectation
         out.forEach(dto -> {
             if (dto != null && !StringUtils.hasText(dto.getProfileIconUrl())) {
+                int iconId = dto.getProfileIconId();
+                if (iconId <= 0) {
+                    dto.setProfileIconUrl(null);
+                    return;
+                }
                 try {
-                    dto.setProfileIconUrl(riotApiClient.getProfileIconUrl(dto.getProfileIconId()));
+                    dto.setProfileIconUrl(riotApiClient.getProfileIconUrl(iconId));
                 } catch (Exception ignored) {}
             }
         });

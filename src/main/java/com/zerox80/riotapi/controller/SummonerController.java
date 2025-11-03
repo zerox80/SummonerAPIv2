@@ -258,12 +258,18 @@ public class SummonerController {
             }
 
             try {
-                payload.put("bases", dataDragonService.getImageBases(null));
+                Map<String, String> bases = dataDragonService.getImageBases(null);
+                if (bases != null && !bases.isEmpty()) {
+                    payload.put("bases", bases);
+                }
             } catch (Exception ex) {
                 logger.warn("Failed to load DDragon base URLs: {}", ex.getMessage());
             }
             try {
-                payload.put("championSquares", dataDragonService.getChampionKeyToSquareUrl(locale));
+                Map<Integer, String> championSquares = dataDragonService.getChampionKeyToSquareUrl(locale);
+                if (championSquares != null && !championSquares.isEmpty()) {
+                    payload.put("championSquares", championSquares);
+                }
             } catch (Exception ex) {
                 logger.warn("Failed to load champion square URLs: {}", ex.getMessage());
             }
