@@ -843,7 +843,9 @@ All game assets, data, and content displayed in this application are the intelle
 
 ### Final Notes
 
-This is an **educational, open-source project** created for personal use and learning purposes.  
+This is an **educational, open-source hobby project** created for personal use and learning purposes by a solo developer.  
+I am **not affiliated with or endorsed by Riot Games** - this is just a passion project for the LoL community.  
+
 All League of Legends data, assets, and content are property of **Riot Games, Inc.**  
 
 **Always respect the [Riot Games API Terms of Service](https://developer.riotgames.com/terms) and [Terms of Service](https://www.riotgames.com/en/terms-of-service).**
