@@ -10,6 +10,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Scheduled service for running nightly champion build aggregations.
+ *
+ * <p>This service triggers the build aggregation process based on a cron schedule.
+ * It is responsible for parsing configuration properties to determine which champions
+ * to process and with what parameters.</p>
+ *
+ * <p>The scheduler can be enabled or disabled via configuration and supports
+ * customization of the aggregation parameters such as queue ID, number of pages,
+ * and matches per summoner.</p>
+ *
+ * @author zerox80
+ * @version 2.0
+ * @since 2.0
+ */
 @Service
 public class BuildAggregationScheduler {
 
@@ -35,10 +50,19 @@ public class BuildAggregationScheduler {
     @Value("${build.agg.champions:}")
     private String championsCsv;
 
+    /**
+     * Constructs a new BuildAggregationScheduler with the required service dependency.
+     *
+     * @param agg The build aggregation service.
+     */
     public BuildAggregationScheduler(BuildAggregationService agg) {
         this.agg = agg;
     }
 
+    /**
+     * Runs the nightly build aggregation task.
+     * This method is triggered by a cron schedule.
+     */
     // Default: every day at 03:15 UTC; can be overridden by property build.agg.cron
     @Scheduled(cron = "${build.agg.cron:0 15 3 * * *}")
     public void runNightly() {

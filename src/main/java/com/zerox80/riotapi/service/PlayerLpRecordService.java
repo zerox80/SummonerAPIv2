@@ -23,6 +23,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Service for managing and analyzing player League Points (LP) records.
+ *
+ * <p>This service handles the storage and retrieval of player LP data over time.
+ * It provides functionality to save new LP records and to calculate LP changes
+ * for matches by comparing LP values before and after a match.</p>
+ *
+ * <p>Key features:</p>
+ * <ul>
+ *   <li>Saving LP records for ranked queues</li>
+ *   <li>Calculating LP gains or losses for individual matches</li>
+ *   <li>Preloading LP data for efficient batch processing of match histories</li>
+ * </ul>
+ *
+ * @author zerox80
+ * @version 2.0
+ * @since 2.0
+ */
 @Service
 public class PlayerLpRecordService {
 
@@ -30,11 +48,23 @@ public class PlayerLpRecordService {
     private static final Duration MATCH_END_TOLERANCE = Duration.ofMinutes(10);
     private final PlayerLpRecordRepository playerLpRecordRepository;
 
+    /**
+     * Constructs a new PlayerLpRecordService with the required repository.
+     *
+     * @param playerLpRecordRepository The repository for accessing LP record data.
+     */
     @Autowired
     public PlayerLpRecordService(PlayerLpRecordRepository playerLpRecordRepository) {
         this.playerLpRecordRepository = playerLpRecordRepository;
     }
 
+    /**
+     * Saves a list of league entries as player LP records.
+     *
+     * @param puuid The PUUID of the player.
+     * @param leagueEntries The list of league entries to save.
+     * @param timestamp The timestamp for the records.
+     */
     @Transactional
     public void savePlayerLpRecords(String puuid, List<LeagueEntryDTO> leagueEntries, Instant timestamp) {
         Instant ts = timestamp != null ? timestamp : Instant.now();
@@ -54,6 +84,12 @@ public class PlayerLpRecordService {
         }
     }
 
+    /**
+     * Calculates and sets the LP change for each match in a list of matches.
+     *
+     * @param summoner The summoner for whom to calculate LP changes.
+     * @param matchHistory The list of matches to process.
+     */
     public void calculateAndSetLpChangesForMatches(Summoner summoner, List<MatchV5Dto> matchHistory) {
         if (summoner == null || !StringUtils.hasText(summoner.getPuuid()) || matchHistory == null || matchHistory.isEmpty()) {
             return;

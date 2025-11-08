@@ -109,6 +109,16 @@ public class SummonerController {
         this.maxMatchesStartOffset = Math.max(0, maxMatchesStartOffset);
     }
 
+    /**
+     * Asynchronously fetches a paginated list of matches for a given Riot ID.
+     *
+     * @param riotId The summoner's Riot ID in "Name#TAG" format.
+     * @param start The starting index for the match history list.
+     * @param count The number of matches to retrieve.
+     * @return A {@code CompletableFuture} containing a {@code ResponseEntity}.
+     *         The body will contain a list of {@code MatchV5Dto} objects on success,
+     *         or an error map on failure.
+     */
     @GetMapping("/api/matches")
     @ResponseBody
     public CompletableFuture<ResponseEntity<?>> getMoreMatches(@RequestParam("riotId") String riotId,
@@ -168,6 +178,14 @@ public class SummonerController {
                 });
     }
 
+    /**
+     * Provides summoner name suggestions based on a query string.
+     * It also considers the user's search history from cookies.
+     *
+     * @param query The partial summoner name to search for.
+     * @param request The {@code HttpServletRequest} to access cookies.
+     * @return A {@code ResponseEntity} containing a list of {@code SummonerSuggestionDTO} objects.
+     */
     @GetMapping("/api/summoner-suggestions")
     public ResponseEntity<List<SummonerSuggestionDTO>> summonerSuggestions(@RequestParam("query") String query, HttpServletRequest request) {
         Map<String, SummonerSuggestionDTO> userHistory = getSearchHistoryFromCookie(request);
@@ -177,6 +195,14 @@ public class SummonerController {
                 .body(list);
     }
 
+    /**
+     * Retrieves the summoner profile associated with the RSO bearer token.
+     *
+     * @param authorizationHeader The "Authorization" header containing the "Bearer" token.
+     * @return A {@code Callable} that produces a {@code ResponseEntity}.
+     *         On success, the body contains the {@code Summoner} object.
+     *         On failure, it contains an error message.
+     */
     @GetMapping("/api/me")
     @ResponseBody
     public Callable<ResponseEntity<?>> getMySummoner(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
@@ -213,6 +239,17 @@ public class SummonerController {
         };
     }
 
+    /**
+     * Fetches the complete profile for a summoner by their Riot ID.
+     * This includes summoner data, league entries, champion play counts, and optionally, match history.
+     *
+     * @param riotId The summoner's Riot ID in "Name#TAG" format.
+     * @param includeMatches If true, the response will include the summoner's recent match history.
+     * @param request The {@code HttpServletRequest} to access cookies.
+     * @param response The {@code HttpServletResponse} to set cookies.
+     * @param locale The locale for localizing data from Data Dragon.
+     * @return A {@code ResponseEntity} containing the summoner's profile data or an error message.
+     */
     @GetMapping("/api/profile")
     public ResponseEntity<?> getSummonerProfile(@RequestParam("riotId") String riotId,
                                                 @RequestParam(value = "includeMatches", defaultValue = "true") boolean includeMatches,
@@ -300,6 +337,13 @@ public class SummonerController {
         }
     }
 
+    /**
+     * Retrieves and deserializes the user's search history from the search history cookie.
+     *
+     * @param request The {@code HttpServletRequest} to get cookies from.
+     * @return A map of lowercase Riot IDs to {@code SummonerSuggestionDTO} objects.
+     *         Returns an empty map if the cookie is not found or is invalid.
+     */
     private Map<String, SummonerSuggestionDTO> getSearchHistoryFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request != null ? request.getCookies() : null;
 
@@ -319,6 +363,15 @@ public class SummonerController {
         return new LinkedHashMap<>();
     }
 
+    /**
+     * Updates the search history cookie with a new summoner search.
+     * The history is capped at a maximum size.
+     *
+     * @param request The {@code HttpServletRequest} to check for secure connection.
+     * @param response The {@code HttpServletResponse} to add the cookie to.
+     * @param riotId The Riot ID that was searched for.
+     * @param suggestionDTO The summoner data to add to the history.
+     */
     private void updateSearchHistoryCookie(HttpServletRequest request, HttpServletResponse response, String riotId, SummonerSuggestionDTO suggestionDTO) {
         String normalizedRiotId = riotId != null ? riotId.trim() : null;
         if (!StringUtils.hasText(normalizedRiotId) || suggestionDTO == null) {
