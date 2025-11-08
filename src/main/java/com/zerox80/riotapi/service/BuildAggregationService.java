@@ -28,6 +28,27 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * Service for aggregating and loading champion build data.
+ *
+ * <p>This service is responsible for asynchronously fetching match data for high-elo players,
+ * analyzing item builds, rune setups, and summoner spell choices for specific champions,
+ * and saving the aggregated statistics to the database. It also provides methods to load
+ * these pre-computed builds.</p>
+ *
+ * <p>Key features:</p>
+ * <ul>
+ *   <li>Asynchronous build aggregation to avoid blocking API calls</li>
+ *   <li>Fetches data from multiple tiers and divisions</li>
+ *   <li>Aggregates statistics for items, runes, and summoner spells</li>
+ *   <li>Handles role detection and normalization</li>
+ *   <li>Saves and retrieves build data from the database</li>
+ * </ul>
+ *
+ * @author zerox80
+ * @version 2.0
+ * @since 2.0
+ */
 @Service
 public class BuildAggregationService {
 
@@ -40,6 +61,16 @@ public class BuildAggregationService {
     private final ChampionSpellPairStatRepository spellRepo;
     private final TransactionTemplate transactionTemplate;
 
+    /**
+     * Constructs a new BuildAggregationService with the required dependencies.
+     *
+     * @param riot The Riot API client.
+     * @param dd The Data Dragon service.
+     * @param itemRepo The repository for champion item statistics.
+     * @param runeRepo The repository for champion rune statistics.
+     * @param spellRepo The repository for champion spell pair statistics.
+     * @param transactionManager The transaction manager for atomic database operations.
+     */
     public BuildAggregationService(RiotApiClient riot,
                                    DataDragonService dd,
                                    ChampionItemStatRepository itemRepo,
@@ -75,6 +106,15 @@ public class BuildAggregationService {
         return spellRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId);
     }
 
+    /**
+     * Loads the aggregated build for a champion.
+     *
+     * @param championId The ID of the champion.
+     * @param queueId The queue ID for which to load the build.
+     * @param role The role for which to load the build.
+     * @param locale The locale for item and spell names.
+     * @return A {@code ChampionBuildDto} containing the aggregated build data.
+     */
     public ChampionBuildDto loadBuild(String championId, Integer queueId, String role, Locale locale) {
         String patch = dd.getLatestShortPatch();
         int q = (queueId == null) ? 420 : queueId; // default SoloQ
@@ -143,6 +183,16 @@ public class BuildAggregationService {
         return new ChampionBuildDto(championId, patch, q, effectiveRole, itemDtos, runeDtos, spellDtos);
     }
 
+    /**
+     * Asynchronously aggregates build data for a specific champion.
+     *
+     * @param championId The ID of the champion to aggregate.
+     * @param queueId The queue ID to scan for matches.
+     * @param pagesToScan The number of pages of summoners to scan per tier/division.
+     * @param matchesPerSummoner The number of recent matches to analyze per summoner.
+     * @param maxSummoners The maximum number of summoners to process.
+     * @param locale The locale for resolving champion data.
+     */
     @Async("appTaskExecutor")
     public void aggregateChampion(String championId,
                                   Integer queueId,
