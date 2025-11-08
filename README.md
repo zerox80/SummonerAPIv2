@@ -238,6 +238,47 @@ For production deployments, additional configuration is available in:
 
 ---
 
+## 🧭 New Developer Guide
+
+1. **Understand the system**
+   - Revisit the [Overview](#-overview) and [Features](#-features) sections to internalize the product vision.
+   - Skim the [Project Structure](#-documentation) tree so you know where backend services, the React frontend, scripts, and infrastructure live.
+2. **Configure your environment**
+   - Install the prerequisites from [Quick Start](#-quick-start) (Java 21, Node 18+, Docker, PostgreSQL, Riot API key).
+   - Copy `.env.example` → `.env`, then set `RIOT_API_KEY`, database credentials, and any overrides such as `APP_HTTP_PORT` before starting services.
+   - If you use a local PostgreSQL instance, keep the `SPRING_DATASOURCE_*` values aligned with your container or local install.
+3. **Run the stack**
+   - Backend (hot reload):
+     ```bash
+     ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+     ```
+   - Frontend (Vite dev server):
+     ```bash
+     cd frontend
+     npm install
+     npm run dev
+     ```
+   - Full Docker stack:
+     ```bash
+     docker compose up --build
+     ```
+4. **Use the application**
+   - Web UI: open `http://localhost:5173`, search for a Riot ID such as `Faker#KR1`, and navigate the Summoner → Match History → Champions flows.
+   - REST API: visit `http://localhost:8080/swagger-ui.html` to explore `/api/profile`, `/api/matches`, and `/api/champions`.
+   - Health checks: run `curl http://localhost:8080/actuator/health` to confirm the backend is up.
+5. **Develop with confidence**
+   - Backend tests: `./mvnw verify`
+   - Frontend unit tests: `cd frontend && npm run test`
+   - Linting/formatting: `npm run lint` and (if enabled) `./mvnw spotless:apply`
+6. **Troubleshoot & observe**
+   - Tail backend logs with `./mvnw spring-boot:run -Dspring-boot.run.arguments=--logging.level.root=DEBUG`
+   - Inspect metrics via `http://localhost:8080/actuator/metrics` and rate-limit headers on API responses.
+   - Toggle scheduled build aggregation through the `build.agg.*` environment variables documented above.
+
+Following these steps takes a new contributor from clone → configuration → running stack → productive development in minutes.
+
+---
+
 ## 📚 Documentation
 
 ### Project Structure

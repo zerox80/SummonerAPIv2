@@ -1404,6 +1404,21 @@ public class DataDragonService {
         return self().getChampionKeyCached(championId, ver, loc);
     }
 
+    /**
+     * Resolves the canonical numeric champion key for a given identifier and caches the result.
+     *
+     * <p>The lookup sanitizes the caller-supplied {@code championId}, attempts to resolve a canonical
+     * identifier for the supplied patch {@code version} and {@code localeTag}, and falls back to scanning
+     * Data Dragon metadata if no exact match is found. Results are cached under the
+     * {@code ddragonChampionDetail} cache to avoid repeated static-data downloads.</p>
+     *
+     * @param championId The human-readable or numeric champion handle supplied by the caller
+     * @param version The Data Dragon version to scope the lookup to (for example, {@code 15.20.1})
+     * @param localeTag The locale identifier (for example, {@code en_US}) used to resolve localized datasets
+     * @return The numeric champion key when found, or {@code null} if the champion cannot be resolved
+     * @throws IOException If the static data cannot be downloaded or parsed
+     * @throws InterruptedException If the calling thread is interrupted while awaiting HTTP responses
+     */
     @Cacheable(cacheNames = "ddragonChampionDetail", key = "'key-' + T(com.zerox80.riotapi.service.DataDragonService).safeLower(#championId) + '|' + #version + '|' + #localeTag")
     public Integer getChampionKeyCached(String championId, String version, String localeTag) throws IOException, InterruptedException {
         String cid = sanitizeChampionIdBasic(championId);

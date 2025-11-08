@@ -60,10 +60,16 @@ public class BuildAggregationScheduler {
     }
 
     /**
-     * Runs the nightly build aggregation task.
-     * This method is triggered by a cron schedule.
+     * Executes the configured nightly champion build aggregation workflow.
+     *
+     * <p>Triggered by {@link Scheduled} cron expression {@code ${build.agg.cron:0 15 3 * * *}},
+     * this method validates that the scheduler is enabled, parses the champion allow list,
+     * and invokes {@link BuildAggregationService#aggregateChampion(String, int, int, int, int, Locale)}
+     * for each entry with the configured queue, pagination, and sampling limits. The default
+     * schedule runs every day at 03:15 UTC but can be overridden via {@code build.agg.cron}.</p>
+     *
+     * @return Nothing; the method schedules aggregation side effects only
      */
-    // Default: every day at 03:15 UTC; can be overridden by property build.agg.cron
     @Scheduled(cron = "${build.agg.cron:0 15 3 * * *}")
     public void runNightly() {
         if (!enabled) {

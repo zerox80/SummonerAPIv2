@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Utility helper methods for working with {@link java.util.List} collections.
+ *
+ * <p>The methods encapsulate reusable list transformations (for example, partitioning)
+ * in a central location so that services can remain focused on domain logic. All utilities
+ * are static and null-safe, making the class an easy drop-in dependency across modules.</p>
+ */
 public final class ListUtils {
 
     private ListUtils() {
