@@ -1,6 +1,17 @@
 import PropTypes from 'prop-types';
 import '../../styles/champions/champion-hero.css';
 
+/**
+ * Renders a hero section for a champion.
+ *
+ * @param {object} props - The component props.
+ * @param {string} props.name - The name of the champion.
+ * @param {string} props.title - The title of the champion.
+ * @param {string} props.tagline - A tagline for the champion.
+ * @param {string} props.imageSrc - The URL of the champion's image.
+ * @param {React.ReactNode} props.actions - Action buttons or links for the hero section.
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function ChampionHero({ name, title, tagline, imageSrc, actions }) {
   return (
     <section className="champion-hero glass-panel" aria-labelledby="champion-hero-heading">

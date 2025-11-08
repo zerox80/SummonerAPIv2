@@ -20,6 +20,15 @@ const QUEUE_OPTIONS = [
   { label: 'ARAM', value: '450' }
 ];
 
+/**
+ * Builds a timeline of match data for sparkline charts.
+ *
+ * @param {Array<object>} matches - The list of matches.
+ * @param {string} puuid - The PUUID of the summoner.
+ * @param {string} queueFilter - The queue filter.
+ * @param {string} rangeFilter - The range filter.
+ * @returns {Array<object>} The timeline data.
+ */
 function buildTimeline(matches, puuid, queueFilter, rangeFilter) {
   if (!Array.isArray(matches)) return [];
   const filtered = matches.filter((match) => {
@@ -44,6 +53,12 @@ function buildTimeline(matches, puuid, queueFilter, rangeFilter) {
     });
 }
 
+/**
+ * Renders a summary of a summoner's performance.
+ *
+ * @param {object} props - The component props.
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function PerformanceSummary({ derived, matches, summoner, range = '40', onRangeChange }) {
   const [queue, setQueue] = useState('ALL');
   const [internalRange, setInternalRange] = useState(range || '40');

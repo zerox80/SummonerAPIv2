@@ -3,6 +3,15 @@ import '../../styles/champions/champion-curated-build.css';
 
 const ITEM_IMAGE_BASE = 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/item/';
 
+/**
+ * Renders an icon for a curated item.
+ *
+ * @param {object} props - The component props.
+ * @param {number} props.id - The ID of the item.
+ * @param {string} props.name - The name of the item.
+ * @param {number} props.count - The count of the item.
+ * @returns {React.ReactElement} The rendered component.
+ */
 function CuratedItemIcon({ id, name, count }) {
   const src = `${ITEM_IMAGE_BASE}${id}.png`;
   return (
@@ -19,6 +28,14 @@ CuratedItemIcon.propTypes = {
   count: PropTypes.number
 };
 
+/**
+ * Renders a list of curated item groups.
+ *
+ * @param {object} props - The component props.
+ * @param {string} props.title - The title of the section.
+ * @param {Array<object>} props.groups - The list of item groups to display.
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function CuratedItemGroups({ title, groups }) {
   return (
     <section className="curated-build glass-panel">

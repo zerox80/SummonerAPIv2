@@ -11,6 +11,11 @@ import TopChampions from '../sections/summoner/TopChampions.jsx';
 import MatchHistory from '../sections/summoner/MatchHistory.jsx';
 import '../styles/page-summoner.css';
 
+/**
+ * Renders the summoner page, which displays a summoner's profile, stats, and match history.
+ *
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function SummonerPage() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -65,10 +70,10 @@ export default function SummonerPage() {
         killParticipation: 0
       };
     }
-    
+
     const targetCount = range === 'all' ? matches.length : Number(range);
     const filteredMatches = matches.slice(0, targetCount);
-    
+
     let wins = 0;
     let losses = 0;
     let kills = 0;
@@ -165,14 +170,14 @@ export default function SummonerPage() {
   useEffect(() => {
     const autoLoadMatches = async () => {
       if (!riotIdResolved || isFetchingMore) return;
-      
+
       const targetCount = range === '100' ? 100 : (range === 'all' ? 999999 : Number(range));
       if (matches.length >= targetCount || !hasMoreMatches) return;
-      
+
       setIsFetchingMore(true);
       const start = matches.length;
       const count = profileQuery.data?.matchesPageSize || 40;
-      
+
       try {
         const more = await api.matches({ riotId: riotIdResolved, start, count });
         if (Array.isArray(more) && more.length > 0) {

@@ -10,6 +10,15 @@ const PLACEHOLDER_IDS = [
   'G2 Caps#1323'
 ];
 
+/**
+ * Renders a search panel for finding summoners.
+ *
+ * @param {object} props - The component props.
+ * @param {Function} props.onSubmit - The callback function to call when the form is submitted.
+ * @param {string} [props.initialValue=''] - The initial value of the search input.
+ * @param {boolean} props.isLoading - Whether a search is currently in progress.
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) {
   const [input, setInput] = useState(initialValue);
   const [focused, setFocused] = useState(false);

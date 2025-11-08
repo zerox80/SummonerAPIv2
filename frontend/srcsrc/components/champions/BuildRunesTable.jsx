@@ -14,16 +14,16 @@ function calculateWinrate(wins, count) {
 }
 
 /**
- * Renders a table of champion build summoner spells.
+ * Renders a table of champion build runes.
  *
  * @param {object} props - The component props.
  * @param {string} props.title - The title of the table.
- * @param {Array<object>} props.spells - The list of summoner spells to display.
+ * @param {Array<object>} props.runes - The list of runes to display.
  * @param {boolean} props.loading - Whether the data is loading.
  * @param {React.ReactNode} props.meta - Additional metadata to display in the header.
  * @returns {React.ReactElement} The rendered component.
  */
-export default function BuildSummonerSpellsTable({ title, spells, loading, meta }) {
+export default function BuildRunesTable({ title, runes, loading, meta }) {
   if (loading) {
     return (
       <section className="champion-build-section glass-panel">
@@ -31,19 +31,19 @@ export default function BuildSummonerSpellsTable({ title, spells, loading, meta 
           <h3>{title}</h3>
           {meta && <span className="champion-build-section__meta">{meta}</span>}
         </header>
-        <p className="champion-build-section__empty">Loading summoner spells ...</p>
+        <p className="champion-build-section__empty">Loading runes ...</p>
       </section>
     );
   }
 
-  if (!spells || spells.length === 0) {
+  if (!runes || runes.length === 0) {
     return (
       <section className="champion-build-section glass-panel">
         <header className="champion-build-section__header">
           <h3>{title}</h3>
           {meta && <span className="champion-build-section__meta">{meta}</span>}
         </header>
-        <p className="champion-build-section__empty">No summoner-spell data available.</p>
+        <p className="champion-build-section__empty">No rune data available.</p>
       </section>
     );
   }
@@ -58,23 +58,29 @@ export default function BuildSummonerSpellsTable({ title, spells, loading, meta 
         <table className="table-clean champion-build-table">
           <thead>
             <tr>
-              <th>Summoner Spells</th>
+              <th>Primary Style</th>
+              <th>Sub Style</th>
               <th>Games</th>
               <th>Win Rate</th>
             </tr>
           </thead>
           <tbody>
-            {spells.map((entry) => (
-              <tr key={`${entry.spell1Name}-${entry.spell2Name}`}>
+            {runes.map((rune) => (
+              <tr key={`${rune.primaryStyleName}-${rune.subStyleName}-${rune.keystone}`}>
                 <td>
-                  <div className="champion-build-table__spell">
-                    {entry.spell1IconUrl && <img src={entry.spell1IconUrl} alt={entry.spell1Name} loading="lazy" />}
-                    {entry.spell2IconUrl && <img src={entry.spell2IconUrl} alt={entry.spell2Name} loading="lazy" />}
-                    <span>{entry.spell1Name} + {entry.spell2Name}</span>
+                  <div className="champion-build-table__rune">
+                    {rune.keystoneIconUrl && (
+                      <img src={rune.keystoneIconUrl} alt={rune.keystoneName || rune.primaryStyleName} loading="lazy" />
+                    )}
+                    <div className="champion-build-table__rune-styles">
+                      <span>{rune.primaryStyleName}</span>
+                      <span>{rune.keystoneName}</span>
+                    </div>
                   </div>
                 </td>
-                <td>{entry.count.toLocaleString()}</td>
-                <td>{calculateWinrate(entry.wins, entry.count)}%</td>
+                <td>{rune.subStyleName}</td>
+                <td>{rune.count.toLocaleString()}</td>
+                <td>{calculateWinrate(rune.wins, rune.count)}%</td>
               </tr>
             ))}
           </tbody>
@@ -84,13 +90,14 @@ export default function BuildSummonerSpellsTable({ title, spells, loading, meta 
   );
 }
 
-BuildSummonerSpellsTable.propTypes = {
+BuildRunesTable.propTypes = {
   title: PropTypes.string.isRequired,
-  spells: PropTypes.arrayOf(PropTypes.shape({
-    spell1Name: PropTypes.string.isRequired,
-    spell2Name: PropTypes.string.isRequired,
-    spell1IconUrl: PropTypes.string,
-    spell2IconUrl: PropTypes.string,
+  runes: PropTypes.arrayOf(PropTypes.shape({
+    primaryStyleName: PropTypes.string.isRequired,
+    subStyleName: PropTypes.string.isRequired,
+    keystoneName: PropTypes.string,
+    keystoneIconUrl: PropTypes.string,
+    keystone: PropTypes.number,
     count: PropTypes.number.isRequired,
     wins: PropTypes.number.isRequired
   })),

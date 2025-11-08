@@ -1,11 +1,28 @@
 import PropTypes from 'prop-types';
 import '../../styles/champions/champion-build.css';
 
+/**
+ * Calculates the win rate as a percentage.
+ *
+ * @param {number} wins - The number of wins.
+ * @param {number} count - The total number of games.
+ * @returns {number} The win rate percentage.
+ */
 function calculateWinrate(wins, count) {
   if (!count) return 0;
   return Math.round((wins / count) * 100);
 }
 
+/**
+ * Renders a table of champion build items.
+ *
+ * @param {object} props - The component props.
+ * @param {string} props.title - The title of the table.
+ * @param {Array<object>} props.items - The list of items to display.
+ * @param {boolean} props.loading - Whether the data is loading.
+ * @param {React.ReactNode} props.meta - Additional metadata to display in the header.
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function BuildItemsTable({ title, items, loading, meta }) {
   if (loading) {
     return (

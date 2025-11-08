@@ -1,5 +1,14 @@
 import PropTypes from 'prop-types';
 
+/**
+ * Renders a sparkline chart.
+ *
+ * @param {object} props - The component props.
+ * @param {Array<number>} props.data - The data points for the sparkline.
+ * @param {string} [props.color='var(--accent-solid)'] - The color of the sparkline.
+ * @param {number} [props.height=48] - The height of the sparkline.
+ * @returns {React.ReactElement|null} The rendered component or null if no data is provided.
+ */
 export default function Sparkline({ data, color = 'var(--accent-solid)', height = 48 }) {
   if (!Array.isArray(data) || data.length === 0) {
     return null;

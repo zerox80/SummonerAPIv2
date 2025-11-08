@@ -18,6 +18,11 @@ const SORT_OPTIONS = [
   { label: 'Role', value: 'roles' }
 ];
 
+/**
+ * Renders the champions page, which displays a filterable list of champions.
+ *
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function ChampionsPage() {
   const {
     champions,
@@ -120,4 +125,3 @@ export default function ChampionsPage() {
     </div>
   );
 }
-
