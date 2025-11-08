@@ -141,7 +141,7 @@
   height: 60px;
   border-radius: 16px;
   border: 2px solid rgba(255, 255, 255, 0.32);
-  object-fit: cover;
+  object-fit: contain;
   box-shadow: 0 16px 30px rgba(15, 23, 42, 0.35);
 }
 
@@ -351,12 +351,14 @@
   display: flex;
   gap: clamp(1.5rem, 4vw, 2.5rem);
   flex-wrap: wrap;
+  align-items: flex-start;
 }
 
 .match-card__build-group {
   display: grid;
   gap: 0.5rem;
   min-width: 140px;
+  align-items: start;
 }
 
 .match-card__meta-label {
@@ -369,6 +371,8 @@
 .match-card__spell-pair {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .match-card__spell,
@@ -382,13 +386,14 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .match-card__spell img,
 .match-card__keystone img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .match-card__spell-placeholder {
@@ -402,6 +407,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
+  align-items: flex-start;
 }
 
 .match-card__items::after {
@@ -421,12 +427,13 @@
   justify-content: center;
   overflow: hidden;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
 }
 
 .match-card__item-slot img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .match-card__item-slot.is-empty {
@@ -558,6 +565,7 @@
   height: 46px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.25);
+  object-fit: contain;
 }
 
 .match-player-row__identity {
@@ -578,6 +586,7 @@
 .match-player-row__spells {
   display: flex;
   gap: 0.4rem;
+  align-items: center;
 }
 
 .match-player-row__spell {
@@ -595,7 +604,7 @@
 .match-player-row__spell img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .match-player-row__kda {
@@ -637,6 +646,7 @@
   gap: 0.35rem;
   flex-wrap: wrap;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .match-player-row__item {
@@ -654,7 +664,7 @@
 .match-player-row__item img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .match-player-row__item.is-empty {
@@ -726,7 +736,11 @@
     text-align: left;
   }
 
+  .match-player-row__spells {
+    gap: 0.3rem;
+  }
+
   .match-player-row__items {
-    gap: 0.4rem;
+    gap: 0.3rem;
   }
 }
