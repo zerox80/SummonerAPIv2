@@ -10,6 +10,13 @@ const NAV_LINKS = [
   { to: '/champions', label: 'Champions' }
 ];
 
+/**
+ * Renders the main shell layout for the application.
+ *
+ * @param {object} props - The component props.
+ * @param {React.ReactNode} props.children - The content to render within the layout.
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function ShellLayout({ children }) {
   const location = useLocation();
   const activeLabel = useMemo(() => {

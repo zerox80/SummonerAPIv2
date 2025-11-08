@@ -15,12 +15,26 @@ const CRESTS = {
   CHALLENGER: 'challenger'
 };
 
+/**
+ * Gets the crest for a given tier.
+ *
+ * @param {string} tier - The tier.
+ * @returns {string} The crest.
+ */
 function crestForTier(tier) {
   if (!tier) return CRESTS.IRON;
   const key = tier.toUpperCase();
   return CRESTS[key] || CRESTS.IRON;
 }
 
+/**
+ * Renders an overview of a summoner's ranked performance.
+ *
+ * @param {object} props - The component props.
+ * @param {Array<object>} props.entries - The list of ranked entries.
+ * @param {object} props.bases - The base URLs for images.
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function RankedOverview({ entries, bases }) {
   if (!entries || entries.length === 0) {
     return (

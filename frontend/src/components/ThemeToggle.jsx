@@ -2,6 +2,11 @@ import { useState } from 'react';
 import { useTheme } from '../providers/ThemeProvider.jsx';
 import '../styles/theme-toggle.css';
 
+/**
+ * A button that toggles the application's theme.
+ *
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function ThemeToggle() {
   const { mode, toggle } = useTheme();
   const [isAnimating, setAnimating] = useState(false);

@@ -43,11 +43,23 @@ const QUICK_NAV_ITEMS = [
 
 const IMAGE_BASE = 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/';
 
+/**
+ * Clamps a score to a range of 0-10.
+ *
+ * @param {number} score - The score to clamp.
+ * @returns {number} The clamped score.
+ */
 function clampScore(score) {
   if (score == null) return 0;
   return Math.max(0, Math.min(score, 10));
 }
 
+/**
+ * Gets a difficulty label based on a score.
+ *
+ * @param {number} score - The difficulty score.
+ * @returns {string} The difficulty label.
+ */
 function getDifficultyLabel(score) {
   if (score == null) return 'Unknown';
   if (score <= 3) return 'Beginner Friendly';
@@ -56,6 +68,12 @@ function getDifficultyLabel(score) {
   return 'Expert Only';
 }
 
+/**
+ * Gets the damage profile based on attack and magic scores.
+ *
+ * @param {object} info - The champion info object.
+ * @returns {string|null} The damage profile or null.
+ */
 function getDamageProfile(info) {
   if (!info) return null;
   const { attack = 0, magic = 0 } = info;
@@ -65,6 +83,13 @@ function getDamageProfile(info) {
   return 'Hybrid';
 }
 
+/**
+ * Formats a stat value to a string with a specified number of digits.
+ *
+ * @param {number} value - The value to format.
+ * @param {number} [digits=0] - The number of digits to show after the decimal.
+ * @returns {string} The formatted value.
+ */
 function formatStatValue(value, digits = 0) {
   if (value == null) return '—';
   if (typeof value !== 'number' || Number.isNaN(value)) return value;
@@ -74,6 +99,11 @@ function formatStatValue(value, digits = 0) {
   });
 }
 
+/**
+ * Renders the champion detail page.
+ *
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function ChampionDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -353,4 +383,3 @@ export default function ChampionDetailPage() {
     </div>
   );
 }
-

@@ -2,12 +2,26 @@ import PropTypes from 'prop-types';
 import { capitalize } from '../../utils/formatters.js';
 import '../../styles/summoner/summoner-header.css';
 
+/**
+ * Builds a tagline from a Riot ID.
+ *
+ * @param {string} riotId - The Riot ID.
+ * @returns {string} The formatted tagline.
+ */
 function buildTagline(riotId) {
   if (!riotId || !riotId.includes('#')) return riotId || '';
   const [name, tag] = riotId.split('#');
   return `${name} · #${tag}`;
 }
 
+/**
+ * Renders a header for a summoner's profile.
+ *
+ * @param {object} props - The component props.
+ * @param {object} props.profile - The summoner's profile data.
+ * @param {object} props.derived - Derived stats from the summoner's matches.
+ * @returns {React.ReactElement} The rendered component.
+ */
 export default function SummonerHeader({ profile, derived }) {
   const riotId = profile?.suggestion?.riotId || profile?.summoner?.name;
   const tagline = buildTagline(riotId);
@@ -71,7 +85,8 @@ SummonerHeader.propTypes = {
   profile: PropTypes.shape({
     summoner: PropTypes.object,
     suggestion: PropTypes.object,
-    profileIconUrl: PropTypes.string
+    profileIconUrl: PropTypes.string,
+    primaryRole: PropTypes.string
   }),
   derived: PropTypes.shape({
     totalWins: PropTypes.number,
