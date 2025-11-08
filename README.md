@@ -327,6 +327,19 @@ SummonerAPIv2/
 └── package.json       # NPM dependencies
 ```
 
+### Frontend Architecture
+
+The frontend is a modern React single-page application (SPA) built with Vite. It follows a component-based architecture designed for maintainability, scalability, and performance.
+
+- **State Management**: The application uses a combination of local component state (`useState`, `useReducer`) for UI state and **TanStack Query (`useQuery`)** for managing server state. TanStack Query handles data fetching, caching, and synchronization with the backend API, significantly simplifying data management and improving performance.
+- **Routing**: Client-side routing is managed by **React Router**. The application uses a declarative routing approach, with routes defined in `App.jsx` and organized into pages.
+- **Component Structure**: Components are organized by feature and type.
+    - `pages/`: Top-level components that correspond to a specific URL route.
+    - `sections/`: Large, composite components that make up a significant part of a page (e.g., `MatchHistory`, `RankedOverview`).
+    - `components/`: Smaller, reusable components used across the application (e.g., `Button`, `Tooltip`, `MetricTile`).
+- **Styling**: The application uses plain CSS with a BEM-like naming convention. Styles are organized by component, promoting modularity and avoiding style conflicts. A global stylesheet (`global.css`) defines base styles and variables.
+- **API Communication**: All communication with the backend is handled through a centralized API client (`api/client.js`), which provides a consistent interface for making HTTP requests and handling errors. Custom hooks in the `hooks/` directory wrap these API calls with TanStack Query for easy consumption in components.
+
 ### Code Documentation
 
 This project includes **comprehensive code documentation** with 100% coverage of all public APIs, classes, methods, and functions. Every public interface is thoroughly documented to help developers understand, use, and contribute to the codebase effectively.
