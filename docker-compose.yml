@@ -17,7 +17,8 @@ services:
     restart: unless-stopped
 
   app:
-    build: .
+    build:
+      context: .
     depends_on:
       db:
         condition: service_healthy
