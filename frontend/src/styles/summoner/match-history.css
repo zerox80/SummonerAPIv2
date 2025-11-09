@@ -333,8 +333,9 @@
 
 .match-card__detail-grid {
   display: grid;
-  gap: clamp(1rem, 2.5vw, 1.8rem);
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.2vw, 1.6rem);
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  align-items: stretch;
 }
 
 .match-card__build {
@@ -486,9 +487,9 @@
 .match-card__scoreboard {
   display: grid;
   gap: clamp(1rem, 3vw, 1.4rem);
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-  scroll-snap-type: x proximity;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  align-items: stretch;
+  padding-bottom: 0;
 }
 
 .match-card__scoreboard::-webkit-scrollbar {
@@ -509,8 +510,7 @@
   display: grid;
   gap: clamp(0.8rem, 2.5vw, 1.1rem);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  scroll-snap-align: start;
-  min-width: min(420px, 100%);
+  min-width: 0;
 }
 
 .match-card__team::before {
@@ -704,6 +704,20 @@
   justify-content: center;
 }
 
+@media (max-width: 1024px) {
+  .match-card__scoreboard {
+    grid-template-columns: 1fr;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scroll-snap-type: x proximity;
+  }
+
+  .match-card__team {
+    min-width: min(420px, 100%);
+    scroll-snap-align: start;
+  }
+}
+
 @media (max-width: 960px) {
   .match-card__summary {
     grid-template-columns: 1fr;
@@ -731,10 +745,6 @@
     right: 1.25rem;
   }
 
-  .match-card__detail-grid {
-    grid-template-columns: 1fr;
-  }
-
   .match-player-row {
     grid-template-columns: minmax(0, 1.4fr) repeat(3, auto) minmax(0, 1.2fr);
     gap: 0.75rem;
@@ -743,6 +753,12 @@
   .match-player-row__items {
     width: 100%;
     justify-content: flex-start;
+  }
+}
+
+@media (max-width: 900px) {
+  .match-card__detail-grid {
+    grid-template-columns: 1fr;
   }
 }
 
