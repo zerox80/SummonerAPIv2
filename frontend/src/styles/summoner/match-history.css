@@ -425,10 +425,10 @@
 }
 
 .match-card__item-slot {
-  flex: 0 0 52px;
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  flex: 0 0 clamp(54px, 3.4vw, 62px);
+  width: clamp(54px, 3.4vw, 62px);
+  height: clamp(54px, 3.4vw, 62px);
+  border-radius: 16px;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.25);
   display: flex;
@@ -557,10 +557,10 @@
 
 .match-player-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) repeat(3, auto) minmax(0, 1.4fr);
-  gap: clamp(0.75rem, 2.5vw, 1rem);
+  grid-template-columns: minmax(0, 2.1fr) minmax(120px, 0.85fr) minmax(130px, 0.8fr) minmax(90px, 0.6fr) minmax(0, 1.9fr);
+  gap: clamp(0.8rem, 2.2vw, 1.4rem);
   align-items: center;
-  padding: clamp(0.75rem, 2vw, 0.9rem) clamp(0.6rem, 2vw, 0.85rem);
+  padding: clamp(0.8rem, 2.2vw, 1rem) clamp(0.75rem, 2.2vw, 1rem);
   border-radius: var(--radius-md);
   transition: background var(--duration-base) ease, transform var(--duration-base) ease;
   border: 1px solid transparent;
@@ -583,8 +583,8 @@
 }
 
 .match-player-row__champion img {
-  width: 46px;
-  height: 46px;
+  width: clamp(48px, 3.4vw, 56px);
+  height: clamp(48px, 3.4vw, 56px);
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.25);
   object-fit: contain;
@@ -607,14 +607,15 @@
 
 .match-player-row__spells {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.45rem;
   align-items: center;
+  justify-content: center;
 }
 
 .match-player-row__spell {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: clamp(40px, 2.6vw, 46px);
+  height: clamp(40px, 2.6vw, 46px);
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
   background: rgba(15, 23, 42, 0.65);
@@ -665,16 +666,16 @@
 
 .match-player-row__items {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.45rem;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
 }
 
 .match-player-row__item {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: clamp(42px, 2.8vw, 50px);
+  height: clamp(42px, 2.8vw, 50px);
+  border-radius: 12px;
   border: 1px solid rgba(148, 163, 184, 0.25);
   background: rgba(15, 23, 42, 0.6);
   display: flex;
