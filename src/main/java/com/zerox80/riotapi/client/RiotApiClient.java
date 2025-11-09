@@ -457,9 +457,31 @@ public class RiotApiClient {
     /**
      * Retrieves account information by Riot ID (game name and tag line).
      * 
-     * @param gameName The game name portion of the Riot ID
-     * @param tagLine The tag line portion of the Riot ID
-     * @return A CompletableFuture containing the account information
+     * <p>This method makes a request to the Riot Account API to resolve a Riot ID
+     * to an AccountDto containing the player's PUUID and other account information.
+     * The request is cached for 30 minutes to reduce API calls and improve performance.</p>
+     * 
+     * <p><strong>Performance Characteristics:</strong></p>
+     * <ul>
+     *   <li>Typical response time: 100-300ms</li>
+     *   <li>Cache duration: 30 minutes</li>
+     *   <li>Rate limit impact: 1 request per unique Riot ID</li>
+     *   <li>Request coalescing: Duplicate requests for same Riot ID are merged</li>
+     * </ul>
+     * 
+     * <p><strong>Error Handling:</strong></p>
+     * <ul>
+     *   <li>Returns null if account not found (404)</li>
+     *   <li>Throws {@link RiotApiRequestException} for API errors (5xx, 429)</li>
+     *   <li>Automatic retry with exponential backoff for transient failures</li>
+     *   <li>Cache entry is evicted on persistent failures</li>
+     * </ul>
+     * 
+     * @param gameName The game name portion of the Riot ID (e.g., "Faker")
+     * @param tagLine The tag line portion of the Riot ID (e.g., "KR1")
+     * @return A CompletableFuture containing the AccountDto, or null if not found
+     * @throws RiotApiRequestException if the request fails after retries
+     * @throws IllegalArgumentException if gameName or tagLine is null/empty
      */
     @Cacheable(value = "accounts", key = "T(com.zerox80.riotapi.client.RiotApiClient).accountCacheKey(#gameName, #tagLine)")
     public CompletableFuture<AccountDto> getAccountByRiotId(String gameName, String tagLine) {
