@@ -1,3 +1,26 @@
+/**
+ * Component for displaying metric data in a styled tile format.
+ * 
+ * <p>This module provides a reusable MetricTile component for displaying key performance
+ * indicators, statistics, and other important metrics in a clean, consistent format.
+ * The component supports flexible content display with optional secondary information,
+ * icons, and trend indicators.</p>
+ * 
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Flexible content display with optional secondary information</li>
+ *   <li>Icon support for visual context and branding</li>
+ *   <li>Trend indicators for showing changes over time</li>
+ *   <li>Emphasis mode for highlighting important metrics</li>
+ *   <li>Responsive design that works across all screen sizes</li>
+ *   <li>Semantic HTML structure for accessibility</li>
+ * </ul>
+ * 
+ * @module components/MetricTile
+ * @author zerox80
+ * @version 2.0
+ */
+
 import PropTypes from 'prop-types';
 import '../styles/components/metric-tile.css';
 
@@ -19,6 +42,7 @@ import '../styles/components/metric-tile.css';
  *   <li>Semantic HTML structure for accessibility</li>
  * </ul>
  * 
+ * @component MetricTile
  * @param {Object} props - Component props
  * @param {string} props.label - The metric label displayed in the header
  * @param {string|number} props.value - The primary metric value to display

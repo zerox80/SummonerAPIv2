@@ -1,3 +1,27 @@
+/**
+ * Components for displaying and managing match history for summoners.
+ *
+ * <p>This module provides a comprehensive match history component that displays recent matches
+ * with filtering capabilities, expandable match details, and performance statistics.
+ * It supports filtering by queue type, match result, and role, as well as
+ * detailed match information including team compositions, items, runes, and statistics.</p>
+ *
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Interactive match cards with expand/collapse functionality</li>
+ *   <li>Advanced filtering by queue, result, and role</li>
+ *   <li>Detailed match statistics and team composition</li>
+ *   <li>Champion, item, and rune display with fallback handling</li>
+ *   <li>Load more functionality for pagination</li>
+ *   <li>Keyboard navigation support</li>
+ *   <li>Responsive design for all screen sizes</li>
+ * </ul>
+ *
+ * @module sections/summoner/MatchHistory
+ * @author zerox80
+ * @version 2.0
+ */
+
 import { useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import SegmentedControl from '../../components/SegmentedControl.jsx';

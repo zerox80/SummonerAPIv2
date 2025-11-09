@@ -1,3 +1,27 @@
+/**
+ * Components for displaying champion abilities and spell information.
+ *
+ * <p>This module provides components for rendering champion ability information
+ * in an interactive and accessible format. It includes support for passive abilities,
+ * active spells with hotkeys, expandable descriptions, and comprehensive ability
+ * statistics with tooltips.</p>
+ *
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Interactive ability cards with expand/collapse functionality</li>
+ *   <li>Automatic content length detection for optimal display</li>
+ *   <li>Tooltip support for ability statistics</li>
+ *   <li>Responsive grid layout for all screen sizes</li>
+ *   <li>Accessibility support with proper ARIA attributes</li>
+ *   <li>Lazy loading for ability images</li>
+ *   <li>HTML-safe description rendering</li>
+ * </ul>
+ *
+ * @module components/champions/AbilityList
+ * @author zerox80
+ * @version 2.0
+ */
+
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '../Tooltip.jsx';

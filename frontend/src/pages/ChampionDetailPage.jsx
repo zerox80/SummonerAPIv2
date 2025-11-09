@@ -1,3 +1,27 @@
+/**
+ * Page component for displaying detailed champion information.
+ *
+ * <p>This module provides a comprehensive champion detail page that displays extensive
+ * information about a specific champion including their abilities, base stats,
+ * recommended builds, lore, and performance insights. It features tabbed navigation,
+ * filtering options, and interactive elements for exploring champion data.</p>
+ *
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Comprehensive champion overview with stats and insights</li>
+ *   <li>Tabbed navigation for different content sections</li>
+ *   <li>Build recommendations with filtering by role and queue</li>
+ *   <li>Ability information with expandable descriptions</li>
+ *   <li>Champion lore with expand/collapse functionality</li>
+ *   <li>Interactive stat visualizations</li>
+ *   <li>Responsive design with smooth scrolling</li>
+ * </ul>
+ *
+ * @module pages/ChampionDetailPage
+ * @author zerox80
+ * @version 2.0
+ */
+
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import SegmentedControl from '../components/SegmentedControl.jsx';

@@ -1,11 +1,8 @@
-import PropTypes from 'prop-types';
-import '../styles/components/tooltip.css';
-
 /**
  * Component for displaying tooltip information on hover.
  * 
- * <p>This component provides a simple tooltip implementation that displays
- * additional information when users hover over or focus on the wrapped content.
+ * <p>This module provides a simple tooltip implementation that displays
+ * additional information when users hover over or focus on wrapped content.
  * It supports multiple placement positions and includes proper accessibility
  * attributes for screen readers.</p>
  * 
@@ -18,6 +15,31 @@ import '../styles/components/tooltip.css';
  *   <li>Keyboard and screen reader friendly</li>
  * </ul>
  * 
+ * @module components/Tooltip
+ * @author zerox80
+ * @version 2.0
+ */
+import PropTypes from 'prop-types';
+import '../styles/components/tooltip.css';
+
+/**
+ * Component for displaying tooltip information on hover.
+ * 
+ * <p>This component provides a simple tooltip implementation that displays
+ * additional information when users hover over or focus on wrapped content.
+ * It supports multiple placement positions and includes proper accessibility
+ * attributes for screen readers.</p>
+ * 
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Multiple placement options (top, bottom, left, right)</li>
+ *   <li>Accessibility support with proper ARIA attributes</li>
+ *   <li>CSS-based positioning and animations</li>
+ *   <li>Support for any content type as tooltip label</li>
+ *   <li>Keyboard and screen reader friendly</li>
+ * </ul>
+ * 
+ * @component Tooltip
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.label - The tooltip content to display on hover
  * @param {React.ReactNode} props.children - The content that triggers the tooltip

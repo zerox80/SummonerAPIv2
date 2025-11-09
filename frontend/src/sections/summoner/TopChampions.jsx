@@ -1,3 +1,27 @@
+/**
+ * Component for displaying a summoner's most played champions.
+ *
+ * <p>This module provides a component that displays a summoner's top champions
+ * based on play count, along with detailed performance statistics for each champion.
+ * It shows win rates, KDA ratios, and game counts in a visually appealing
+ * grid layout with champion images.</p>
+ *
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Top 6 most played champions display</li>
+ *   <li>Performance statistics for each champion</li>
+ *   <li>Win rate indicators with color coding</li>
+ *   <li>KDA calculations and game records</li>
+ *   <li>Responsive grid layout</li>
+ *   <li>Range-based filtering</li>
+ *   <li>Champion image resolution with fallbacks</li>
+ * </ul>
+ *
+ * @module sections/summoner/TopChampions
+ * @author zerox80
+ * @version 2.0
+ */
+
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Tag from '../../components/Tag.jsx';

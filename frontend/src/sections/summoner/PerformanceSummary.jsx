@@ -1,3 +1,26 @@
+/**
+ * Components for displaying summoner performance summary and insights.
+ *
+ * <p>This module provides a comprehensive performance summary component that displays
+ * key statistics, trends, and insights about a summoner's recent match
+ * performance. It includes win rates, KDA ratios, damage metrics, and
+ * visual sparkline charts to show performance trends over time.</p>
+ *
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Comprehensive performance metrics with trend visualization</li>
+ *   <li>Filterable by match range and queue type</li>
+ *   <li>Visual sparkline charts for performance trends</li>
+ *   <li>Last match summary with detailed information</li>
+ *   <li>Responsive grid layout for metric tiles</li>
+ *   <li>Controlled and uncontrolled range selection</li>
+ * </ul>
+ *
+ * @module sections/summoner/PerformanceSummary
+ * @author zerox80
+ * @version 2.0
+ */
+
 import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import MetricTile from '../../components/MetricTile.jsx';

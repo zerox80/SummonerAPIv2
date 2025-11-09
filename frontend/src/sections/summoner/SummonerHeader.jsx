@@ -1,3 +1,26 @@
+/**
+ * Component for displaying summoner profile header information.
+ *
+ * <p>This module provides a header component that displays comprehensive information
+ * about a summoner including their profile icon, level, region, performance
+ * statistics, and key metrics. It presents the data in a visually appealing
+ * layout with emphasis on important performance indicators.</p>
+ *
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Profile icon and level display with badge</li>
+ *   <li>Formatted Riot ID with tagline</li>
+ *   <li>Key performance metrics grid layout</li>
+ *   <li>Highlighted statistics section</li>
+ *   <li>Responsive design with glass panel styling</li>
+ *   <li>Support for both summoner and suggestion data</li>
+ * </ul>
+ *
+ * @module sections/summoner/SummonerHeader
+ * @author zerox80
+ * @version 2.0
+ */
+
 import PropTypes from 'prop-types';
 import { capitalize } from '../../utils/formatters.js';
 import '../../styles/summoner/summoner-header.css';

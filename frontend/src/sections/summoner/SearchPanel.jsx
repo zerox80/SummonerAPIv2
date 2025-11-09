@@ -1,3 +1,26 @@
+/**
+ * Component for searching and finding League of Legends summoners.
+ *
+ * <p>This module provides a comprehensive search panel component that allows users
+ * to search for summoners by their Riot ID. It features real-time suggestions,
+ * debounced input handling, rotating placeholder examples, and a clean
+ * accessible interface with keyboard navigation support.</p>
+ *
+ * <p>Features:</p>
+ * <ul>
+ *   <li>Real-time search suggestions with debounced input</li>
+ *   <li>Rotating placeholder examples</li>
+ *   <li>Profile icon display for suggestions</li>
+ *   <li>Keyboard navigation and accessibility support</li>
+ *   <li>Responsive design with glass panel styling</li>
+ *   <li>Auto-completion with mouse and keyboard selection</li>
+ * </ul>
+ *
+ * @module sections/summoner/SearchPanel
+ * @author zerox80
+ * @version 2.0
+ */
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from '@tanstack/react-query';
