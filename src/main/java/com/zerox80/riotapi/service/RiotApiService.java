@@ -27,27 +27,7 @@ import java.util.Optional;
 import java.util.Locale;
 import com.zerox80.riotapi.util.ListUtils;
 
-/**
- * Service layer for interacting with the Riot Games API and processing game data.
- * 
- * <p>This service provides high-level methods for fetching and processing League of Legends
- * data from the Riot API, including summoner information, match history, league entries,
- * and player statistics. It handles data aggregation, caching, and business logic
- * transformations.</p>
- * 
- * <p>Key responsibilities:</p>
- * <ul>
- *   <li>Orchestrating API calls to multiple Riot endpoints</li>
- *   <li>Aggregating and transforming match data</li>
- *   <li>Managing player LP tracking and statistics</li>
- *   <li>Providing cached responses for performance</li>
- *   <li>Handling error scenarios and fallbacks</li>
- * </ul>
- * 
- * @author zerox80
- * @version 2.0
- * @since 2.0
- */
+
 @Service
 public class RiotApiService {
 
@@ -55,12 +35,7 @@ public class RiotApiService {
     private final RiotApiClient riotApiClient;
     private final PlayerLpRecordService playerLpRecordService;
 
-    /**
-     * Constructs a new RiotApiService with the required dependencies.
-     * 
-     * @param riotApiClient The client for making Riot API requests
-     * @param playerLpRecordService Service for tracking player LP changes over time
-     */
+    
     @Autowired
     public RiotApiService(RiotApiClient riotApiClient,
                           PlayerLpRecordService playerLpRecordService) {
@@ -68,44 +43,7 @@ public class RiotApiService {
         this.playerLpRecordService = playerLpRecordService;
     }
 
-    /**
-     * Retrieves paginated match history for a player with detailed match information.
-     * 
-     * <p>This method fetches match IDs using the Riot API's pagination parameters
-     * and then hydrates each match with full details. It processes matches in batches
-     * of 5 to optimize API usage and provides comprehensive match data including
-     * participant information, timeline events, and statistics.</p>
-     * 
-     * <p><strong>Performance Characteristics:</strong></p>
-     * <ul>
-     *   <li>Typical response time: 500ms-2s depending on match count</li>
-     *   <li>Batch processing: 5 matches per API call to optimize rate limits</li>
-     *   <li>Memory usage: Approximately 50KB per match in memory</li>
-     *   <li>Cache behavior: Individual matches cached for 30 minutes</li>
-     * </ul>
-     * 
-     * <p><strong>Error Handling:</strong></p>
-     * <ul>
-     *   <li>Invalid PUUID returns empty list (logged as error)</li>
-     *   <li>Invalid count returns empty list (logged as error)</li>
-     *   <li>Partial failures: Successful matches returned, failures logged</li>
-     *   <li>API rate limits: Automatic retry with exponential backoff</li>
-     *   <li>Network timeouts: Retry up to 3 times with backoff</li>
-     * </ul>
-     * 
-     * <p><strong>Rate Limit Considerations:</strong></p>
-     * <ul>
-     *   <li>Each batch of 5 matches consumes 5 API requests</li>
-     *   <li>Recommended max count: 40 to stay within rate limits</li>
-     *   <li>High concurrency may trigger rate limiting</li>
-     * </ul>
-     * 
-     * @param puuid The Player Universally Unique Identifier (must not be null/empty)
-     * @param start The starting index for pagination (0-based, negative values clamped to 0)
-     * @param count The number of matches to retrieve (1-100 recommended, max 100)
-     * @return CompletableFuture containing the list of detailed match data, empty list on validation errors
-     * @throws IllegalArgumentException if puuid is null or empty, or if count <= 0
-     */
+    
     public CompletableFuture<List<MatchV5Dto>> getMatchHistoryPaged(String puuid, int start, int count) {
         if (!StringUtils.hasText(puuid)) {
             logger.error("Error: PUUID cannot be empty when fetching match history.");
@@ -144,17 +82,7 @@ public class RiotApiService {
                 });
     }
 
-    /**
-     * Resolves a {@link Summoner} by its Riot ID (gameName#tagLine) asynchronously.
-     *
-     * <p>The inputs are trimmed and validated before delegating to {@link RiotApiClient}.
-     * The returned future completes with the canonical summoner payload or {@code null}
-     * when the player cannot be found or when invalid identifiers are supplied.</p>
-     *
-     * @param gameName The visible Riot ID name portion (for example, {@code "Faker"})
-     * @param tagLine The regional tag that accompanies the Riot ID (for example, {@code "KR1"})
-     * @return A {@link CompletableFuture} that completes with the resolved {@link Summoner}, or {@code null} if not found
-     */
+    
     public CompletableFuture<Summoner> getSummonerByRiotId(String gameName, String tagLine) {
         String trimmedGameName = gameName != null ? gameName.trim() : null;
         String trimmedTagLine = tagLine != null ? tagLine.trim() : null;
@@ -196,16 +124,7 @@ public class RiotApiService {
                 });
     }
 
-    /**
-     * Retrieves all ranked queue entries for the specified player and snapshots LP data.
-     *
-     * <p>This helper validates the provided PUUID, fetches league entries via {@link RiotApiClient},
-     * persists an LP history record through {@link PlayerLpRecordService}, and returns the
-     * raw league entries for downstream consumers.</p>
-     *
-     * @param puuid The player's globally unique PUUID used to query league entries
-     * @return A {@link CompletableFuture} containing the list of ranked queue entries (possibly empty)
-     */
+    
     public CompletableFuture<List<LeagueEntryDTO>> getLeagueEntries(String puuid) {
         if (!StringUtils.hasText(puuid)) {
             logger.error("Error: PUUID cannot be empty.");
@@ -228,17 +147,7 @@ public class RiotApiService {
                 });
     }
 
-    /**
-     * Loads a fixed-size slice of a player's match history with full match payloads.
-     *
-     * <p>The result is cached per {@code (puuid, numberOfMatches)} pair to reduce upstream calls.
-     * The method validates inputs, fetches the most recent match IDs, hydrates each match via
-     * {@link RiotApiClient#getMatchDetails(String)}, and returns the completed list.</p>
-     *
-     * @param puuid The player's PUUID to load matches for
-     * @param numberOfMatches The maximum number of recent matches to fetch (must be positive)
-     * @return A {@link CompletableFuture} that yields the requested matches (empty on validation failure)
-     */
+    
     @Cacheable(value = "matchHistory", key = "#puuid + '-' + #numberOfMatches")
     public CompletableFuture<List<MatchV5Dto>> getMatchHistory(String puuid, int numberOfMatches) {
         if (!StringUtils.hasText(puuid)) {
@@ -294,16 +203,7 @@ public class RiotApiService {
                 .collect(Collectors.toList()));
     }
 
-    /**
-     * Builds a frequency map of champions played by the searched summoner across matches.
-     *
-     * <p>Only participants that match the provided PUUID are considered, and null matches are skipped.
-     * The resulting map is keyed by champion ID and contains the number of appearances within the supplied list.</p>
-     *
-     * @param matches The match collection to analyze (may be {@code null} or empty)
-     * @param searchedPuuid The PUUID identifying which participant should be counted
-     * @return An ordered map of champion IDs to play counts, or an empty map when no data is available
-     */
+    
     public Map<String, Long> getChampionPlayCounts(List<MatchV5Dto> matches, String searchedPuuid) {
         if (matches == null || matches.isEmpty() || !StringUtils.hasText(searchedPuuid)) {
             return Collections.emptyMap();
@@ -319,17 +219,7 @@ public class RiotApiService {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-    /**
-     * Generates summoner auto-complete suggestions sourced from per-user history.
-     *
-     * <p>The method filters and ranks cached {@link SummonerSuggestionDTO} entries that match the current
-     * {@code partialName}, limits the response to ten unique suggestions, and enriches missing profile
-     * icon URLs to satisfy frontend expectations.</p>
-     *
-     * @param partialName The characters typed by the user (optional; {@code null} returns the raw history)
-     * @param userHistoryDtoMap The caller's cached suggestion history keyed by normalized Riot ID (may be {@code null})
-     * @return A list of up to ten enriched {@link SummonerSuggestionDTO} items ordered by history priority
-     */
+    
     public List<SummonerSuggestionDTO> getSummonerSuggestions(String partialName, Map<String, SummonerSuggestionDTO> userHistoryDtoMap) {
         Stream<Map.Entry<String, SummonerSuggestionDTO>> stream;
         Map<String, SummonerSuggestionDTO> historyToUse = (userHistoryDtoMap != null) ? userHistoryDtoMap : Collections.emptyMap();
@@ -363,17 +253,7 @@ public class RiotApiService {
         return out;
     }
 
-    /**
-     * Builds the full {@link SummonerProfileData} payload for the UI asynchronously.
-     *
-     * <p>The workflow resolves the summoner by Riot ID, fetches ranked entries and recent matches in parallel,
-     * augments matches with LP deltas, derives champion play counts, hydrates profile icon URLs,
-     * and finally combines everything into a single DTO consumable by the frontend.</p>
-     *
-     * @param gameName The Riot ID name portion used for lookup
-     * @param tagLine The Riot ID tag line used for lookup
-     * @return A {@link CompletableFuture} that completes with an aggregated {@link SummonerProfileData} view model
-     */
+    
     public CompletableFuture<SummonerProfileData> getSummonerProfileDataAsync(String gameName, String tagLine) {
         return getSummonerByRiotId(gameName, tagLine)
                 .thenCompose(summoner -> {
@@ -422,10 +302,7 @@ public class RiotApiService {
                 });
     }
 
-    /**
-     * Fetch the currently authenticated user's summoner profile using an RSO Bearer token.
-     * This uses the endpoint /lol/summoner/v4/summoners/me and does NOT require the X-Riot-Token.
-     */
+    
     public CompletableFuture<Summoner> getSummonerViaRso(String bearerToken) {
         if (!StringUtils.hasText(bearerToken)) {
             logger.error("Error: bearerToken is empty for RSO summoner request.");

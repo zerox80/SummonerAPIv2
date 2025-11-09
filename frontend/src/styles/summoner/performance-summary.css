@@ -1,7 +1,7 @@
 .performance-summary {
   display: grid;
-  gap: 1.75rem;
-  padding: 1.9rem;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+  padding: clamp(1.4rem, 3vw, 1.9rem);
 }
 
 .performance-summary__header {
@@ -32,15 +32,15 @@
 
 .performance-summary__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.35rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(1rem, 3vw, 1.35rem);
 }
 
 .performance-summary__last {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 1.35rem;
-  padding: 1.35rem;
+  gap: clamp(1rem, 2.5vw, 1.35rem);
+  padding: clamp(1.1rem, 3vw, 1.35rem);
   border-radius: var(--radius-md);
   background: rgba(15, 23, 42, 0.45);
   border: 1px solid rgba(99, 102, 241, 0.22);
@@ -82,7 +82,7 @@
 
 .performance-summary__last-meta {
   display: flex;
-  gap: 0.65rem;
+  gap: clamp(0.5rem, 2vw, 0.75rem);
   align-items: center;
   flex-wrap: wrap;
 }
@@ -94,5 +94,6 @@
 
   .performance-summary__header {
     flex-direction: column;
+    align-items: stretch;
   }
 }

@@ -1,14 +1,16 @@
 .match-history {
   display: grid;
-  gap: 1.5rem;
-  padding: 1.75rem;
+  gap: clamp(1rem, 3vw, 1.75rem);
+  padding: clamp(1rem, 2vw + 1rem, 2rem);
+  width: min(100%, 1040px);
+  margin: 0 auto;
 }
 
 .match-history__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1.25rem;
+  gap: clamp(1rem, 3vw, 1.4rem);
   flex-wrap: wrap;
 }
 
@@ -22,6 +24,7 @@
   display: flex;
   gap: 0.6rem;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .match-history__empty {
@@ -44,7 +47,11 @@
 
 .match-history__list {
   display: grid;
-  gap: 1rem;
+  gap: clamp(0.85rem, 2vw, 1.2rem);
+}
+
+.match-history__list > .match-card {
+  width: 100%;
 }
 
 
@@ -109,8 +116,8 @@
 .match-card__summary {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: clamp(1.15rem, 3vw, 2rem);
-  padding: clamp(1.25rem, 3vw, 1.85rem);
+  gap: clamp(1rem, 2.6vw, 2rem);
+  padding: clamp(1.05rem, 3vw, 1.85rem);
   align-items: center;
   cursor: pointer;
   position: relative;
@@ -137,8 +144,8 @@
 }
 
 .match-card__champion img {
-  width: 60px;
-  height: 60px;
+  width: clamp(52px, 7vw, 64px);
+  height: clamp(52px, 7vw, 64px);
   border-radius: 16px;
   border: 2px solid rgba(255, 255, 255, 0.32);
   object-fit: contain;
@@ -190,21 +197,21 @@
 
 .match-card__stat-group {
   display: flex;
-  gap: 0.85rem;
+  gap: clamp(0.65rem, 2vw, 0.95rem);
   flex-wrap: wrap;
 }
 
 .match-card__stat {
   display: grid;
   gap: 0.35rem;
-  padding: 0.85rem 1rem;
+  padding: clamp(0.7rem, 2vw, 0.95rem) clamp(0.8rem, 3vw, 1rem);
   border-radius: var(--radius-md);
   background: linear-gradient(145deg, rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.52));
   border: 1px solid rgba(148, 163, 184, 0.26);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
-  min-width: 140px;
+  min-width: 128px;
 }
 
 .match-card__stat::before {
@@ -307,8 +314,8 @@
 
 .match-card__details {
   display: grid;
-  gap: 1.9rem;
-  padding: 0 clamp(1.5rem, 4vw, 2.4rem) clamp(1.9rem, 4vw, 2.7rem);
+  gap: clamp(1.35rem, 3vw, 1.9rem);
+  padding: 0 clamp(1.25rem, 4vw, 2.4rem) clamp(1.6rem, 4vw, 2.7rem);
   animation: match-card-expand var(--duration-base) ease;
 }
 
@@ -325,16 +332,16 @@
 
 .match-card__detail-grid {
   display: grid;
-  gap: clamp(1.25rem, 3vw, 1.9rem);
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.5vw, 1.8rem);
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
 }
 
 .match-card__build {
   display: grid;
-  gap: 1.1rem;
+  gap: clamp(0.9rem, 2.5vw, 1.1rem);
   background: linear-gradient(150deg, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.55));
   border-radius: var(--radius-lg);
-  padding: clamp(1.25rem, 3vw, 1.85rem);
+  padding: clamp(1rem, 3vw, 1.85rem);
   border: 1px solid rgba(148, 163, 184, 0.24);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 18px 35px rgba(15, 23, 42, 0.35);
 }
@@ -349,7 +356,7 @@
 
 .match-card__build-row {
   display: flex;
-  gap: clamp(1.5rem, 4vw, 2.5rem);
+  gap: clamp(1rem, 4vw, 2.5rem);
   flex-wrap: wrap;
   align-items: flex-start;
 }
@@ -406,7 +413,7 @@
 .match-card__items {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: clamp(0.45rem, 2vw, 0.7rem);
   align-items: flex-start;
 }
 
@@ -447,11 +454,11 @@
 
 .match-card__stat-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: clamp(0.85rem, 2vw, 1.1rem);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   background: linear-gradient(150deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.52));
   border-radius: var(--radius-lg);
-  padding: clamp(1.25rem, 3vw, 1.85rem);
+  padding: clamp(1rem, 3vw, 1.85rem);
   border: 1px solid rgba(148, 163, 184, 0.24);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -477,7 +484,19 @@
 
 .match-card__scoreboard {
   display: grid;
-  gap: 1.2rem;
+  gap: clamp(1rem, 3vw, 1.4rem);
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scroll-snap-type: x proximity;
+}
+
+.match-card__scoreboard::-webkit-scrollbar {
+  height: 6px;
+}
+
+.match-card__scoreboard::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 999px;
 }
 
 .match-card__team {
@@ -485,10 +504,12 @@
   background: linear-gradient(155deg, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.52));
   border-radius: var(--radius-lg);
   border: 1px solid rgba(148, 163, 184, 0.22);
-  padding: clamp(1.1rem, 3vw, 1.55rem) clamp(1.25rem, 3vw, 1.85rem);
+  padding: clamp(1rem, 3vw, 1.6rem) clamp(1.1rem, 4vw, 1.9rem);
   display: grid;
-  gap: 1rem;
+  gap: clamp(0.8rem, 2.5vw, 1.1rem);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  scroll-snap-align: start;
+  min-width: min(420px, 100%);
 }
 
 .match-card__team::before {
@@ -536,9 +557,9 @@
 .match-player-row {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) repeat(3, auto) minmax(0, 1.4fr);
-  gap: 1rem;
+  gap: clamp(0.75rem, 2.5vw, 1rem);
   align-items: center;
-  padding: 0.9rem 0.75rem;
+  padding: clamp(0.75rem, 2vw, 0.9rem) clamp(0.6rem, 2vw, 0.85rem);
   border-radius: var(--radius-md);
   transition: background var(--duration-base) ease, transform var(--duration-base) ease;
   border: 1px solid transparent;
@@ -677,7 +698,7 @@
 }
 
 .match-history__load-more {
-  margin-top: 1rem;
+  margin-top: clamp(0.75rem, 2vw, 1.1rem);
   display: flex;
   justify-content: center;
 }
@@ -742,5 +763,95 @@
 
   .match-player-row__items {
     gap: 0.3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .match-history__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .match-history__filters {
+    justify-content: stretch;
+    gap: 0.5rem;
+  }
+
+  .match-history__filters > * {
+    width: 100%;
+  }
+
+  .match-card__summary {
+    padding: clamp(0.95rem, 4vw, 1.35rem);
+  }
+
+  .match-card__champion {
+    gap: 0.65rem;
+  }
+
+  .match-card__stat {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .match-card__stat-grid {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .match-card__details {
+    padding: 0 clamp(1rem, 5vw, 1.85rem) clamp(1.4rem, 6vw, 2.2rem);
+  }
+
+  .match-card__team {
+    min-width: min(360px, 100%);
+  }
+
+  .match-player-row__champion img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .match-player-row__spell {
+    width: 32px;
+    height: 32px;
+  }
+
+  .match-card__item-slot,
+  .match-card__item-slot--trinket,
+  .match-player-row__item,
+  .match-player-row__item--trinket {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 420px) {
+  .match-card__summary {
+    gap: 0.9rem;
+  }
+
+  .match-card__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .match-card__toggle {
+    display: none;
+  }
+
+  .match-card__detail-grid,
+  .match-card__stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .match-card__scoreboard {
+    scroll-snap-type: none;
+  }
+
+  .match-card__team {
+    min-width: 100%;
   }
 }

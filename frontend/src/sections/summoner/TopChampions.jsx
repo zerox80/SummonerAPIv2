@@ -1,41 +1,11 @@
-/**
- * Component for displaying a summoner's most played champions.
- *
- * <p>This module provides a component that displays a summoner's top champions
- * based on play count, along with detailed performance statistics for each champion.
- * It shows win rates, KDA ratios, and game counts in a visually appealing
- * grid layout with champion images.</p>
- *
- * <p>Features:</p>
- * <ul>
- *   <li>Top 6 most played champions display</li>
- *   <li>Performance statistics for each champion</li>
- *   <li>Win rate indicators with color coding</li>
- *   <li>KDA calculations and game records</li>
- *   <li>Responsive grid layout</li>
- *   <li>Range-based filtering</li>
- *   <li>Champion image resolution with fallbacks</li>
- * </ul>
- *
- * @module sections/summoner/TopChampions
- * @author zerox80
- * @version 2.0
- */
+
 
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Tag from '../../components/Tag.jsx';
 import '../../styles/summoner/top-champions.css';
 
-/**
- * Resolves the champion image URL.
- *
- * @param {object} championSquares - A map of champion names to image URLs.
- * @param {string} championBase - The base URL for champion images.
- * @param {string} championName - The name of the champion.
- * @param {number} championId - The ID of the champion.
- * @returns {string|null} The champion image URL or null.
- */
+
 function resolveChampionImage(championSquares, championBase, championName, championId) {
   if (!championName) return null;
   const byName = championSquares?.[championName];
@@ -45,18 +15,7 @@ function resolveChampionImage(championSquares, championBase, championName, champ
   return `${championBase}${championName}.png`;
 }
 
-/**
- * Renders the top champions section of the summoner page.
- *
- * @param {object} props - The component props.
- * @param {object} props.championPlayCounts - A map of champion names to play counts.
- * @param {Array<object>} props.matches - The summoner's match history.
- * @param {object} props.summoner - The summoner's profile data.
- * @param {object} props.championSquares - A map of champion names to image URLs.
- * @param {object} props.bases - A map of base URLs for images.
- * @param {string} props.range - The time range for which to display stats.
- * @returns {React.ReactElement} The rendered component.
- */
+
 export default function TopChampions({ championPlayCounts, matches, summoner, championSquares, bases, range }) {
   const enrichedChampions = useMemo(() => {
     if (!championPlayCounts || !matches || !summoner) return [];

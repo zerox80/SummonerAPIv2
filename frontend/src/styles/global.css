@@ -17,6 +17,7 @@
   --border-glass: 1px solid rgba(255, 255, 255, 0.12);
   --max-width-desktop: 1360px;
   --max-width-wide: 1600px;
+  --page-gutter: clamp(1rem, 3vw, 2rem);
 }
 
 :root.light {
@@ -52,7 +53,7 @@
 }
 
 /* Slight global "zoom out" via font scaling (affects rem-based sizes) */
-html { font-size: 93.75%; } /* 15px base */
+html { font-size: clamp(15px, 0.9vw + 13px, 16px); }
 
 * {
   box-sizing: border-box;
@@ -76,16 +77,19 @@ body {
     radial-gradient(circle at 80% 0%, rgba(45, 212, 191, 0.1), transparent 40%),
     radial-gradient(circle at 0% 100%, rgba(14, 165, 233, 0.12), transparent 50%);
   background-attachment: fixed;
+  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 .layout-wide {
-  width: min(var(--max-width-wide), 96vw);
+  width: min(var(--max-width-wide), 100%);
   margin: 0 auto;
+  padding: 0 var(--page-gutter);
 }
 
 .layout-desktop {
-  width: min(var(--max-width-desktop), 96vw);
+  width: min(var(--max-width-desktop), 100%);
   margin: 0 auto;
+  padding: 0 var(--page-gutter);
 }
 
 a {
@@ -117,8 +121,9 @@ textarea {
 }
 
 .container {
-  width: min(1240px, 92vw);
+  width: min(1240px, 100%);
   margin: 0 auto;
+  padding: 0 var(--page-gutter);
 }
 
 .glass-panel {

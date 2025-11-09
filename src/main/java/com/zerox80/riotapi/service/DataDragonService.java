@@ -40,27 +40,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-/**
- * Service for interacting with Riot Games' Data Dragon static data API.
- *
- * <p>This service provides methods for retrieving static game data such as
- * champion information, item details, summoner spells, and runes. It handles
- * caching of responses to minimize redundant API calls and improve performance.</p>
- *
- * <p>Key features:</p>
- * <ul>
- *   <li>Fetching latest game version and patch information</li>
- *   <li>Retrieving champion summaries and detailed data</li>
- *   <li>Resolving champion IDs and keys</li>
- *   <li>Providing localized data based on locale</li>
- *   <li>Caching frequently accessed data</li>
- *   <li>Sanitizing HTML content from API responses</li>
- * </ul>
- *
- * @author zerox80
- * @version 2.0
- * @since 2.0
- */
+
 @Service
 public class DataDragonService {
 
@@ -92,14 +72,7 @@ public class DataDragonService {
 
     private static final Pattern TAG_STRIP_PATTERN = Pattern.compile("<[^>]+>");
 
-    /**
-     * Constructs a new DataDragonService with the required dependencies.
-     *
-     * @param riotApiHttpClient The primary HTTP client for API requests.
-     * @param defaultLocale The default locale to use when none is specified.
-     * @param userAgent The User-Agent header for HTTP requests.
-     * @param selfProvider Provider for self-injection to enable caching on internal calls.
-     */
+    
     public DataDragonService(HttpClient riotApiHttpClient,
                              @Value("${ddragon.default-locale:en_US}") String defaultLocale,
                              @Value("${app.user-agent:SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)}") String userAgent,
@@ -216,12 +189,7 @@ public class DataDragonService {
         return null;
     }
 
-    /**
-     * Retrieves a list of all available Data Dragon versions.
-     * The result is cached.
-     *
-     * @return A list of version strings, or an empty list on failure.
-     */
+    
     @Cacheable(cacheNames = "ddragonVersions", unless = "#result == null || #result.isEmpty()")
     public List<String> getAllVersions() {
         String url = DDRAGON_BASE + "/api/versions.json";
@@ -241,11 +209,7 @@ public class DataDragonService {
         return Collections.emptyList();
     }
 
-    /**
-     * Gets the latest Data Dragon version string.
-     *
-     * @return The latest version string (e.g., "14.1.1").
-     */
+    
     public String getLatestVersion() {
         List<String> versions = getAllVersions();
         if (!versions.isEmpty()) {
@@ -255,11 +219,7 @@ public class DataDragonService {
         return (lastKnownVersion != null && !lastKnownVersion.isBlank()) ? lastKnownVersion : "latest";
     }
 
-    /**
-     * Gets the latest patch version in a short format (e.g., "14.1").
-     *
-     * @return The latest short patch string.
-     */
+    
     public String getLatestShortPatch() {
         String v = getLatestVersion();
         // e.g., 15.18.1 -> 15.18
@@ -268,12 +228,7 @@ public class DataDragonService {
         return v;
     }
 
-    /**
-     * Resolves a Java {@code Locale} to a Data Dragon locale string.
-     *
-     * @param locale The locale to resolve.
-     * @return The corresponding Data Dragon locale string (e.g., "en_US").
-     */
+    
     public String resolveLocale(Locale locale) {
         if (locale == null) return defaultLocale;
         String lang = locale.toLanguageTag();
@@ -293,29 +248,14 @@ public class DataDragonService {
         return defaultLocale;
     }
 
-    /**
-     * Retrieves a list of summaries for all champions.
-     *
-     * @param locale The locale for champion names and titles.
-     * @return A list of {@code ChampionSummary} objects.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     public List<ChampionSummary> getChampionSummaries(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
         return self().getChampionSummariesCached(ver, loc);
     }
 
-    /**
-     * Retrieves a cached list of summaries for all champions for a specific version and locale.
-     *
-     * @param version The Data Dragon version.
-     * @param localeTag The Data Dragon locale string.
-     * @return A list of {@code ChampionSummary} objects.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     @Cacheable(cacheNames = "ddragonChampionList", key = "#version + '|' + #localeTag")
     public List<ChampionSummary> getChampionSummariesCached(String version, String localeTag) throws IOException, InterruptedException {
         String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/champion.json";
@@ -343,31 +283,14 @@ public class DataDragonService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Retrieves detailed information for a specific champion.
-     *
-     * @param championId The ID of the champion.
-     * @param locale The locale for the champion's data.
-     * @return A {@code ChampionDetail} object, or null if not found.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     public ChampionDetail getChampionDetail(String championId, Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
         return self().getChampionDetailCached(championId, ver, loc);
     }
 
-    /**
-     * Retrieves cached detailed information for a specific champion.
-     *
-     * @param championId The ID of the champion.
-     * @param version The Data Dragon version.
-     * @param localeTag The Data Dragon locale string.
-     * @return A {@code ChampionDetail} object, or null if not found.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     @Cacheable(cacheNames = "ddragonChampionDetail", key = "T(com.zerox80.riotapi.service.DataDragonService).safeLower(#championId) + '|' + #version + '|' + #localeTag")
     public ChampionDetail getChampionDetailCached(String championId, String version, String localeTag) throws IOException, InterruptedException {
         String cid = sanitizeChampionIdBasic(championId);
@@ -731,11 +654,7 @@ public class DataDragonService {
         return a.replace('-', '_').equalsIgnoreCase(b.replace('-', '_'));
     }
 
-    /**
-     * Best-effort render of a DDragon spell tooltip by replacing common placeholders
-     * like {{ e1 }}, {{ cooldown }}, {{ cost }}, and keys present in datavalues/vars.
-     * Unknown placeholders are removed to avoid leaking raw template tokens to the UI.
-     */
+    
     private String renderSpellTooltip(JsonNode spellNode) {
         return renderSpellTooltip(spellNode, Collections.emptyMap());
     }
@@ -1205,34 +1124,15 @@ public class DataDragonService {
         return map;
     }
 
-    /**
-     * Returns a map from champion numeric key (e.g., 34) to full champion square image URL.
-     * Uses the latest version and resolved locale.
-     */
-    /**
-     * Returns a map from champion numeric key (e.g., 34) to full champion square image URL.
-     * Uses the latest version and resolved locale.
-     *
-     * @param locale The locale for resolving champion data.
-     * @return A map of champion keys to their square image URLs.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
+    
     public Map<Integer, String> getChampionKeyToSquareUrl(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
         return self().getChampionKeyToSquareUrlCached(ver, loc);
     }
 
-    /**
-     * Retrieves a cached map of champion keys to their square image URLs.
-     *
-     * @param version The Data Dragon version.
-     * @param localeTag The Data Dragon locale string.
-     * @return A map of champion keys to image URLs.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     @Cacheable(cacheNames = "ddragonChampionList", key = "'keyToImg|' + #version + '|' + #localeTag")
     public Map<Integer, String> getChampionKeyToSquareUrlCached(String version, String localeTag) throws IOException, InterruptedException {
         String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/champion.json";
@@ -1314,10 +1214,7 @@ public class DataDragonService {
         return ddragonLocale.toLowerCase(Locale.ROOT).replace('-', '_');
     }
 
-    /**
-     * Last-resort hardcoded overrides for champions where neither CDragon nor DDragon
-     * exposes numeric values in public static JSON. Only used when tooltips still lack digits.
-     */
+    
     private void applyChampionSpecificTooltipOverrides(String championId, String ddragonLocale, List<SpellSummary> spells) {
         if (spells == null || spells.isEmpty()) return;
         String id = championId != null ? championId : "";
@@ -1395,30 +1292,14 @@ public class DataDragonService {
         }
     }
 
-    /**
-     * Returns the numeric champion key for a given DDragon champion id (e.g., Anivia -> 34).
-     */
+    
     public Integer getChampionKey(String championId, Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
         return self().getChampionKeyCached(championId, ver, loc);
     }
 
-    /**
-     * Resolves the canonical numeric champion key for a given identifier and caches the result.
-     *
-     * <p>The lookup sanitizes the caller-supplied {@code championId}, attempts to resolve a canonical
-     * identifier for the supplied patch {@code version} and {@code localeTag}, and falls back to scanning
-     * Data Dragon metadata if no exact match is found. Results are cached under the
-     * {@code ddragonChampionDetail} cache to avoid repeated static-data downloads.</p>
-     *
-     * @param championId The human-readable or numeric champion handle supplied by the caller
-     * @param version The Data Dragon version to scope the lookup to (for example, {@code 15.20.1})
-     * @param localeTag The locale identifier (for example, {@code en_US}) used to resolve localized datasets
-     * @return The numeric champion key when found, or {@code null} if the champion cannot be resolved
-     * @throws IOException If the static data cannot be downloaded or parsed
-     * @throws InterruptedException If the calling thread is interrupted while awaiting HTTP responses
-     */
+    
     @Cacheable(cacheNames = "ddragonChampionDetail", key = "'key-' + T(com.zerox80.riotapi.service.DataDragonService).safeLower(#championId) + '|' + #version + '|' + #localeTag")
     public Integer getChampionKeyCached(String championId, String version, String localeTag) throws IOException, InterruptedException {
         String cid = sanitizeChampionIdBasic(championId);
@@ -1466,13 +1347,7 @@ public class DataDragonService {
         return mapper.readTree(res2.body());
     }
 
-    /**
-     * Constructs a map of base URLs for various Data Dragon image assets.
-     * The result is cached.
-     *
-     * @param version The Data Dragon version. Can be null to use the latest.
-     * @return A map of image categories to their base URLs.
-     */
+    
     @Cacheable(cacheNames = "ddragonImageBases", key = "#version == null || #version.isBlank() ? 'latest' : #version")
     public Map<String, String> getImageBases(String version) {
         String requested = version;
@@ -1506,29 +1381,14 @@ public class DataDragonService {
         return map;
     }
 
-    /**
-     * Retrieves a map of all items.
-     *
-     * @param locale The locale for item names.
-     * @return A map of item IDs to {@code ItemSummary} objects.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     public Map<Integer, com.zerox80.riotapi.model.ItemSummary> getItems(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
         return self().getItemsCached(ver, loc);
     }
 
-    /**
-     * Retrieves a cached map of all items for a specific version and locale.
-     *
-     * @param version The Data Dragon version.
-     * @param localeTag The Data Dragon locale string.
-     * @return A map of item IDs to {@code ItemSummary} objects.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     @Cacheable(cacheNames = "ddragonItems", key = "#version + '|' + #localeTag")
     public Map<Integer, com.zerox80.riotapi.model.ItemSummary> getItemsCached(String version, String localeTag) throws IOException, InterruptedException {
         String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/item.json";
@@ -1546,29 +1406,14 @@ public class DataDragonService {
         return map;
     }
 
-    /**
-     * Retrieves a map of rune style IDs to their names.
-     *
-     * @param locale The locale for the rune style names.
-     * @return A map of rune style IDs to names.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     public Map<Integer, String> getRuneStyleNames(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
         return self().getRuneStyleNamesCached(ver, loc);
     }
 
-    /**
-     * Retrieves a cached map of rune style IDs to their names for a specific version and locale.
-     *
-     * @param version The Data Dragon version.
-     * @param localeTag The Data Dragon locale string.
-     * @return A map of rune style IDs to names.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     @Cacheable(cacheNames = "ddragonRunes", key = "#version + '|' + #localeTag")
     public Map<Integer, String> getRuneStyleNamesCached(String version, String localeTag) throws IOException, InterruptedException {
         Map<Integer, String> styleNames = new java.util.HashMap<>();
@@ -1580,29 +1425,14 @@ public class DataDragonService {
         return styleNames;
     }
 
-    /**
-     * Retrieves a map of rune perk IDs to their information.
-     *
-     * @param locale The locale for the rune perk names.
-     * @return A map of rune perk IDs to {@code RunePerkInfo} objects.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     public Map<Integer, com.zerox80.riotapi.model.RunePerkInfo> getRunePerkLookup(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
         return self().getRunePerkLookupCached(ver, loc);
     }
 
-    /**
-     * Retrieves a cached map of rune perk IDs to their information for a specific version and locale.
-     *
-     * @param version The Data Dragon version.
-     * @param localeTag The Data Dragon locale string.
-     * @return A map of rune perk IDs to {@code RunePerkInfo} objects.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     @Cacheable(cacheNames = "ddragonRunes", key = "'perks-' + #version + '|' + #localeTag")
     public Map<Integer, com.zerox80.riotapi.model.RunePerkInfo> getRunePerkLookupCached(String version, String localeTag) throws IOException, InterruptedException {
         Map<Integer, com.zerox80.riotapi.model.RunePerkInfo> map = new java.util.HashMap<>();
@@ -1624,29 +1454,14 @@ public class DataDragonService {
         return getJson(url);
     }
 
-    /**
-     * Retrieves a map of summoner spell IDs to their information.
-     *
-     * @param locale The locale for the summoner spell names.
-     * @return A map of summoner spell IDs to {@code SummonerSpellInfo} objects.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     public Map<Integer, com.zerox80.riotapi.model.SummonerSpellInfo> getSummonerSpells(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
         return self().getSummonerSpellsCached(ver, loc);
     }
 
-    /**
-     * Retrieves a cached map of summoner spell IDs to their information for a specific version and locale.
-     *
-     * @param version The Data Dragon version.
-     * @param localeTag The Data Dragon locale string.
-     * @return A map of summoner spell IDs to {@code SummonerSpellInfo} objects.
-     * @throws IOException If an I/O error occurs.
-     * @throws InterruptedException If the request is interrupted.
-     */
+    
     @Cacheable(cacheNames = "ddragonSummonerSpells", key = "#version + '|' + #localeTag")
     public Map<Integer, com.zerox80.riotapi.model.SummonerSpellInfo> getSummonerSpellsCached(String version, String localeTag) throws IOException, InterruptedException {
         String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/summoner.json";
@@ -1664,12 +1479,7 @@ public class DataDragonService {
         return map;
     }
 
-    /**
-     * Converts a string to lowercase safely, handling null input.
-     *
-     * @param value The string to convert.
-     * @return The lowercased string, or null if the input was null.
-     */
+    
     public static String safeLower(String value) {
         return value == null ? null : value.toLowerCase(Locale.ROOT);
     }

@@ -17,11 +17,7 @@ import {
 const instances = new WeakMap();
 const suggestionCache = new Map();
 
-/**
- * Initializes search dropdown functionality for a Riot ID input field
- * @param {HTMLInputElement} riotIdInput - The input element for Riot ID search
- * @returns {Function|null} Cleanup function to remove event listeners, or null if already initialized
- */
+
 export function initSearchDropdown() {
     const riotIdInput = document.querySelector(SELECTORS.RIOT_ID_INPUT);
     const suggestionsContainer = document.querySelector(SELECTORS.SUGGESTIONS_CONTAINER);
@@ -69,10 +65,7 @@ export function initSearchDropdown() {
         }
     };
 
-    /**
-     * Positions the suggestions dropdown relative to the search input
-     * @param {boolean} force - Force repositioning even if dropdown is not visible
-     */
+    
     // Lightweight positioning hook: we rely mostly on CSS but ensure hero section styling updates
     function positionDropdown(force = false) {
         if (!suggestionsContainer || !searchGroup) return;

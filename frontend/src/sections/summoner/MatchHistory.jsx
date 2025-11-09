@@ -1,27 +1,3 @@
-/**
- * Components for displaying and managing match history for summoners.
- *
- * <p>This module provides a comprehensive match history component that displays recent matches
- * with filtering capabilities, expandable match details, and performance statistics.
- * It supports filtering by queue type, match result, and role, as well as
- * detailed match information including team compositions, items, runes, and statistics.</p>
- *
- * <p>Features:</p>
- * <ul>
- *   <li>Interactive match cards with expand/collapse functionality</li>
- *   <li>Advanced filtering by queue, result, and role</li>
- *   <li>Detailed match statistics and team composition</li>
- *   <li>Champion, item, and rune display with fallback handling</li>
- *   <li>Load more functionality for pagination</li>
- *   <li>Keyboard navigation support</li>
- *   <li>Responsive design for all screen sizes</li>
- * </ul>
- *
- * @module sections/summoner/MatchHistory
- * @author zerox80
- * @version 2.0
- */
-
 import { useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import SegmentedControl from '../../components/SegmentedControl.jsx';
@@ -100,15 +76,6 @@ const ROLE_FILTER_OPTIONS = [
   { label: 'Support', value: 'UTILITY' }
 ];
 
-/**
- * Resolves the champion image URL from the provided data.
- *
- * @param {object} championSquares - A map of champion names to image URLs.
- * @param {string} championBase - The base URL for champion images.
- * @param {string} championName - The name of the champion.
- * @param {number} championId - The ID of the champion.
- * @returns {string|null} The champion image URL or null.
- */
 function resolveChampionImage(championSquares, championBase, championName, championId) {
   if (!championName) return null;
   const championByName = championSquares?.[championName];
@@ -118,14 +85,6 @@ function resolveChampionImage(championSquares, championBase, championName, champ
   return `${championBase}${championName}.png`;
 }
 
-/**
- * Applies filters to a list of matches.
- *
- * @param {Array<object>} matches - The list of matches to filter.
- * @param {object} summoner - The summoner object.
- * @param {object} filters - The filters to apply.
- * @returns {Array<object>} The filtered list of matches.
- */
 function applyFilters(matches, summoner, filters) {
   if (!Array.isArray(matches)) return [];
 
@@ -143,12 +102,6 @@ function applyFilters(matches, summoner, filters) {
   });
 }
 
-/**
- * Sorts team participants by role and performance.
- *
- * @param {Array<object>} participants - The list of participants to sort.
- * @returns {Array<object>} The sorted list of participants.
- */
 function sortTeamParticipants(participants = []) {
   return [...participants].sort((a, b) => {
     const roleDiff = (POSITION_ORDER[a.teamPosition] ?? 99) - (POSITION_ORDER[b.teamPosition] ?? 99);
@@ -159,13 +112,6 @@ function sortTeamParticipants(participants = []) {
   });
 }
 
-/**
- * Gets the asset information for a summoner spell.
- *
- * @param {number} spellId - The ID of the summoner spell.
- * @param {string} spellBase - The base URL for summoner spell images.
- * @returns {{src: string, name: string}|null} The spell asset or null.
- */
 function getSpellAsset(spellId, spellBase) {
   if (!spellId || !SUMMONER_SPELL_DATA[spellId]) return null;
   const { key, name } = SUMMONER_SPELL_DATA[spellId];
@@ -175,13 +121,6 @@ function getSpellAsset(spellId, spellBase) {
   };
 }
 
-/**
- * Gets the asset information for a keystone rune.
- *
- * @param {object} perks - The perks object for a participant.
- * @param {string} runeBase - The base URL for rune images.
- * @returns {{src: string, name: string}|null} The keystone asset or null.
- */
 function getKeystoneAsset(perks, runeBase) {
   const keystoneId = perks?.styles?.[0]?.selections?.[0]?.perk;
   const keystone = KEYSTONE_DATA[keystoneId];
@@ -194,23 +133,10 @@ function getKeystoneAsset(perks, runeBase) {
   };
 }
 
-/**
- * Sums a specific stat for a team.
- *
- * @param {Array<object>} participants - The list of participants in the team.
- * @param {Function} extractor - A function to extract the stat from a participant.
- * @returns {number} The sum of the stat.
- */
 function sumTeamStat(participants = [], extractor) {
   return participants.reduce((total, current) => total + (extractor(current) || 0), 0);
 }
 
-/**
- * Renders the match history section.
- *
- * @param {object} props - The component props.
- * @returns {React.ReactElement} The rendered component.
- */
 export default function MatchHistory({ matches, summoner, filters, onFiltersChange, fetchMore, hasMore, isFetchingMore, championSquares, bases }) {
   const filteredMatches = useMemo(() => applyFilters(matches, summoner, filters), [matches, summoner, filters]);
   const [expandedMatchId, setExpandedMatchId] = useState(null);

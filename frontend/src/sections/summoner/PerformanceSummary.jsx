@@ -1,25 +1,4 @@
-/**
- * Components for displaying summoner performance summary and insights.
- *
- * <p>This module provides a comprehensive performance summary component that displays
- * key statistics, trends, and insights about a summoner's recent match
- * performance. It includes win rates, KDA ratios, damage metrics, and
- * visual sparkline charts to show performance trends over time.</p>
- *
- * <p>Features:</p>
- * <ul>
- *   <li>Comprehensive performance metrics with trend visualization</li>
- *   <li>Filterable by match range and queue type</li>
- *   <li>Visual sparkline charts for performance trends</li>
- *   <li>Last match summary with detailed information</li>
- *   <li>Responsive grid layout for metric tiles</li>
- *   <li>Controlled and uncontrolled range selection</li>
- * </ul>
- *
- * @module sections/summoner/PerformanceSummary
- * @author zerox80
- * @version 2.0
- */
+
 
 import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -43,15 +22,7 @@ const QUEUE_OPTIONS = [
   { label: 'ARAM', value: '450' }
 ];
 
-/**
- * Builds a timeline of match data for sparkline charts.
- *
- * @param {Array<object>} matches - The list of matches.
- * @param {string} puuid - The PUUID of the summoner.
- * @param {string} queueFilter - The queue filter.
- * @param {string} rangeFilter - The range filter.
- * @returns {Array<object>} The timeline data.
- */
+
 function buildTimeline(matches, puuid, queueFilter, rangeFilter) {
   if (!Array.isArray(matches)) return [];
   const filtered = matches.filter((match) => {
@@ -76,12 +47,7 @@ function buildTimeline(matches, puuid, queueFilter, rangeFilter) {
     });
 }
 
-/**
- * Renders a summary of a summoner's performance.
- *
- * @param {object} props - The component props.
- * @returns {React.ReactElement} The rendered component.
- */
+
 export default function PerformanceSummary({ derived, matches, summoner, range = '40', onRangeChange }) {
   const [queue, setQueue] = useState('ALL');
   const [internalRange, setInternalRange] = useState(range || '40');

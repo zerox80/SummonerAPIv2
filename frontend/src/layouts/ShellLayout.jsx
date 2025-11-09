@@ -1,22 +1,4 @@
-/**
- * The main shell layout for the application.
- *
- * <p>This module provides the main layout structure for the application, including
- * the header, main content area, and footer. It also includes the primary
- * navigation and theme toggle button.</p>
- *
- * <p>Features:</p>
- * <ul>
- *   <li>Consistent layout across all pages</li>
- *   <li>Primary navigation with active link highlighting</li>
- *   <li>Includes brand mark and theme toggle</li>
- *   <li>Responsive design for different screen sizes</li>
- * </ul>
- *
- * @module layouts/ShellLayout
- * @author zerox80
- * @version 2.0
- */
+
 import PropTypes from 'prop-types';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
@@ -29,28 +11,7 @@ const NAV_LINKS = [
   { to: '/champions', label: 'Champions' }
 ];
 
-/**
- * Renders the main shell layout for the application, including the header, navigation, content area, and footer.
- *
- * <p>This component wraps the page content and provides a consistent structure
- * for the entire application. It includes the top navigation bar with links to
- * the main sections of the site, the brand mark, and the theme toggle button.
- * The main content of the current page is rendered as children of this component.</p>
- *
- * @component
- * @param {object} props - The component props.
- * @param {React.ReactNode} props.children - The page content to render within the layout.
- * @returns {React.ReactElement} The rendered shell layout component.
- *
- * @example
- * // In your router setup
- * <Routes>
- *   <Route element={<ShellLayout />}>
- *     <Route path="/" element={<SummonerPage />} />
- *     <Route path="/champions" element={<ChampionsPage />} />
- *   </Route>
- * </Routes>
- */
+
 export default function ShellLayout({ children }) {
   const location = useLocation();
   const activeLabel = useMemo(() => {

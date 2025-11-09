@@ -1,25 +1,4 @@
-/**
- * Component for searching and finding League of Legends summoners.
- *
- * <p>This module provides a comprehensive search panel component that allows users
- * to search for summoners by their Riot ID. It features real-time suggestions,
- * debounced input handling, rotating placeholder examples, and a clean
- * accessible interface with keyboard navigation support.</p>
- *
- * <p>Features:</p>
- * <ul>
- *   <li>Real-time search suggestions with debounced input</li>
- *   <li>Rotating placeholder examples</li>
- *   <li>Profile icon display for suggestions</li>
- *   <li>Keyboard navigation and accessibility support</li>
- *   <li>Responsive design with glass panel styling</li>
- *   <li>Auto-completion with mouse and keyboard selection</li>
- * </ul>
- *
- * @module sections/summoner/SearchPanel
- * @author zerox80
- * @version 2.0
- */
+
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -33,15 +12,7 @@ const PLACEHOLDER_IDS = [
   'G2 Caps#1323'
 ];
 
-/**
- * Renders a search panel for finding summoners.
- *
- * @param {object} props - The component props.
- * @param {Function} props.onSubmit - The callback function to call when the form is submitted.
- * @param {string} [props.initialValue=''] - The initial value of the search input.
- * @param {boolean} props.isLoading - Whether a search is currently in progress.
- * @returns {React.ReactElement} The rendered component.
- */
+
 export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) {
   const [input, setInput] = useState(initialValue);
   const [focused, setFocused] = useState(false);

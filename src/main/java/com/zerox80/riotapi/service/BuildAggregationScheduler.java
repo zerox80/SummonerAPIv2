@@ -10,21 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Scheduled service for running nightly champion build aggregations.
- *
- * <p>This service triggers the build aggregation process based on a cron schedule.
- * It is responsible for parsing configuration properties to determine which champions
- * to process and with what parameters.</p>
- *
- * <p>The scheduler can be enabled or disabled via configuration and supports
- * customization of the aggregation parameters such as queue ID, number of pages,
- * and matches per summoner.</p>
- *
- * @author zerox80
- * @version 2.0
- * @since 2.0
- */
+
 @Service
 public class BuildAggregationScheduler {
 
@@ -50,26 +36,12 @@ public class BuildAggregationScheduler {
     @Value("${build.agg.champions:}")
     private String championsCsv;
 
-    /**
-     * Constructs a new BuildAggregationScheduler with the required service dependency.
-     *
-     * @param agg The build aggregation service.
-     */
+    
     public BuildAggregationScheduler(BuildAggregationService agg) {
         this.agg = agg;
     }
 
-    /**
-     * Executes the configured nightly champion build aggregation workflow.
-     *
-     * <p>Triggered by {@link Scheduled} cron expression {@code ${build.agg.cron:0 15 3 * * *}},
-     * this method validates that the scheduler is enabled, parses the champion allow list,
-     * and invokes {@link BuildAggregationService#aggregateChampion(String, int, int, int, int, Locale)}
-     * for each entry with the configured queue, pagination, and sampling limits. The default
-     * schedule runs every day at 03:15 UTC but can be overridden via {@code build.agg.cron}.</p>
-     *
-     * @return Nothing; the method schedules aggregation side effects only
-     */
+    
     @Scheduled(cron = "${build.agg.cron:0 15 3 * * *}")
     public void runNightly() {
         if (!enabled) {

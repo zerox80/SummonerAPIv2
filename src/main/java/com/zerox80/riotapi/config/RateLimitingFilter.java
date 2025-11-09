@@ -22,87 +22,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Lightweight fixed-window IP-based rate limiter for selected endpoints.
- * 
- * <p>This filter provides configurable rate limiting based on client IP addresses
- * using a fixed time window approach. It supports proxy configurations for accurate
- * IP extraction, includes rate limit headers in responses, and provides metrics
- * for monitoring rate limiting activity.</p>
- * 
- * <p>Key features:</p>
- * <ul>
- *   <li>Fixed-window rate limiting with configurable time windows</li>
- *   <li>Ant-style path pattern matching for protected endpoints</li>
- *   <li>Proxy-aware client IP extraction with allowlist support</li>
- *   <li>Rate limit headers (X-RateLimit-*) in responses</li>
- *   <li>Metrics integration for monitoring</li>
- *   <li>Memory-efficient caching with size limits</li>
- * </ul>
- * 
- * <p>Configuration properties (prefix: rate.limit):</p>
- * <ul>
- *   <li>enabled - Enable/disable rate limiting (default: true)</li>
- *   <li>window-ms - Time window in milliseconds (default: 60000)</li>
- *   <li>max-requests - Max requests per window per IP (default: 60)</li>
- *   <li>paths - Ant-style path patterns to protect</li>
- *   <li>trust-proxy - Trust proxy headers for IP extraction</li>
- * </ul>
- * 
- * @author zerox80
- * @version 2.0
- * @since 2.0
- */
+
 @Component
 public class RateLimitingFilter extends OncePerRequestFilter {
 
-    /** Logger for rate limiting operations */
+    
     private static final Logger logger = LoggerFactory.getLogger(RateLimitingFilter.class);
 
-    /**
-     * Internal class representing a rate limiting time window.
-     * 
-     * <p>This immutable-like structure tracks the start time of a window
-     * and the number of requests made within that window. Volatile fields
-     * ensure visibility across threads without synchronization overhead.</p>
-     */
+    
     private static final class Window {
-        /** Start time of the window in milliseconds */
+        
         volatile long startMs;
-        /** Number of requests made in this window */
+        
         volatile int count;
         
-        /**
-         * Constructs a new Window with the specified start time and count.
-         * 
-         * @param startMs The start time of the window in milliseconds
-         * @param count The number of requests in the window
-         */
+        
         Window(long startMs, int count) { this.startMs = startMs; this.count = count; }
     }
 
-    /** Cache for storing rate limiting windows by client IP */
+    
     private Cache<String, Window> windowsCache;
 
-    /** Configuration properties for rate limiting */
+    
     private final RateLimitProperties properties;
-    /** Metrics registry for rate limiting monitoring */
+    
     private final MeterRegistry meterRegistry;
 
-    /** Compiled list of path patterns to protect */
+    
     private List<String> pathPatterns;
-    /** Path matcher for Ant-style pattern matching */
+    
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    /**
-     * Constructs a new RateLimitingFilter with the specified dependencies.
-     * 
-     * <p>This constructor uses ObjectProvider to handle optional dependencies
-     * gracefully, providing sensible defaults when dependencies are not available.</p>
-     * 
-     * @param properties Provider for rate limit configuration properties
-     * @param meterRegistry Provider for metrics registry (optional)
-     */
+    
     public RateLimitingFilter(ObjectProvider<RateLimitProperties> properties, ObjectProvider<MeterRegistry> meterRegistry) {
         RateLimitProperties provided = properties.getIfAvailable();
         if (provided != null) {
@@ -116,14 +67,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         this.meterRegistry = meterRegistry.getIfAvailable(SimpleMeterRegistry::new);
     }
 
-    /**
-     * Initializes the rate limiting filter after dependency injection is complete.
-     * 
-     * <p>This method sets up the Caffeine cache for storing rate limiting windows,
-     * processes the path patterns, and logs the configuration for debugging purposes.
-     * The cache is configured with expiration based on the window size and a maximum
-     * size limit to prevent memory exhaustion.</p>
-     */
+    
     @PostConstruct
     void init() {
         // Initialize cache with eviction based on the configured window size; cap maximum distinct IP windows
@@ -142,16 +86,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
                 properties.getCacheMaxIps(), properties.isIncludeHeaders(), pathPatterns);
     }
 
-    /**
-     * Checks if the current request path matches any of the protected path patterns.
-     * 
-     * <p>This method uses Ant-style pattern matching to determine if rate limiting
-     * should be applied to the current request. It iterates through all configured
-     * patterns and returns true if any pattern matches the request URI.</p>
-     * 
-     * @param request The HTTP request to check
-     * @return true if the request path should be rate limited, false otherwise
-     */
+    
     private boolean isRateLimitedPath(HttpServletRequest request) {
         String path = request.getRequestURI();
         for (String pattern : pathPatterns) {
@@ -162,17 +97,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return false;
     }
 
-    /**
-     * Extracts a clean IP address from a header value.
-     * 
-     * <p>This method parses various IP address formats including IPv4, IPv6 (with
-     * and without brackets), and IPv4 with port numbers. It removes quotes and
-     * extracts only the IP portion, handling the complexity of different proxy
-     * header formats.</p>
-     * 
-     * @param val The raw header value containing the IP address
-     * @return The extracted IP address, or null if parsing fails
-     */
+    
     private String extractIp(String val) {
         if (val == null) {
             return null;
@@ -196,18 +121,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return v;
     }
 
-    /**
-     * Extracts the client IP address from the HTTP request.
-     * 
-     * <p>This method implements proxy-aware IP extraction that respects the configured
-     * trusted proxy settings. It supports both the RFC 7239 Forwarded header and the
-     * X-Forwarded-For header for determining the original client IP when requests
-     * pass through proxies. If proxy headers are not trusted, it returns the remote
-     * address directly.</p>
-     * 
-     * @param request The HTTP request to extract the IP from
-     * @return The client IP address, or the remote address if proxy headers are not trusted
-     */
+    
     private String clientIp(HttpServletRequest request) {
         if (!properties.isTrustProxy()) {
             return request.getRemoteAddr();
@@ -250,16 +164,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return request.getRemoteAddr();
     }
 
-    /**
-     * Checks if the given remote address is in the list of allowed trusted proxies.
-     * 
-     * <p>This method validates that the current remote address is a trusted proxy
-     * before honoring proxy headers for client IP extraction. This prevents IP spoofing
-     * attacks where malicious clients could forge proxy headers.</p>
-     * 
-     * @param remoteAddr The remote address to check against the allowlist
-     * @return true if the address is a trusted proxy, false otherwise
-     */
+    
     private boolean isAllowedProxy(String remoteAddr) {
         try {
             for (String allowed : properties.getAllowedProxies()) {
@@ -271,20 +176,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return false;
     }
 
-    /**
-     * Filters HTTP requests to apply rate limiting to protected endpoints.
-     * 
-     * <p>This method implements the core rate limiting logic. It checks if the request
-     * path should be rate limited, extracts the client IP, tracks request counts within
-     * the time window, and either allows the request to proceed or returns a 429 Too Many
-     * Requests response with appropriate headers.</p>
-     * 
-     * @param request The HTTP request being processed
-     * @param response The HTTP response being generated
-     * @param filterChain The filter chain for processing the request
-     * @throws ServletException If a servlet error occurs
-     * @throws IOException If an I/O error occurs
-     */
+    
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

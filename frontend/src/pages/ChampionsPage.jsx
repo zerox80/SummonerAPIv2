@@ -1,26 +1,4 @@
-/**
- * Page component for browsing and filtering champions.
- *
- * <p>This module provides a comprehensive champions browsing page that displays
- * all available champions in a filterable grid layout. Users can search
- * by name, filter by role, and sort alphabetically or by role.
- * Each champion card links to detailed champion information.</p>
- *
- * <p>Features:</p>
- * <ul>
- *   <li>Real-time search functionality</li>
- *   <li>Role-based filtering (Assassin, Fighter, Mage, etc.)</li>
- *   <li>Alphabetical and role-based sorting</li>
- *   <li>Visual champion cards with images and tags</li>
- *   <li>Responsive grid layout</li>
- *   <li>Filter chip display showing active filters</li>
- *   <li>Loading and error state handling</li>
- * </ul>
- *
- * @module pages/ChampionsPage
- * @author zerox80
- * @version 2.0
- */
+
 
 import { Link } from 'react-router-dom';
 import { useChampions } from '../hooks/useChampions.js';
@@ -42,11 +20,7 @@ const SORT_OPTIONS = [
   { label: 'Role', value: 'roles' }
 ];
 
-/**
- * Renders the champions page, which displays a filterable list of champions.
- *
- * @returns {React.ReactElement} The rendered component.
- */
+
 export default function ChampionsPage() {
   const {
     champions,
