@@ -557,8 +557,8 @@
 
 .match-player-row {
   display: grid;
-  grid-template-columns: minmax(0, 2.35fr) minmax(120px, 0.75fr) minmax(110px, 0.75fr) minmax(88px, 0.6fr) minmax(0, 2.4fr);
-  gap: clamp(0.6rem, 1.4vw, 0.85rem);
+  grid-template-columns: minmax(240px, 2.2fr) minmax(128px, 0.8fr) minmax(120px, 0.75fr) minmax(88px, 0.6fr) minmax(260px, 2.4fr);
+  gap: clamp(0.65rem, 1.6vw, 0.95rem);
   align-items: center;
   padding: clamp(0.78rem, 2vw, 0.95rem) clamp(0.75rem, 1.8vw, 0.95rem);
   border-radius: var(--radius-md);
@@ -672,7 +672,7 @@
 
 .match-player-row__items {
   display: flex;
-  gap: clamp(0.35rem, 1.4vw, 0.55rem);
+  gap: clamp(0.35rem, 1.1vw, 0.5rem);
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
