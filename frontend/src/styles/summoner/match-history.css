@@ -557,10 +557,10 @@
 
 .match-player-row {
   display: grid;
-  grid-template-columns: minmax(0, 2.1fr) minmax(120px, 0.85fr) minmax(130px, 0.8fr) minmax(90px, 0.6fr) minmax(0, 1.9fr);
-  gap: clamp(0.8rem, 2.2vw, 1.4rem);
+  grid-template-columns: minmax(0, 1.85fr) auto auto auto minmax(0, 1.55fr);
+  gap: clamp(0.75rem, 2vw, 1.15rem);
   align-items: center;
-  padding: clamp(0.8rem, 2.2vw, 1rem) clamp(0.75rem, 2.2vw, 1rem);
+  padding: clamp(0.8rem, 2.2vw, 1rem) clamp(0.75rem, 2vw, 1rem);
   border-radius: var(--radius-md);
   transition: background var(--duration-base) ease, transform var(--duration-base) ease;
   border: 1px solid transparent;
@@ -609,7 +609,7 @@
   display: flex;
   gap: 0.45rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .match-player-row__spell {
@@ -666,7 +666,7 @@
 
 .match-player-row__items {
   display: flex;
-  gap: 0.45rem;
+  gap: clamp(0.4rem, 1.6vw, 0.6rem);
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
