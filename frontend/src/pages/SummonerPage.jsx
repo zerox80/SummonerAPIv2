@@ -12,9 +12,45 @@ import MatchHistory from '../sections/summoner/MatchHistory.jsx';
 import '../styles/page-summoner.css';
 
 /**
- * Renders the summoner page, which displays a summoner's profile, stats, and match history.
- *
- * @returns {React.ReactElement} The rendered component.
+ * Main summoner page component that displays comprehensive summoner profile and match data.
+ * 
+ * <p>This component serves as the primary interface for viewing summoner information,
+ * including ranked statistics, performance metrics, champion preferences, and detailed match history.
+ * It provides search functionality, filtering options, and pagination for match data.</p>
+ * 
+ * <p>Key features:</p>
+ * <ul>
+ *   <li>Summoner search with Riot ID (GameName#TagLine format)</li>
+ *   <li>Profile data caching with 60-second stale time</li>
+ *   <li>Comprehensive performance statistics calculation</li>
+ *   <li>Match history with pagination and filtering</li>
+ *   <li>Ranked overview with league entry display</li>
+ *   <li>Top champions analysis based on match data</li>
+ *   <li>Queue and result filtering for match history</li>
+ *   <li>Responsive grid layout with sidebar and main content</li>
+ * </ul>
+ * 
+ * <p>Data flow:</p>
+ * <ul>
+ *   <li>Fetches initial profile data including first page of matches</li>
+ *   <li>Calculates derived statistics from match data</li>
+ *   <li>Supports infinite scroll pagination for additional matches</li>
+ *   <li>Auto-loads matches based on range selection</li>
+ * </ul>
+ * 
+ * @component SummonerPage
+ * @author zerox80
+ * @version 2.0
+ * @since 2.0
+ * 
+ * @example
+ * // Basic usage - component handles routing and data fetching internally
+ * <SummonerPage />
+ * 
+ * @example
+ * // With custom search parameter in URL
+ * // /summoner?riotId=HideonBush#KR1
+ * // Component will automatically load and display the summoner data
  */
 export default function SummonerPage() {
   const queryClient = useQueryClient();
@@ -26,6 +62,10 @@ export default function SummonerPage() {
   const [hasMoreMatches, setHasMoreMatches] = useState(false);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
+  /**
+   * Fetches summoner profile data including match history.
+   * Uses React Query for caching with 60-second stale time.
+   */
   const profileQuery = useQuery({
     queryKey: ['profile', riotIdParam],
     queryFn: () => api.profile({ riotId: riotIdParam, includeMatches: true }),
@@ -33,6 +73,10 @@ export default function SummonerPage() {
     staleTime: 60_000
   });
 
+  /**
+   * Initializes matches state when profile data is loaded.
+   * Sets up initial match history and pagination state.
+   */
   useEffect(() => {
     if (profileQuery.data?.matchHistory) {
       const initialMatches = profileQuery.data.matchHistory;
@@ -46,14 +90,29 @@ export default function SummonerPage() {
     }
   }, [profileQuery.data]);
 
+  /**
+   * Handles form submission for summoner search.
+   * Updates URL search parameter with new Riot ID.
+   * 
+   * @param {string} riotId - The Riot ID to search for
+   */
   const handleSubmitRiotId = (riotId) => {
     if (riotId && riotId !== riotIdParam) {
       setSearchParams({ riotId });
     }
   };
 
+  /**
+   * Resolved Riot ID from profile data or URL parameter.
+   * Uses profile data Riot ID if available, falls back to URL parameter.
+   */
   const riotIdResolved = profileQuery.data?.riotId || riotIdParam;
 
+  /**
+   * Calculates derived statistics from match data.
+   * Computes comprehensive performance metrics including wins, losses, KDA ratios,
+   * and various averages across all matches.
+   */
   const derived = useMemo(() => {
     if (!profileQuery.data || matches.length === 0) {
       return {
@@ -85,6 +144,11 @@ export default function SummonerPage() {
     let damage = 0;
     let vision = 0;
     let killParticipation = 0;
+    
+    /**
+     * Processes each match to calculate statistics.
+     * Extracts participant data and accumulates performance metrics.
+     */
     filteredMatches.forEach((match) => {
       const { info } = match;
       if (!info || !info.participants) return;
@@ -111,6 +175,7 @@ export default function SummonerPage() {
         }
       }
     });
+    
     const totalGames = wins + losses;
     const kdaRatio = deaths === 0 ? 'Perfect' : ((kills + assists) / Math.max(deaths, 1)).toFixed(2);
     const avgCsPerMin = totalGames === 0 || durationSeconds === 0 ? 0 : (cs / (durationSeconds / 60)).toFixed(1);
@@ -135,6 +200,10 @@ export default function SummonerPage() {
     };
   }, [matches, profileQuery.data, range]);
 
+  /**
+   * Handles loading additional matches via pagination.
+   * Fetches next page of match data and appends to existing matches.
+   */
   const handleLoadMore = async () => {
     if (!riotIdResolved || isFetchingMore || !hasMoreMatches) return;
     setIsFetchingMore(true);
@@ -155,10 +224,20 @@ export default function SummonerPage() {
     }
   };
 
+  /**
+   * Handles range selection for match history display.
+   * Updates the range state and triggers auto-loading of matches.
+   * 
+   * @param {string} newRange - The new range value ('40', '100', 'all')
+   */
   const handleRangeChange = (newRange) => {
     setRange(newRange);
   };
 
+  /**
+   * Cleans up queries when no summoner is selected.
+   * Removes profile queries and resets match state.
+   */
   useEffect(() => {
     setHasMoreMatches(false);
     if (!riotIdParam) {
@@ -167,6 +246,10 @@ export default function SummonerPage() {
     }
   }, [queryClient, riotIdParam]);
 
+  /**
+   * Auto-loads matches based on range selection.
+   * Implements infinite scroll behavior by loading matches to meet range target.
+   */
   useEffect(() => {
     const autoLoadMatches = async () => {
       if (!riotIdResolved || isFetchingMore) return;

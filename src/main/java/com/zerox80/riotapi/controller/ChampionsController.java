@@ -23,7 +23,7 @@ import java.time.Duration;
  * 
  * <p>This controller provides endpoints for retrieving champion data from Data Dragon,
  * including champion summaries and detailed champion information. It serves as the
- * backend for the champion browser and build statistics features.</p>
+ * backend for champion browser and build statistics features.</p>
  * 
  * <p>Endpoints provided:</p>
  * <ul>
@@ -51,7 +51,7 @@ public class ChampionsController {
     private static final Logger log = LoggerFactory.getLogger(ChampionsController.class);
 
     /**
-     * Constructs a new ChampionsController with the required dependencies.
+     * Constructs a new ChampionsController with required dependencies.
      * 
      * @param dataDragonService Service for accessing Data Dragon champion data
      */
@@ -66,8 +66,8 @@ public class ChampionsController {
      * to improve performance and reduce Data Dragon API calls.</p>
      * 
      * @param localeParam Optional locale parameter to override request locale (e.g., 'en_US', 'de_DE')
-     * @param locale The locale from the request headers
-     * @return ResponseEntity containing the list of champion summaries
+     * @param locale The locale from request headers
+     * @return ResponseEntity containing list of champion summaries
      * @throws Exception If Data Dragon service fails, returns empty list as fallback
      */
     @GetMapping("/api/champions")
@@ -94,8 +94,8 @@ public class ChampionsController {
      * 
      * @param id The champion ID or key (e.g., 'Ahri', '1')
      * @param localeParam Optional locale parameter to override request locale
-     * @param locale The locale from the request headers
-     * @return ResponseEntity containing the detailed champion information
+     * @param locale The locale from request headers
+     * @return ResponseEntity containing detailed champion information
      * @throws Exception If champion is not found or service fails, returns 404
      */
     @GetMapping("/api/champions/{id}")
@@ -113,6 +113,18 @@ public class ChampionsController {
         }
     }
 
+    /**
+     * Resolves locale override from request parameter with fallback to request locale.
+     * 
+     * <p>This method attempts to parse the locale parameter string into a Locale object.
+     * If the parameter is missing, blank, or invalid, it falls back to the locale
+     * derived from the request headers. This allows clients to override the locale
+     * while maintaining sensible defaults.</p>
+     * 
+     * @param localeParam The locale parameter from request (e.g., 'en_US', 'de_DE')
+     * @param fallback The fallback locale from request headers
+     * @return The resolved Locale object, or fallback if parsing fails
+     */
     private Locale resolveLocaleOverride(String localeParam, Locale fallback) {
         if (localeParam == null || localeParam.isBlank()) {
             return fallback;
