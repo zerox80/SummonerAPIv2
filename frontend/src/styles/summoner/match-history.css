@@ -557,10 +557,10 @@
 
 .match-player-row {
   display: grid;
-  grid-template-columns: minmax(0, 2.1fr) minmax(118px, 1fr) minmax(110px, 0.9fr) minmax(88px, 0.7fr) minmax(0, 1.8fr);
-  gap: clamp(0.65rem, 1.8vw, 1rem);
+  grid-template-columns: minmax(0, 1.9fr) minmax(128px, 0.9fr) minmax(110px, 0.75fr) minmax(90px, 0.65fr) minmax(0, 2fr);
+  gap: clamp(0.7rem, 1.6vw, 0.95rem);
   align-items: center;
-  padding: clamp(0.78rem, 2vw, 0.95rem) clamp(0.75rem, 2vw, 1rem);
+  padding: clamp(0.78rem, 2vw, 0.95rem) clamp(0.75rem, 1.8vw, 0.95rem);
   border-radius: var(--radius-md);
   transition: background var(--duration-base) ease, transform var(--duration-base) ease;
   border: 1px solid transparent;
@@ -669,14 +669,15 @@
 .match-player-row__items {
   display: flex;
   gap: clamp(0.35rem, 1.4vw, 0.55rem);
-  flex-wrap: nowrap;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   align-items: center;
+  max-width: 100%;
 }
 
 .match-player-row__item {
-  width: clamp(40px, 2.6vw, 48px);
-  height: clamp(40px, 2.6vw, 48px);
+  width: clamp(40px, 2.5vw, 46px);
+  height: clamp(40px, 2.5vw, 46px);
   border-radius: 11px;
   border: 1px solid rgba(148, 163, 184, 0.25);
   background: rgba(15, 23, 42, 0.6);
