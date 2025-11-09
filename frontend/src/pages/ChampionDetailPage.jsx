@@ -34,11 +34,11 @@ const BUILD_VIEW_OPTIONS = [
   { label: 'Summoners', value: 'spells' }
 ];
 
-const QUICK_NAV_ITEMS = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'builds', label: 'Builds' },
-  { id: 'abilities', label: 'Abilities' },
-  { id: 'lore', label: 'Lore' }
+const TAB_OPTIONS = [
+  { id: 'overview', label: 'Overview', icon: '📊' },
+  { id: 'builds', label: 'Builds', icon: '⚔️' },
+  { id: 'abilities', label: 'Abilities', icon: '✨' },
+  { id: 'lore', label: 'Lore', icon: '📖' }
 ];
 
 const IMAGE_BASE = 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/';
@@ -110,6 +110,7 @@ export default function ChampionDetailPage() {
   const [role, setRole] = useState('ALL');
   const [queue, setQueue] = useState('420');
   const [buildView, setBuildView] = useState('items');
+  const [activeTab, setActiveTab] = useState('overview');
   const [loreExpanded, setLoreExpanded] = useState(false);
   const queueId = Number(queue);
   const normalizedId = (id || '').toLowerCase();
@@ -235,150 +236,170 @@ export default function ChampionDetailPage() {
         )}
       />
 
-      <nav className="champion-detail__quick-nav glass-panel" aria-label="Champion sections">
-        {QUICK_NAV_ITEMS.map((item) => (
-          <button key={item.id} type="button" onClick={() => handleQuickNav(item.id)}>
-            {item.label}
+      <nav className="champion-detail__tab-nav glass-panel" aria-label="Champion sections">
+        {TAB_OPTIONS.map((tab) => (
+          <button 
+            key={tab.id} 
+            type="button" 
+            className={`champion-detail__tab-button ${activeTab === tab.id ? 'is-active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <span className="champion-detail__tab-icon">{tab.icon}</span>
+            <span className="champion-detail__tab-label">{tab.label}</span>
           </button>
         ))}
       </nav>
 
-      <section id="overview" className="champion-detail__overview glass-panel">
-        <div className="champion-detail__overview-top">
-          {champion.blurb && (
-            <p className="champion-detail__overview-blurb">{champion.blurb}</p>
-          )}
-          <div className="champion-detail__insights">
-            {quickInsights.map((insight) => (
-              <article key={insight.label} className="champion-detail__insight">
-                <p className="champion-detail__insight-label">{insight.label}</p>
-                <p className="champion-detail__insight-value">{insight.value}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-        {statScores.length > 0 && (
-          <div className="champion-detail__stat-grid">
-            {statScores.map((stat) => (
-              <div key={stat.label} className="champion-detail__stat-card">
-                <div className="champion-detail__stat-header">
-                  <span>{stat.label}</span>
-                  <span>{stat.value}/10</span>
+      <div className="champion-detail__content-area">
+        {activeTab === 'overview' && (
+          <div className="champion-detail__tab-content">
+            <div className="champion-detail__compact-layout">
+              <section className="champion-detail__overview glass-panel">
+                <div className="champion-detail__overview-top">
+                  {champion.blurb && (
+                    <p className="champion-detail__overview-blurb">{champion.blurb}</p>
+                  )}
+                  <div className="champion-detail__insights">
+                    {quickInsights.map((insight) => (
+                      <article key={insight.label} className="champion-detail__insight">
+                        <p className="champion-detail__insight-label">{insight.label}</p>
+                        <p className="champion-detail__insight-value">{insight.value}</p>
+                      </article>
+                    ))}
+                  </div>
                 </div>
-                <div className="champion-detail__stat-bar">
-                  <span className="champion-detail__stat-bar-fill" style={{ '--fill': `${stat.percent}%` }} />
-                </div>
-              </div>
-            ))}
+                {statScores.length > 0 && (
+                  <div className="champion-detail__stat-grid">
+                    {statScores.map((stat) => (
+                      <div key={stat.label} className="champion-detail__stat-card">
+                        <div className="champion-detail__stat-header">
+                          <span>{stat.label}</span>
+                          <span>{stat.value}/10</span>
+                        </div>
+                        <div className="champion-detail__stat-bar">
+                          <span className="champion-detail__stat-bar-fill" style={{ '--fill': `${stat.percent}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              {baseStats.length > 0 && (
+                <section className="champion-detail__section">
+                  <div className="champion-detail__section-header glass-panel">
+                    <div>
+                      <p className="champion-detail__section-eyebrow">Vitals</p>
+                      <h3>Base Stats</h3>
+                    </div>
+                  </div>
+                  <div className="champion-detail__stats glass-panel">
+                    <dl className="champion-detail__stats-grid">
+                      {baseStats.map((entry) => (
+                        <div key={entry.label} className="champion-detail__stat-item">
+                          <dt>{entry.label}</dt>
+                          <dd>{entry.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </section>
+              )}
+            </div>
           </div>
         )}
-      </section>
 
-      <div className="champion-detail__layout">
-        <div className="champion-detail__main-column">
-          <section id="builds" className="champion-detail__section">
-            <div className="champion-detail__section-header glass-panel">
-              <div>
-                <p className="champion-detail__section-eyebrow">Meta Insights</p>
-                <h3>Optimal Recommendations</h3>
-              </div>
-              <SegmentedControl options={BUILD_VIEW_OPTIONS} value={buildView} onChange={setBuildView} size="sm" />
-            </div>
-            <div className="champion-detail__build-content">
-              {buildView === 'items' && (
-                <BuildItemsTable
-                  title="Most Popular Items"
-                  items={build?.items}
-                  loading={buildQuery.isLoading}
-                  meta={buildMeta}
-                />
-              )}
-              {buildView === 'runes' && (
-                <BuildRunesTable
-                  title="Rune Preferences"
-                  runes={build?.runes}
-                  loading={buildQuery.isLoading}
-                  meta={buildMeta}
-                />
-              )}
-              {buildView === 'spells' && (
-                <BuildSummonerSpellsTable
-                  title="Summoner Spells"
-                  spells={build?.spells}
-                  loading={buildQuery.isLoading}
-                  meta={buildMeta}
-                />
-              )}
-            </div>
-          </section>
-
-          {curatedBuild && (
+        {activeTab === 'builds' && (
+          <div className="champion-detail__tab-content">
             <section className="champion-detail__section">
               <div className="champion-detail__section-header glass-panel">
                 <div>
-                  <p className="champion-detail__section-eyebrow">Expert Path</p>
-                  <h3>{curatedBuild.title}</h3>
+                  <p className="champion-detail__section-eyebrow">Meta Insights</p>
+                  <h3>Optimal Recommendations</h3>
+                </div>
+                <SegmentedControl options={BUILD_VIEW_OPTIONS} value={buildView} onChange={setBuildView} size="sm" />
+              </div>
+              <div className="champion-detail__build-content">
+                {buildView === 'items' && (
+                  <BuildItemsTable
+                    title="Most Popular Items"
+                    items={build?.items}
+                    loading={buildQuery.isLoading}
+                    meta={buildMeta}
+                  />
+                )}
+                {buildView === 'runes' && (
+                  <BuildRunesTable
+                    title="Rune Preferences"
+                    runes={build?.runes}
+                    loading={buildQuery.isLoading}
+                    meta={buildMeta}
+                  />
+                )}
+                {buildView === 'spells' && (
+                  <BuildSummonerSpellsTable
+                    title="Summoner Spells"
+                    spells={build?.spells}
+                    loading={buildQuery.isLoading}
+                    meta={buildMeta}
+                  />
+                )}
+              </div>
+            </section>
+
+            {curatedBuild && (
+              <section className="champion-detail__section">
+                <div className="champion-detail__section-header glass-panel">
+                  <div>
+                    <p className="champion-detail__section-eyebrow">Expert Path</p>
+                    <h3>{curatedBuild.title}</h3>
+                  </div>
+                </div>
+                <CuratedItemGroups title={null} groups={curatedBuild.groups} />
+              </section>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'abilities' && (
+          <div className="champion-detail__tab-content">
+            <section className="champion-detail__section champion-detail__abilities">
+              <div className="champion-detail__section-header glass-panel">
+                <div>
+                  <p className="champion-detail__section-eyebrow">Kit Primer</p>
+                  <h3>Ability Overview</h3>
                 </div>
               </div>
-              <CuratedItemGroups title={null} groups={curatedBuild.groups} />
+              <AbilityList passive={abilities.passive} spells={abilities.spells} showHeader={false} />
             </section>
-          )}
+          </div>
+        )}
 
-          <section id="lore" className="champion-detail__section">
-            <div className="champion-detail__section-header glass-panel">
-              <div>
-                <p className="champion-detail__section-eyebrow">Story</p>
-                <h3>Lore</h3>
-              </div>
-            </div>
-            <div className="champion-detail__lore glass-panel">
-              <p className={`champion-detail__lore-text${shouldClampLore && !loreExpanded ? ' is-clamped' : ''}`}>{champion.lore}</p>
-              {shouldClampLore && (
-                <button
-                  type="button"
-                  className="champion-detail__lore-toggle"
-                  onClick={() => setLoreExpanded((prev) => !prev)}
-                  aria-expanded={loreExpanded}
-                >
-                  {loreExpanded ? 'Show less' : 'Show more'}
-                </button>
-              )}
-            </div>
-          </section>
-        </div>
-
-        <div className="champion-detail__sidebar">
-          <section id="abilities" className="champion-detail__section champion-detail__abilities">
-            <div className="champion-detail__section-header glass-panel">
-              <div>
-                <p className="champion-detail__section-eyebrow">Kit Primer</p>
-                <h3>Ability Overview</h3>
-              </div>
-            </div>
-            <AbilityList passive={abilities.passive} spells={abilities.spells} showHeader={false} />
-          </section>
-
-          {baseStats.length > 0 && (
+        {activeTab === 'lore' && (
+          <div className="champion-detail__tab-content">
             <section className="champion-detail__section">
               <div className="champion-detail__section-header glass-panel">
                 <div>
-                  <p className="champion-detail__section-eyebrow">Vitals</p>
-                  <h3>Base Stats</h3>
+                  <p className="champion-detail__section-eyebrow">Story</p>
+                  <h3>Lore</h3>
                 </div>
               </div>
-              <div className="champion-detail__stats glass-panel">
-                <dl className="champion-detail__stats-grid">
-                  {baseStats.map((entry) => (
-                    <div key={entry.label} className="champion-detail__stat-item">
-                      <dt>{entry.label}</dt>
-                      <dd>{entry.value}</dd>
-                    </div>
-                  ))}
-                </dl>
+              <div className="champion-detail__lore glass-panel">
+                <p className={`champion-detail__lore-text${shouldClampLore && !loreExpanded ? ' is-clamped' : ''}`}>{champion.lore}</p>
+                {shouldClampLore && (
+                  <button
+                    type="button"
+                    className="champion-detail__lore-toggle"
+                    onClick={() => setLoreExpanded((prev) => !prev)}
+                    aria-expanded={loreExpanded}
+                  >
+                    {loreExpanded ? 'Show less' : 'Show more'}
+                  </button>
+                )}
               </div>
             </section>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
