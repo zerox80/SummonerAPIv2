@@ -11,11 +11,15 @@
 .champion-detail-page::before {
   content: '';
   position: absolute;
-  inset: -20% -30% auto;
+  top: clamp(-180px, -18vw, -60px);
+  left: 50%;
+  width: clamp(420px, 90vw, 960px);
   height: clamp(300px, 35vw, 480px);
+  translate: -50% 0;
   background: radial-gradient(circle at 25% 20%, rgba(99, 102, 241, 0.32), rgba(30, 41, 109, 0));
   filter: blur(14px);
   z-index: -2;
+  pointer-events: none;
 }
 
 .champion-detail__control-groups {

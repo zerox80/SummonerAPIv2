@@ -4,6 +4,7 @@
   gap: clamp(2rem, 5vw, 3.25rem);
   padding-bottom: clamp(3rem, 6vw, 4rem);
   z-index: 0;
+  overflow: hidden;
 }
 
 .champions-page::before {
@@ -29,7 +30,11 @@
 .champions-hero::before {
   content: '';
   position: absolute;
-  inset: -40% -20% 30%;
+  top: clamp(-240px, -22vw, -80px);
+  left: 50%;
+  width: clamp(480px, 110vw, 1040px);
+  height: clamp(420px, 60vw, 760px);
+  translate: -50% 0;
   background: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.55), transparent 65%);
   opacity: 0.6;
   z-index: 0;
