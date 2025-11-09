@@ -487,7 +487,7 @@
 .match-card__scoreboard {
   display: grid;
   gap: clamp(1rem, 3vw, 1.4rem);
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
   align-items: stretch;
   padding-bottom: 0;
 }
@@ -557,7 +557,8 @@
 
 .match-player-row {
   display: grid;
-  grid-template-columns: minmax(240px, 2.2fr) minmax(128px, 0.8fr) minmax(120px, 0.75fr) minmax(88px, 0.6fr) minmax(260px, 2.4fr);
+  grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(64px, 0.8fr) minmax(0, 2.2fr);
+  grid-template-areas: "champ spells kda cs items";
   gap: clamp(0.65rem, 1.6vw, 0.95rem);
   align-items: center;
   padding: clamp(0.78rem, 2vw, 0.95rem) clamp(0.75rem, 1.8vw, 0.95rem);
@@ -581,6 +582,7 @@
   align-items: center;
   gap: 0.85rem;
   min-width: 0;
+  grid-area: champ;
 }
 
 .match-player-row__champion img {
@@ -615,6 +617,7 @@
   gap: 0.4rem;
   align-items: center;
   justify-content: flex-start;
+  grid-area: spells;
 }
 
 .match-player-row__spell {
@@ -640,6 +643,7 @@
   gap: 0.2rem;
   justify-items: end;
   text-align: right;
+  grid-area: kda;
 }
 
 .match-player-row__kda .score {
@@ -656,6 +660,7 @@
   display: grid;
   gap: 0.2rem;
   justify-items: center;
+  grid-area: cs;
 }
 
 .match-player-row__cs .score {
@@ -677,6 +682,7 @@
   justify-content: flex-end;
   align-items: center;
   max-width: 100%;
+  grid-area: items;
 }
 
 .match-player-row__item {
@@ -721,8 +727,62 @@
   }
 
   .match-card__team {
-    min-width: min(420px, 100%);
+    min-width: min(440px, 100%);
     scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 900px) {
+  .match-player-row {
+    grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "champ spells kda"
+      "champ cs items";
+    align-items: start;
+  }
+
+  .match-player-row__kda,
+  .match-player-row__cs {
+    justify-items: flex-start;
+    text-align: left;
+  }
+
+  .match-player-row__cs {
+    align-self: center;
+  }
+
+  .match-player-row__items {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .match-player-row {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "champ"
+      "spells"
+      "kda"
+      "cs"
+      "items";
+    gap: 0.75rem;
+  }
+
+  .match-player-row__champion {
+    gap: 0.65rem;
+  }
+
+  .match-player-row__identity .name {
+    white-space: normal;
+  }
+
+  .match-player-row__kda,
+  .match-player-row__cs {
+    justify-items: flex-start;
+  }
+
+  .match-player-row__items {
+    justify-content: flex-start;
   }
 }
 
