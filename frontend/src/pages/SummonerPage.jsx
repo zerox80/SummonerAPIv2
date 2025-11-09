@@ -226,39 +226,35 @@ export default function SummonerPage() {
 
       {profileQuery.data && !profileQuery.data.error && (
         <div className="summoner-page__grid">
-          <div className="summoner-page__primary">
-            <SummonerHeader profile={profileQuery.data} derived={derived} />
-            <PerformanceSummary
-              derived={derived}
-              matches={matches}
-              summoner={profileQuery.data.summoner}
-              range={range}
-              onRangeChange={handleRangeChange}
-            />
-            <MatchHistory
-              matches={matches}
-              summoner={profileQuery.data.summoner}
-              filters={filters}
-              onFiltersChange={setFilters}
-              fetchMore={handleLoadMore}
-              hasMore={hasMoreMatches}
-              isFetchingMore={isFetchingMore}
-              championSquares={profileQuery.data.championSquares}
-              bases={profileQuery.data?.bases}
-              matchesPageSize={profileQuery.data?.matchesPageSize}
-            />
-          </div>
-          <aside className="summoner-page__sidebar">
-            <RankedOverview entries={profileQuery.data.leagueEntries} bases={profileQuery.data.bases} />
-            <TopChampions
-              championPlayCounts={profileQuery.data.championPlayCounts}
-              matches={matches}
-              summoner={profileQuery.data.summoner}
-              bases={profileQuery.data.bases}
-              championSquares={profileQuery.data.championSquares}
-              range={range}
-            />
-          </aside>
+          <SummonerHeader profile={profileQuery.data} derived={derived} />
+          <RankedOverview entries={profileQuery.data.leagueEntries} bases={profileQuery.data.bases} />
+          <PerformanceSummary
+            derived={derived}
+            matches={matches}
+            summoner={profileQuery.data.summoner}
+            range={range}
+            onRangeChange={handleRangeChange}
+          />
+          <TopChampions
+            championPlayCounts={profileQuery.data.championPlayCounts}
+            matches={matches}
+            summoner={profileQuery.data.summoner}
+            bases={profileQuery.data.bases}
+            championSquares={profileQuery.data.championSquares}
+            range={range}
+          />
+          <MatchHistory
+            matches={matches}
+            summoner={profileQuery.data.summoner}
+            filters={filters}
+            onFiltersChange={setFilters}
+            fetchMore={handleLoadMore}
+            hasMore={hasMoreMatches}
+            isFetchingMore={isFetchingMore}
+            championSquares={profileQuery.data.championSquares}
+            bases={profileQuery.data?.bases}
+            matchesPageSize={profileQuery.data?.matchesPageSize}
+          />
         </div>
       )}
 

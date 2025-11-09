@@ -239,13 +239,19 @@
   font-size: 0.9rem;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1000px) {
   .ranked-overview__header {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+    align-items: center;
   }
 
   .ranked-overview__title {
-    max-width: none;
+    max-width: 460px;
+  }
+
+  .ranked-overview__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-self: end;
   }
 }
 
