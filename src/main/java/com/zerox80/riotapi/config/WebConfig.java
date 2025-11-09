@@ -26,14 +26,10 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        VersionResourceResolver versionResolver = new VersionResourceResolver()
-                .addContentVersionStrategy("/**");
-
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("classpath:/static/", "classpath:/public/")
                 .setCacheControl(CacheControl.maxAge(Duration.ofDays(30)).cachePublic())
                 .resourceChain(true)
-                .addResolver(versionResolver)
                 .addResolver(new PathResourceResolver());
     }
 
