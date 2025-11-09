@@ -8,7 +8,7 @@
   display: grid;
   gap: clamp(1.4rem, 3.2vw, 2rem);
   grid-template-columns: minmax(0, 1fr);
-  width: min(100%, 1240px);
+  width: min(100%, 1340px);
   margin-inline: auto;
 }
 
@@ -31,7 +31,7 @@
 
 @media (min-width: 1160px) {
   .summoner-page__grid {
-    grid-template-columns: minmax(0, 1fr) clamp(280px, 27vw, 360px);
+    grid-template-columns: minmax(0, 1fr) clamp(300px, 25vw, 380px);
     align-items: start;
   }
 }

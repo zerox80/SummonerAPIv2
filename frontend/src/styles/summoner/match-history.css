@@ -2,7 +2,8 @@
   display: grid;
   gap: clamp(0.75rem, 2.5vw, 1.5rem);
   padding: clamp(0.75rem, 1.5vw + 0.75rem, 1.5rem);
-  width: min(100%, 1040px);
+  width: 100%;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
