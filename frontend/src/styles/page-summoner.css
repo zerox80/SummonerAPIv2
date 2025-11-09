@@ -55,3 +55,31 @@
     padding: clamp(1.1rem, 4vw, 1.6rem);
   }
 }
+
+@media (max-width: 780px) {
+  .summoner-page {
+    gap: clamp(1.1rem, 4vw, 1.6rem);
+  }
+
+  .summoner-page__grid {
+    gap: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .summoner-page__primary {
+    gap: clamp(0.9rem, 4vw, 1.35rem);
+  }
+}
+
+@media (max-width: 560px) {
+  .summoner-page {
+    gap: clamp(1rem, 5vw, 1.35rem);
+  }
+
+  .summoner-page__grid {
+    gap: clamp(0.9rem, 5vw, 1.4rem);
+  }
+
+  .summoner-page__sidebar > * {
+    padding: clamp(0.95rem, 5vw, 1.35rem);
+  }
+}

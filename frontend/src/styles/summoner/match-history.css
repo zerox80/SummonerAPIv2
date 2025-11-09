@@ -1,7 +1,7 @@
 .match-history {
   display: grid;
-  gap: clamp(1rem, 3vw, 1.75rem);
-  padding: clamp(1rem, 2vw + 1rem, 2rem);
+  gap: clamp(0.75rem, 2.5vw, 1.5rem);
+  padding: clamp(0.75rem, 1.5vw + 0.75rem, 1.5rem);
   width: min(100%, 1040px);
   margin: 0 auto;
 }
@@ -853,5 +853,64 @@
 
   .match-card__team {
     min-width: 100%;
+  }
+}
+
+@media (max-width: 780px) {
+  .match-history {
+    gap: clamp(0.85rem, 4vw, 1.4rem);
+    padding: clamp(0.9rem, 5vw, 1.4rem);
+  }
+
+  .match-history__header {
+    gap: clamp(0.75rem, 3vw, 1.1rem);
+  }
+
+  .match-card__stat-group {
+    justify-content: center;
+  }
+
+  .match-card__stat {
+    flex: 1 1 150px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .match-history__filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .match-card__meta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .match-card__stat-group {
+    justify-content: stretch;
+  }
+
+  .match-card__meta span,
+  .match-card__stat {
+    width: 100%;
+  }
+
+  .match-card__scoreboard {
+    gap: clamp(0.85rem, 4vw, 1.3rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .match-card__summary {
+    padding: clamp(0.85rem, 5vw, 1.15rem);
+  }
+
+  .match-card__stat {
+    padding: clamp(0.6rem, 4vw, 0.85rem) clamp(0.7rem, 5vw, 0.9rem);
+  }
+
+  .match-card__team {
+    padding: clamp(0.9rem, 5vw, 1.25rem);
   }
 }

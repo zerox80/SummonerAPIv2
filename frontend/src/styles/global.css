@@ -299,3 +299,39 @@ textarea {
     width: 92vw;
   }
 }
+
+@media (max-width: 720px) {
+  :root {
+    --page-gutter: clamp(0.85rem, 5vw, 1.4rem);
+  }
+
+  .container {
+    padding: 0 var(--page-gutter);
+  }
+}
+
+@media (max-width: 540px) {
+  :root {
+    --page-gutter: clamp(0.75rem, 6vw, 1.1rem);
+  }
+
+  html {
+    font-size: clamp(14px, 3.6vw + 10px, 15px);
+  }
+
+  .glass-panel {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .glass-panel:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+@media (max-width: 380px) {
+  html {
+    font-size: clamp(13px, 5vw + 9px, 14.5px);
+  }
+}

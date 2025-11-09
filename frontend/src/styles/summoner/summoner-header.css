@@ -170,3 +170,56 @@
     font-size: 1.75rem;
   }
 }
+
+@media (max-width: 720px) {
+  .summoner-header {
+    gap: 1.25rem;
+    padding: clamp(1.15rem, 4vw, 1.45rem);
+  }
+
+  .summoner-header__meta {
+    gap: 1.25rem;
+  }
+
+  .summoner-header__highlight {
+    padding: clamp(1.1rem, 4vw, 1.35rem);
+  }
+}
+
+@media (max-width: 520px) {
+  .summoner-header__avatar {
+    width: 82px;
+    height: 82px;
+  }
+
+  .summoner-header__badge {
+    font-size: 0.65rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .summoner-header__highlight {
+    gap: 0.85rem;
+  }
+
+  .summoner-header__highlight > div {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .summoner-header__highlight-value {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .summoner-header__media {
+    margin-bottom: 0.35rem;
+  }
+
+  .summoner-header__meta {
+    align-items: center;
+  }
+
+  .summoner-header__highlight {
+    padding: clamp(1rem, 5vw, 1.2rem);
+  }
+}

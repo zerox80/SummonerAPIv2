@@ -22,7 +22,7 @@ public class RateLimitProperties {
     private int maxRequests = 60;
 
     
-    private List<String> paths = new ArrayList<>(Arrays.asList("/api
+    private List<String> paths = new ArrayList<>(Arrays.asList("/api/**"));
     private boolean trustProxy = false;
 
     

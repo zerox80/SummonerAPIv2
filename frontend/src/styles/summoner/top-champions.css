@@ -116,3 +116,26 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 720px) {
+  .top-champions {
+    gap: clamp(1rem, 4vw, 1.4rem);
+    padding: clamp(1.1rem, 4vw, 1.5rem);
+  }
+
+  .champion-card {
+    gap: clamp(0.7rem, 3vw, 1rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .champion-card__stats {
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .champion-card__meta {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+}

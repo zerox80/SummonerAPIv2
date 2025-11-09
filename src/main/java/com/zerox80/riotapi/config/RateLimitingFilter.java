@@ -22,38 +22,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 
-
 @Component
 public class RateLimitingFilter extends OncePerRequestFilter {
 
-    
     private static final Logger logger = LoggerFactory.getLogger(RateLimitingFilter.class);
 
-    
     private static final class Window {
-        
         volatile long startMs;
-        
         volatile int count;
-        
-        
-        Window(long startMs, int count) { this.startMs = startMs; this.count = count; }
+
+        Window(long startMs, int count) {
+            this.startMs = startMs;
+            this.count = count;
+        }
     }
 
-    
     private Cache<String, Window> windowsCache;
 
-    
     private final RateLimitProperties properties;
-    
     private final MeterRegistry meterRegistry;
 
-    
     private List<String> pathPatterns;
-    
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    
     public RateLimitingFilter(ObjectProvider<RateLimitProperties> properties, ObjectProvider<MeterRegistry> meterRegistry) {
         RateLimitProperties provided = properties.getIfAvailable();
         if (provided != null) {
@@ -67,10 +58,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         this.meterRegistry = meterRegistry.getIfAvailable(SimpleMeterRegistry::new);
     }
 
-    
     @PostConstruct
     void init() {
-        // Initialize cache with eviction based on the configured window size; cap maximum distinct IP windows
         this.windowsCache = Caffeine.newBuilder()
                 .expireAfterWrite(properties.getWindowMs(), TimeUnit.MILLISECONDS)
                 .maximumSize(properties.getCacheMaxIps())
@@ -86,7 +75,6 @@ public class RateLimitingFilter extends OncePerRequestFilter {
                 properties.getCacheMaxIps(), properties.isIncludeHeaders(), pathPatterns);
     }
 
-    
     private boolean isRateLimitedPath(HttpServletRequest request) {
         String path = request.getRequestURI();
         for (String pattern : pathPatterns) {
@@ -97,7 +85,6 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return false;
     }
 
-    
     private String extractIp(String val) {
         if (val == null) {
             return null;
@@ -121,13 +108,11 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return v;
     }
 
-    
     private String clientIp(HttpServletRequest request) {
         if (!properties.isTrustProxy()) {
             return request.getRemoteAddr();
         }
 
-        // If an allowlist is configured, only honor proxy headers when the remote address is trusted
         String remoteAddr = request.getRemoteAddr();
         if (properties.getAllowedProxies() != null && !properties.getAllowedProxies().isEmpty()) {
             if (!isAllowedProxy(remoteAddr)) {
@@ -135,11 +120,9 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             }
         }
 
-        // Try RFC 7239 Forwarded: e.g. Forwarded: for=192.0.2.43, for="[2001:db8:cafe::17]"
         String fwd = request.getHeader("Forwarded");
         if (fwd != null && !fwd.isBlank()) {
             try {
-                // Parse left-most for= value
                 String[] parts = fwd.split(",");
                 for (String part : parts) {
                     String[] kvs = part.split(";");
@@ -150,10 +133,10 @@ public class RateLimitingFilter extends OncePerRequestFilter {
                         }
                     }
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
-        // Fallback: X-Forwarded-For: client, proxy1, proxy2
         String xff = request.getHeader("X-Forwarded-For");
         if (xff != null && !xff.isBlank()) {
             int comma = xff.indexOf(',');
@@ -164,7 +147,6 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return request.getRemoteAddr();
     }
 
-    
     private boolean isAllowedProxy(String remoteAddr) {
         try {
             for (String allowed : properties.getAllowedProxies()) {
@@ -172,11 +154,11 @@ public class RateLimitingFilter extends OncePerRequestFilter {
                     return true;
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return false;
     }
 
-    
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -187,8 +169,10 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Record matched request for rate-limited paths
-        try { meterRegistry.counter("app.ratelimit.matched").increment(); } catch (Exception ignored) {}
+        try {
+            meterRegistry.counter("app.ratelimit.matched").increment();
+        } catch (Exception ignored) {
+        }
 
         final long now = System.currentTimeMillis();
         final String key = clientIp(request);
@@ -197,7 +181,6 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             if (old == null || now - old.startMs >= properties.getWindowMs()) {
                 return new Window(now, 1);
             } else {
-                // immutable-style update to avoid mutating shared objects
                 return new Window(old.startMs, old.count + 1);
             }
         });
@@ -217,7 +200,10 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             response.setContentType("application/json;charset=UTF-8");
             String body = "{\"error\":\"Too Many Requests\",\"retryAfterSeconds\":" + (int) Math.ceil(resetMs / 1000.0) + "}";
             response.getWriter().write(body);
-            try { meterRegistry.counter("app.ratelimit.blocked").increment(); } catch (Exception ignored) {}
+            try {
+                meterRegistry.counter("app.ratelimit.blocked").increment();
+            } catch (Exception ignored) {
+            }
             return;
         }
 

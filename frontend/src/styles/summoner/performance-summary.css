@@ -97,3 +97,53 @@
     align-items: stretch;
   }
 }
+
+@media (max-width: 720px) {
+  .performance-summary {
+    gap: clamp(1rem, 4vw, 1.4rem);
+    padding: clamp(1.1rem, 4vw, 1.5rem);
+  }
+
+  .performance-summary__header {
+    gap: 1rem;
+  }
+
+  .performance-summary__controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .performance-summary__grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .performance-summary__header {
+    text-align: center;
+  }
+
+  .performance-summary__controls {
+    justify-content: center;
+  }
+
+  .performance-summary__last {
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .performance-summary__last-meta {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .performance-summary__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .performance-summary__last-meta {
+    width: 100%;
+    justify-content: center;
+  }
+}

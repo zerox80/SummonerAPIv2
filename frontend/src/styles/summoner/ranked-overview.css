@@ -138,3 +138,40 @@
 .ranked-card__lp .negative {
   color: #f87171;
 }
+
+@media (max-width: 720px) {
+  .ranked-overview {
+    gap: clamp(1.1rem, 4vw, 1.4rem);
+    padding: clamp(1.2rem, 4vw, 1.6rem);
+  }
+
+  .ranked-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .ranked-card__stats,
+  .ranked-card__lp {
+    justify-content: center;
+  }
+
+  .ranked-card__crest {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .ranked-overview__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ranked-card__rank {
+    font-size: 1.25rem;
+  }
+
+  .ranked-card__stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

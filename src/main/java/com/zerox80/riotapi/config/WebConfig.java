@@ -19,19 +19,39 @@ import java.time.Duration;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    
+    /**
+     * Add resource handlers for static asset versioning and caching.
+     *
+     * @param registry ResourceHandlerRegistry
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         VersionResourceResolver versionResolver = new VersionResourceResolver()
-                .addContentVersionStrategy("
+                .addContentVersionStrategy("/**");
 
-    
+        registry.addResourceHandler("/assets/**")
+                .addResourceLocations("classpath:/static/", "classpath:/public/")
+                .setCacheControl(CacheControl.maxAge(Duration.ofDays(30)).cachePublic())
+                .resourceChain(true)
+                .addResolver(versionResolver)
+                .addResolver(new PathResourceResolver());
+    }
+
+    /**
+     * Create a ShallowEtagHeaderFilter bean.
+     *
+     * @return ShallowEtagHeaderFilter
+     */
     @Bean
     public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
         return new ShallowEtagHeaderFilter();
     }
 
-    
+    /**
+     * Create a WebServerFactoryCustomizer bean for compression.
+     *
+     * @return WebServerFactoryCustomizer
+     */
     @Bean
     public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> compressionCustomizer() {
         return factory -> {
