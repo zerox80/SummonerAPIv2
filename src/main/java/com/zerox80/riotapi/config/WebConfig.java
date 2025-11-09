@@ -27,10 +27,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**")
-                .addResourceLocations("classpath:/static/", "classpath:/public/")
+                .addResourceLocations("classpath:/static/assets/")
                 .setCacheControl(CacheControl.maxAge(Duration.ofDays(30)).cachePublic())
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());
+        
+        registry.addResourceHandler("/favicon.svg")
+                .addResourceLocations("classpath:/static/")
+                .setCacheControl(CacheControl.maxAge(Duration.ofDays(7)).cachePublic());
     }
 
     /**

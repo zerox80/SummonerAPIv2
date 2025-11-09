@@ -23,12 +23,15 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
             "/",
             "/index",
+            "/index.html",
             "/favicon.ico",
+            "/favicon.svg",
             "/assets/**",
             "/static/**",
             "/api/profile/**",
             "/api/matches/**",
             "/api/summoner-suggestions",
+            "/api/champions/**",
             "/actuator/health",
             "/actuator/info"
     };
@@ -57,7 +60,6 @@ public class SecurityConfig {
                 .addHeaderWriter(new StaticHeadersWriter("Permissions-Policy",
                     "geolocation=(), microphone=(), camera=(), payment=()"))
                 .addHeaderWriter(new StaticHeadersWriter("Cross-Origin-Opener-Policy", "same-origin"))
-                .addHeaderWriter(new StaticHeadersWriter("Cross-Origin-Resource-Policy", "same-origin"))
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
