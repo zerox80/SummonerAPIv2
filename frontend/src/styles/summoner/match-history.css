@@ -370,16 +370,18 @@
 
 .match-card__build-row {
   display: flex;
-  gap: clamp(1rem, 4vw, 2.5rem);
+  gap: clamp(1.2rem, 3vw, 2rem);
   align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: wrap;
 }
 
 .match-card__build-group {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  align-items: start;
+  align-items: flex-start;
+  flex-shrink: 0;
 }
 
 .match-card__meta-label {
