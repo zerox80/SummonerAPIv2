@@ -658,10 +658,10 @@
 }
 
 .match-player-row__spell {
-  width: clamp(32px, 2.2vw, 40px);
-  height: clamp(32px, 2.2vw, 40px);
+  width: clamp(40px, 2.8vw, 48px);
+  height: clamp(40px, 2.8vw, 48px);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: none;
   background: rgba(15, 23, 42, 0.65);
   box-shadow: 0 8px 18px rgba(2, 6, 23, 0.45);
   overflow: hidden;
@@ -673,7 +673,7 @@
 .match-player-row__spell img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .match-player-row__kda {
