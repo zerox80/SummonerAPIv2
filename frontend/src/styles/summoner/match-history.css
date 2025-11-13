@@ -570,14 +570,15 @@
 
 .match-player-row {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 1fr) minmax(64px, 0.6fr) minmax(0, 2fr);
-  grid-template-rows: auto;
+  grid-template-columns: minmax(140px, 2fr) minmax(80px, 0.8fr) minmax(100px, 1fr) minmax(60px, 0.6fr);
+  grid-template-rows: auto auto;
   grid-template-areas:
-    "champ spells kda cs items";
-  column-gap: clamp(0.65rem, 1.6vw, 0.95rem);
-  row-gap: clamp(0.35rem, 1vw, 0.6rem);
+    "champ spells kda cs"
+    "items items items items";
+  column-gap: clamp(0.8rem, 2vw, 1.2rem);
+  row-gap: clamp(0.5rem, 1.2vw, 0.8rem);
   align-items: center;
-  padding: clamp(0.78rem, 2vw, 0.95rem) clamp(0.75rem, 1.8vw, 0.95rem);
+  padding: clamp(0.85rem, 2vw, 1rem);
   border-radius: var(--radius-md);
   transition: background var(--duration-base) ease, transform var(--duration-base) ease;
   border: 1px solid transparent;
@@ -602,11 +603,11 @@
 }
 
 .match-player-row__champion img {
-  width: clamp(48px, 3vw, 54px);
-  height: clamp(48px, 3vw, 54px);
+  width: clamp(54px, 4vw, 64px);
+  height: clamp(54px, 4vw, 64px);
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  object-fit: contain;
+  border: none;
+  object-fit: cover;
 }
 
 .match-player-row__identity {
@@ -616,12 +617,12 @@
 
 .match-player-row__identity .name {
   font-weight: 600;
-  font-size: 0.92rem;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  line-height: 1.25;
-  word-break: break-word;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  max-width: 100%;
 }
 
 .match-player-row__identity .name--link {
@@ -657,16 +658,17 @@
 }
 
 .match-player-row__spell {
-  width: clamp(40px, 2.8vw, 48px);
-  height: clamp(40px, 2.8vw, 48px);
+  width: clamp(36px, 2.6vw, 44px);
+  height: clamp(36px, 2.6vw, 44px);
   border-radius: 8px;
   border: none;
   background: rgba(15, 23, 42, 0.65);
-  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.45);
+  box-shadow: 0 6px 14px rgba(2, 6, 23, 0.4);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .match-player-row__spell img {
@@ -677,10 +679,11 @@
 
 .match-player-row__kda {
   display: grid;
-  gap: 0.2rem;
-  justify-items: end;
-  text-align: right;
+  gap: 0.25rem;
+  justify-items: center;
+  text-align: center;
   grid-area: kda;
+  min-width: 0;
 }
 
 .match-player-row__kda .score {
@@ -714,18 +717,18 @@
 
 .match-player-row__items {
   display: flex;
-  gap: clamp(0.3rem, 0.8vw, 0.4rem);
-  flex-wrap: nowrap;
-  justify-content: flex-end;
+  gap: clamp(0.35rem, 0.9vw, 0.5rem);
+  flex-wrap: wrap;
+  justify-content: flex-start;
   grid-area: items;
   width: 100%;
   align-items: center;
 }
 
 .match-player-row__item {
-  width: clamp(28px, 2vw, 34px);
-  height: clamp(28px, 2vw, 34px);
-  border-radius: 6px;
+  width: clamp(30px, 2.2vw, 36px);
+  height: clamp(30px, 2.2vw, 36px);
+  border-radius: 7px;
   border: 1px solid rgba(148, 163, 184, 0.25);
   background: rgba(15, 23, 42, 0.6);
   display: flex;
@@ -772,14 +775,30 @@
 
 @media (max-width: 900px) {
   .match-player-row {
-    grid-template-columns: minmax(0, 1.8fr) minmax(0, 0.7fr) minmax(0, 0.8fr) minmax(50px, 0.5fr) minmax(0, 1.8fr);
-    column-gap: 0.6rem;
+    grid-template-columns: minmax(120px, 1.8fr) minmax(70px, 0.8fr) minmax(85px, 1fr) minmax(50px, 0.6fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "champ spells kda cs"
+      "items items items items";
+    column-gap: 0.7rem;
+    row-gap: 0.6rem;
+    padding: 0.8rem 0.85rem;
+  }
+
+  .match-player-row__champion img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .match-player-row__spell {
+    width: 34px;
+    height: 34px;
   }
 
   .match-player-row__kda,
   .match-player-row__cs {
-    justify-items: flex-start;
-    text-align: left;
+    justify-items: center;
+    text-align: center;
   }
 
   .match-player-row__cs {
@@ -787,17 +806,23 @@
   }
 
   .match-player-row__items {
-    gap: 0.25rem;
+    gap: 0.35rem;
+    justify-content: flex-start;
+  }
+
+  .match-player-row__item {
+    width: 30px;
+    height: 30px;
   }
 }
 
 @media (max-width: 640px) {
   .match-player-row {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto;
     grid-template-areas:
-      "champ items"
-      "spells items"
-      "kda cs";
+      "champ spells kda"
+      "items items items";
     gap: 0.6rem;
     column-gap: 0.8rem;
   }
@@ -806,23 +831,44 @@
     gap: 0.65rem;
   }
 
-  .match-player-row__identity .name {
-    white-space: normal;
+  .match-player-row__champion img {
+    width: 44px;
+    height: 44px;
   }
 
-  .match-player-row__kda,
+  .match-player-row__spell {
+    width: 32px;
+    height: 32px;
+  }
+
+  .match-player-row__identity .name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .match-player-row__kda {
+    justify-items: center;
+    text-align: center;
+  }
+
   .match-player-row__cs {
-    justify-items: flex-start;
+    display: none;
   }
 
   .match-player-row__items {
-    justify-content: flex-end;
+    justify-content: flex-start;
     flex-wrap: wrap;
-    max-width: 180px;
+    gap: 0.35rem;
+  }
+
+  .match-player-row__item {
+    width: 32px;
+    height: 32px;
   }
 
   .match-player-row__spells {
-    justify-self: flex-start;
+    justify-self: center;
   }
 }
 
@@ -854,14 +900,30 @@
   }
 
   .match-player-row {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.7fr) minmax(0, 0.8fr) minmax(50px, 0.5fr) minmax(0, 1.8fr);
-    gap: 0.6rem;
+    grid-template-columns: minmax(130px, 2fr) minmax(75px, 0.8fr) minmax(90px, 1fr) minmax(55px, 0.6fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "champ spells kda cs"
+      "items items items items";
+    gap: 0.7rem;
+    row-gap: 0.6rem;
+    padding: 0.85rem 0.9rem;
+  }
+
+  .match-player-row__champion img {
+    width: 52px;
+    height: 52px;
   }
 
   .match-player-row__items {
     width: 100%;
-    justify-content: flex-end;
-    gap: 0.3rem;
+    justify-content: flex-start;
+    gap: 0.4rem;
+  }
+
+  .match-player-row__item {
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -873,30 +935,49 @@
 
 @media (max-width: 720px) {
   .match-player-row {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto;
     grid-template-areas:
-      "champ items"
-      "spells items"
-      "kda cs";
+      "champ spells kda"
+      "items items items";
     justify-items: start;
-    gap: 0.5rem;
+    gap: 0.55rem;
+    padding: 0.75rem 0.7rem;
   }
 
-  .match-player-row__kda,
+  .match-player-row__champion img {
+    width: 46px;
+    height: 46px;
+  }
+
+  .match-player-row__spell {
+    width: 32px;
+    height: 32px;
+  }
+
+  .match-player-row__kda {
+    justify-items: center;
+    text-align: center;
+  }
+
   .match-player-row__cs {
-    justify-items: start;
-    text-align: left;
+    display: none;
   }
 
   .match-player-row__spells {
-    gap: 0.3rem;
+    gap: 0.35rem;
+    justify-self: center;
   }
 
   .match-player-row__items {
-    gap: 0.3rem;
+    gap: 0.35rem;
     flex-wrap: wrap;
-    max-width: 160px;
-    justify-content: flex-end;
+    justify-content: flex-start;
+  }
+
+  .match-player-row__item {
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -942,9 +1023,20 @@
     min-width: min(360px, 100%);
   }
 
+  .match-player-row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "champ"
+      "spells"
+      "kda"
+      "items";
+    gap: 0.6rem;
+    padding: 0.7rem 0.6rem;
+  }
+
   .match-player-row__champion img {
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
   }
 
   .match-player-row__spell {
@@ -960,12 +1052,32 @@
 
   .match-player-row__item,
   .match-player-row__item--trinket {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
   }
 
   .match-player-row__items {
-    gap: 0.25rem;
+    gap: 0.3rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .match-player-row__kda {
+    justify-items: flex-start;
+  }
+
+  .match-player-row__cs {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  .match-player-row__cs .score {
+    order: 2;
+  }
+
+  .match-player-row__cs .label {
+    order: 1;
   }
 }
 
@@ -995,6 +1107,40 @@
 
   .match-card__team {
     min-width: 100%;
+    padding: 0.9rem 0.7rem;
+  }
+
+  .match-player-row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "champ"
+      "spells"
+      "kda"
+      "items";
+    gap: 0.5rem;
+    padding: 0.6rem 0.5rem;
+  }
+
+  .match-player-row__champion img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .match-player-row__spell {
+    width: 32px;
+    height: 32px;
+  }
+
+  .match-player-row__item,
+  .match-player-row__item--trinket {
+    width: 28px;
+    height: 28px;
+  }
+
+  .match-player-row__items {
+    gap: 0.25rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
 
@@ -1041,6 +1187,22 @@
   .match-card__scoreboard {
     gap: clamp(0.85rem, 4vw, 1.3rem);
   }
+
+  .match-player-row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "champ"
+      "spells"
+      "kda"
+      "items";
+    gap: 0.55rem;
+    padding: 0.65rem 0.55rem;
+  }
+
+  .match-player-row__items {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 380px) {
@@ -1068,6 +1230,31 @@
 
   .match-card__detail-stat .label {
     font-size: 0.68rem;
+  }
+
+  .match-player-row {
+    padding: 0.55rem 0.45rem;
+    gap: 0.5rem;
+  }
+
+  .match-player-row__champion img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .match-player-row__spell {
+    width: 30px;
+    height: 30px;
+  }
+
+  .match-player-row__item,
+  .match-player-row__item--trinket {
+    width: 28px;
+    height: 28px;
+  }
+
+  .match-player-row__items {
+    gap: 0.2rem;
   }
 }
 
