@@ -1,149 +1,149 @@
-package com.zerox80.riotapi.service;
+package com.zerox80.riotapi.service; // Paketdeklaration für den Service-Layer
 
-import com.zerox80.riotapi.client.RiotApiClient;
-import com.zerox80.riotapi.dto.ChampionBuildDto;
-import com.zerox80.riotapi.dto.ItemStatDto;
-import com.zerox80.riotapi.dto.RuneStatDto;
-import com.zerox80.riotapi.dto.SpellPairStatDto;
-import com.zerox80.riotapi.model.*;
-import com.zerox80.riotapi.repository.ChampionItemStatRepository;
-import com.zerox80.riotapi.repository.ChampionRuneStatRepository;
-import com.zerox80.riotapi.repository.ChampionSpellPairStatRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.StringUtils;
+import com.zerox80.riotapi.client.RiotApiClient; // Import des Riot API Clients für externe API-Aufrufe
+import com.zerox80.riotapi.dto.ChampionBuildDto; // Import für Champion-Build-Response-DTO
+import com.zerox80.riotapi.dto.ItemStatDto; // Import für Item-Statistik-DTO
+import com.zerox80.riotapi.dto.RuneStatDto; // Import für Runen-Statistik-DTO
+import com.zerox80.riotapi.dto.SpellPairStatDto; // Import für Summoner-Spell-Paar-Statistik-DTO
+import com.zerox80.riotapi.model.*; // Import aller Model-Klassen (DTOs und Entities)
+import com.zerox80.riotapi.repository.ChampionItemStatRepository; // Import für Item-Statistik-Repository (Database)
+import com.zerox80.riotapi.repository.ChampionRuneStatRepository; // Import für Runen-Statistik-Repository (Database)
+import com.zerox80.riotapi.repository.ChampionSpellPairStatRepository; // Import für Spell-Statistik-Repository (Database)
+import org.slf4j.Logger; // Import für Logging-Schnittstelle
+import org.slf4j.LoggerFactory; // Import für Logger-Factory zur Logger-Instanziierung
+import org.springframework.scheduling.annotation.Async; // Import für asynchrone Methoden-Ausführung
+import org.springframework.stereotype.Service; // Import für Service-Komponenten-Annotation
+import org.springframework.transaction.PlatformTransactionManager; // Import für programmatische Transaktionsverwaltung
+import org.springframework.transaction.support.TransactionTemplate; // Import für transaktionale Code-Blöcke
+import org.springframework.util.StringUtils; // Import für String-Utility-Funktionen
 
-import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BooleanSupplier;
-import java.util.stream.Collectors;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.time.Duration; // Import für Zeitdauer-Berechnungen
+import java.util.*; // Import aller Java-Utility-Klassen
+import java.util.concurrent.CompletableFuture; // Import für asynchrone/nicht-blockierende Operationen
+import java.util.concurrent.CompletionException; // Import für Exception-Handling in CompletableFutures
+import java.util.concurrent.atomic.AtomicInteger; // Import für thread-sichere Integer-Operationen
+import java.util.function.BooleanSupplier; // Import für Supplier-Functional-Interface
+import java.util.stream.Collectors; // Import für Stream-Sammler
+import java.util.concurrent.ExecutionException; // Import für Future-Exception-Handling
+import java.util.concurrent.TimeUnit; // Import für Zeiteinheiten
+import java.util.concurrent.TimeoutException; // Import für Timeout-Exceptions
 
 
-@Service
-public class BuildAggregationService {
+@Service // Markiert diese Klasse als Spring Service-Komponente für Dependency Injection
+public class BuildAggregationService { // Service-Klasse für Champion-Build-Daten-Aggregation aus hochrangigen Spieler-Matches
 
-    private static final Logger log = LoggerFactory.getLogger(BuildAggregationService.class);
+    private static final Logger log = LoggerFactory.getLogger(BuildAggregationService.class); // Logger-Instanz für Logging in diesem Service
 
-    private final RiotApiClient riot;
-    private final DataDragonService dd;
-    private final ChampionItemStatRepository itemRepo;
-    private final ChampionRuneStatRepository runeRepo;
-    private final ChampionSpellPairStatRepository spellRepo;
-    private final TransactionTemplate transactionTemplate;
+    private final RiotApiClient riot; // Client für HTTP-Aufrufe an die Riot API
+    private final DataDragonService dd; // Service für statische Daten (Champion-Keys, Item-Namen, etc.)
+    private final ChampionItemStatRepository itemRepo; // Database-Repository für Item-Build-Statistiken
+    private final ChampionRuneStatRepository runeRepo; // Database-Repository für Runen-Statistiken
+    private final ChampionSpellPairStatRepository spellRepo; // Database-Repository für Summoner-Spell-Statistiken
+    private final TransactionTemplate transactionTemplate; // Template für programmatische Transaktionsverwaltung
 
-    
-    public BuildAggregationService(RiotApiClient riot,
-                                   DataDragonService dd,
-                                   ChampionItemStatRepository itemRepo,
-                                   ChampionRuneStatRepository runeRepo,
-                                   ChampionSpellPairStatRepository spellRepo,
-                                   PlatformTransactionManager transactionManager) {
-        this.riot = riot;
-        this.dd = dd;
-        this.itemRepo = itemRepo;
-        this.runeRepo = runeRepo;
-        this.spellRepo = spellRepo;
-        this.transactionTemplate = new TransactionTemplate(transactionManager);
+
+    public BuildAggregationService(RiotApiClient riot, // Konstruktor mit Dependency Injection aller benötigten Services/Repositories
+                                   DataDragonService dd, // Injiziert DataDragon-Service
+                                   ChampionItemStatRepository itemRepo, // Injiziert Item-Repository
+                                   ChampionRuneStatRepository runeRepo, // Injiziert Runen-Repository
+                                   ChampionSpellPairStatRepository spellRepo, // Injiziert Spell-Repository
+                                   PlatformTransactionManager transactionManager) { // Injiziert Transaction-Manager für DB-Transaktionen
+        this.riot = riot; // Weist injizierten Client der Instanzvariable zu
+        this.dd = dd; // Weist injizierten Service der Instanzvariable zu
+        this.itemRepo = itemRepo; // Weist injiziertes Repository der Instanzvariable zu
+        this.runeRepo = runeRepo; // Weist injiziertes Repository der Instanzvariable zu
+        this.spellRepo = spellRepo; // Weist injiziertes Repository der Instanzvariable zu
+        this.transactionTemplate = new TransactionTemplate(transactionManager); // Erstellt Transaction-Template für transaktionale Code-Blöcke
     }
 
-    private List<ChampionItemStat> fetchItems(String championId, String patch, int queueId, String role) {
-        if (StringUtils.hasText(role) && !"ALL".equals(role)) {
-            return itemRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId);
+    private List<ChampionItemStat> fetchItems(String championId, String patch, int queueId, String role) { // Private Hilfsmethode zum Abrufen der Top-10-Item-Statistiken aus Database
+        if (StringUtils.hasText(role) && !"ALL".equals(role)) { // Prüft ob spezifische Rolle angegeben (z.B. "TOP", "JUNGLE")
+            return itemRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId); // Database-Query: Holt Top 10 Items für Champion+Rolle+Patch+Queue sortiert nach Häufigkeit
         }
-        return itemRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId);
+        return itemRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId); // Database-Query: Holt Top 10 Items für Champion+Patch+Queue (alle Rollen aggregiert)
     }
 
-    private List<ChampionRuneStat> fetchRunes(String championId, String patch, int queueId, String role) {
-        if (StringUtils.hasText(role) && !"ALL".equals(role)) {
-            return runeRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId);
+    private List<ChampionRuneStat> fetchRunes(String championId, String patch, int queueId, String role) { // Private Hilfsmethode zum Abrufen der Top-10-Runen-Statistiken aus Database
+        if (StringUtils.hasText(role) && !"ALL".equals(role)) { // Prüft ob spezifische Rolle angegeben
+            return runeRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId); // Database-Query: Holt Top 10 Runen-Kombinationen für Champion+Rolle+Patch+Queue
         }
-        return runeRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId);
+        return runeRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId); // Database-Query: Holt Top 10 Runen-Kombinationen für Champion+Patch+Queue (alle Rollen)
     }
 
-    private List<ChampionSpellPairStat> fetchSpells(String championId, String patch, int queueId, String role) {
-        if (StringUtils.hasText(role) && !"ALL".equals(role)) {
-            return spellRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId);
+    private List<ChampionSpellPairStat> fetchSpells(String championId, String patch, int queueId, String role) { // Private Hilfsmethode zum Abrufen der Top-10-Summoner-Spell-Statistiken aus Database
+        if (StringUtils.hasText(role) && !"ALL".equals(role)) { // Prüft ob spezifische Rolle angegeben
+            return spellRepo.findTop10ByChampionIdAndRoleAndPatchAndQueueIdOrderByCountDesc(championId, role, patch, queueId); // Database-Query: Holt Top 10 Summoner-Spell-Paare für Champion+Rolle+Patch+Queue
         }
-        return spellRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId);
+        return spellRepo.findTop10ByChampionIdAndPatchAndQueueIdOrderByCountDesc(championId, patch, queueId); // Database-Query: Holt Top 10 Summoner-Spell-Paare für Champion+Patch+Queue (alle Rollen)
     }
 
-    
-    public ChampionBuildDto loadBuild(String championId, Integer queueId, String role, Locale locale) {
-        String patch = dd.getLatestShortPatch();
+
+    public ChampionBuildDto loadBuild(String championId, Integer queueId, String role, Locale locale) { // Öffentliche Methode zum Laden aggregierter Champion-Build-Daten aus Database
+        String patch = dd.getLatestShortPatch(); // Holt aktuellen Patch (z.B. "15.18")
         int q = (queueId == null) ? 420 : queueId; // default SoloQ
-        String requestedRole = (StringUtils.hasText(role) ? role.toUpperCase(Locale.ROOT) : "ALL");
+        String requestedRole = (StringUtils.hasText(role) ? role.toUpperCase(Locale.ROOT) : "ALL"); // Normalisiert Rolle zu Großbuchstaben oder "ALL"
 
-        List<ChampionItemStat> items = fetchItems(championId, patch, q, requestedRole);
-        List<ChampionRuneStat> runes = fetchRunes(championId, patch, q, requestedRole);
-        List<ChampionSpellPairStat> spells = fetchSpells(championId, patch, q, requestedRole);
+        List<ChampionItemStat> items = fetchItems(championId, patch, q, requestedRole); // Database-Query: Holt Item-Statistiken für angeforderte Rolle
+        List<ChampionRuneStat> runes = fetchRunes(championId, patch, q, requestedRole); // Database-Query: Holt Runen-Statistiken für angeforderte Rolle
+        List<ChampionSpellPairStat> spells = fetchSpells(championId, patch, q, requestedRole); // Database-Query: Holt Spell-Statistiken für angeforderte Rolle
 
-        String effectiveRole = requestedRole;
-        if (!"ALL".equals(requestedRole) && items.isEmpty() && runes.isEmpty() && spells.isEmpty()) {
-            effectiveRole = "ALL";
-            items = fetchItems(championId, patch, q, effectiveRole);
-            runes = fetchRunes(championId, patch, q, effectiveRole);
-            spells = fetchSpells(championId, patch, q, effectiveRole);
+        String effectiveRole = requestedRole; // Initialisiert effektive Rolle mit angeforderter Rolle
+        if (!"ALL".equals(requestedRole) && items.isEmpty() && runes.isEmpty() && spells.isEmpty()) { // Business-Logik: Prüft ob keine Daten für spezifische Rolle vorhanden
+            effectiveRole = "ALL"; // Fallback: Verwendet aggregierte Daten über alle Rollen
+            items = fetchItems(championId, patch, q, effectiveRole); // Database-Query: Holt Item-Statistiken für alle Rollen
+            runes = fetchRunes(championId, patch, q, effectiveRole); // Database-Query: Holt Runen-Statistiken für alle Rollen
+            spells = fetchSpells(championId, patch, q, effectiveRole); // Database-Query: Holt Spell-Statistiken für alle Rollen
         }
 
-        Map<Integer, ItemSummary> itemLookupTmp;
-        Map<Integer, SummonerSpellInfo> spellLookupTmp;
-        Map<Integer, RunePerkInfo> runePerkLookupTmp;
-        Map<Integer, String> styleNamesTmp;
-        try {
-            itemLookupTmp = dd.getItems(locale);
-            spellLookupTmp = dd.getSummonerSpells(locale);
-            runePerkLookupTmp = dd.getRunePerkLookup(locale);
-            styleNamesTmp = dd.getRuneStyleNames(locale);
-        } catch (Exception e) {
-            log.warn("DDragon lookups failed: {}", e.toString());
-            itemLookupTmp = Collections.emptyMap();
-            spellLookupTmp = Collections.emptyMap();
-            runePerkLookupTmp = Collections.emptyMap();
-            styleNamesTmp = Collections.emptyMap();
+        Map<Integer, ItemSummary> itemLookupTmp; // Temporäre Variable für Item-Lookup-Map (für final-Zuweisung)
+        Map<Integer, SummonerSpellInfo> spellLookupTmp; // Temporäre Variable für Spell-Lookup-Map
+        Map<Integer, RunePerkInfo> runePerkLookupTmp; // Temporäre Variable für Runen-Perk-Lookup-Map
+        Map<Integer, String> styleNamesTmp; // Temporäre Variable für Runen-Style-Namen-Map
+        try { // Try-Block für fehlertolerante DataDragon-Abfragen
+            itemLookupTmp = dd.getItems(locale); // Holt Item-Daten von DataDragon (Namen, Icons)
+            spellLookupTmp = dd.getSummonerSpells(locale); // Holt Summoner-Spell-Daten von DataDragon
+            runePerkLookupTmp = dd.getRunePerkLookup(locale); // Holt Runen-Perk-Daten von DataDragon
+            styleNamesTmp = dd.getRuneStyleNames(locale); // Holt Runen-Style-Namen von DataDragon
+        } catch (Exception e) { // Fängt DataDragon-Fehler ab
+            log.warn("DDragon lookups failed: {}", e.toString()); // Warnung bei DataDragon-Fehler
+            itemLookupTmp = Collections.emptyMap(); // Fallback: Leere Map für Items
+            spellLookupTmp = Collections.emptyMap(); // Fallback: Leere Map für Spells
+            runePerkLookupTmp = Collections.emptyMap(); // Fallback: Leere Map für Runen-Perks
+            styleNamesTmp = Collections.emptyMap(); // Fallback: Leere Map für Style-Namen
         }
-        final Map<Integer, ItemSummary> itemLookup = itemLookupTmp;
-        final Map<Integer, SummonerSpellInfo> spellLookup = spellLookupTmp;
-        final Map<Integer, RunePerkInfo> runePerkLookup = runePerkLookupTmp;
-        final Map<Integer, String> styleNames = styleNamesTmp;
-        final Map<String,String> bases = dd.getImageBases(null);
+        final Map<Integer, ItemSummary> itemLookup = itemLookupTmp; // Final-Zuweisung für Lambda-Verwendung
+        final Map<Integer, SummonerSpellInfo> spellLookup = spellLookupTmp; // Final-Zuweisung für Lambda-Verwendung
+        final Map<Integer, RunePerkInfo> runePerkLookup = runePerkLookupTmp; // Final-Zuweisung für Lambda-Verwendung
+        final Map<Integer, String> styleNames = styleNamesTmp; // Final-Zuweisung für Lambda-Verwendung
+        final Map<String,String> bases = dd.getImageBases(null); // Holt Basis-URLs für Bilder von DataDragon
 
-        List<ItemStatDto> itemDtos = items.stream().map(s -> {
-            ItemSummary info = itemLookup.get(s.getItemId());
-            String name = info != null ? info.getName() : ("Item " + s.getItemId());
-            String icon = info != null ? bases.get("item") + info.getImageFull() : null;
-            return new ItemStatDto(s.getItemId(), s.getCount(), s.getWins(), name, icon);
-        }).collect(Collectors.toList());
+        List<ItemStatDto> itemDtos = items.stream().map(s -> { // Business-Logik: Transformiert Item-Statistik-Entities zu DTOs mit angereicherten Daten
+            ItemSummary info = itemLookup.get(s.getItemId()); // Holt Item-Info aus Lookup-Map
+            String name = info != null ? info.getName() : ("Item " + s.getItemId()); // Verwendet Item-Name oder Fallback "Item {ID}"
+            String icon = info != null ? bases.get("item") + info.getImageFull() : null; // Generiert Icon-URL
+            return new ItemStatDto(s.getItemId(), s.getCount(), s.getWins(), name, icon); // Erstellt DTO mit Statistiken und Metadaten
+        }).collect(Collectors.toList()); // Sammelt in Liste
 
-        List<RuneStatDto> runeDtos = runes.stream().map(s -> {
-            String pName = styleNames.getOrDefault(s.getPrimaryStyle(), String.valueOf(s.getPrimaryStyle()));
-            String sName = styleNames.getOrDefault(s.getSubStyle(), String.valueOf(s.getSubStyle()));
-            RunePerkInfo k = runePerkLookup.get(s.getKeystone());
-            String kName = k != null ? k.getName() : String.valueOf(s.getKeystone());
-            String kIcon = k != null ? ("https://ddragon.leagueoflegends.com/cdn/img/" + k.getIconFull()) : null;
-            return new RuneStatDto(s.getPrimaryStyle(), s.getSubStyle(), s.getKeystone(), s.getCount(), s.getWins(), pName, sName, kName, kIcon);
-        }).collect(Collectors.toList());
+        List<RuneStatDto> runeDtos = runes.stream().map(s -> { // Business-Logik: Transformiert Runen-Statistik-Entities zu DTOs mit angereicherten Daten
+            String pName = styleNames.getOrDefault(s.getPrimaryStyle(), String.valueOf(s.getPrimaryStyle())); // Holt Primary-Style-Name oder Fallback ID
+            String sName = styleNames.getOrDefault(s.getSubStyle(), String.valueOf(s.getSubStyle())); // Holt Sub-Style-Name oder Fallback ID
+            RunePerkInfo k = runePerkLookup.get(s.getKeystone()); // Holt Keystone-Info aus Lookup-Map
+            String kName = k != null ? k.getName() : String.valueOf(s.getKeystone()); // Verwendet Keystone-Name oder Fallback ID
+            String kIcon = k != null ? ("https://ddragon.leagueoflegends.com/cdn/img/" + k.getIconFull()) : null; // Generiert Keystone-Icon-URL
+            return new RuneStatDto(s.getPrimaryStyle(), s.getSubStyle(), s.getKeystone(), s.getCount(), s.getWins(), pName, sName, kName, kIcon); // Erstellt DTO mit Statistiken und Metadaten
+        }).collect(Collectors.toList()); // Sammelt in Liste
 
-        List<SpellPairStatDto> spellDtos = spells.stream().map(s -> {
-            SummonerSpellInfo s1 = spellLookup.get(s.getSpell1Id());
-            SummonerSpellInfo s2 = spellLookup.get(s.getSpell2Id());
-            String s1Name = s1 != null ? s1.getName() : String.valueOf(s.getSpell1Id());
-            String s2Name = s2 != null ? s2.getName() : String.valueOf(s.getSpell2Id());
-            String s1Icon = s1 != null ? bases.get("spell") + s1.getImageFull() : null;
-            String s2Icon = s2 != null ? bases.get("spell") + s2.getImageFull() : null;
-            return new SpellPairStatDto(s.getSpell1Id(), s.getSpell2Id(), s.getCount(), s.getWins(), s1Name, s2Name, s1Icon, s2Icon);
-        }).collect(Collectors.toList());
+        List<SpellPairStatDto> spellDtos = spells.stream().map(s -> { // Business-Logik: Transformiert Spell-Statistik-Entities zu DTOs mit angereicherten Daten
+            SummonerSpellInfo s1 = spellLookup.get(s.getSpell1Id()); // Holt Info für Spell 1 aus Lookup-Map
+            SummonerSpellInfo s2 = spellLookup.get(s.getSpell2Id()); // Holt Info für Spell 2 aus Lookup-Map
+            String s1Name = s1 != null ? s1.getName() : String.valueOf(s.getSpell1Id()); // Verwendet Spell-1-Name oder Fallback ID
+            String s2Name = s2 != null ? s2.getName() : String.valueOf(s.getSpell2Id()); // Verwendet Spell-2-Name oder Fallback ID
+            String s1Icon = s1 != null ? bases.get("spell") + s1.getImageFull() : null; // Generiert Spell-1-Icon-URL
+            String s2Icon = s2 != null ? bases.get("spell") + s2.getImageFull() : null; // Generiert Spell-2-Icon-URL
+            return new SpellPairStatDto(s.getSpell1Id(), s.getSpell2Id(), s.getCount(), s.getWins(), s1Name, s2Name, s1Icon, s2Icon); // Erstellt DTO mit Statistiken und Metadaten
+        }).collect(Collectors.toList()); // Sammelt in Liste
 
-        return new ChampionBuildDto(championId, patch, q, effectiveRole, itemDtos, runeDtos, spellDtos);
+        return new ChampionBuildDto(championId, patch, q, effectiveRole, itemDtos, runeDtos, spellDtos); // Erstellt finales Champion-Build-DTO mit allen angereicherten Statistiken
     }
 
     

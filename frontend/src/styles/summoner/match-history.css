@@ -115,8 +115,7 @@
 }
 
 .match-card__summary {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  display: flex;
   gap: clamp(0.8rem, 2.2vw, 1.6rem);
   padding: clamp(0.85rem, 2.5vw, 1.4rem);
   align-items: center;
@@ -124,6 +123,7 @@
   position: relative;
   background: linear-gradient(120deg, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.62));
   border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  width: 100%;
 }
 
 .match-card__summary::after {
@@ -141,8 +141,9 @@
   display: flex;
   align-items: center;
   gap: clamp(0.5rem, 1.5vw, 0.8rem);
-  width: 100%;
-  flex-wrap: wrap;
+  flex: 1;
+  min-width: 200px; /* Ensure minimum space for name */
+  flex-shrink: 0;
 }
 
 .match-card__champion img {
@@ -160,7 +161,7 @@
   gap: 0.45rem;
   align-items: flex-start;
   flex: 1;
-  min-width: 120px; /* Ensure minimum width for readability */
+  min-width: 150px; /* More space for full names */
   overflow: visible;
 }
 
@@ -178,8 +179,8 @@
   display: flex;
   flex-direction: column;
   gap: clamp(0.5rem, 1.5vw, 0.8rem);
-  flex: 1;
-  min-width: 0;
+  flex-shrink: 0;
+  align-items: flex-end;
 }
 
 .match-card__meta {
