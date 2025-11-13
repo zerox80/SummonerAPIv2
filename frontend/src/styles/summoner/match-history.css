@@ -606,6 +606,24 @@
   text-overflow: ellipsis;
 }
 
+.match-player-row__identity .name--link {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--duration-base) ease, text-shadow var(--duration-base) ease;
+  cursor: pointer;
+}
+
+.match-player-row__identity .name--link:hover {
+  color: rgba(94, 234, 212, 1);
+  text-shadow: 0 0 8px rgba(94, 234, 212, 0.4);
+}
+
+.match-player-row__identity .name--link:focus {
+  outline: 2px solid rgba(94, 234, 212, 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .match-player-row__identity .role {
   font-size: 0.78rem;
   color: rgba(226, 232, 240, 0.65);

@@ -368,7 +368,19 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
                               <div className="match-player-row__champion">
                                 <img src={playerChampionImg} alt={player.championName} loading="lazy" />
                                 <div className="match-player-row__identity">
-                                  <span className="name">{player.riotIdGameName || player.summonerName || 'Unknown'}</span>
+                                  {player.riotIdGameName && player.riotIdTagline ? (
+                                    <a
+                                      href={`/?riotId=${encodeURIComponent(player.riotIdGameName)}%23${encodeURIComponent(player.riotIdTagline)}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="name name--link"
+                                      title={`View profile: ${player.riotIdGameName}#${player.riotIdTagline}`}
+                                    >
+                                      {player.riotIdGameName}
+                                    </a>
+                                  ) : (
+                                    <span className="name">{player.riotIdGameName || player.summonerName || 'Unknown'}</span>
+                                  )}
                                   <span className="role">{roleLabel(player.teamPosition)}</span>
                                 </div>
                               </div>
