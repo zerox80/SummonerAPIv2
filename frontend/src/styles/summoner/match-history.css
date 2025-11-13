@@ -117,8 +117,8 @@
 .match-card__summary {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: clamp(1rem, 2.6vw, 2rem);
-  padding: clamp(1.05rem, 3vw, 1.85rem);
+  gap: clamp(0.8rem, 2.2vw, 1.6rem);
+  padding: clamp(0.85rem, 2.5vw, 1.4rem);
   align-items: center;
   cursor: pointer;
   position: relative;
@@ -315,8 +315,8 @@
 
 .match-card__details {
   display: grid;
-  gap: clamp(1.35rem, 3vw, 1.9rem);
-  padding: 0 clamp(1.25rem, 4vw, 2.4rem) clamp(1.6rem, 4vw, 2.7rem);
+  gap: clamp(1rem, 2.5vw, 1.4rem);
+  padding: 0 clamp(1rem, 3.2vw, 1.8rem) clamp(1.2rem, 3.2vw, 1.8rem);
   animation: match-card-expand var(--duration-base) ease;
 }
 
@@ -333,17 +333,17 @@
 
 .match-card__detail-grid {
   display: grid;
-  gap: clamp(1rem, 2.2vw, 1.6rem);
+  gap: clamp(0.7rem, 1.8vw, 1.2rem);
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
   align-items: stretch;
 }
 
 .match-card__build {
   display: grid;
-  gap: clamp(0.9rem, 2.5vw, 1.1rem);
+  gap: clamp(0.7rem, 2vw, 0.9rem);
   background: linear-gradient(150deg, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.55));
   border-radius: var(--radius-lg);
-  padding: clamp(1rem, 3vw, 1.85rem);
+  padding: clamp(0.8rem, 2.5vw, 1.4rem);
   border: 1px solid rgba(148, 163, 184, 0.24);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 18px 35px rgba(15, 23, 42, 0.35);
 }
@@ -386,9 +386,9 @@
 
 .match-card__spell,
 .match-card__keystone {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(15, 23, 42, 0.65);
   display: flex;
@@ -425,10 +425,10 @@
 }
 
 .match-card__item-slot {
-  flex: 0 0 clamp(54px, 3.4vw, 62px);
-  width: clamp(54px, 3.4vw, 62px);
-  height: clamp(54px, 3.4vw, 62px);
-  border-radius: 16px;
+  flex: 0 0 clamp(42px, 2.8vw, 48px);
+  width: clamp(42px, 2.8vw, 48px);
+  height: clamp(42px, 2.8vw, 48px);
+  border-radius: 12px;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.25);
   display: flex;
@@ -456,11 +456,11 @@
 
 .match-card__stat-grid {
   display: grid;
-  gap: clamp(0.85rem, 2vw, 1.1rem);
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: clamp(0.6rem, 1.5vw, 0.8rem);
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
   background: linear-gradient(150deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.52));
   border-radius: var(--radius-lg);
-  padding: clamp(1rem, 3vw, 1.85rem);
+  padding: clamp(0.8rem, 2.5vw, 1.4rem);
   border: 1px solid rgba(148, 163, 184, 0.24);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -472,14 +472,14 @@
 }
 
 .match-card__detail-stat .label {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(226, 232, 240, 0.6);
 }
 
 .match-card__detail-stat .value {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -639,9 +639,9 @@
 }
 
 .match-player-row__spell {
-  width: clamp(38px, 2.4vw, 44px);
-  height: clamp(38px, 2.4vw, 44px);
-  border-radius: 11px;
+  width: clamp(30px, 2.1vw, 36px);
+  height: clamp(30px, 2.1vw, 36px);
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
   background: rgba(15, 23, 42, 0.65);
@@ -704,9 +704,9 @@
 }
 
 .match-player-row__item {
-  width: clamp(40px, 2.5vw, 46px);
-  height: clamp(40px, 2.5vw, 46px);
-  border-radius: 11px;
+  width: clamp(32px, 2.2vw, 38px);
+  height: clamp(32px, 2.2vw, 38px);
+  border-radius: 8px;
   border: 1px solid rgba(148, 163, 184, 0.25);
   background: rgba(15, 23, 42, 0.6);
   display: flex;
@@ -807,7 +807,7 @@
 @media (max-width: 960px) {
   .match-card__summary {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1rem;
     justify-items: start;
   }
 
@@ -1006,14 +1006,28 @@
 
 @media (max-width: 380px) {
   .match-card__summary {
-    padding: clamp(0.85rem, 5vw, 1.15rem);
+    padding: clamp(0.7rem, 4vw, 1rem);
   }
 
   .match-card__stat {
-    padding: clamp(0.6rem, 4vw, 0.85rem) clamp(0.7rem, 5vw, 0.9rem);
+    padding: clamp(0.5rem, 3.5vw, 0.75rem) clamp(0.6rem, 4vw, 0.8rem);
   }
 
   .match-card__team {
-    padding: clamp(0.9rem, 5vw, 1.25rem);
+    padding: clamp(0.8rem, 4vw, 1.1rem);
+  }
+
+  .match-card__stat-grid {
+    grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+    gap: clamp(0.5rem, 2vw, 0.6rem);
+    padding: clamp(0.6rem, 3vw, 1rem);
+  }
+
+  .match-card__detail-stat .value {
+    font-size: 0.9rem;
+  }
+
+  .match-card__detail-stat .label {
+    font-size: 0.68rem;
   }
 }

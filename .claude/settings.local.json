@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "WebSearch",
+      "WebFetch(domain:developer.riotgames.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:status.riotgames.com)",
+      "WebFetch(domain:raw.communitydragon.org)",
+      "Bash(mvn:*)"
     ],
     "deny": [],
     "ask": []
