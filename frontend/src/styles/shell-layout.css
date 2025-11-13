@@ -105,6 +105,60 @@
   }
 }
 
+/* Mobile Layout Styles */
+.mobile-app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 60px; /* Space for bottom navigation */
+}
+
+/* Compact Mobile Header */
+.mobile-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 0.75rem 1rem;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.mobile-header__brand {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mobile-main {
+  flex: 1;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.mobile-content {
+  padding: 0 0.5rem;
+}
+
+/* Simplified Mobile Footer */
+.mobile-footer {
+  padding: 1rem 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: auto;
+}
+
+.mobile-footer__text {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+/* Responsive adjustments */
 @media (max-width: 720px) {
   .app-shell__toolbar {
     padding: clamp(0.6rem, 4vw, 1rem) clamp(0.75rem, 5vw, 1.25rem);
@@ -118,5 +172,83 @@
   .app-shell__actions {
     width: 100%;
     justify-content: space-between;
+  }
+}
+
+/* Compact BrandMark for mobile */
+.mobile-header__brand .brand-mark {
+  font-size: 1.25rem;
+}
+
+/* Safe area support for modern mobile devices */
+@supports (padding: max(0px)) {
+  .mobile-header {
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+  }
+
+  .mobile-content {
+    padding-left: max(0.5rem, env(safe-area-inset-left));
+    padding-right: max(0.5rem, env(safe-area-inset-right));
+  }
+
+  .mobile-app-shell {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
+  }
+
+  .bottom-nav {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 4px);
+  }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+  .mobile-header {
+    min-height: 48px;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .mobile-app-shell {
+    padding-bottom: 50px; /* Smaller bottom nav in landscape */
+  }
+
+  .mobile-main {
+    padding-top: 0.5rem;
+  }
+}
+
+/* Smooth transitions for layout changes */
+.mobile-app-shell,
+.mobile-header,
+.mobile-main {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hide desktop elements on mobile */
+@media (max-width: 767px) {
+  .app-shell__nav,
+  .app-shell__context {
+    display: none;
+  }
+}
+
+/* Enhance touch targets on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-header {
+    min-height: 60px; /* Larger touch target */
+  }
+
+  .mobile-content {
+    padding: 0 1rem; /* More spacing for thumbs */
+  }
+}
+
+/* Performance optimizations for mobile */
+@media (max-width: 767px) {
+  .mobile-header,
+  .mobile-main,
+  .mobile-footer {
+    will-change: transform;
+    contain: layout style paint;
   }
 }

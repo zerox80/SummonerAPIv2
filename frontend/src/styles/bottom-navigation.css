@@ -1,0 +1,140 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  z-index: 50;
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0)
+          calc(env(safe-area-inset-bottom, 0) + 4px) env(safe-area-inset-left, 0);
+}
+
+.bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 12px;
+  min-height: 44px; /* Minimum touch target size */
+  min-width: 44px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.bottom-nav__item svg {
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s ease;
+}
+
+/* Active state */
+.bottom-nav__item--active {
+  color: var(--accent-solid);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.bottom-nav__item--active svg {
+  transform: scale(1.1);
+}
+
+/* Hover state */
+.bottom-nav__item:hover:not(.bottom-nav__item--fab) {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* FAB (Floating Action Button) style for search */
+.bottom-nav__item--fab {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px;
+  margin: -8px 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 44px;
+  height: 44px;
+  justify-self: center;
+}
+
+.bottom-nav__item--fab svg {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+
+/* Active/touch feedback */
+.bottom-nav__item:active {
+  transform: scale(0.95);
+}
+
+.bottom-nav__item--fab:active {
+  transform: scale(0.9);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Focus states for accessibility */
+.bottom-nav__item:focus-visible {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 2px;
+}
+
+/* Theme toggle positioning in bottom nav */
+.bottom-nav__item .theme-toggle {
+  transform: scale(0.8);
+}
+
+/* Safe area support for iPhone X+ */
+@supports (padding: max(0px)) {
+  .bottom-nav {
+    height: calc(60px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .bottom-nav {
+    background: rgba(0, 0, 0, 0.3);
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav__item,
+  .bottom-nav__item svg,
+  .bottom-nav__item:active {
+    transition: none;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+  .bottom-nav {
+    height: 50px;
+  }
+
+  .bottom-nav__item {
+    gap: 1px;
+    padding: 6px 8px;
+    font-size: 0.7rem;
+  }
+
+  .bottom-nav__item svg {
+    width: 18px;
+    height: 18px;
+  }
+}

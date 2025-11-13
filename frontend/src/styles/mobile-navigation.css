@@ -1,0 +1,232 @@
+.mobile-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.mobile-nav--open {
+  pointer-events: all;
+}
+
+/* Overlay */
+.mobile-nav__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-nav--open .mobile-nav__overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Navigation Panel */
+.mobile-nav__panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  background: var(--surface-primary);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-nav--open .mobile-nav__panel {
+  transform: translateX(0);
+}
+
+/* Panel Header */
+.mobile-nav__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-nav__close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.mobile-nav__close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.mobile-nav__close:active {
+  transform: scale(0.95);
+}
+
+/* Navigation Menu */
+.mobile-nav__menu {
+  flex: 1;
+  padding: 1rem 0;
+}
+
+.mobile-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.875rem 1.25rem;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.mobile-nav__link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.mobile-nav__link:active {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(2px);
+}
+
+.mobile-nav__link--active {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--accent-solid);
+  border-left: 3px solid var(--accent-solid);
+}
+
+.mobile-nav__link-icon {
+  font-size: 1.1rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav__link-label {
+  font-weight: 500;
+}
+
+/* Actions Section */
+.mobile-nav__actions {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 0;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mobile-nav__section {
+  padding: 0 1.25rem;
+}
+
+.mobile-nav__section-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem 0;
+  padding: 0 0 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Focus states for accessibility */
+.mobile-nav__link:focus-visible {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: -2px;
+}
+
+.mobile-nav__close:focus-visible {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 2px;
+}
+
+/* Smooth scroll behavior */
+.mobile-nav__panel {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for panel */
+.mobile-nav__panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mobile-nav__panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mobile-nav__panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.mobile-nav__panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav__overlay,
+  .mobile-nav__panel,
+  .mobile-nav__link,
+  .mobile-nav__close {
+    transition: none;
+  }
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .mobile-nav__panel {
+    width: 320px;
+  }
+}
+
+/* Dark mode specific */
+@media (prefers-color-scheme: dark) {
+  .mobile-nav__panel {
+    background: var(--surface-primary);
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Large screens - slide from left with offset */
+@media (min-width: 1024px) {
+  .mobile-nav__panel {
+    transform: translateX(-100%) scale(0.98);
+  }
+
+  .mobile-nav--open .mobile-nav__panel {
+    transform: translateX(0) scale(1);
+  }
+}

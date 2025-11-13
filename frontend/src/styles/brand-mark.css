@@ -9,6 +9,7 @@
   letter-spacing: 0.02em;
   transform: translateZ(0);
   transition: transform var(--duration-fast) ease;
+  text-decoration: none;
 }
 
 .brand-mark:hover {
@@ -22,6 +23,9 @@
   -webkit-background-clip: text;
   color: transparent;
   filter: drop-shadow(0 8px 18px rgba(99, 102, 241, 0.35));
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .brand-mark__text {
@@ -38,4 +42,52 @@
   color: var(--text-secondary);
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+/* Compact version for mobile header */
+.brand-mark--compact {
+  padding: 0.25rem 0.4rem;
+  gap: 0;
+}
+
+.brand-mark__glyph--compact {
+  font-size: 1.75rem;
+}
+
+/* Hide text in compact mode */
+.brand-mark--compact .brand-mark__text {
+  display: none;
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .brand-mark--compact {
+    padding: 0.2rem 0.3rem;
+  }
+
+  .brand-mark__glyph--compact {
+    font-size: 1.5rem;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .brand-mark:hover {
+    transform: none;
+  }
+
+  .brand-mark:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Focus states for accessibility */
+.brand-mark:focus-visible {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.brand-mark--compact:focus-visible {
+  outline-offset: 1px;
 }
