@@ -395,10 +395,6 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
                                 <span className="score">{player.kills}/{player.deaths}/{player.assists}</span>
                                 <span className="ratio">{formatKDA(player.kills, player.deaths, player.assists)}</span>
                               </div>
-                              <div className="match-player-row__cs">
-                                <span className="score">{playerCs}</span>
-                                <span className="label">CS</span>
-                              </div>
                               <div className="match-player-row__items">
                                 {playerItems.map((itemId, index) => (
                                   <div key={index} className={`match-player-row__item ${itemId ? '' : 'is-empty'}`}>
@@ -421,6 +417,10 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
                                       loading="lazy"
                                     />
                                   ) : null}
+                                </div>
+                                <div className="match-player-row__cs">
+                                  <span className="score">{playerCs}</span>
+                                  <span className="label">CS</span>
                                 </div>
                               </div>
                             </div>

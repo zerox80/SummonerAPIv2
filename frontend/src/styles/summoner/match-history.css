@@ -572,11 +572,11 @@
 
 .match-player-row {
   display: grid;
-  grid-template-columns: minmax(140px, 2fr) minmax(80px, 0.8fr) minmax(100px, 1fr) minmax(60px, 0.6fr);
+  grid-template-columns: minmax(140px, 2fr) minmax(80px, 0.8fr) minmax(100px, 1fr);
   grid-template-rows: auto auto;
   grid-template-areas:
-    "champ spells kda cs"
-    "items items items items";
+    "champ spells kda"
+    "items items items";
   column-gap: clamp(0.8rem, 2vw, 1.2rem);
   row-gap: clamp(0.5rem, 1.2vw, 0.8rem);
   align-items: center;
@@ -680,9 +680,11 @@
 }
 
 .match-player-row__kda {
-  display: grid;
-  gap: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
   justify-items: center;
+  align-items: center;
   text-align: center;
   grid-area: kda;
   min-width: 0;
@@ -699,18 +701,26 @@
 }
 
 .match-player-row__cs {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 0.2rem;
-  justify-items: center;
-  grid-area: cs;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  margin-left: 0.5rem;
 }
 
 .match-player-row__cs .score {
   font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
 }
 
 .match-player-row__cs .label {
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(226, 232, 240, 0.6);
@@ -777,11 +787,11 @@
 
 @media (max-width: 900px) {
   .match-player-row {
-    grid-template-columns: minmax(120px, 1.8fr) minmax(70px, 0.8fr) minmax(85px, 1fr) minmax(50px, 0.6fr);
+    grid-template-columns: minmax(120px, 1.8fr) minmax(70px, 0.8fr) minmax(85px, 1fr);
     grid-template-rows: auto auto;
     grid-template-areas:
-      "champ spells kda cs"
-      "items items items items";
+      "champ spells kda"
+      "items items items";
     column-gap: 0.7rem;
     row-gap: 0.6rem;
     padding: 0.8rem 0.85rem;
@@ -797,16 +807,6 @@
     height: 34px;
   }
 
-  .match-player-row__kda,
-  .match-player-row__cs {
-    justify-items: center;
-    text-align: center;
-  }
-
-  .match-player-row__cs {
-    align-self: center;
-  }
-
   .match-player-row__items {
     gap: 0.35rem;
     justify-content: flex-start;
@@ -815,6 +815,19 @@
   .match-player-row__item {
     width: 30px;
     height: 30px;
+  }
+
+  .match-player-row__cs {
+    padding: 0.35rem 0.5rem;
+    margin-left: 0.4rem;
+  }
+
+  .match-player-row__cs .score {
+    font-size: 0.85rem;
+  }
+
+  .match-player-row__cs .label {
+    font-size: 0.65rem;
   }
 }
 
@@ -850,12 +863,7 @@
   }
 
   .match-player-row__kda {
-    justify-items: center;
-    text-align: center;
-  }
-
-  .match-player-row__cs {
-    display: none;
+    align-items: center;
   }
 
   .match-player-row__items {
@@ -867,6 +875,19 @@
   .match-player-row__item {
     width: 32px;
     height: 32px;
+  }
+
+  .match-player-row__cs {
+    padding: 0.3rem 0.45rem;
+    margin-left: 0.35rem;
+  }
+
+  .match-player-row__cs .score {
+    font-size: 0.8rem;
+  }
+
+  .match-player-row__cs .label {
+    font-size: 0.6rem;
   }
 
   .match-player-row__spells {
@@ -902,11 +923,11 @@
   }
 
   .match-player-row {
-    grid-template-columns: minmax(130px, 2fr) minmax(75px, 0.8fr) minmax(90px, 1fr) minmax(55px, 0.6fr);
+    grid-template-columns: minmax(130px, 2fr) minmax(75px, 0.8fr) minmax(90px, 1fr);
     grid-template-rows: auto auto;
     grid-template-areas:
-      "champ spells kda cs"
-      "items items items items";
+      "champ spells kda"
+      "items items items";
     gap: 0.7rem;
     row-gap: 0.6rem;
     padding: 0.85rem 0.9rem;
@@ -958,12 +979,8 @@
   }
 
   .match-player-row__kda {
-    justify-items: center;
+    align-items: center;
     text-align: center;
-  }
-
-  .match-player-row__cs {
-    display: none;
   }
 
   .match-player-row__spells {
@@ -980,6 +997,11 @@
   .match-player-row__item {
     width: 32px;
     height: 32px;
+  }
+
+  .match-player-row__cs {
+    padding: 0.3rem 0.45rem;
+    margin-left: 0.35rem;
   }
 }
 
