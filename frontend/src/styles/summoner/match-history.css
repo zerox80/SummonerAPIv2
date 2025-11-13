@@ -369,11 +369,11 @@
 }
 
 .match-card__build-row {
-  display: grid;
-  grid-template-columns: auto auto;
+  display: flex;
   gap: clamp(1rem, 4vw, 2.5rem);
   align-items: flex-start;
-  justify-content: start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .match-card__build-group {
@@ -570,14 +570,13 @@
 
 .match-player-row {
   display: grid;
-  grid-template-columns: minmax(0, 2.6fr) minmax(0, 1.1fr) minmax(0, 1fr) minmax(64px, 0.8fr);
-  grid-template-rows: auto auto;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 1fr) minmax(64px, 0.6fr) minmax(0, 2fr);
+  grid-template-rows: auto;
   grid-template-areas:
-    "champ spells kda cs"
-    "items . . .";
+    "champ spells kda cs items";
   column-gap: clamp(0.65rem, 1.6vw, 0.95rem);
   row-gap: clamp(0.35rem, 1vw, 0.6rem);
-  align-items: flex-start;
+  align-items: center;
   padding: clamp(0.78rem, 2vw, 0.95rem) clamp(0.75rem, 1.8vw, 0.95rem);
   border-radius: var(--radius-md);
   transition: background var(--duration-base) ease, transform var(--duration-base) ease;
@@ -715,23 +714,25 @@
 
 .match-player-row__items {
   display: flex;
-  gap: clamp(0.35rem, 1.1vw, 0.5rem);
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  gap: clamp(0.3rem, 0.8vw, 0.4rem);
+  flex-wrap: nowrap;
+  justify-content: flex-end;
   grid-area: items;
   width: 100%;
+  align-items: center;
 }
 
 .match-player-row__item {
-  width: clamp(32px, 2.2vw, 38px);
-  height: clamp(32px, 2.2vw, 38px);
-  border-radius: 8px;
+  width: clamp(28px, 2vw, 34px);
+  height: clamp(28px, 2vw, 34px);
+  border-radius: 6px;
   border: 1px solid rgba(148, 163, 184, 0.25);
   background: rgba(15, 23, 42, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .match-player-row__item img {
@@ -771,8 +772,8 @@
 
 @media (max-width: 900px) {
   .match-player-row {
-    grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 0.9fr) minmax(56px, 0.7fr);
-    column-gap: 0.75rem;
+    grid-template-columns: minmax(0, 1.8fr) minmax(0, 0.7fr) minmax(0, 0.8fr) minmax(50px, 0.5fr) minmax(0, 1.8fr);
+    column-gap: 0.6rem;
   }
 
   .match-player-row__kda,
@@ -782,20 +783,23 @@
   }
 
   .match-player-row__cs {
-    align-self: flex-start;
+    align-self: center;
+  }
+
+  .match-player-row__items {
+    gap: 0.25rem;
   }
 }
 
 @media (max-width: 640px) {
   .match-player-row {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "champ"
-      "items"
-      "spells"
-      "kda"
-      "cs";
-    gap: 0.75rem;
+      "champ items"
+      "spells items"
+      "kda cs";
+    gap: 0.6rem;
+    column-gap: 0.8rem;
   }
 
   .match-player-row__champion {
@@ -812,7 +816,13 @@
   }
 
   .match-player-row__items {
-    justify-content: flex-start;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    max-width: 180px;
+  }
+
+  .match-player-row__spells {
+    justify-self: flex-start;
   }
 }
 
@@ -844,13 +854,14 @@
   }
 
   .match-player-row {
-    grid-template-columns: minmax(0, 1.4fr) repeat(3, auto) minmax(0, 1.2fr);
-    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.7fr) minmax(0, 0.8fr) minmax(50px, 0.5fr) minmax(0, 1.8fr);
+    gap: 0.6rem;
   }
 
   .match-player-row__items {
     width: 100%;
-    justify-content: flex-start;
+    justify-content: flex-end;
+    gap: 0.3rem;
   }
 }
 
@@ -862,8 +873,13 @@
 
 @media (max-width: 720px) {
   .match-player-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "champ items"
+      "spells items"
+      "kda cs";
     justify-items: start;
+    gap: 0.5rem;
   }
 
   .match-player-row__kda,
@@ -878,6 +894,9 @@
 
   .match-player-row__items {
     gap: 0.3rem;
+    flex-wrap: wrap;
+    max-width: 160px;
+    justify-content: flex-end;
   }
 }
 
@@ -934,11 +953,19 @@
   }
 
   .match-card__item-slot,
-  .match-card__item-slot--trinket,
-  .match-player-row__item,
-  .match-player-row__item--trinket {
+  .match-card__item-slot--trinket {
     width: 44px;
     height: 44px;
+  }
+
+  .match-player-row__item,
+  .match-player-row__item--trinket {
+    width: 30px;
+    height: 30px;
+  }
+
+  .match-player-row__items {
+    gap: 0.25rem;
   }
 }
 
