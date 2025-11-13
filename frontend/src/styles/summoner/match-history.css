@@ -674,7 +674,7 @@
 .match-player-row__spell img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .match-player-row__kda {
