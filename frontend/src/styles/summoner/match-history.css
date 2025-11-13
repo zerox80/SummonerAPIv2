@@ -369,10 +369,11 @@
 }
 
 .match-card__build-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
   gap: clamp(1rem, 4vw, 2.5rem);
-  flex-wrap: wrap;
   align-items: flex-start;
+  justify-content: start;
 }
 
 .match-card__build-group {
@@ -658,8 +659,8 @@
 }
 
 .match-player-row__spell {
-  width: clamp(36px, 2.6vw, 48px);
-  height: clamp(36px, 2.6vw, 48px);
+  width: clamp(48px, 3vw, 56px);
+  height: clamp(48px, 3vw, 56px);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(15, 23, 42, 0.65);

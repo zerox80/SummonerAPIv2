@@ -7,7 +7,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:status.riotgames.com)",
       "WebFetch(domain:raw.communitydragon.org)",
-      "Bash(mvn:*)"
+      "Bash(mvn:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
