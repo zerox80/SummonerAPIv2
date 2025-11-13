@@ -1,75 +1,144 @@
+// Package-Deklaration: Definiert dass diese Klasse zum Client-Package gehört
 package com.zerox80.riotapi.client;
 
+// Import für Jackson JSON-Parsing Exceptions
 import com.fasterxml.jackson.core.JsonProcessingException;
+// Import für Jackson um generische Typen zu deserialisieren (z.B. List<LeagueEntryDTO>)
 import com.fasterxml.jackson.core.type.TypeReference;
+// Import für Konfiguration des Deserialisierungsverhaltens
 import com.fasterxml.jackson.databind.DeserializationFeature;
+// Import der Hauptklasse für JSON Serialisierung/Deserialisierung
 import com.fasterxml.jackson.databind.ObjectMapper;
+// Import für Konfiguration der Property-Namensgebung (camelCase, snake_case, etc.)
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+// Import unserer Model-Klasse für Account-Daten von Riot
 import com.zerox80.riotapi.model.AccountDto;
+// Import für Ranked League Einträge (Rang, Division, LP)
 import com.zerox80.riotapi.model.LeagueEntryDTO;
+// Import für detaillierte Match-Daten aus der V5 API
 import com.zerox80.riotapi.model.MatchV5Dto;
+// Import für Summoner-Grunddaten (Level, Name, Icon)
 import com.zerox80.riotapi.model.Summoner;
+// Import für das Logging-Interface von SLF4J
 import org.slf4j.Logger;
+// Import für die Factory zum Erstellen von Logger-Instanzen
 import org.slf4j.LoggerFactory;
+// Import für automatische Dependency Injection durch Spring
 import org.springframework.beans.factory.annotation.Autowired;
+// Import um Werte aus application.properties zu injizieren
 import org.springframework.beans.factory.annotation.Value;
+// Import für direkten Cache-Zugriff zum manuellen Evicting
 import org.springframework.cache.Cache;
+// Import der Annotation um Methoden-Ergebnisse zu cachen
 import org.springframework.cache.annotation.Cacheable;
+// Import für Zugriff auf alle konfigurierten Caches
 import org.springframework.cache.CacheManager;
+// Import um diese Klasse als Spring-Bean zu registrieren
 import org.springframework.stereotype.Component;
+// Import für Metrics-Registry zur Performance-Überwachung
 import io.micrometer.core.instrument.MeterRegistry;
+// Import für Timer-Metriken um Latenz zu messen
 import io.micrometer.core.instrument.Timer;
 
+// Import für allgemeine IO-Exceptions
 import java.io.IOException;
+// Import für URI-Konstruktion (URLs für API-Calls)
 import java.net.URI;
+// Import zum URL-Encoding von Parametern (verhindert Injection)
 import java.net.URLEncoder;
+// Import des modernen Java HTTP Clients (seit Java 11)
 import java.net.http.HttpClient;
+// Import für HTTP Request Builder
 import java.net.http.HttpRequest;
+// Import für HTTP Response Objekte
 import java.net.http.HttpResponse;
+// Import für UTF-8 Encoding Standard
 import java.nio.charset.StandardCharsets;
+// Import für Zeitdauern (Timeouts, Delays)
 import java.time.Duration;
+// Import für Zeitpunkte mit Zeitzone (für Retry-After Header)
 import java.time.ZonedDateTime;
+// Import für Formatierung von Datums-Strings
 import java.time.format.DateTimeFormatter;
+// Import für Listen-Datenstruktur
 import java.util.List;
+// Import für Locale (Spracheinstellungen, hier für toLowerCase)
 import java.util.Locale;
+// Import für Optional Pattern (vermeidet null-Checks)
 import java.util.Optional;
+// Import für Map-Interface
 import java.util.Map;
+// Import für thread-sichere Hash-Map (wichtig für Concurrency)
 import java.util.concurrent.ConcurrentHashMap;
+// Import für Zeiteinheiten in Concurrent-Operationen
 import java.util.concurrent.TimeUnit;
+// Import für thread-sicheren Zufallsgenerator (für Jitter in Retry-Logik)
 import java.util.concurrent.ThreadLocalRandom;
+// Import für asynchrone Operationen mit Callbacks
 import java.util.concurrent.CompletableFuture;
+// Import für Supplier-Functional-Interface
 import java.util.function.Supplier;
+// Import für Semaphore zur Begrenzung gleichzeitiger Requests
 import java.util.concurrent.Semaphore;
+// Import für thread-sicheren Integer-Counter
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+// @Component: Markiert diese Klasse als Spring-Bean die automatisch instanziiert wird
 @Component
+// Öffentliche Klasse: Haupt-Client für alle Kommunikation mit der Riot Games API
 public class RiotApiClient {
 
-    // Limit the number of concurrent outbound HTTP requests to avoid overwhelming upstream and hitting rate limits
+    // Kommentar: Semaphore begrenzt die Anzahl gleichzeitiger ausgehender HTTP-Requests
+    // Verhindert Überlastung der Riot API und das Erreichen von Rate Limits
+    // final: Wert kann nach Initialisierung nicht mehr geändert werden
     private final Semaphore outboundLimiter;
 
+    // static final: Klassenweite Konstante, Logger für diese spezifische Klasse
+    // LoggerFactory.getLogger(): Erstellt einen Logger mit dem Klassennamen als Kategorie
     private static final Logger logger = LoggerFactory.getLogger(RiotApiClient.class);
+    // final: Immutabler API-Key für Authentifizierung bei Riot
     private final String apiKey;
+    // final: Platform-Region (z.B. "euw1" für Europa West)
     private final String platformRegion;
+    // final: Regionales Routing für Match-History APIs (z.B. "europe")
     private final String regionalRoute;
+    // final: Wiederverwendbarer HTTP-Client für alle Requests
     private final HttpClient httpClient;
+    // final: JSON Mapper für Serialisierung/Deserialisierung
     private final ObjectMapper objectMapper;
+    // final: Basis-URL für Community Dragon CDN (Profile Icons, etc.)
     private final String communityDragonUrl;
+    // final: Registry für Metriken (Prometheus, Grafana)
     private final MeterRegistry meterRegistry;
+    // final: Maximale Anzahl gleichzeitiger ausgehender Requests
     private final int maxConcurrentOutbound;
+    // final: User-Agent String für HTTP-Headers (identifiziert unsere App)
     private final String userAgent;
+    // final: Manager für alle Cache-Instanzen in der Anwendung
     private final CacheManager cacheManager;
 
-    // In-flight request coalescing maps to prevent duplicate upstream calls on cache misses
+    // Kommentar: In-flight Request Coalescing Maps - verhindert doppelte API-Calls
+    // wenn mehrere Threads gleichzeitig die gleichen Daten anfordern (Cache-Miss)
+    // ConcurrentHashMap: Thread-sichere Map für parallele Zugriffe
+    // Key: Account-Identifier, Value: Future mit dem Ergebnis
     private final Map<String, CompletableFuture<AccountDto>> accountByRiotIdInFlight = new ConcurrentHashMap<>();
+    // Map für in-flight Summoner-Requests nach PUUID
     private final Map<String, CompletableFuture<Summoner>> summonerByPuuidInFlight = new ConcurrentHashMap<>();
+    // Map für in-flight League-Requests nach Summoner-ID
     private final Map<String, CompletableFuture<List<LeagueEntryDTO>>> leagueBySummonerIdInFlight = new ConcurrentHashMap<>();
+    // Map für in-flight League-Requests nach PUUID
     private final Map<String, CompletableFuture<List<LeagueEntryDTO>>> leagueByPuuidInFlight = new ConcurrentHashMap<>();
+    // Map für in-flight Match-ID Requests
     private final Map<String, CompletableFuture<List<String>>> matchIdsInFlight = new ConcurrentHashMap<>();
+    // Map für in-flight Match-Detail Requests
     private final Map<String, CompletableFuture<MatchV5Dto>> matchDetailsInFlight = new ConcurrentHashMap<>();
 
+    // static final: Typ-Token für Jackson um List<LeagueEntryDTO> zu deserialisieren
+    // TypeReference: Erhält generische Typ-Information zur Laufzeit (Type Erasure Umgehung)
+    // {} am Ende: Anonyme innere Klasse die TypeReference erweitert
     private static final TypeReference<List<LeagueEntryDTO>> LEAGUE_LIST_TYPE = new TypeReference<>() {};
+    // Typ-Token für Deserialisierung von String-Listen (Match-IDs)
     private static final TypeReference<List<String>> MATCH_ID_LIST_TYPE = new TypeReference<>() {};
 
     

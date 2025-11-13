@@ -138,10 +138,11 @@
 
 
 .match-card__champion {
-  display: grid;
-  gap: 0.75rem;
+  display: flex;
   align-items: center;
-  grid-template-columns: auto 1fr;
+  gap: clamp(0.5rem, 1.5vw, 0.8rem);
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .match-card__champion img {
@@ -154,21 +155,31 @@
 }
 
 .match-card__champion-meta {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.45rem;
-  align-items: start;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 120px; /* Ensure minimum width for readability */
+  overflow: visible;
 }
 
 .match-card__champion-name {
   font-weight: 600;
   font-size: 1rem;
   letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+  flex-wrap: nowrap;
 }
 
 .match-card__summary-body {
-  display: grid;
-  gap: clamp(0.75rem, 2vw, 1rem);
-  align-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.5vw, 0.8rem);
+  flex: 1;
+  min-width: 0;
 }
 
 .match-card__meta {
@@ -382,13 +393,14 @@
   gap: 0.5rem;
   align-items: center;
   justify-content: flex-start;
+  grid-area: spells;
 }
 
 .match-card__spell,
 .match-card__keystone {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(15, 23, 42, 0.65);
   display: flex;
@@ -425,10 +437,10 @@
 }
 
 .match-card__item-slot {
-  flex: 0 0 clamp(42px, 2.8vw, 48px);
-  width: clamp(42px, 2.8vw, 48px);
-  height: clamp(42px, 2.8vw, 48px);
-  border-radius: 12px;
+  flex: 0 0 clamp(48px, 3.2vw, 54px);
+  width: clamp(48px, 3.2vw, 54px);
+  height: clamp(48px, 3.2vw, 54px);
+  border-radius: 14px;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.25);
   display: flex;
