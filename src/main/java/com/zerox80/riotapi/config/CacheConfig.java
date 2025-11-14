@@ -1,196 +1,168 @@
-// Package-Deklaration: Definiert dass diese Konfigurationsklasse zum Config-Package gehört
+// Package declaration - defines that this configuration class belongs to the config package
 package com.zerox80.riotapi.config;
 
-// Import für Caffeine Cache Builder - High-Performance Java Caching Library
+// Import for Caffeine Cache Builder - high-performance Java caching library
 import com.github.benmanes.caffeine.cache.Caffeine;
-// Import für Spring's Cache-Manager Interface
+// Import for Spring's CacheManager interface
 import org.springframework.cache.CacheManager;
-// Import für Spring's Caffeine Cache Manager Implementation
+// Import for Spring's Caffeine Cache Manager implementation
 import org.springframework.cache.caffeine.CaffeineCacheManager;
-// Import für @Bean Annotation um Spring-Beans zu deklarieren
+// Import for @Bean annotation - used to declare Spring beans
 import org.springframework.context.annotation.Bean;
-// Import für @Configuration um diese Klasse als Konfigurationsquelle zu markieren
+// Import for @Configuration annotation - marks this class as a configuration source
 import org.springframework.context.annotation.Configuration;
-// Import für @Primary um diese Bean als Standard-CacheManager zu markieren
+// Import for @Primary annotation - marks this bean as the default CacheManager
 import org.springframework.context.annotation.Primary;
 
-// Import für Zeit-Einheiten (HOURS, MINUTES, DAYS)
+// Import for time units (HOURS, MINUTES, DAYS)
 import java.util.concurrent.TimeUnit;
 
 
-// @Configuration: Markiert diese Klasse als Quelle von Bean-Definitionen
+// @Configuration - marks this class as a source of bean definitions
 @Configuration
-// Öffentliche Klasse: Konfiguration aller Caches in der Anwendung
+/**
+ * CacheConfig configures all caches used in the application.
+ * Uses Caffeine as the caching provider with different TTL and size settings for each cache.
+ * Caches include Riot API data (accounts, summoners, matches) and Data Dragon static data (champions, items, runes).
+ */
 public class CacheConfig {
 
-    // Javadoc würde beschreiben: Erstellt und konfiguriert den Haupt-Cache-Manager
-
-    // @Primary: Markiert diese Bean als primäre Wahl wenn mehrere CacheManager existieren
+    /**
+     * Creates and configures the main cache manager bean.
+     * Registers multiple named caches with specific expiration and size settings.
+     * All caches use async mode for better concurrency and non-blocking operations.
+     *
+     * @return Configured CaffeineCacheManager with all application caches
+     */
     @Primary
-    // @Bean: Registriert Rückgabewert als Bean im Spring Container
-    // name = "caffeineCacheManager": Gibt der Bean einen expliziten Namen
     @Bean("caffeineCacheManager")
-    // public: Methode ist öffentlich zugänglich
-    // CaffeineCacheManager: Return-Type, Caffeine-basierter Cache Manager
-    // cacheManager(): Methodenname, erstellt den Cache Manager
     public CaffeineCacheManager cacheManager() {
-        // Erstellt neue Instanz von CaffeineCacheManager (Spring Wrapper um Caffeine)
+        // Create new instance of CaffeineCacheManager (Spring wrapper for Caffeine)
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-        // Aktiviert asynchronen Cache-Modus für bessere Concurrency
-        // Verhindert Blockierung bei Cache-Operationen
+        // Enable asynchronous cache mode for better concurrency
+        // Prevents blocking on cache operations
         cacheManager.setAsyncCacheMode(true);
 
-        // Registriert Custom Cache für "accounts" (Riot Account Daten)
-        // registerCustomCache(): Fügt einen benannten Cache mit spezifischer Konfiguration hinzu
+        // Register cache for "accounts" (Riot Account data: puuid, gameName, tagLine)
         cacheManager.registerCustomCache("accounts",
-            // Caffeine.newBuilder(): Startet Builder-Pattern für Cache-Konfiguration
             Caffeine.newBuilder()
-                // Einträge verfallen 12 Stunden nach dem Schreiben
-                // Account-Daten ändern sich selten
+                // Entries expire 12 hours after write - account data rarely changes
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximale Anzahl von Einträgen: 2000 Accounts
-                // LRU-Eviction wenn Limit erreicht (Least Recently Used)
+                // Maximum 2000 account entries - LRU eviction when limit reached
                 .maximumSize(2000)
-                // Baut asynchronen Cache (CompletableFuture-basiert)
                 .buildAsync());
-        // Registriert Cache für "summoners" (Summoner-Daten: Level, Name, Icon)
+
+        // Register cache for "summoners" (Summoner data: level, name, icon)
         cacheManager.registerCustomCache("summoners",
-            // Neuer Caffeine Builder für Summoner-Cache
             Caffeine.newBuilder()
-                // Einträge verfallen nach 12 Stunden
-                // Summoner-Daten (Level, Name) ändern sich selten
+                // Entries expire after 12 hours - summoner data (level, name) changes infrequently
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximum 2000 Summoner können gecached werden
+                // Maximum 2000 summoners can be cached
                 .maximumSize(2000)
-                // Asynchroner Cache für non-blocking Operations
                 .buildAsync());
-        // Registriert Cache für "leagueEntries" (Ranked Daten: Rang, Division, LP)
+
+        // Register cache for "leagueEntries" (Ranked data: rank, division, LP)
         cacheManager.registerCustomCache("leagueEntries",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 10 Minuten
-                // Ranked-Daten ändern sich häufig (nach jedem Game)
+                // Entries expire after 10 minutes - ranked data changes frequently (after each game)
                 .expireAfterWrite(10, TimeUnit.MINUTES)
-                // Maximum 2000 League-Einträge
+                // Maximum 2000 league entries
                 .maximumSize(2000)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "matchIds" (Listen von Match-IDs pro Spieler)
+
+        // Register cache for "matchIds" (Lists of match IDs per player)
         cacheManager.registerCustomCache("matchIds",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 5 Minuten
-                // Match-IDs ändern sich häufig (neue Games)
+                // Entries expire after 5 minutes - match IDs change frequently (new games)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
-                // Maximum 5000 Match-ID-Listen (mehr als Summoner wegen Pagination)
+                // Maximum 5000 match ID lists (more than summoners due to pagination)
                 .maximumSize(5000)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "matchDetails" (Detaillierte Match-Daten)
+
+        // Register cache for "matchDetails" (Detailed match data)
         cacheManager.registerCustomCache("matchDetails",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 7 Tagen
-                // Match-Details ändern sich NIEMALS (historische Daten)
+                // Entries expire after 7 days - match details NEVER change (historical data)
                 .expireAfterWrite(7, TimeUnit.DAYS)
-                // Maximum 10000 Match-Details (größter Cache, viele Daten)
+                // Maximum 10000 match details (largest cache, lots of data)
                 .maximumSize(10000)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "matchHistory" (Aggregierte Match-History pro Spieler)
+
+        // Register cache for "matchHistory" (Aggregated match history per player)
         cacheManager.registerCustomCache("matchHistory",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 5 Minuten
-                // Match-History ändert sich mit neuen Games
+                // Entries expire after 5 minutes - match history changes with new games
                 .expireAfterWrite(5, TimeUnit.MINUTES)
-                // Maximum 2000 Match-Histories
+                // Maximum 2000 match histories
                 .maximumSize(2000)
-                // Asynchroner Cache
                 .buildAsync());
-        // Kommentar: Statische Daten (Data Dragon): Generös cachen, ändern sich nur bei Patches
+
         // Static data (Data Dragon): cache generously, these change only per patch
-        // Registriert Cache für "ddragonVersions" (Verfügbare LoL Patch-Versionen)
+
+        // Register cache for "ddragonVersions" (Available LoL patch versions)
         cacheManager.registerCustomCache("ddragonVersions",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 12 Stunden
-                // Versionen ändern sich nur bei neuen Patches (~2 Wochen)
+                // Entries expire after 12 hours - versions change only on new patches (~2 weeks)
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximum 10 Versionen (sehr kleine Datenmenge)
+                // Maximum 10 versions (very small data)
                 .maximumSize(10)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "ddragonChampionList" (Liste aller Champions)
+
+        // Register cache for "ddragonChampionList" (List of all champions)
         cacheManager.registerCustomCache("ddragonChampionList",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 12 Stunden
-                // Champion-Liste ändert sich nur bei neuen Champion-Releases (selten)
+                // Entries expire after 12 hours - champion list changes only on new champion releases (rare)
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximum 2 Einträge (meist nur eine Sprache/Version aktiv)
+                // Maximum 2 entries (usually only one language/version active)
                 .maximumSize(2)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "ddragonChampionDetail" (Detaillierte Champion-Daten)
+
+        // Register cache for "ddragonChampionDetail" (Detailed champion data)
         cacheManager.registerCustomCache("ddragonChampionDetail",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 12 Stunden
-                // Champion-Details ändern sich nur bei Balance-Patches
+                // Entries expire after 12 hours - champion details change only on balance patches
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximum 300 Champions (etwa ~160 Champions existieren aktuell)
+                // Maximum 300 champions (about ~160 champions currently exist)
                 .maximumSize(300)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "ddragonItems" (Item-Daten: Kosten, Stats, Rezepte)
+
+        // Register cache for "ddragonItems" (Item data: costs, stats, recipes)
         cacheManager.registerCustomCache("ddragonItems",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 12 Stunden
-                // Items ändern sich nur bei Patches
+                // Entries expire after 12 hours - items change only on patches
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximum 2 Einträge (komplette Item-Liste pro Version)
+                // Maximum 2 entries (complete item list per version)
                 .maximumSize(2)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "ddragonRunes" (Runen-Daten: Keystones, etc.)
+
+        // Register cache for "ddragonRunes" (Rune data: keystones, etc.)
         cacheManager.registerCustomCache("ddragonRunes",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 12 Stunden
-                // Runen ändern sich nur bei Major-Patches
+                // Entries expire after 12 hours - runes change only on major patches
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximum 2 Einträge (komplette Runen-Liste)
+                // Maximum 2 entries (complete rune list)
                 .maximumSize(2)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "ddragonSummonerSpells" (Summoner Spells: Flash, Ignite, etc.)
+
+        // Register cache for "ddragonSummonerSpells" (Summoner spells: Flash, Ignite, etc.)
         cacheManager.registerCustomCache("ddragonSummonerSpells",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 12 Stunden
-                // Summoner Spells ändern sich sehr selten
+                // Entries expire after 12 hours - summoner spells change very rarely
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximum 2 Einträge
+                // Maximum 2 entries
                 .maximumSize(2)
-                // Asynchroner Cache
                 .buildAsync());
-        // Registriert Cache für "ddragonImageBases" (Basis-URLs für Champion/Item-Bilder)
+
+        // Register cache for "ddragonImageBases" (Base URLs for champion/item images)
         cacheManager.registerCustomCache("ddragonImageBases",
-            // Neuer Caffeine Builder
             Caffeine.newBuilder()
-                // Einträge verfallen nach 12 Stunden
-                // Bild-URLs ändern sich nur mit neuen DDragon-Versionen
+                // Entries expire after 12 hours - image URLs change only with new DDragon versions
                 .expireAfterWrite(12, TimeUnit.HOURS)
-                // Maximum 5 Einträge (verschiedene Asset-Typen)
+                // Maximum 5 entries (different asset types)
                 .maximumSize(5)
-                // Asynchroner Cache
                 .buildAsync());
-        // Gibt den vollständig konfigurierten CacheManager zurück
-        // Wird von Spring als Bean registriert
+
+        // Return fully configured cache manager for Spring bean registration
         return cacheManager;
-    // Schließende geschweifte Klammer für Methode cacheManager
     }
-// Schließende geschweifte Klammer für Klasse CacheConfig
 }

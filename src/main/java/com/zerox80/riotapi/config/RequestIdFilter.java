@@ -1,98 +1,117 @@
-// Paket-Deklaration: Definiert die Zugehörigkeit dieser Klasse zum config-Paket
+// Package declaration - defines that this class belongs to the config package
 package com.zerox80.riotapi.config;
 
-// Import für FilterChain zur Weiterleitung des Requests an den nächsten Filter
+// Import for FilterChain to forward request to next filter
 import jakarta.servlet.FilterChain;
-// Import für ServletException zum Werfen von Servlet-spezifischen Exceptions
+// Import for ServletException to throw servlet-specific exceptions
 import jakarta.servlet.ServletException;
-// Import für HTTP-Request-Objekt zum Lesen von Request-Daten
+// Import for HTTP request object to read request data
 import jakarta.servlet.http.HttpServletRequest;
-// Import für HTTP-Response-Objekt zum Setzen von Response-Headern
+// Import for HTTP response object to set response headers
 import jakarta.servlet.http.HttpServletResponse;
-// Import für MDC (Mapped Diagnostic Context) zur Thread-lokalen Kontextverwaltung
+// Import for MDC (Mapped Diagnostic Context) for thread-local context management
 import org.slf4j.MDC;
-// Import für Ordered Interface zur Definition der Filter-Reihenfolge
+// Import for Ordered interface to define filter order
 import org.springframework.core.Ordered;
-// Import für @Order Annotation zum Festlegen der Filter-Priorität
+// Import for @Order annotation to set filter priority
 import org.springframework.core.annotation.Order;
-// Import für @Component um diese Klasse als Spring Bean zu registrieren
+// Import for @Component to register this class as a Spring bean
 import org.springframework.stereotype.Component;
-// Import für OncePerRequestFilter - stellt sicher dass Filter nur 1x pro Request läuft
+// Import for OncePerRequestFilter - ensures filter runs only once per request
 import org.springframework.web.filter.OncePerRequestFilter;
 
-// Import für IOException bei I/O-Operationen
+// Import for IOException during I/O operations
 import java.io.IOException;
-// Import für UUID zum Generieren eindeutiger Request-IDs
+// Import for UUID to generate unique request IDs
 import java.util.UUID;
 
 
-// @Component: Markiert diese Klasse als Spring-verwaltete Komponente
+// @Component - marks this class as a Spring-managed component
 @Component
-// @Order: Setzt die Ausführungsreihenfolge auf HIGHEST_PRECEDENCE (Integer.MIN_VALUE)
-// WICHTIG: Dieser Filter muss als ERSTER laufen um Request-ID für alle nachfolgenden Filter bereitzustellen
+// @Order - sets execution order to HIGHEST_PRECEDENCE (Integer.MIN_VALUE)
+// IMPORTANT: This filter must run FIRST to provide request ID for all subsequent filters
 @Order(Ordered.HIGHEST_PRECEDENCE)
+/**
+ * RequestIdFilter generates or accepts a unique request ID for each HTTP request.
+ * The ID is stored in MDC for logging and returned as an HTTP header.
+ * This filter runs with highest precedence to make the ID available to all other filters and controllers.
+ * Supports client-provided request IDs via X-Request-Id header or generates a new UUID if not provided.
+ */
 public class RequestIdFilter extends OncePerRequestFilter {
 
-    // Statische Konstante für den HTTP-Header-Namen der Request-ID
-    // Public damit andere Klassen darauf zugreifen können
+    // Static constant for the HTTP header name of the request ID
+    // Public so other classes can access it
     public static final String HEADER = "X-Request-Id";
-    // Statische Konstante für den MDC-Key unter dem die Request-ID gespeichert wird
-    // Public damit andere Klassen dieselbe ID aus dem MDC lesen können
+    // Static constant for the MDC key under which the request ID is stored
+    // Public so other classes can read the same ID from MDC
     public static final String MDC_KEY = "requestId";
 
-    // Private Methode zur Bereinigung und Validierung der Request-ID
-    // SICHERHEIT: Kritisch zur Verhinderung von HTTP Response Splitting und Log Injection
+    /**
+     * Sanitizes and validates the request ID.
+     * SECURITY: Critical for preventing HTTP response splitting and log injection attacks.
+     *
+     * @param raw The raw request ID from HTTP header
+     * @return Sanitized request ID or null if invalid
+     */
     private String sanitizeRequestId(String raw) {
-        // Null-Check: Falls keine ID übergeben wurde, gib null zurück
+        // Null check: if no ID was provided, return null
         if (raw == null) return null;
-        // Entfernt Carriage Return (\r) und Line Feed (\n) Zeichen
-        // SICHERHEIT: Verhindert HTTP Response Splitting Attacks
-        // Angreifer könnten sonst \r\n im Header einfügen und zusätzliche Header injizieren
+        // Remove Carriage Return (\r) and Line Feed (\n) characters
+        // SECURITY: Prevents HTTP response splitting attacks
+        // Attackers could otherwise inject \r\n in header to add additional headers
         String cleaned = raw.replace("\r", "").replace("\n", "");
-        // Regex: Ersetzt ALLE Zeichen die nicht alphanumerisch, Unterstrich, Punkt oder Minus sind
-        // SICHERHEIT: Whitelist-Ansatz - nur sichere Zeichen erlauben
-        // Verhindert Log Injection und andere Injection-Angriffe
+        // Regex: Replace ALL characters that are not alphanumeric, underscore, period or hyphen
+        // SECURITY: Whitelist approach - only allow safe characters
+        // Prevents log injection and other injection attacks
         cleaned = cleaned.replaceAll("[^A-Za-z0-9_.-]", "");
-        // Begrenzt die Länge auf maximal 64 Zeichen
+        // Limit length to maximum 64 characters
         if (cleaned.length() > 64) {
-            // Schneidet String auf 64 Zeichen ab
-            // SICHERHEIT: Verhindert DoS durch extrem lange IDs
+            // Truncate string to 64 characters
+            // SECURITY: Prevents DoS through extremely long IDs
             cleaned = cleaned.substring(0, 64);
         }
-        // Prüft ob der bereinigte String leer ist (nur Whitespace)
-        // Falls ja: gib null zurück statt leeren String
+        // Check if cleaned string is empty (only whitespace)
+        // If yes: return null instead of empty string
         return cleaned.isBlank() ? null : cleaned;
     }
 
-    // @Override: Überschreibt die Hauptmethode von OncePerRequestFilter
-    // Diese Methode wird für JEDEN HTTP-Request genau EINMAL aufgerufen
+    /**
+     * Main filter method executed for each HTTP request.
+     * Generates or validates request ID, stores it in MDC, and adds it to response headers.
+     *
+     * @param request The incoming HTTP request
+     * @param response The outgoing HTTP response
+     * @param filterChain The chain of remaining filters
+     * @throws ServletException If servlet processing error occurs
+     * @throws IOException If I/O error occurs during filtering
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        // Liest X-Request-Id Header aus dem Request und bereinigt ihn
+        // Read X-Request-Id header from request and sanitize it
         String requestId = sanitizeRequestId(request.getHeader(HEADER));
-        // Prüft ob eine gültige Request-ID im Header vorhanden war
+        // Check if a valid request ID was present in the header
         if (requestId == null) {
-            // Falls nicht: Generiere eine neue UUID als Request-ID
-            // UUID ist eindeutig und verhindert Kollisionen auch bei hoher Last
+            // If not: Generate a new UUID as request ID
+            // UUID is unique and prevents collisions even under high load
             requestId = UUID.randomUUID().toString();
         }
-        // Speichert die Request-ID im MDC (Thread-lokaler Context)
-        // Jetzt kann JEDES Log-Statement in diesem Thread auf die ID zugreifen
+        // Store the request ID in MDC (thread-local context)
+        // Now EVERY log statement in this thread can access the ID
         MDC.put(MDC_KEY, requestId);
         try {
-            // Setzt die Request-ID als Response-Header
-            // Client kann die ID verwenden um Requests nachzuverfolgen und Support-Anfragen zu stellen
+            // Set the request ID as response header
+            // Client can use the ID to track requests and make support inquiries
             response.setHeader(HEADER, requestId);
-            // Ruft den nächsten Filter/Servlet in der Chain auf
-            // Request wird weitergeleitet - alle nachfolgenden Operationen haben Zugriff auf Request-ID
+            // Call the next filter/servlet in the chain
+            // Request is forwarded - all subsequent operations have access to request ID
             filterChain.doFilter(request, response);
         } finally {
-            // Finally-Block wird IMMER ausgeführt (auch bei Exceptions)
-            // Entfernt die Request-ID aus dem MDC
-            // KRITISCH: Thread-Pools verwenden Threads mehrfach - MDC MUSS aufgeräumt werden
-            // SICHERHEIT: Verhindert dass Request-IDs zwischen verschiedenen Requests geleakt werden
+            // Finally block is ALWAYS executed (even with exceptions)
+            // Remove the request ID from MDC
+            // CRITICAL: Thread pools reuse threads - MDC MUST be cleaned up
+            // SECURITY: Prevents request IDs from leaking between different requests
             MDC.remove(MDC_KEY);
         }
     }

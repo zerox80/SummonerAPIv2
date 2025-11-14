@@ -1,147 +1,185 @@
-// Package-Deklaration: Definiert dass diese Klasse zum Client-Package gehört
+// Package declaration: Defines that this class belongs to the client package
 package com.zerox80.riotapi.client;
 
-// Import für Jackson JSON-Parsing Exceptions
+// Import for Jackson JSON parsing exceptions
 import com.fasterxml.jackson.core.JsonProcessingException;
-// Import für Jackson um generische Typen zu deserialisieren (z.B. List<LeagueEntryDTO>)
+// Import for Jackson to deserialize generic types (e.g., List<LeagueEntryDTO>)
 import com.fasterxml.jackson.core.type.TypeReference;
-// Import für Konfiguration des Deserialisierungsverhaltens
+// Import for configuring deserialization behavior
 import com.fasterxml.jackson.databind.DeserializationFeature;
-// Import der Hauptklasse für JSON Serialisierung/Deserialisierung
+// Import of the main class for JSON serialization/deserialization
 import com.fasterxml.jackson.databind.ObjectMapper;
-// Import für Konfiguration der Property-Namensgebung (camelCase, snake_case, etc.)
+// Import for configuration of property naming (camelCase, snake_case, etc.)
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-// Import unserer Model-Klasse für Account-Daten von Riot
+// Import of our model class for account data from Riot
 import com.zerox80.riotapi.model.AccountDto;
-// Import für Ranked League Einträge (Rang, Division, LP)
+// Import for ranked league entries (rank, division, LP)
 import com.zerox80.riotapi.model.LeagueEntryDTO;
-// Import für detaillierte Match-Daten aus der V5 API
+// Import for detailed match data from the V5 API
 import com.zerox80.riotapi.model.MatchV5Dto;
-// Import für Summoner-Grunddaten (Level, Name, Icon)
+// Import for summoner basic data (level, name, icon)
 import com.zerox80.riotapi.model.Summoner;
-// Import für das Logging-Interface von SLF4J
+// Import for the logging interface from SLF4J
 import org.slf4j.Logger;
-// Import für die Factory zum Erstellen von Logger-Instanzen
+// Import for the factory to create logger instances
 import org.slf4j.LoggerFactory;
-// Import für automatische Dependency Injection durch Spring
+// Import for automatic dependency injection by Spring
 import org.springframework.beans.factory.annotation.Autowired;
-// Import um Werte aus application.properties zu injizieren
+// Import to inject values from application.properties
 import org.springframework.beans.factory.annotation.Value;
-// Import für direkten Cache-Zugriff zum manuellen Evicting
+// Import for direct cache access for manual evicting
 import org.springframework.cache.Cache;
-// Import der Annotation um Methoden-Ergebnisse zu cachen
+// Import of the annotation to cache method results
 import org.springframework.cache.annotation.Cacheable;
-// Import für Zugriff auf alle konfigurierten Caches
+// Import for access to all configured caches
 import org.springframework.cache.CacheManager;
-// Import um diese Klasse als Spring-Bean zu registrieren
+// Import to register this class as a Spring bean
 import org.springframework.stereotype.Component;
-// Import für Metrics-Registry zur Performance-Überwachung
+// Import for metrics registry for performance monitoring
 import io.micrometer.core.instrument.MeterRegistry;
-// Import für Timer-Metriken um Latenz zu messen
+// Import for timer metrics to measure latency
 import io.micrometer.core.instrument.Timer;
 
-// Import für allgemeine IO-Exceptions
+// Import for general IO exceptions
 import java.io.IOException;
-// Import für URI-Konstruktion (URLs für API-Calls)
+// Import for URI construction (URLs for API calls)
 import java.net.URI;
-// Import zum URL-Encoding von Parametern (verhindert Injection)
+// Import for URL encoding of parameters (prevents injection)
 import java.net.URLEncoder;
-// Import des modernen Java HTTP Clients (seit Java 11)
+// Import of the modern Java HTTP client (since Java 11)
 import java.net.http.HttpClient;
-// Import für HTTP Request Builder
+// Import for HTTP request builder
 import java.net.http.HttpRequest;
-// Import für HTTP Response Objekte
+// Import for HTTP response objects
 import java.net.http.HttpResponse;
-// Import für UTF-8 Encoding Standard
+// Import for UTF-8 encoding standard
 import java.nio.charset.StandardCharsets;
-// Import für Zeitdauern (Timeouts, Delays)
+// Import for time durations (timeouts, delays)
 import java.time.Duration;
-// Import für Zeitpunkte mit Zeitzone (für Retry-After Header)
+// Import for time points with timezone (for Retry-After header)
 import java.time.ZonedDateTime;
-// Import für Formatierung von Datums-Strings
+// Import for formatting date strings
 import java.time.format.DateTimeFormatter;
-// Import für Listen-Datenstruktur
+// Import for list data structure
 import java.util.List;
-// Import für Locale (Spracheinstellungen, hier für toLowerCase)
+// Import for locale (language settings, here for toLowerCase)
 import java.util.Locale;
-// Import für Optional Pattern (vermeidet null-Checks)
+// Import for optional pattern (avoids null checks)
 import java.util.Optional;
-// Import für Map-Interface
+// Import for map interface
 import java.util.Map;
-// Import für thread-sichere Hash-Map (wichtig für Concurrency)
+// Import for thread-safe hash map (important for concurrency)
 import java.util.concurrent.ConcurrentHashMap;
-// Import für Zeiteinheiten in Concurrent-Operationen
+// Import for time units in concurrent operations
 import java.util.concurrent.TimeUnit;
-// Import für thread-sicheren Zufallsgenerator (für Jitter in Retry-Logik)
+// Import for thread-safe random generator (for jitter in retry logic)
 import java.util.concurrent.ThreadLocalRandom;
-// Import für asynchrone Operationen mit Callbacks
+// Import for asynchronous operations with callbacks
 import java.util.concurrent.CompletableFuture;
-// Import für Supplier-Functional-Interface
+// Import for supplier functional interface
 import java.util.function.Supplier;
-// Import für Semaphore zur Begrenzung gleichzeitiger Requests
+// Import for semaphore to limit concurrent requests
 import java.util.concurrent.Semaphore;
-// Import für thread-sicheren Integer-Counter
+// Import for thread-safe integer counter
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-// @Component: Markiert diese Klasse als Spring-Bean die automatisch instanziiert wird
+/**
+ * Main HTTP client for all communication with the Riot Games API.
+ *
+ * This client handles:
+ * - Riot API authentication and rate limiting
+ * - Automatic retry logic with exponential backoff
+ * - Request coalescing to prevent duplicate API calls
+ * - Comprehensive metrics and logging
+ * - Spring Cache integration
+ *
+ * All methods return CompletableFuture for asynchronous, non-blocking operations.
+ */
 @Component
-// Öffentliche Klasse: Haupt-Client für alle Kommunikation mit der Riot Games API
 public class RiotApiClient {
 
-    // Kommentar: Semaphore begrenzt die Anzahl gleichzeitiger ausgehender HTTP-Requests
-    // Verhindert Überlastung der Riot API und das Erreichen von Rate Limits
-    // final: Wert kann nach Initialisierung nicht mehr geändert werden
+    // Semaphore limits the number of concurrent outgoing HTTP requests
+    // Prevents overloading the Riot API and reaching rate limits
+    // final: Value cannot be changed after initialization
     private final Semaphore outboundLimiter;
 
-    // static final: Klassenweite Konstante, Logger für diese spezifische Klasse
-    // LoggerFactory.getLogger(): Erstellt einen Logger mit dem Klassennamen als Kategorie
+    // static final: Class-wide constant, logger for this specific class
+    // LoggerFactory.getLogger(): Creates a logger with the class name as category
     private static final Logger logger = LoggerFactory.getLogger(RiotApiClient.class);
-    // final: Immutabler API-Key für Authentifizierung bei Riot
+
+    // final: Immutable API key for authentication with Riot
     private final String apiKey;
-    // final: Platform-Region (z.B. "euw1" für Europa West)
+
+    // final: Platform region (e.g., "euw1" for Europe West)
     private final String platformRegion;
-    // final: Regionales Routing für Match-History APIs (z.B. "europe")
+
+    // final: Regional routing for match history APIs (e.g., "europe")
     private final String regionalRoute;
-    // final: Wiederverwendbarer HTTP-Client für alle Requests
+
+    // final: Reusable HTTP client for all requests
     private final HttpClient httpClient;
-    // final: JSON Mapper für Serialisierung/Deserialisierung
+
+    // final: JSON mapper for serialization/deserialization
     private final ObjectMapper objectMapper;
-    // final: Basis-URL für Community Dragon CDN (Profile Icons, etc.)
+
+    // final: Base URL for Community Dragon CDN (profile icons, etc.)
     private final String communityDragonUrl;
-    // final: Registry für Metriken (Prometheus, Grafana)
+
+    // final: Registry for metrics (Prometheus, Grafana)
     private final MeterRegistry meterRegistry;
-    // final: Maximale Anzahl gleichzeitiger ausgehender Requests
+
+    // final: Maximum number of concurrent outgoing requests
     private final int maxConcurrentOutbound;
-    // final: User-Agent String für HTTP-Headers (identifiziert unsere App)
+
+    // final: User-Agent string for HTTP headers (identifies our application)
     private final String userAgent;
-    // final: Manager für alle Cache-Instanzen in der Anwendung
+
+    // final: Manager for all cache instances in the application
     private final CacheManager cacheManager;
 
-    // Kommentar: In-flight Request Coalescing Maps - verhindert doppelte API-Calls
-    // wenn mehrere Threads gleichzeitig die gleichen Daten anfordern (Cache-Miss)
-    // ConcurrentHashMap: Thread-sichere Map für parallele Zugriffe
-    // Key: Account-Identifier, Value: Future mit dem Ergebnis
+    // In-flight request coalescing maps - prevents duplicate API calls
+    // when multiple threads request the same data simultaneously (cache miss)
+    // ConcurrentHashMap: Thread-safe map for parallel access
+    // Key: Account identifier, Value: Future with the result
     private final Map<String, CompletableFuture<AccountDto>> accountByRiotIdInFlight = new ConcurrentHashMap<>();
-    // Map für in-flight Summoner-Requests nach PUUID
+
+    // Map for in-flight summoner requests by PUUID
     private final Map<String, CompletableFuture<Summoner>> summonerByPuuidInFlight = new ConcurrentHashMap<>();
-    // Map für in-flight League-Requests nach Summoner-ID
+
+    // Map for in-flight league requests by summoner ID
     private final Map<String, CompletableFuture<List<LeagueEntryDTO>>> leagueBySummonerIdInFlight = new ConcurrentHashMap<>();
-    // Map für in-flight League-Requests nach PUUID
+
+    // Map for in-flight league requests by PUUID
     private final Map<String, CompletableFuture<List<LeagueEntryDTO>>> leagueByPuuidInFlight = new ConcurrentHashMap<>();
-    // Map für in-flight Match-ID Requests
+
+    // Map for in-flight match ID requests
     private final Map<String, CompletableFuture<List<String>>> matchIdsInFlight = new ConcurrentHashMap<>();
-    // Map für in-flight Match-Detail Requests
+
+    // Map for in-flight match detail requests
     private final Map<String, CompletableFuture<MatchV5Dto>> matchDetailsInFlight = new ConcurrentHashMap<>();
 
-    // static final: Typ-Token für Jackson um List<LeagueEntryDTO> zu deserialisieren
-    // TypeReference: Erhält generische Typ-Information zur Laufzeit (Type Erasure Umgehung)
-    // {} am Ende: Anonyme innere Klasse die TypeReference erweitert
+    // static final: Type token for Jackson to deserialize List<LeagueEntryDTO>
+    // TypeReference: Preserves generic type information at runtime (bypasses type erasure)
+    // {} at the end: Anonymous inner class extending TypeReference
     private static final TypeReference<List<LeagueEntryDTO>> LEAGUE_LIST_TYPE = new TypeReference<>() {};
-    // Typ-Token für Deserialisierung von String-Listen (Match-IDs)
+
+    // Type token for deserialization of string lists (match IDs)
     private static final TypeReference<List<String>> MATCH_ID_LIST_TYPE = new TypeReference<>() {};
 
-    
+    /**
+     * Constructs the RiotApiClient with all required dependencies.
+     *
+     * @param apiKey Riot API key from configuration
+     * @param platformRegion Platform region (e.g., euw1, na1, kr)
+     * @param communityDragonUrl Base URL for Community Dragon CDN
+     * @param userAgent User-Agent header for API requests
+     * @param objectMapper Jackson ObjectMapper for JSON processing
+     * @param meterRegistry Metrics registry for monitoring
+     * @param httpClient HTTP client for making requests
+     * @param maxConcurrentOutbound Maximum number of concurrent outbound requests
+     * @param cacheManager Spring cache manager for cache operations
+     */
     @Autowired
     public RiotApiClient(@Value("${riot.api.key:}") String apiKey,
                          @Value("${riot.api.region:euw1}") String platformRegion,
@@ -172,12 +210,23 @@ public class RiotApiClient {
         }
     }
 
-    
+    /**
+     * Constructs the full URL for a summoner profile icon.
+     *
+     * @param iconId The profile icon ID
+     * @return Full URL to the profile icon image
+     */
     public String getProfileIconUrl(int iconId) {
         return communityDragonUrl + "/" + iconId + ".jpg";
     }
 
-    
+    /**
+     * Determines the regional routing endpoint based on the platform region.
+     * Regional routes are used for match history and account APIs.
+     *
+     * @param platform The platform region (e.g., euw1, na1, kr)
+     * @return The regional routing endpoint (europe, americas, asia, sea)
+     */
     private String determineRegionalRoute(String platform) {
         switch (platform) {
             case "euw1", "eun1", "tr1", "ru", "me1":
@@ -194,22 +243,47 @@ public class RiotApiClient {
         }
     }
 
-    
+    /**
+     * Sends an async API request and parses the response into a single object.
+     *
+     * @param url The full API endpoint URL
+     * @param responseClass The class to deserialize the response into
+     * @param requestType Description of the request type for logging/metrics
+     * @param <T> The type of the response object
+     * @return CompletableFuture containing the parsed response
+     */
     private <T> CompletableFuture<T> sendApiRequestAsync(String url, Class<T> responseClass, String requestType) {
         return sendRequest(url, requestType)
                 .thenApply(response -> parseResponse(response, responseClass, requestType, url));
     }
 
-    
+    /**
+     * Sends an async API request and parses the response into a generic type.
+     *
+     * @param url The full API endpoint URL
+     * @param typeReference TypeReference for generic types (e.g., List<T>)
+     * @param requestType Description of the request type for logging/metrics
+     * @param <T> The type of the response object
+     * @return CompletableFuture containing the parsed response
+     */
     private <T> CompletableFuture<T> sendApiRequestAsync(String url, TypeReference<T> typeReference, String requestType) {
         return sendRequest(url, requestType)
                 .thenApply(response -> parseResponse(response, typeReference, requestType, url));
     }
 
+    // Maximum retry attempts for failed requests
     private static final int MAX_ATTEMPTS = 3;
+
+    // Base backoff duration for exponential retry
     private static final Duration BASE_BACKOFF = Duration.ofSeconds(2);
 
-    
+    /**
+     * Sends an HTTP request with automatic retry logic and instrumentation.
+     *
+     * @param url The full API endpoint URL
+     * @param requestType Description of the request type for logging/metrics
+     * @return CompletableFuture containing the HTTP response
+     */
     private CompletableFuture<HttpResponse<String>> sendRequest(String url, String requestType) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -239,7 +313,14 @@ public class RiotApiClient {
                 });
     }
 
-    
+    /**
+     * Sends an HTTP request with Bearer token authentication (for RSO endpoints).
+     *
+     * @param url The full API endpoint URL
+     * @param requestType Description of the request type for logging/metrics
+     * @param bearerToken RSO Bearer token for authentication
+     * @return CompletableFuture containing the HTTP response
+     */
     private CompletableFuture<HttpResponse<String>> sendRequestWithBearer(String url, String requestType, String bearerToken) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -269,7 +350,17 @@ public class RiotApiClient {
                 });
     }
 
-    
+    /**
+     * Executes the HTTP request with automatic retry for transient failures.
+     * Implements exponential backoff with jitter and respects Retry-After headers.
+     *
+     * @param request The HTTP request to send
+     * @param requestType Description of the request type for logging/metrics
+     * @param url The full API endpoint URL
+     * @param attempt Current attempt number (1-based)
+     * @param retries Atomic counter tracking total retry attempts
+     * @return CompletableFuture containing the HTTP response
+     */
     private CompletableFuture<HttpResponse<String>> sendWithRetryInstrumented(HttpRequest request, String requestType, String url, int attempt, AtomicInteger retries) {
         return acquirePermitAsync()
                 .thenCompose(v -> httpClient
@@ -309,14 +400,24 @@ public class RiotApiClient {
                 });
     }
 
-    
+    /**
+     * Asynchronously acquires a permit from the semaphore for rate limiting.
+     * Uses non-blocking polling with delayed retry.
+     *
+     * @return CompletableFuture that completes when a permit is acquired
+     */
     private CompletableFuture<Void> acquirePermitAsync() {
         CompletableFuture<Void> future = new CompletableFuture<>();
         retryAcquire(future);
         return future;
     }
 
-    
+    /**
+     * Recursively tries to acquire a semaphore permit with polling.
+     * Retries every 25ms if permit is not available.
+     *
+     * @param future The future to complete when permit is acquired
+     */
     private void retryAcquire(CompletableFuture<Void> future) {
         if (outboundLimiter.tryAcquire()) {
             future.complete(null);
@@ -326,7 +427,13 @@ public class RiotApiClient {
         }
     }
 
-    
+    /**
+     * Parses the Retry-After header from the HTTP response.
+     * Supports both delta-seconds and HTTP-date formats per RFC 7231.
+     *
+     * @param response The HTTP response containing the header
+     * @return Optional containing retry delay in seconds, empty if header missing or invalid
+     */
     private Optional<Long> parseRetryAfterSeconds(HttpResponse<String> response) {
         return response.headers().firstValue("Retry-After").flatMap(value -> {
             if (value == null) return Optional.empty();
@@ -347,7 +454,14 @@ public class RiotApiClient {
         });
     }
 
-    
+    /**
+     * Computes the backoff delay for retry attempts.
+     * Respects Retry-After header if present, otherwise uses exponential backoff with jitter.
+     *
+     * @param attempt Current attempt number (1-based)
+     * @param retryAfterSeconds Optional retry delay from Retry-After header
+     * @return Duration to wait before retrying
+     */
     private Duration computeBackoffDelay(int attempt, Optional<Long> retryAfterSeconds) {
         if (retryAfterSeconds.isPresent()) {
             return Duration.ofSeconds(Math.max(1, retryAfterSeconds.get()));
@@ -357,12 +471,27 @@ public class RiotApiClient {
         return Duration.ofMillis(backoffMs + jitterMs);
     }
 
-    
+    /**
+     * Creates a CompletableFuture that completes after the specified delay.
+     *
+     * @param delay Duration to wait
+     * @return CompletableFuture that completes after the delay
+     */
     private CompletableFuture<Void> delayed(Duration delay) {
         return CompletableFuture.supplyAsync(() -> null, CompletableFuture.delayedExecutor(delay.toMillis(), TimeUnit.MILLISECONDS)).thenAccept(v -> {});
     }
 
-    
+    /**
+     * Parses HTTP response body into a single object using class type.
+     * Handles 200 OK, 404 Not Found, and error responses.
+     *
+     * @param response The HTTP response to parse
+     * @param responseClass The class to deserialize into
+     * @param requestType Description of the request type for logging
+     * @param url The original request URL for logging
+     * @param <T> The type of the response object
+     * @return Parsed object, or null if 404, throws exception on error
+     */
     private <T> T parseResponse(HttpResponse<String> response, Class<T> responseClass, String requestType, String url) {
         if (response.statusCode() == 200) {
             try {
@@ -380,7 +509,17 @@ public class RiotApiClient {
         }
     }
 
-    
+    /**
+     * Parses HTTP response body into a generic type using TypeReference.
+     * Handles 200 OK, 404 Not Found, and error responses.
+     *
+     * @param response The HTTP response to parse
+     * @param typeReference TypeReference for generic types (e.g., List<T>)
+     * @param requestType Description of the request type for logging
+     * @param url The original request URL for logging
+     * @param <T> The type of the response object
+     * @return Parsed object, or null if 404, throws exception on error
+     */
     private <T> T parseResponse(HttpResponse<String> response, TypeReference<T> typeReference, String requestType, String url) {
         if (response.statusCode() == 200) {
             try {
@@ -398,7 +537,14 @@ public class RiotApiClient {
         }
     }
 
-    
+    /**
+     * Retrieves account information by Riot ID (game name + tag line).
+     * Results are cached to reduce API calls.
+     *
+     * @param gameName The summoner's game name
+     * @param tagLine The summoner's tag line (e.g., "EUW", "NA1")
+     * @return CompletableFuture containing the AccountDto, or null if not found
+     */
     @Cacheable(value = "accounts", key = "T(com.zerox80.riotapi.client.RiotApiClient).accountCacheKey(#gameName, #tagLine)")
     public CompletableFuture<AccountDto> getAccountByRiotId(String gameName, String tagLine) {
         String encodedGameName = URLEncoder.encode(gameName, StandardCharsets.UTF_8).replace("+", "%20");
@@ -417,7 +563,13 @@ public class RiotApiClient {
         return evictOnException(future, "accounts", inflightKey);
     }
 
-    
+    /**
+     * Retrieves summoner information by PUUID.
+     * Results are cached to reduce API calls.
+     *
+     * @param puuid The player's PUUID
+     * @return CompletableFuture containing the Summoner, or null if not found
+     */
     @Cacheable(value = "summoners", key = "#puuid")
     public CompletableFuture<Summoner> getSummonerByPuuid(String puuid) {
         String host = this.platformRegion + ".api.riotgames.com";
@@ -429,7 +581,13 @@ public class RiotApiClient {
         return evictOnException(future, "summoners", puuid);
     }
 
-    
+    /**
+     * Retrieves ranked league entries by summoner ID.
+     * Results are cached to reduce API calls.
+     *
+     * @param summonerId The summoner's encrypted ID
+     * @return CompletableFuture containing list of LeagueEntryDTOs (may be empty)
+     */
     @Cacheable(value = "leagueEntries", key = "'sid:' + #summonerId")
     public CompletableFuture<List<LeagueEntryDTO>> getLeagueEntriesBySummonerId(String summonerId) {
         String host = this.platformRegion + ".api.riotgames.com";
@@ -443,7 +601,13 @@ public class RiotApiClient {
         return evictOnException(future, "leagueEntries", cacheKey);
     }
 
-    
+    /**
+     * Retrieves ranked league entries by PUUID.
+     * Results are cached to reduce API calls.
+     *
+     * @param puuid The player's PUUID
+     * @return CompletableFuture containing list of LeagueEntryDTOs (may be empty)
+     */
     @Cacheable(value = "leagueEntries", key = "'puuid:' + #puuid")
     public CompletableFuture<List<LeagueEntryDTO>> getLeagueEntriesByPuuid(String puuid) {
         String host = this.platformRegion + ".api.riotgames.com";
@@ -457,7 +621,13 @@ public class RiotApiClient {
         return evictOnException(future, "leagueEntries", cacheKey);
     }
 
-    
+    /**
+     * Retrieves authenticated summoner data using RSO Bearer token.
+     * This endpoint uses the /me endpoint with OAuth authentication.
+     *
+     * @param bearerToken RSO Bearer token from OAuth flow
+     * @return CompletableFuture containing the authenticated Summoner
+     */
     public CompletableFuture<Summoner> getSummonerMeWithBearer(String bearerToken) {
         String host = this.platformRegion + ".api.riotgames.com";
         String path = "/lol/summoner/v4/summoners/me";
@@ -467,7 +637,14 @@ public class RiotApiClient {
                 .thenApply(response -> parseResponse(response, Summoner.class, "SummonerMeRSO", url));
     }
 
-    
+    /**
+     * Retrieves match IDs for a player by PUUID.
+     * Results are cached to reduce API calls.
+     *
+     * @param puuid The player's PUUID
+     * @param count Maximum number of match IDs to return
+     * @return CompletableFuture containing list of match IDs (may be empty)
+     */
     @Cacheable(value = "matchIds", key = "#puuid + '-' + #count")
     public CompletableFuture<List<String>> getMatchIdsByPuuid(String puuid, int count) {
         String host = this.regionalRoute + ".api.riotgames.com";
@@ -481,7 +658,15 @@ public class RiotApiClient {
         return evictOnException(future, "matchIds", key);
     }
 
-    
+    /**
+     * Retrieves match IDs for a player by PUUID with pagination.
+     * Results are cached to reduce API calls.
+     *
+     * @param puuid The player's PUUID
+     * @param start Starting index for pagination
+     * @param count Maximum number of match IDs to return
+     * @return CompletableFuture containing list of match IDs (may be empty)
+     */
     @Cacheable(value = "matchIds", key = "#puuid + '-' + #start + '-' + #count")
     public CompletableFuture<List<String>> getMatchIdsByPuuid(String puuid, int start, int count) {
         String host = this.regionalRoute + ".api.riotgames.com";
@@ -495,7 +680,13 @@ public class RiotApiClient {
         return evictOnException(future, "matchIds", key);
     }
 
-    
+    /**
+     * Retrieves detailed match information by match ID.
+     * Results are cached to reduce API calls.
+     *
+     * @param matchId The match ID (e.g., "EUW1_6234567890")
+     * @return CompletableFuture containing MatchV5Dto, or null if not found
+     */
     @Cacheable(value = "matchDetails", key = "#matchId")
     public CompletableFuture<MatchV5Dto> getMatchDetails(String matchId) {
         String host = this.regionalRoute + ".api.riotgames.com";
@@ -507,7 +698,17 @@ public class RiotApiClient {
         return evictOnException(future, "matchDetails", matchId);
     }
 
-    
+    /**
+     * Retrieves league entries by queue type, tier, and division with pagination.
+     * Used for fetching ladder data and LP tracking.
+     * Results are cached to reduce API calls.
+     *
+     * @param queue Queue type (e.g., "RANKED_SOLO_5x5")
+     * @param tier Tier (e.g., "DIAMOND", "MASTER")
+     * @param division Division (e.g., "I", "II", "III", "IV")
+     * @param page Page number (1-based)
+     * @return CompletableFuture containing list of LeagueEntryDTOs
+     */
     @Cacheable(value = "leagueEntries", key = "#queue + '|' + #tier + '|' + #division + '|' + #page")
     public CompletableFuture<List<LeagueEntryDTO>> getEntriesByQueueTierDivision(String queue, String tier, String division, int page) {
         String host = this.platformRegion + ".api.riotgames.com";
@@ -519,12 +720,23 @@ public class RiotApiClient {
         return evictOnException(future, "leagueEntries", cacheKey);
     }
 
-    
+    /**
+     * URL-encodes a string using UTF-8 encoding.
+     *
+     * @param s The string to encode
+     * @return URL-encoded string
+     */
     private String urlEncode(String s) {
         return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 
-    
+    /**
+     * Retrieves summoner information by summoner ID.
+     * Results are cached to reduce API calls.
+     *
+     * @param summonerId The summoner's encrypted ID
+     * @return CompletableFuture containing Summoner, or null if not found
+     */
     @Cacheable(value = "summoners", key = "#summonerId")
     public CompletableFuture<Summoner> getSummonerById(String summonerId) {
         String host = this.platformRegion + ".api.riotgames.com";
@@ -535,18 +747,39 @@ public class RiotApiClient {
         return evictOnException(future, "summoners", summonerId);
     }
 
-    
+    /**
+     * Gets the configured platform region.
+     *
+     * @return The platform region (e.g., "euw1", "na1")
+     */
     public String getPlatformRegion() {
         return platformRegion;
     }
 
-    
+    /**
+     * Coalesces multiple concurrent requests for the same resource.
+     * If a request is already in flight for the given key, returns the existing future.
+     * Otherwise, creates a new request and registers it.
+     *
+     * @param inFlightMap Map tracking in-flight requests
+     * @param key Unique identifier for the request
+     * @param loader Supplier that creates the actual request
+     * @param <K> Type of the key
+     * @param <T> Type of the result
+     * @return CompletableFuture for the result (shared if in flight)
+     */
     private <K, T> CompletableFuture<T> coalesce(Map<K, CompletableFuture<T>> inFlightMap, K key, Supplier<CompletableFuture<T>> loader) {
         return inFlightMap.computeIfAbsent(key, k -> loader.get()
                 .whenComplete((res, ex) -> inFlightMap.remove(k)));
     }
 
-    
+    /**
+     * Masks PUUID for logging to protect sensitive data.
+     * Shows first 6 and last 4 characters.
+     *
+     * @param puuid The PUUID to mask
+     * @return Masked PUUID string
+     */
     private static String maskPuuid(String puuid) {
         if (puuid == null) return "(null)";
         int len = puuid.length();
@@ -554,7 +787,13 @@ public class RiotApiClient {
         return puuid.substring(0, 6) + "..." + puuid.substring(len - 4);
     }
 
-    
+    /**
+     * Masks ID for logging to protect sensitive data.
+     * Shows first 4 and last 3 characters.
+     *
+     * @param id The ID to mask
+     * @return Masked ID string
+     */
     private static String maskId(String id) {
         if (id == null) return "(null)";
         int len = id.length();
@@ -562,14 +801,30 @@ public class RiotApiClient {
         return id.substring(0, Math.min(4, len)) + "..." + id.substring(len - Math.min(3, len));
     }
 
-    
+    /**
+     * Abbreviates a string to maximum length for logging.
+     * Appends ellipsis if truncated.
+     *
+     * @param s The string to abbreviate
+     * @param max Maximum length
+     * @return Abbreviated string
+     */
     private String abbreviate(String s, int max) {
         if (s == null) return null;
         if (s.length() <= max) return s;
         return s.substring(0, max) + "…";
     }
 
-    
+    /**
+     * Evicts cache entry if the future completes with an exception.
+     * Ensures failed requests don't poison the cache.
+     *
+     * @param future The CompletableFuture to monitor
+     * @param cacheName Name of the cache to evict from
+     * @param cacheKey Key to evict
+     * @param <T> Type of the future result
+     * @return The same future, for chaining
+     */
     private <T> CompletableFuture<T> evictOnException(CompletableFuture<T> future, String cacheName, Object cacheKey) {
         return future.whenComplete((value, throwable) -> {
             if (throwable != null && cacheManager != null) {
@@ -581,12 +836,25 @@ public class RiotApiClient {
         });
     }
 
-    
+    /**
+     * Converts a string to lowercase using ROOT locale.
+     * Used for case-insensitive cache keys.
+     *
+     * @param value The string to convert
+     * @return Lowercase string
+     */
     public static String lower(String value) {
         return java.util.Objects.requireNonNull(value, "value").toLowerCase(Locale.ROOT);
     }
 
-    
+    /**
+     * Creates a normalized cache key for account lookup.
+     * Case-insensitive by converting both parts to lowercase.
+     *
+     * @param gameName The summoner's game name
+     * @param tagLine The summoner's tag line
+     * @return Normalized cache key
+     */
     public static String accountCacheKey(String gameName, String tagLine) {
         return lower(gameName) + "#" + lower(tagLine);
     }

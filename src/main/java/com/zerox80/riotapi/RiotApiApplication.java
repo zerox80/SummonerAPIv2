@@ -1,48 +1,45 @@
-// Package-Deklaration: Definiert den Namespace für diese Klasse im Projekt
+// Package declaration: Defines the namespace for this class in the project
 package com.zerox80.riotapi;
 
-// Import der SpringBoot-Hauptklasse zum Starten der Applikation
+// Import of the main SpringBoot class to start the application
 import org.springframework.boot.SpringApplication;
-// Import für die Haupt-Annotation die Spring Boot aktiviert
+// Import for the main annotation that enables Spring Boot
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-// Import um Caching-Mechanismen zu aktivieren (verbessert Performance durch Zwischenspeicherung)
+// Import to enable caching mechanisms (improves performance through caching)
 import org.springframework.cache.annotation.EnableCaching;
-// Import um automatisches Scannen von Configuration Properties zu ermöglichen
+// Import to enable automatic scanning of Configuration Properties
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-// Import um zeitgesteuerte Tasks (Scheduled Tasks) zu aktivieren
+// Import to enable scheduled tasks (Scheduled Tasks)
 import org.springframework.scheduling.annotation.EnableScheduling;
-// Import um asynchrone Methodenausführung zu ermöglichen
+// Import to enable asynchronous method execution
 import org.springframework.scheduling.annotation.EnableAsync;
 
 
-// @SpringBootApplication: Hauptannotation die @Configuration, @EnableAutoConfiguration und @ComponentScan kombiniert
+// @SpringBootApplication: Main annotation that combines @Configuration, @EnableAutoConfiguration and @ComponentScan
 @SpringBootApplication
-// @EnableCaching: Aktiviert Spring's Caching-Abstraction für die gesamte Anwendung
+// @EnableCaching: Enables Spring's caching abstraction for the entire application
 @EnableCaching
-// @ConfigurationPropertiesScan: Scannt automatisch nach @ConfigurationProperties annotierten Klassen
+// @ConfigurationPropertiesScan: Automatically scans for @ConfigurationProperties annotated classes
 @ConfigurationPropertiesScan
-// @EnableScheduling: Ermöglicht die Verwendung von @Scheduled Annotationen für zeitgesteuerte Aufgaben
+// @EnableScheduling: Enables the use of @Scheduled annotations for scheduled tasks
 @EnableScheduling
-// @EnableAsync: Aktiviert asynchrone Methodenausführung mit @Async Annotation
+// @EnableAsync: Enables asynchronous method execution with @Async annotation
 @EnableAsync
-// Öffentliche Klasse: Einstiegspunkt der gesamten Spring Boot Anwendung
+// Public class: Entry point of the entire Spring Boot application
 public class RiotApiApplication {
 
-    // Javadoc-Kommentar: Hauptmethode die beim Start der Anwendung ausgeführt wird
-
-    // public: Methode ist von überall aufrufbar
-    // static: Methode gehört zur Klasse, nicht zu einer Instanz
-    // void: Methode gibt keinen Wert zurück
-    // main: Spezielle Methode die von der JVM als Einstiegspunkt erkannt wird
-    // String[] args: Array von Command-Line-Argumenten
+    /**
+     * Main method that is executed when the application starts.
+     * This is the entry point recognized by the JVM.
+     *
+     * @param args Array of command-line arguments passed to the application
+     */
     public static void main(String[] args) {
-        // SpringApplication.run(): Startet die Spring Boot Anwendung
-        // Erster Parameter: Die Hauptklasse der Anwendung
-        // Zweiter Parameter: Command-Line-Argumente die weitergereicht werden
+        // SpringApplication.run(): Starts the Spring Boot application
+        // First parameter: The main application class
+        // Second parameter: Command-line arguments to be passed through
         SpringApplication.run(RiotApiApplication.class, args);
     }
 
-    // Kommentar: Hinweis dass ein unsicherer CommandLineRunner entfernt wurde
-    // der zuvor sensible Konfigurationsdaten in die Logs geschrieben hat
-    // Removed insecure CommandLineRunner that printed sensitive configuration
+    // Note: Removed insecure CommandLineRunner that previously printed sensitive configuration to logs
 }

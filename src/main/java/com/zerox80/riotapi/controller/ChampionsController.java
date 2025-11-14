@@ -1,123 +1,151 @@
-// Package-Deklaration: definiert den Namespace für die Controller-Klasse
+// Package declaration - defines the namespace for the controller class
 package com.zerox80.riotapi.controller;
 
-// Import für ChampionDetail (Model mit detaillierten Champion-Informationen)
+// Import for ChampionDetail (model with detailed champion information)
 import com.zerox80.riotapi.model.ChampionDetail;
-// Import für ChampionSummary (Model mit Champion-Übersichtsdaten)
+// Import for ChampionSummary (model with champion overview data)
 import com.zerox80.riotapi.model.ChampionSummary;
-// Import für DataDragonService (Service für Data Dragon API Zugriff)
+// Import for DataDragonService (service for Data Dragon API access)
 import com.zerox80.riotapi.service.DataDragonService;
-// Import für CacheControl (definiert Browser-Caching-Verhalten)
+// Import for CacheControl (defines browser caching behavior)
 import org.springframework.http.CacheControl;
-// Import für HttpStatus-Enum (definiert HTTP-Statuscodes wie 200, 404, 500)
+// Import for HttpStatus enum (defines HTTP status codes like 200, 404, 500)
 import org.springframework.http.HttpStatus;
-// Import für ResponseEntity (ermöglicht HTTP-Statuscode und Header-Steuerung)
+// Import for ResponseEntity (enables HTTP status code and header control)
 import org.springframework.http.ResponseEntity;
-// Import für GetMapping-Annotation (definiert HTTP GET Endpoints)
+// Import for GetMapping annotation (defines HTTP GET endpoints)
 import org.springframework.web.bind.annotation.GetMapping;
-// Import für PathVariable-Annotation (bindet URL-Pfad-Variablen an Parameter)
+// Import for PathVariable annotation (binds URL path variables to parameters)
 import org.springframework.web.bind.annotation.PathVariable;
-// Import für RequestMapping-Annotation (definiert Basis-Pfad für Controller)
+// Import for RequestMapping annotation (defines base path for controller)
 import org.springframework.web.bind.annotation.RequestMapping;
-// Import für RestController-Annotation (kennzeichnet Klasse als REST-Controller)
+// Import for RestController annotation (marks class as REST controller)
 import org.springframework.web.bind.annotation.RestController;
 
-// Import für SLF4J Logger (Logging-Framework für strukturierte Logs)
+// Import for SLF4J Logger (logging framework for structured logs)
 import org.slf4j.Logger;
-// Import für Logger-Factory (erstellt Logger-Instanzen)
+// Import for LoggerFactory (creates Logger instances)
 import org.slf4j.LoggerFactory;
-// Import für Collections-Utility (bietet statische Methoden für Collections)
+// Import for Collections utility (provides static methods for collections)
 import java.util.Collections;
-// Import für List-Interface (generische Collection für Listen)
+// Import for List interface (generic collection for lists)
 import java.util.List;
-// Import für Locale (repräsentiert Sprache/Region für Internationalisierung)
+// Import for Locale (represents language/region for internationalization)
 import java.util.Locale;
-// Import für Duration (repräsentiert Zeitdauer für Cache-Ablaufzeit)
+// Import for Duration (represents time duration for cache expiration)
 import java.time.Duration;
 
 
-// @RestController kennzeichnet diese Klasse als REST-API-Controller
+// @RestController marks this class as a REST API controller
 @RestController
-// @RequestMapping definiert Basis-Pfad (hier: kein Basis-Pfad, nur Root)
+// @RequestMapping defines base path (here: no base path, just root)
 @RequestMapping
+/**
+ * ChampionsController handles champion data API endpoints.
+ * Provides functionality for fetching champion lists and detailed champion information.
+ * Implements caching for improved performance and reduced API calls.
+ */
 public class ChampionsController {
 
-    // Service-Instanz für Data Dragon Zugriff (wird via Dependency Injection bereitgestellt)
+    // Service instance for Data Dragon access (provided via dependency injection)
     private final DataDragonService dataDragonService;
-    // Logger-Instanz für strukturierte Log-Ausgaben dieser Klasse
+    // Logger instance for structured log output of this class
     private static final Logger log = LoggerFactory.getLogger(ChampionsController.class);
 
 
-    // Konstruktor mit Dependency Injection für DataDragonService
-    public ChampionsController(DataDragonService dataDragonService) { // Service für Data Dragon Daten
-        // Zuweisen des DataDragonService zur Instanzvariablen
+    /**
+     * Constructor with dependency injection for DataDragonService.
+     *
+     * @param dataDragonService Service for Data Dragon data
+     */
+    public ChampionsController(DataDragonService dataDragonService) {
+        // Assign DataDragonService to instance variable
         this.dataDragonService = dataDragonService;
     }
 
-    // @GetMapping definiert HTTP GET Endpoint unter /api/champions
+    // @GetMapping defines HTTP GET endpoint at /api/champions
     @GetMapping("/api/champions")
-    // Methode zum Abrufen einer Liste aller Champions mit Basis-Informationen
+    /**
+     * Fetches a list of all champions with basic information.
+     *
+     * @param localeParam Optional locale parameter from query string
+     * @param locale Fallback locale from Accept-Language header
+     * @return ResponseEntity with list of champion summaries
+     */
     public ResponseEntity<List<ChampionSummary>> apiChampions(
-            @org.springframework.web.bind.annotation.RequestParam(value = "locale", required = false) String localeParam, // Optionaler Locale-Parameter aus Query-String
-            Locale locale) { // Fallback-Locale aus Accept-Language Header
-        // Try-Block für Exception-Handling beim Champion-Laden
+            @org.springframework.web.bind.annotation.RequestParam(value = "locale", required = false) String localeParam,
+            Locale locale) {
+        // Try block for exception handling during champion loading
         try {
-            // Abrufen der Champion-Übersichten mit aufgelöstem Locale
+            // Fetch champion summaries with resolved locale
             List<ChampionSummary> champions = dataDragonService.getChampionSummaries(resolveLocaleOverride(localeParam, locale));
-            // Erstellen von Cache-Control Header (30 Minuten Cache, öffentlich cachebar)
+            // Create Cache-Control header (30 minutes cache, publicly cacheable)
             CacheControl cc = CacheControl.maxAge(Duration.ofMinutes(30)).cachePublic();
-            // Rückgabe der Champion-Liste mit HTTP 200 OK und Cache-Headers
+            // Return champion list with HTTP 200 OK and cache headers
             return ResponseEntity.ok().cacheControl(cc).body(champions);
-        // Catch-Block für alle Exceptions während des Ladens
+        // Catch block for all exceptions during loading
         } catch (Exception e) {
-            // Loggen einer Warnung (kein Error, da graceful degradation)
+            // Log warning (not error, for graceful degradation)
             log.warn("/api/champions failed: {}", e.toString());
-            // Graceful Degradation: leere Liste zurückgeben statt Fehler (für bessere UX)
+            // Graceful degradation: return empty list instead of error (better UX)
             return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(Collections.emptyList());
         }
     }
 
 
-    // @GetMapping definiert HTTP GET Endpoint unter /api/champions/{id}
+    // @GetMapping defines HTTP GET endpoint at /api/champions/{id}
     @GetMapping("/api/champions/{id}")
-    // Methode zum Abrufen detaillierter Informationen zu einem bestimmten Champion
+    /**
+     * Fetches detailed information for a specific champion.
+     *
+     * @param id Champion ID from URL path (e.g. "Ahri")
+     * @param localeParam Optional locale parameter from query string
+     * @param locale Fallback locale from Accept-Language header
+     * @return ResponseEntity with champion details or 404 if not found
+     */
     public ResponseEntity<ChampionDetail> apiChampion(
-            @PathVariable("id") String id, // Champion-ID aus URL-Pfad (z.B. "Ahri")
-            @org.springframework.web.bind.annotation.RequestParam(value = "locale", required = false) String localeParam, // Optionaler Locale-Parameter aus Query-String
-            Locale locale) { // Fallback-Locale aus Accept-Language Header
-        // Try-Block für Exception-Handling beim Champion-Detail-Laden
+            @PathVariable("id") String id,
+            @org.springframework.web.bind.annotation.RequestParam(value = "locale", required = false) String localeParam,
+            Locale locale) {
+        // Try block for exception handling during champion detail loading
         try {
-            // Abrufen der Champion-Details mit aufgelöstem Locale
+            // Fetch champion details with resolved locale
             ChampionDetail detail = dataDragonService.getChampionDetail(id, resolveLocaleOverride(localeParam, locale));
-            // Validierung: prüfen ob Champion gefunden wurde
-            if (detail == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found wenn Champion nicht existiert
-            // Erstellen von Cache-Control Header (30 Minuten Cache, öffentlich cachebar)
+            // Validation: check if champion was found
+            if (detail == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found if champion doesn't exist
+            // Create Cache-Control header (30 minutes cache, publicly cacheable)
             CacheControl cc = CacheControl.maxAge(Duration.ofMinutes(30)).cachePublic();
-            // Rückgabe der Champion-Details mit HTTP 200 OK und Cache-Headers
+            // Return champion details with HTTP 200 OK and cache headers
             return ResponseEntity.ok().cacheControl(cc).body(detail);
-        // Catch-Block für alle Exceptions während des Ladens
+        // Catch block for all exceptions during loading
         } catch (Exception e) {
-            // Rückgabe eines 500 Internal Server Error bei technischen Fehlern
+            // Return 500 Internal Server Error on technical errors
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).cacheControl(CacheControl.noStore()).build();
         }
     }
 
 
-    // Private Hilfsmethode zum Auflösen des Locale-Parameters mit Fallback
-    private Locale resolveLocaleOverride(String localeParam, // Locale-Parameter aus Query-String (optional)
-                                        Locale fallback) { // Fallback-Locale wenn Parameter fehlt/ungültig
-        // Validierung: prüfen ob Locale-Parameter leer oder nicht vorhanden ist
+    /**
+     * Private helper method to resolve locale parameter with fallback.
+     *
+     * @param localeParam Locale parameter from query string (optional)
+     * @param fallback Fallback locale if parameter is missing/invalid
+     * @return Resolved Locale object
+     */
+    private Locale resolveLocaleOverride(String localeParam,
+                                        Locale fallback) {
+        // Validation: check if locale parameter is empty or missing
         if (localeParam == null || localeParam.isBlank()) {
-            // Rückgabe des Fallback-Locale bei fehlendem Parameter
+            // Return fallback locale when parameter is missing
             return fallback;
         }
-        // Try-Block für Locale-Parsing
+        // Try block for locale parsing
         try {
-            // Konvertierung des Locale-Strings zu Locale-Objekt (ersetzt _ durch -)
+            // Convert locale string to Locale object (replaces _ with -)
             return Locale.forLanguageTag(localeParam.replace('_', '-'));
-        // Catch-Block für ungültige Locale-Strings
+        // Catch block for invalid locale strings
         } catch (Exception ignored) {
-            // Rückgabe des Fallback-Locale bei Parsing-Fehler
+            // Return fallback locale on parsing error
             return fallback;
         }
     }

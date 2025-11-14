@@ -1,147 +1,174 @@
-// Paket-Deklaration: Definiert die Zugehörigkeit dieser Klasse zum config-Paket
+// Package declaration: Defines that this class belongs to the config package
 package com.zerox80.riotapi.config;
 
-// Import für FilterChain zur Weiterleitung des Requests
+// Import for FilterChain to forward the request
 import jakarta.servlet.FilterChain;
-// Import für ServletException zum Werfen von Servlet-Exceptions
+// Import for ServletException to throw servlet-specific exceptions
 import jakarta.servlet.ServletException;
-// Import für HTTP-Request-Objekt zum Lesen von Request-Eigenschaften
+// Import for HTTP request object to read request properties
 import jakarta.servlet.http.HttpServletRequest;
-// Import für HTTP-Response-Objekt zum Setzen von Security-Headern
+// Import for HTTP response object to set security headers
 import jakarta.servlet.http.HttpServletResponse;
-// Import für ObjectProvider zur optionalen Dependency Injection
+// Import for ObjectProvider for optional dependency injection
 import org.springframework.beans.factory.ObjectProvider;
-// Import für @ConditionalOnProperty zur bedingten Bean-Aktivierung
+// Import for @ConditionalOnProperty for conditional bean activation
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-// Import für Ordered Interface zur Filter-Reihenfolge
+// Import for Ordered interface for filter ordering
 import org.springframework.core.Ordered;
-// Import für @Order Annotation zur Priorisierung
+// Import for @Order annotation to set priority
 import org.springframework.core.annotation.Order;
-// Import für @Component zur Bean-Registrierung
+// Import for @Component for bean registration
 import org.springframework.stereotype.Component;
-// Import für StringUtils zur String-Validierung
+// Import for StringUtils for string validation
 import org.springframework.util.StringUtils;
-// Import für OncePerRequestFilter - garantiert einmalige Ausführung pro Request
+// Import for OncePerRequestFilter - guarantees one execution per request
 import org.springframework.web.filter.OncePerRequestFilter;
 
-// Import für IOException bei I/O-Operationen
+// Import for IOException during I/O operations
 import java.io.IOException;
 
 
-// @Component: Markiert diese Klasse als Spring-verwaltete Komponente
+// @Component: Marks this class as a Spring-managed component
 @Component
-// @Order: Setzt Filter-Priorität auf HIGHEST_PRECEDENCE für frühe Ausführung
-// SICHERHEIT: Security-Header sollten früh gesetzt werden bevor Content generiert wird
+// @Order: Sets filter priority to HIGHEST_PRECEDENCE for early execution
+// SECURITY: Security headers should be set early before content is generated
 @Order(Ordered.HIGHEST_PRECEDENCE)
-// @ConditionalOnProperty: Aktiviert diesen Filter nur wenn Konfiguration es erlaubt
-// prefix="security.headers", name="enabled": Prüft security.headers.enabled Property
-// havingValue="true": Filter aktiv wenn Property = true
-// matchIfMissing=true: Filter aktiv wenn Property NICHT existiert (secure by default)
+// @ConditionalOnProperty: Activates this filter only if configuration allows it
+// prefix="security.headers", name="enabled": Checks security.headers.enabled property
+// havingValue="true": Filter active when property = true
+// matchIfMissing=true: Filter active if property does NOT exist (secure by default)
 @ConditionalOnProperty(prefix = "security.headers", name = "enabled", havingValue = "true", matchIfMissing = true)
+/**
+ * SecurityHeadersFilter sets various security-related HTTP headers on every response.
+ * Headers include X-Content-Type-Options, X-Frame-Options, HSTS, CSP, and more.
+ * This filter runs with highest precedence to ensure headers are set before any content generation.
+ */
 public class SecurityHeadersFilter extends OncePerRequestFilter {
 
-    // Final-Field für die Security-Header-Konfiguration
-    // Enthält alle konfigurierbaren Security-Header-Werte
+    // Final field for security header configuration
+    // Contains all configurable security header values
     private final SecurityHeadersProperties properties;
 
-    // Konstruktor mit ObjectProvider für optionale Dependency Injection
-    // ObjectProvider erlaubt null-sichere Injection auch wenn Bean nicht existiert
+    /**
+     * Constructor with ObjectProvider for optional dependency injection.
+     * ObjectProvider allows null-safe injection even if bean doesn't exist.
+     *
+     * @param properties Provider for SecurityHeadersProperties bean
+     */
     public SecurityHeadersFilter(ObjectProvider<SecurityHeadersProperties> properties) {
-        // getIfAvailable: Holt Bean falls vorhanden, sonst erstellt neue Instanz per Constructor-Reference
-        // Fallback stellt sicher dass Filter auch ohne explizite Konfiguration funktioniert
+        // getIfAvailable: Gets bean if available, otherwise creates new instance via constructor reference
+        // Fallback ensures filter works even without explicit configuration
         this.properties = properties.getIfAvailable(SecurityHeadersProperties::new);
     }
 
-    // @Override: Überschreibt Hauptmethode von OncePerRequestFilter
-    // Wird für JEDEN HTTP-Request genau EINMAL aufgerufen
+    /**
+     * Main filter method executed for each HTTP request.
+     * Sets various security headers based on configuration.
+     *
+     * @param request The incoming HTTP request
+     * @param response The outgoing HTTP response
+     * @param filterChain The chain of remaining filters
+     * @throws ServletException If servlet processing error occurs
+     * @throws IOException If I/O error occurs during filtering
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        // SICHERHEIT: X-Content-Type-Options nosniff
-        // Verhindert MIME-Type-Sniffing - Browser darf Content-Type nicht erraten
-        // Schutz vor MIME-Confusion-Attacks (z.B. HTML als Bild getarnt)
+        // SECURITY: X-Content-Type-Options nosniff
+        // Prevents MIME-type sniffing - browser must not guess content-type
+        // Protection against MIME-confusion attacks (e.g., HTML disguised as image)
         addHeaderIfAbsent(response, "X-Content-Type-Options", "nosniff");
-        // SICHERHEIT: X-XSS-Protection = 0 (deaktiviert)
-        // Moderne Best Practice: CSP ist besser, alte XSS-Filter können selbst Bugs haben
-        // Wert "0" deaktiviert den alten Browser-XSS-Filter explizit
+
+        // SECURITY: X-XSS-Protection = 0 (disabled)
+        // Modern best practice: CSP is better, old XSS filters can have bugs themselves
+        // Value "0" explicitly disables the old browser XSS filter
         addHeaderIfAbsent(response, "X-XSS-Protection", "0");
 
-        // Prüft ob Frame-Options konfiguriert sind und nicht leer
+        // Check if frame options are configured and not empty
         if (StringUtils.hasText(properties.getFrameOptions())) {
-            // SICHERHEIT: X-Frame-Options verhindert Clickjacking
-            // DENY = Seite kann NICHT in Frames eingebettet werden
-            // SAMEORIGIN = Nur Frames von derselben Domain erlaubt
+            // SECURITY: X-Frame-Options prevents clickjacking
+            // DENY = page cannot be embedded in frames
+            // SAMEORIGIN = only frames from same domain allowed
             addHeaderIfAbsent(response, "X-Frame-Options", properties.getFrameOptions());
         }
 
-        // Prüft ob Referrer-Policy konfiguriert ist
+        // Check if referrer policy is configured
         if (StringUtils.hasText(properties.getReferrerPolicy())) {
-            // SICHERHEIT: Referrer-Policy kontrolliert welche Referrer-Infos gesendet werden
-            // strict-origin-when-cross-origin = sendet nur Origin bei Cross-Origin-Requests
-            // Schützt vor Information-Disclosure durch URL-Parameter in Referrer
+            // SECURITY: Referrer-Policy controls what referrer info is sent
+            // strict-origin-when-cross-origin = only sends origin on cross-origin requests
+            // Protects against information disclosure through URL parameters in referrer
             addHeaderIfAbsent(response, "Referrer-Policy", properties.getReferrerPolicy());
         }
 
-        // Prüft ob HSTS aktiviert ist UND (HTTPS-Request ODER forceHttp aktiviert)
+        // Check if HSTS is enabled AND (HTTPS request OR forceHttp enabled)
         if (properties.isHstsEnabled() && (request.isSecure() || properties.isHstsForceHttp())) {
-            // Baut HSTS-Header-Wert dynamisch mit StringBuilder zusammen
+            // Build HSTS header value dynamically with StringBuilder
             StringBuilder value = new StringBuilder("max-age=")
-                    // Fügt max-age in Sekunden hinzu (wie lange Browser HTTPS erzwingen soll)
-                    // Math.max stellt sicher dass Wert nicht negativ wird
+                    // Append max-age in seconds (how long browser should enforce HTTPS)
+                    // Math.max ensures value is not negative
                     .append(Math.max(properties.getHstsMaxAgeSeconds(), 0));
-            // Prüft ob Subdomains in HSTS eingeschlossen werden sollen
+
+            // Check if subdomains should be included in HSTS
             if (properties.isHstsIncludeSubdomains()) {
-                // SICHERHEIT: includeSubDomains erzwingt HTTPS auch für alle Subdomains
+                // SECURITY: includeSubDomains enforces HTTPS for all subdomains too
                 value.append("; includeSubDomains");
             }
-            // Prüft ob HSTS-Preload aktiviert ist
+
+            // Check if HSTS preload is enabled
             if (properties.isHstsPreload()) {
-                // SICHERHEIT: preload erlaubt Aufnahme in Browser-HSTS-Preload-Liste
-                // Achtung: Schwer rückgängig zu machen - nur mit Bedacht aktivieren
+                // SECURITY: preload allows inclusion in browser HSTS preload list
+                // Warning: Hard to reverse - only enable with caution
                 value.append("; preload");
             }
-            // SICHERHEIT: Strict-Transport-Security erzwingt HTTPS
-            // Browser wird automatisch HTTP auf HTTPS umleiten für max-age Sekunden
+
+            // SECURITY: Strict-Transport-Security enforces HTTPS
+            // Browser will automatically redirect HTTP to HTTPS for max-age seconds
             addHeaderIfAbsent(response, "Strict-Transport-Security", value.toString());
         }
 
-        // Prüft ob CSP aktiviert und konfiguriert ist
+        // Check if CSP is enabled and configured
         if (properties.isContentSecurityPolicyEnabled() && StringUtils.hasText(properties.getContentSecurityPolicy())) {
-            // SICHERHEIT: Content-Security-Policy ist DER wichtigste Security-Header
-            // Definiert erlaubte Content-Quellen (Scripts, Styles, Images, etc.)
-            // Verhindert XSS-Angriffe durch strikte Whitelist-Policy
-            // Beispiel: "default-src 'self'" = nur Content von eigener Domain erlaubt
+            // SECURITY: Content-Security-Policy is THE most important security header
+            // Defines allowed content sources (scripts, styles, images, etc.)
+            // Prevents XSS attacks through strict whitelist policy
+            // Example: "default-src 'self'" = only content from own domain allowed
             addHeaderIfAbsent(response, "Content-Security-Policy", properties.getContentSecurityPolicy());
         }
 
-        // Prüft ob Permissions-Policy aktiviert und konfiguriert ist
+        // Check if Permissions-Policy is enabled and configured
         if (properties.isPermissionsPolicyEnabled() && StringUtils.hasText(properties.getPermissionsPolicy())) {
-            // SICHERHEIT: Permissions-Policy kontrolliert Browser-Features
-            // Beispiel: "geolocation=()" = Geolocation für NIEMANDEN erlaubt
-            // Verhindert Missbrauch von sensiblen Browser-APIs
+            // SECURITY: Permissions-Policy controls browser features
+            // Example: "geolocation=()" = geolocation allowed for NOBODY
+            // Prevents abuse of sensitive browser APIs
             addHeaderIfAbsent(response, "Permissions-Policy", properties.getPermissionsPolicy());
         }
 
-        // Prüft ob Cross-Origin-Opener-Policy aktiviert und konfiguriert ist
+        // Check if Cross-Origin-Opener-Policy is enabled and configured
         if (properties.isCrossOriginOpenerPolicyEnabled() && StringUtils.hasText(properties.getCrossOriginOpenerPolicy())) {
-            // SICHERHEIT: Cross-Origin-Opener-Policy isoliert Browsing-Context
-            // same-origin = Nur Fenster von derselben Origin können referenziert werden
-            // Schutz vor Cross-Origin-Attacks wie Spectre/Meltdown
+            // SECURITY: Cross-Origin-Opener-Policy isolates browsing context
+            // same-origin = Only windows from same origin can be referenced
+            // Protection against cross-origin attacks like Spectre/Meltdown
             addHeaderIfAbsent(response, "Cross-Origin-Opener-Policy", properties.getCrossOriginOpenerPolicy());
         }
 
-        // Ruft den nächsten Filter in der Chain auf - Request wird weitergeleitet
+        // Call the next filter in the chain - forward the request
         filterChain.doFilter(request, response);
     }
 
-    // Private Hilfsmethode zum sicheren Hinzufügen von Headern
-    // Setzt Header nur wenn er noch NICHT existiert (kein Überschreiben)
+    /**
+     * Helper method to safely add headers.
+     * Only sets header if it doesn't already exist (no overwriting).
+     *
+     * @param response The HTTP response
+     * @param name The header name
+     * @param value The header value
+     */
     private void addHeaderIfAbsent(HttpServletResponse response, String name, String value) {
-        // Prüft ob Response bereits einen Header mit diesem Namen enthält
+        // Check if response already contains a header with this name
         if (!response.containsHeader(name)) {
-            // Nur wenn nicht vorhanden: Setze den Header
-            // Verhindert Überschreiben von bereits gesetzten Headern (z.B. durch andere Filter)
+            // Only if not present: Set the header
+            // Prevents overwriting headers already set (e.g., by other filters)
             response.setHeader(name, value);
         }
     }

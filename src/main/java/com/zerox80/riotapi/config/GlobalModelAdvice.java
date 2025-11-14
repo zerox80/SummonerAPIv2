@@ -1,57 +1,70 @@
-// Paket-Deklaration: Definiert die Zugehörigkeit dieser Klasse zum config-Paket
+// Package declaration - defines that this class belongs to the config package
 package com.zerox80.riotapi.config;
 
-// Import für den Riot API Client zur Kommunikation mit der Riot Games API
+// Import for the Riot API client for communication with Riot Games API
 import com.zerox80.riotapi.client.RiotApiClient;
-// Import für @Autowired Annotation zur automatischen Dependency Injection
+// Import for @Autowired annotation for automatic dependency injection
 import org.springframework.beans.factory.annotation.Autowired;
-// Import für @Component Annotation um diese Klasse als Spring Bean zu registrieren
+// Import for @Component annotation to register this class as a Spring bean
 import org.springframework.stereotype.Component;
-// Import für @ControllerAdvice zur globalen Anwendung auf alle Controller
+// Import for @ControllerAdvice for global application to all controllers
 import org.springframework.web.bind.annotation.ControllerAdvice;
-// Import für @ModelAttribute zur Anreicherung aller Controller-Modelle
+// Import for @ModelAttribute to enrich all controller models
 import org.springframework.web.bind.annotation.ModelAttribute;
-// Import für das Model-Interface zum Hinzufügen von Attributen für Views
+// Import for Model interface to add attributes for views
 import org.springframework.ui.Model;
 
 
-// @ControllerAdvice: Spring-Annotation für globale Controller-Erweiterungen
-// Diese Klasse reichert ALLE Controller-Views mit gemeinsamen Modell-Daten an
+// @ControllerAdvice - Spring annotation for global controller extensions
+// This class enriches ALL controller views with common model data
 @ControllerAdvice
-// @Component: Markiert diese Klasse als Spring-verwaltete Komponente
-// Spring erstellt automatisch eine Bean-Instanz beim Startup
+// @Component - marks this class as a Spring-managed component
+// Spring automatically creates a bean instance at startup
 @Component
+/**
+ * GlobalModelAdvice adds global attributes to all controller models.
+ * Automatically executed before every controller method to provide common data to all views.
+ * Currently adds the configured platform region (e.g., "EUW1", "NA1") to all templates.
+ */
 public class GlobalModelAdvice {
 
-    // Final-Field für RiotApiClient - wird über Konstruktor injiziert
-    // Final stellt sicher dass der Client nach Initialisierung nicht mehr verändert werden kann
+    // Final field for RiotApiClient - injected via constructor
+    // Final ensures the client cannot be changed after initialization
     private final RiotApiClient riotApiClient;
 
-    // @Autowired: Markiert diesen Konstruktor für Dependency Injection
-    // Spring injiziert automatisch eine RiotApiClient-Instanz beim Erstellen dieser Bean
+    /**
+     * Constructor for dependency injection.
+     * Spring automatically injects a RiotApiClient instance when creating this bean.
+     *
+     * @param riotApiClient The Riot API client to extract configuration from
+     */
     @Autowired
     public GlobalModelAdvice(RiotApiClient riotApiClient) {
-        // Initialisiert das riotApiClient-Field mit der injizierten Instanz
+        // Initialize the riotApiClient field with the injected instance
         this.riotApiClient = riotApiClient;
     }
 
-    // @ModelAttribute: Markiert diese Methode zur automatischen Ausführung vor JEDEM Controller
-    // Fügt globale Attribute zum Model hinzu die in allen Views verfügbar sind
+    /**
+     * Adds global attributes to the model before every controller method execution.
+     * Makes the platform region available in all Thymeleaf templates as ${platformRegion}.
+     *
+     * @param model The Spring MVC model to add attributes to
+     */
     @ModelAttribute
     public void addGlobalAttributes(Model model) {
         try {
-            // Ruft die konfigurierte Platform-Region vom RiotApiClient ab (z.B. "EUW1", "NA1")
+            // Retrieve the configured platform region from RiotApiClient (e.g., "EUW1", "NA1")
             String region = riotApiClient.getPlatformRegion();
-            // Prüft ob eine gültige Region zurückgegeben wurde (nicht null und nicht leer)
+            // Check if a valid region was returned (not null and not empty)
             if (region != null && !region.isBlank()) {
-                // Fügt die Region als "platformRegion" zum Model hinzu
-                // Verfügbar in allen Thymeleaf-Templates als ${platformRegion}
+                // Add the region as "platformRegion" to the model
+                // Available in all Thymeleaf templates as ${platformRegion}
                 model.addAttribute("platformRegion", region);
             }
         } catch (Exception ignored) {
-            // Fängt alle Exceptions ab und ignoriert sie silent
-            // SICHERHEIT: Verhindert dass Fehler beim Region-Abruf die ganze Anwendung blockieren
-            // Das Model bleibt sauber und die Anwendung funktioniert weiter (ohne Region-Info)
+            // Catch all exceptions and ignore them silently
+            // SECURITY: Prevents errors during region retrieval from blocking the entire application
+            // The model remains clean and the application continues to work (without region info)
         }
     }
 }

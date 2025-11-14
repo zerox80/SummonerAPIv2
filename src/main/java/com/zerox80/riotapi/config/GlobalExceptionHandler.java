@@ -1,130 +1,166 @@
-// Paket-Deklaration: Definiert die Zugehörigkeit dieser Klasse zum config-Paket
+// Package declaration - defines that this class belongs to the config package
 package com.zerox80.riotapi.config;
 
-// Import für eigene Exception-Klasse für Riot API Fehler
+// Import for custom exception class for Riot API errors
 import com.zerox80.riotapi.client.RiotApiRequestException;
-// Import für Logger-Interface zur Protokollierung von Ereignissen
+// Import for Logger interface for event logging
 import org.slf4j.Logger;
-// Import für Logger-Factory zum Erstellen von Logger-Instanzen
+// Import for LoggerFactory - creates Logger instances
 import org.slf4j.LoggerFactory;
-// Import für MDC (Mapped Diagnostic Context) zur Thread-gebundenen Kontextverwaltung
+// Import for MDC (Mapped Diagnostic Context) for thread-bound context management
 import org.slf4j.MDC;
-// Import für HTTP-Statuscodes (200, 404, 500, etc.)
+// Import for HTTP status codes (200, 404, 500, etc.)
 import org.springframework.http.HttpStatus;
-// Import für standardisiertes Problem-Detail-Format (RFC 7807)
+// Import for standardized problem detail format (RFC 7807)
 import org.springframework.http.ProblemDetail;
-// Import für HTTP-Response mit generischem Body-Typ
+// Import for HTTP response with generic body type
 import org.springframework.http.ResponseEntity;
-// Import für Annotation zur Markierung von Exception-Handler-Methoden
+// Import for annotation to mark exception handler methods
 import org.springframework.web.bind.annotation.ExceptionHandler;
-// Import für Annotation zur globalen Anwendung auf alle REST-Controller
+// Import for annotation to globally apply to all REST controllers
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-// Import für Servlet HTTP-Request-Objekt
+// Import for Servlet HTTP request object
 import jakarta.servlet.http.HttpServletRequest;
-// Import für Regex-Matcher zum Pattern-Matching
+// Import for regex Matcher for pattern matching
 import java.util.regex.Matcher;
-// Import für Regex-Pattern zur Definition von Suchmustern
+// Import for regex Pattern to define search patterns
 import java.util.regex.Pattern;
 
 
-// @RestControllerAdvice: Spring-Annotation für globale Exception-Handler
-// Diese Klasse fängt alle Exceptions aus @RestController-Methoden ab
+// @RestControllerAdvice - Spring annotation for global exception handlers
+// This class catches all exceptions from @RestController methods
 @RestControllerAdvice
+/**
+ * GlobalExceptionHandler provides centralized exception handling for all REST controllers.
+ * Catches both specific exceptions (RiotApiRequestException) and generic exceptions.
+ * Returns standardized RFC 7807 ProblemDetail responses with appropriate HTTP status codes.
+ * Includes request ID and path for debugging and tracing.
+ */
 public class GlobalExceptionHandler {
 
-    // Statischer Logger für diese Klasse - final bedeutet unveränderlich nach Initialisierung
-    // Wird verwendet um Fehler und Warnungen zu protokollieren
+    // Static logger for this class - final means immutable after initialization
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    // @ExceptionHandler: Markiert diese Methode als Handler für RiotApiRequestException
-    // Wird automatisch aufgerufen wenn eine RiotApiRequestException geworfen wird
+    /**
+     * Handles exceptions thrown by the Riot API client.
+     * Extracts the HTTP status from the exception message and returns a standardized error response.
+     *
+     * @param ex The RiotApiRequestException thrown by the Riot API client
+     * @param request The HTTP request that caused the exception
+     * @return ResponseEntity with ProblemDetail containing error information
+     */
     @ExceptionHandler(RiotApiRequestException.class)
     public ResponseEntity<ProblemDetail> handleRiotApiException(RiotApiRequestException ex, HttpServletRequest request) {
-        // Extrahiert HTTP-Status aus der Exception-Nachricht (z.B. 404, 503)
+        // Extract HTTP status from exception message (e.g., 404, 503)
         HttpStatus status = inferStatusFromMessage(ex.getMessage());
-        // Titel für die Fehlerantwort - beschreibt dass der Fehler von der Riot API kommt
+        // Title for error response - describes that error comes from Riot API
         String title = "Upstream Riot API error";
-        // Bereinigte Fehlermeldung (gekürzt falls zu lang)
+        // Sanitized error message (truncated if too long)
         String detail = safeDetail(ex.getMessage());
-        // Warnung im Log mit strukturierten Platzhaltern für title, detail und Pfad
+        // Warning in log with structured placeholders for title, detail and path
         logger.warn("{}: {} (path={})", title, detail, request.getRequestURI());
-        // Erstellt standardisierte Problem-Antwort und gibt sie zurück
+        // Create standardized problem response and return it
         return buildProblem(status, title, detail, request);
     }
 
-    // @ExceptionHandler: Fängt ALLE anderen Exceptions ab die nicht spezifisch behandelt wurden
-    // Dies ist der Fallback-Handler für unerwartete Fehler - WICHTIG für Sicherheit
+    /**
+     * Handles ALL other exceptions that were not specifically handled.
+     * This is the fallback handler for unexpected errors - IMPORTANT for security.
+     * Returns a generic error message without exposing internal details.
+     *
+     * @param ex The unexpected exception
+     * @param request The HTTP request that caused the exception
+     * @return ResponseEntity with ProblemDetail containing generic error information
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleAnyException(Exception ex, HttpServletRequest request) {
-        // Fehler-Log mit vollständigem Stacktrace (drittes Argument) für Debugging
+        // Error log with full stacktrace (third argument) for debugging
         logger.error("Unhandled exception in controller (path={}): {}", request.getRequestURI(), ex.getMessage(), ex);
-        // Generischer Titel ohne sensible Details - SICHERHEIT: Keine internen Infos leaken
+        // Generic title without sensitive details - SECURITY: no internal info leakage
         String title = "Internal server error";
-        // Generische Nachricht für den Client - SICHERHEIT: Keine Stacktraces nach außen
+        // Generic message for client - SECURITY: no stacktraces exposed
         String detail = "An unexpected error occurred.";
-        // HTTP 500 als Standardfehler für unerwartete Probleme
+        // HTTP 500 as default error for unexpected problems
         return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, title, detail, request);
     }
 
-    // Private Hilfsmethode zur Erstellung einer standardisierten Problem-Antwort
-    // RFC 7807 konformes Format für konsistente API-Fehlerantworten
+    /**
+     * Private helper method to create a standardized problem response.
+     * RFC 7807 compliant format for consistent API error responses.
+     *
+     * @param status The HTTP status code for the response
+     * @param title Brief title describing the error
+     * @param detail Detailed description of the error
+     * @param request The HTTP request for context information
+     * @return ResponseEntity with ProblemDetail body
+     */
     private ResponseEntity<ProblemDetail> buildProblem(HttpStatus status, String title, String detail, HttpServletRequest request) {
-        // Erstellt ProblemDetail-Objekt mit dem übergebenen HTTP-Status
+        // Create ProblemDetail object with the given HTTP status
         ProblemDetail pd = ProblemDetail.forStatus(status);
-        // Setzt den Titel der Fehlermeldung (Kurzform)
+        // Set error message title (short form)
         pd.setTitle(title);
-        // Setzt die detaillierte Beschreibung des Fehlers
+        // Set detailed error description
         pd.setDetail(detail);
         try {
-            // Fügt Request-ID aus MDC hinzu für Request-Tracing über mehrere Services
+            // Add request ID from MDC for request tracing across multiple services
             pd.setProperty("requestId", MDC.get("requestId"));
-            // Fügt den angefragten Pfad hinzu um schnell zu sehen wo der Fehler auftrat
+            // Add requested path to quickly see where the error occurred
             pd.setProperty("path", request.getRequestURI());
-        } catch (Exception ignored) {} // Ignoriert Fehler beim Hinzufügen zusätzlicher Properties
-        // Erstellt ResponseEntity mit Status und ProblemDetail als Body
+        } catch (Exception ignored) {} // Ignore errors when adding additional properties
+        // Create ResponseEntity with status and ProblemDetail as body
         return ResponseEntity.status(status).body(pd);
     }
 
-    // Regex-Pattern zum Extrahieren von HTTP-Statuscodes aus Fehlermeldungen
-    // Sucht nach "status code: " gefolgt von genau 3 Ziffern (z.B. "status code: 404")
+    // Regex pattern to extract HTTP status codes from error messages
+    // Looks for "status code: " followed by exactly 3 digits (e.g., "status code: 404")
     private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("status code: (\\d{3})");
 
-    // Private Methode zur intelligenten Ableitung des HTTP-Status aus Exception-Nachricht
-    // Versucht den tatsächlichen Upstream-Status zu erkennen statt pauschal 502 zu verwenden
+    /**
+     * Intelligently infers HTTP status from exception message.
+     * Attempts to recognize the actual upstream status instead of generically using 502.
+     *
+     * @param message The exception message to parse
+     * @return Inferred HttpStatus, defaults to BAD_GATEWAY if parsing fails
+     */
     private HttpStatus inferStatusFromMessage(String message) {
-        // Null-Check: Falls keine Nachricht vorhanden, gib 502 Bad Gateway zurück
+        // Null check: if no message present, return 502 Bad Gateway
         if (message == null) return HttpStatus.BAD_GATEWAY;
         try {
-            // Wendet das Regex-Pattern auf die Nachricht an
+            // Apply regex pattern to the message
             Matcher m = STATUS_CODE_PATTERN.matcher(message);
-            // Prüft ob ein Match gefunden wurde
+            // Check if a match was found
             if (m.find()) {
-                // Extrahiert die erste Capture-Group (die 3 Ziffern) und parsed zu Integer
+                // Extract first capture group (the 3 digits) and parse to Integer
                 int code = Integer.parseInt(m.group(1));
-                // Validiert dass der Code im gültigen HTTP-Bereich liegt (100-599)
+                // Validate that code is in valid HTTP range (100-599)
                 if (code >= 100 && code < 600) {
-                    // Versucht den Code in einen Spring HttpStatus zu konvertieren
-                    // Falls erfolgreich: verwende den originalen Status, sonst fallback zu BAD_GATEWAY
-                    // Dies erhält semantische Bedeutung (404 bleibt 404, nicht generisch 502)
+                    // Try to convert code to Spring HttpStatus
+                    // If successful: use original status, else fallback to BAD_GATEWAY
+                    // This preserves semantic meaning (404 stays 404, not generic 502)
                     return HttpStatus.resolve(code) != null ? HttpStatus.valueOf(code) : HttpStatus.BAD_GATEWAY;
                 }
             }
-        } catch (Exception ignored) {} // Ignoriert Parsing-Fehler und fällt auf BAD_GATEWAY zurück
-        // Fallback für alle Fälle wo kein Status erkannt werden konnte
-        // 502 Bad Gateway signalisiert Problem mit Upstream-Service (Riot API)
+        } catch (Exception ignored) {} // Ignore parsing errors and fall back to BAD_GATEWAY
+        // Fallback for all cases where no status could be recognized
+        // 502 Bad Gateway signals problem with upstream service (Riot API)
         return HttpStatus.BAD_GATEWAY;
     }
 
-    // Private Methode zur Begrenzung der Länge von Fehlermeldungen
-    // SICHERHEIT: Verhindert DoS durch extrem lange Fehlermeldungen
+    /**
+     * Limits the length of error messages to prevent DoS attacks.
+     * SECURITY: Prevents DoS through extremely long error messages.
+     *
+     * @param msg The error message to sanitize
+     * @return Truncated message if longer than 600 characters, or original message
+     */
     private String safeDetail(String msg) {
-        // Null-Check: Falls keine Nachricht, gib null zurück
+        // Null check: if no message, return null
         if (msg == null) return null;
-        // Prüft ob Nachricht länger als 600 Zeichen ist
-        // Falls ja: Kürze auf 600 Zeichen und füge Ellipse hinzu
-        // Falls nein: Gib Originalnachricht zurück
-        // SICHERHEIT: Begrenzt Response-Größe und verhindert Information Disclosure
+        // Check if message is longer than 600 characters
+        // If yes: truncate to 600 characters and add ellipsis
+        // If no: return original message
+        // SECURITY: Limits response size and prevents information disclosure
         return msg.length() > 600 ? msg.substring(0, 600) + "…" : msg;
     }
 }
