@@ -1,3 +1,4 @@
+// Package declaration: indicates the service-layer namespace for Data Dragon integration utilities
 package com.zerox80.riotapi.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -41,22 +42,45 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 
+/**
+ * Service responsible for interacting with Riot's static content APIs (Data Dragon) and
+ * the community-driven CommunityDragon dataset. The service centralizes every read-only
+ * lookup for champions, localized assets, curated tooltips and sanitized HTML snippets.
+ *
+ * Responsibilities include:
+ * <ul>
+ *   <li>Fetching and caching Data Dragon versions, champion lists and champion details</li>
+ *   <li>Merging curated local JSON bundles with official Riot data for richer tooltips</li>
+ *   <li>Sanitizing HTML fragments so that tooltips can be rendered safely in the browser</li>
+ *   <li>Falling back to CommunityDragon data when Riot's payloads omit numeric values</li>
+ *   <li>Providing helper utilities to normalize locales, tokens and champion identifiers</li>
+ * </ul>
+ */
 @Service
 public class DataDragonService {
 
+    // Base URL for the official Riot Data Dragon CDN
     private static final String DDRAGON_BASE = "https://ddragon.leagueoflegends.com";
 
     private static final Logger logger = LoggerFactory.getLogger(DataDragonService.class);
 
+    // Primary HTTP/2 client shared with the Riot API client
     private final HttpClient httpClient;
+    // Fallback HTTP/1.1 client for legacy/community endpoints that reject HTTP/2
     private final HttpClient fallbackHttp1;
+    // Reusable Jackson mapper for JSON parsing
     private final ObjectMapper mapper = new ObjectMapper();
+    // Locale used when callers do not provide a preference
     private final String defaultLocale;
+    // Custom User-Agent propagated to remote services
     private final String userAgent;
+    // Provider used to obtain the proxied (AOP-aware) instance for cacheable/self-invoking methods
     private final ObjectProvider<DataDragonService> selfProvider;
+    // Tracks last successful patch version to offer a deterministic fallback
     private volatile String lastKnownVersion;
 
     private static final String CURATED_BUNDLE_NAME = "champions.json";
+    // In-memory cache of curated tooltip bundles per locale to avoid repeated disk access
     private final ConcurrentMap<String, Map<String, LocalAbilities>> curatedChampionCache = new ConcurrentHashMap<>();
 
     // Conservative HTML sanitization policy for tooltips/descriptions from DDragon/CDragon.
@@ -73,6 +97,14 @@ public class DataDragonService {
     private static final Pattern TAG_STRIP_PATTERN = Pattern.compile("<[^>]+>");
 
     
+    /**
+     * Constructs the service with HTTP client dependencies and runtime configuration.
+     *
+     * @param riotApiHttpClient shared HTTP client configured with tracing/executor propagation
+     * @param defaultLocale default locale configured through application properties
+     * @param userAgent descriptive user agent sent to Data Dragon / CommunityDragon
+     * @param selfProvider ObjectProvider that allows the bean to call its own proxied methods
+     */
     public DataDragonService(HttpClient riotApiHttpClient,
                              @Value("${ddragon.default-locale:en_US}") String defaultLocale,
                              @Value("${app.user-agent:SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)}") String userAgent,
@@ -87,11 +119,19 @@ public class DataDragonService {
         this.selfProvider = selfProvider;
     }
 
+    /**
+     * Retrieves either the proxied Spring bean (to honor caching annotations) or falls back
+     * to the current instance when running outside the application context (e.g., tests).
+     */
     private DataDragonService self() {
         DataDragonService proxy = selfProvider != null ? selfProvider.getIfAvailable() : null;
         return proxy != null ? proxy : this;
     }
 
+    /**
+     * Sanitizes tooltips/lore snippets using the allow-list policy defined above.
+     * Falls back to a safe plain-text rendering when sanitization fails.
+     */
     private String sanitizeHtml(String html) {
         if (html == null || html.isBlank()) return html;
         try {
@@ -102,16 +142,27 @@ public class DataDragonService {
         }
     }
 
+    /**
+     * Exposed for testing: applies the tooltip policy and returns sanitized HTML.
+     */
     protected String applyTooltipPolicy(String html) {
         return TOOLTIP_POLICY.sanitize(html);
     }
 
+    /**
+     * Replaces HTML tags with whitespace and collapses escape sequences to produce
+     * user-friendly plain text for tooltips that cannot be safely sanitized.
+     */
     private String stripTagsToPlainText(String html) {
         String withoutTags = TAG_STRIP_PATTERN.matcher(html).replaceAll(" ");
         String unescaped = HtmlUtils.htmlUnescape(withoutTags);
         return unescaped.replaceAll("\\s+", " ").trim();
     }
 
+    /**
+     * Helper that counts digits within a string to heuristically detect missing numbers
+     * when validating tooltips.
+     */
     private int countDigits(String s) {
         if (s == null || s.isBlank()) return 0;
         int c = 0;
@@ -119,6 +170,11 @@ public class DataDragonService {
         return c;
     }
 
+    /**
+     * Collects tooltip tokens (damage numbers, cooldown strings, etc.) from a Data Dragon
+     * spell node so that they can be re-used across multiple abilities when rendering rich
+     * tooltips. The resulting map mirrors Riot's token names (e.g., e1, cooldown, slowamount).
+     */
     private void collectGlobalDDragonValues(JsonNode spellNode, Map<String,String> out) {
         if (spellNode == null || out == null) return;
         // datavalues
@@ -161,6 +217,10 @@ public class DataDragonService {
         // Sometimes tokens like slowamount exist in other spells' datavalues in some champs; already covered above.
     }
 
+    /**
+     * Normalizes champion identifiers by stripping non alphabetic characters and limiting
+     * length. This prevents malformed champion IDs from being used in downstream lookups.
+     */
     private String sanitizeChampionIdBasic(String raw) {
         if (raw == null) return null;
         String cleaned = raw.replaceAll("[^A-Za-z]", "");
@@ -170,6 +230,12 @@ public class DataDragonService {
         return cleaned.isBlank() ? null : cleaned;
     }
 
+    /**
+     * Attempts to map a user-provided champion identifier to the canonical ID exposed by
+     * Data Dragon by comparing both champion IDs and champion names in a case-insensitive way.
+     *
+     * @return The canonical champion ID if a match is found, otherwise {@code null}.
+     */
     private String resolveCanonicalChampionId(String candidateId, String version, String localeTag) throws IOException, InterruptedException {
         if (candidateId == null || candidateId.isBlank()) {
             return null;
@@ -190,6 +256,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Loads the complete list of Data Dragon patch versions and caches the result for twelve hours.
+     * The first entry is stored as {@link #lastKnownVersion} for subsequent fallbacks.
+     */
     @Cacheable(cacheNames = "ddragonVersions", unless = "#result == null || #result.isEmpty()")
     public List<String> getAllVersions() {
         String url = DDRAGON_BASE + "/api/versions.json";
@@ -210,6 +280,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Convenience accessor that returns the newest Data Dragon version. When the remote
+     * endpoint cannot be reached, the method falls back to {@link #lastKnownVersion}.
+     */
     public String getLatestVersion() {
         List<String> versions = getAllVersions();
         if (!versions.isEmpty()) {
@@ -220,6 +294,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Returns a short patch string (major.minor) derived from the latest version
+     * so that downstream code can reference aggregated statistics per patch.
+     */
     public String getLatestShortPatch() {
         String v = getLatestVersion();
         // e.g., 15.18.1 -> 15.18
@@ -229,6 +307,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Maps arbitrary {@link Locale} inputs (browser language, HTTP headers, etc.) to the
+     * locale identifiers expected by Data Dragon (e.g., {@code de_DE}, {@code en_US}).
+     */
     public String resolveLocale(Locale locale) {
         if (locale == null) return defaultLocale;
         String lang = locale.toLanguageTag();
@@ -249,6 +331,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Returns all champion summaries for the newest patch, localized to the provided locale.
+     * Internally delegates to the cache-aware method to ensure results are reused.
+     */
     public List<ChampionSummary> getChampionSummaries(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
@@ -256,6 +342,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Loads the localized champion index for the supplied version and locale.
+     * The list is cached per version/locale combination because the upstream payload is static.
+     */
     @Cacheable(cacheNames = "ddragonChampionList", key = "#version + '|' + #localeTag")
     public List<ChampionSummary> getChampionSummariesCached(String version, String localeTag) throws IOException, InterruptedException {
         String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/champion.json";
@@ -284,6 +374,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Fetches the full detail payload (lore, tags, spells, passive) for a champion in a given locale.
+     * Applies curated overrides when available and gracefully falls back to English resources.
+     */
     public ChampionDetail getChampionDetail(String championId, Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
@@ -291,6 +385,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Cacheable variant of {@link #getChampionDetail(String, Locale)} that exposes deterministic
+     * keys (champion/version/locale) so downstream services can render champion pages instantly.
+     */
     @Cacheable(cacheNames = "ddragonChampionDetail", key = "T(com.zerox80.riotapi.service.DataDragonService).safeLower(#championId) + '|' + #version + '|' + #localeTag")
     public ChampionDetail getChampionDetailCached(String championId, String version, String localeTag) throws IOException, InterruptedException {
         String cid = sanitizeChampionIdBasic(championId);
@@ -348,6 +446,11 @@ public class DataDragonService {
         return new ChampionDetail(id, name, title, lore, tags, imageFull, null, java.util.Collections.emptyList());
     }
 
+    /**
+     * Small immutable holder containing lore, passive and spell details either loaded from
+     * curated JSON bundles or synthesized from Data Dragon payloads. Keeps track of the locale
+     * that produced the data so overrides can respect language boundaries.
+     */
     private static class LocalAbilities {
         final String lore;
         final PassiveSummary passive;
@@ -361,6 +464,11 @@ public class DataDragonService {
         }
     }
 
+    /**
+     * Loads champion abilities from bundled resources (when available) or from per-champion
+     * JSON files stored under {@code abilities/<locale>/<champion>.json}. These curated files
+     * allow us to override incomplete Riot tooltips with manually authored content.
+     */
     private LocalAbilities loadLocalAbilities(String championId, String ddragonLocale) {
         LocalAbilities curated = loadCuratedAbilitiesFromBundle(championId, ddragonLocale);
         if (curated == null && !localeEquals(ddragonLocale, defaultLocale)) {
@@ -422,6 +530,10 @@ public class DataDragonService {
         }
     }
 
+    /**
+     * Attempts to resolve a champion entry from the curated bundle (used for locales that
+     * would otherwise rely solely on Riot's payload). Results are cached in-memory per locale.
+     */
     private LocalAbilities loadCuratedAbilitiesFromBundle(String championId, String localeTag) {
         if (championId == null || championId.isBlank()) return null;
         String canonicalLocale = normalizeLocaleTag(localeTag);
@@ -431,6 +543,11 @@ public class DataDragonService {
         return byChampion.get(championId.toLowerCase(Locale.ROOT));
     }
 
+    /**
+     * Loads and deserializes the curated bundle ({@link #CURATED_BUNDLE_NAME}) for a specific locale.
+     *
+     * @return map of lower-cased champion IDs to {@link LocalAbilities} or {@code null} when missing
+     */
     private Map<String, LocalAbilities> loadCuratedLocaleMap(String canonicalLocale) {
         String path = String.format("abilities/%s/%s", canonicalLocale, CURATED_BUNDLE_NAME);
         InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
@@ -525,11 +642,19 @@ public class DataDragonService {
         return new LocalAbilities(lore, passive, spells, localeTag);
     }
 
+    /**
+     * Converts locale tags to the canonical underscore format used by bundled assets.
+     */
     private String normalizeLocaleTag(String localeTag) {
         String loc = (localeTag == null || localeTag.isBlank()) ? defaultLocale : localeTag;
         return loc.replace('-', '_');
     }
 
+    /**
+     * Parses the standard Data Dragon champion payload and builds {@link LocalAbilities}
+     * from it by extracting passive/spell details, resolving tooltip tokens and sanitizing
+     * the resulting HTML.
+     */
     private LocalAbilities buildChampionAbilities(JsonNode championData, String localeTag) {
         if (championData == null || championData.isMissingNode()) {
             return null;
@@ -635,6 +760,9 @@ public class DataDragonService {
         return new LocalAbilities(lore.isBlank() ? null : sanitizeHtml(lore), passive, spells, localeTag);
     }
 
+    /**
+     * Returns the first non-blank string, preferring {@code primary} and falling back to {@code fallback}.
+     */
     private static String selectPreferredString(String primary, String fallback) {
         if (primary != null && !primary.isBlank()) {
             return primary;
@@ -655,10 +783,19 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Convenience overload that renders a single spell tooltip without supplying
+     * any global Data Dragon values.
+     */
     private String renderSpellTooltip(JsonNode spellNode) {
         return renderSpellTooltip(spellNode, Collections.emptyMap());
     }
 
+    /**
+     * Resolves Riot's templated tooltip strings by substituting placeholders such as
+     * {@code {{ e1 }}} with concrete damage/cooldown numbers. The method merges
+     * per-spell values with the optional {@code globalValues} map to mimic Riot's client.
+     */
     private String renderSpellTooltip(JsonNode spellNode, Map<String,String> globalValues) {
         if (spellNode == null || spellNode.isMissingNode()) return "";
         String raw = spellNode.path("tooltip").asText("");
@@ -753,6 +890,10 @@ public class DataDragonService {
         return out;
     }
 
+    /**
+     * Applies heuristic replacements when Riot's templates do not contain the numbers
+     * necessary to make a tooltip readable (e.g., "for seconds" without any digits).
+     */
     private String patchMissingNumbers(String text, Map<String,String> values){
         if (text == null || text.isBlank()) return text;
         String result = text;
@@ -837,6 +978,10 @@ public class DataDragonService {
         return result;
     }
 
+    /**
+     * Picks a reasonable damage string (e.g., "80/110/140") from the supplied token map by
+     * preferring entries that look like damage/eN tokens and discarding absurd values.
+     */
     private String pickDamageCandidate(Map<String,String> values) {
         if (values == null || values.isEmpty()) return null;
         String best = null; double bestAvg = -1.0;
@@ -856,6 +1001,9 @@ public class DataDragonService {
         return best;
     }
 
+    /**
+     * Selects the smallest positive value below {@code max} – handy for cooldown/second heuristics.
+     */
     private String pickSmallNumberCandidate(Map<String,String> values, double max) {
         if (values == null || values.isEmpty()) return null;
         String best = null; double bestVal = Double.MAX_VALUE;
@@ -873,6 +1021,9 @@ public class DataDragonService {
         return best;
     }
 
+    /**
+     * Finds a slash-separated value whose parsed numbers satisfy the provided validator.
+     */
     private String pickJoinedCandidate(Map<String,String> values, java.util.function.Predicate<java.util.List<Double>> validator){
         if (values == null || values.isEmpty()) return null;
         String best = null; double bestAvg = -1.0;
@@ -888,6 +1039,9 @@ public class DataDragonService {
         return best;
     }
 
+    /**
+     * Attempts to find a candidate that clearly represents a percentage/slow modifier.
+     */
     private String pickPercentCandidate(Map<String,String> values){
         if (values == null || values.isEmpty()) return null;
         // Prefer keys that suggest percent/slow/movement speed
@@ -910,6 +1064,9 @@ public class DataDragonService {
             if (nums.isEmpty()) return false; for (Double d : nums) { if (d <= 0 || d > 300) return false; } return true; });
     }
 
+    /**
+     * Parses every number (accepting commas or dots) from a combined string and returns them as doubles.
+     */
     private java.util.List<Double> parseNumbers(String joined){
         java.util.List<Double> list = new java.util.ArrayList<>();
         if (joined == null || joined.isBlank()) return list;
@@ -921,6 +1078,9 @@ public class DataDragonService {
         return list;
     }
 
+    /**
+     * Normalizes Riot/CommunityDragon placeholder tokens by removing namespaces and lower-casing.
+     */
     private String normalizeToken(String token) {
         if (token == null) return "";
         String t = token.trim().toLowerCase(Locale.ROOT);
@@ -933,6 +1093,9 @@ public class DataDragonService {
         return t;
     }
 
+    /**
+     * Detects whether a tooltip still looks unresolved (missing numbers, stray placeholders, etc.).
+     */
     private boolean looksIncompleteTooltip(String text, String locale) {
         if (text == null) return true;
         String s = text.trim();
@@ -952,12 +1115,18 @@ public class DataDragonService {
         return false;
     }
 
+    /**
+     * Formats coefficients for display (trim trailing zeros) so the UI shows "0.6" instead of "0.600000".
+     */
     private String formatCoeff(double v) {
         // Display like 0.6 rather than 0.600000
         if (Math.abs(v - Math.rint(v)) < 1e-9) return String.valueOf((int)Math.rint(v));
         return String.format(Locale.ROOT, "%.2f", v).replaceAll("0+$", "").replaceAll("\\.$", "");
     }
 
+    /**
+     * Converts Riot's link identifiers to human readable stat labels used in tooltips.
+     */
     private String mapLinkToStatLabel(String link) {
         if (link == null) return "";
         switch (link) {
@@ -981,6 +1150,11 @@ public class DataDragonService {
     }
 
     // ===== CommunityDragon fallback for fully-resolved dynamicDescription =====
+    /**
+     * Downloads CommunityDragon spell payloads and resolves their {@code @Token@} placeholders
+     * to plain text. CommunityDragon often contains the fully substituted values even when
+     * Data Dragon does not, making it a reliable fallback for missing numbers.
+     */
     private List<String> fetchCDragonResolvedTooltips(int championKey, String ddragonLocale) throws IOException, InterruptedException {
         String loc = cdragonLocale(ddragonLocale);
         String url = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/" + loc + "/v1/champions/" + championKey + ".json";
@@ -1097,6 +1271,10 @@ public class DataDragonService {
         return tips;
     }
 
+    /**
+     * Extracts the numerous token/value pairs from a CommunityDragon spell definition so that
+     * dynamic descriptions can be rendered without hitting the remote API multiple times.
+     */
     private Map<String,String> extractCDragonSpellValues(JsonNode spell) {
         Map<String,String> map = new HashMap<>();
         if (spell == null) return map;
@@ -1126,6 +1304,10 @@ public class DataDragonService {
 
     
     
+    /**
+     * Returns a map between champion numeric keys and their square splash URLs for the given locale.
+     * Useful for client-side lookups when only the numeric key is known (e.g., match histories).
+     */
     public Map<Integer, String> getChampionKeyToSquareUrl(Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
@@ -1133,6 +1315,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Cache-backed variant of {@link #getChampionKeyToSquareUrl(Locale)} that prevents redundant
+     * parsing of the heavyweight {@code champion.json} payload.
+     */
     @Cacheable(cacheNames = "ddragonChampionList", key = "'keyToImg|' + #version + '|' + #localeTag")
     public Map<Integer, String> getChampionKeyToSquareUrlCached(String version, String localeTag) throws IOException, InterruptedException {
         String url = DDRAGON_BASE + "/cdn/" + version + "/data/" + localeTag + "/champion.json";
@@ -1155,6 +1341,9 @@ public class DataDragonService {
         return map;
     }
 
+    /**
+     * Adds "name" + "values" style entries from nested CommunityDragon structures to a map.
+     */
     private void addNameValues(JsonNode node, Map<String,String> out) {
         if (node == null) return;
         if (node.isArray()) {
@@ -1191,6 +1380,9 @@ public class DataDragonService {
         }
     }
 
+    /**
+     * Utility that turns a numeric/textual JSON array into a slash-separated string (e.g., "10/20/30").
+     */
     private String joinNumberArray(JsonNode arr) {
         if (arr == null) return "";
         if (arr.isArray()) {
@@ -1208,6 +1400,9 @@ public class DataDragonService {
         return "";
     }
 
+    /**
+     * Converts Data Dragon locale values to the lowercase CommunityDragon variant.
+     */
     private String cdragonLocale(String ddragonLocale) {
         if (ddragonLocale == null || ddragonLocale.isBlank()) return "en_us";
         // Convert e.g., de_DE -> de_de
@@ -1215,6 +1410,11 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Applies hand-crafted tooltip fixes for champions whose data is notoriously incomplete
+     * (for example, Anivia or localized Amumu tooltips). The overrides are language aware and
+     * therefore only touch tooltips for the relevant locales.
+     */
     private void applyChampionSpecificTooltipOverrides(String championId, String ddragonLocale, List<SpellSummary> spells) {
         if (spells == null || spells.isEmpty()) return;
         String id = championId != null ? championId : "";
@@ -1293,6 +1493,9 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Looks up the numeric champion key for the provided textual identifier.
+     */
     public Integer getChampionKey(String championId, Locale locale) throws IOException, InterruptedException {
         String ver = getLatestVersion();
         String loc = resolveLocale(locale);
@@ -1300,6 +1503,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Cache-aware helper that fetches a champion's numeric key while respecting locale-specific
+     * canonicalization rules.
+     */
     @Cacheable(cacheNames = "ddragonChampionDetail", key = "'key-' + T(com.zerox80.riotapi.service.DataDragonService).safeLower(#championId) + '|' + #version + '|' + #localeTag")
     public Integer getChampionKeyCached(String championId, String version, String localeTag) throws IOException, InterruptedException {
         String cid = sanitizeChampionIdBasic(championId);
@@ -1322,6 +1529,11 @@ public class DataDragonService {
         }
     }
 
+    /**
+     * Executes an HTTP GET request (preferring HTTP/2) and parses the response body as JSON.
+     * When the primary client fails (e.g., HTTP/2 not supported), the method retries once with
+     * the fallback HTTP/1.1 client before surfacing an {@link IOException}.
+     */
     private JsonNode getJson(String url) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder(URI.create(url))
                 .timeout(Duration.ofSeconds(20))
@@ -1348,6 +1560,10 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Returns a map containing base CDN URLs (versioned image roots, CDN host, etc.) that
+     * callers can use to construct sprite URLs without duplicating string concatenation logic.
+     */
     @Cacheable(cacheNames = "ddragonImageBases", key = "#version == null || #version.isBlank() ? 'latest' : #version")
     public Map<String, String> getImageBases(String version) {
         String requested = version;
@@ -1480,6 +1696,9 @@ public class DataDragonService {
     }
 
     
+    /**
+     * Null-safe helper used inside cache keys to normalize champion identifiers.
+     */
     public static String safeLower(String value) {
         return value == null ? null : value.toLowerCase(Locale.ROOT);
     }
