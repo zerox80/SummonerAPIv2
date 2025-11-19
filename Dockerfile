@@ -33,7 +33,7 @@ COPY --from=frontend-build /app/src/main/resources/static/ ./src/main/resources/
 RUN mvn -q -T 5 -DskipTests=${SKIP_TESTS} clean package
 
 # ===== Stage 3: Runtime =====
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 
 ENV JAVA_TOOL_OPTIONS=""
