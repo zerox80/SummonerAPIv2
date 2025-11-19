@@ -28,7 +28,7 @@
     "@vitest/ui": "^4.0.10",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "jsdom": "^24.0.0",
     "terser": "^5.44.1",
     "vite": "^5.4.21",
