@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # ===== Stage 1: Frontend Build =====
-FROM node:20-alpine AS frontend-build
+FROM node:25-alpine AS frontend-build
 WORKDIR /app
 
 # Copy package files first for better caching
