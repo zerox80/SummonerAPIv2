@@ -4,15 +4,14 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-      time: "04:00"
-    open-pull-requests-limit: 10
-    ignore:
-      # Keep Lombok/manual pinning unless needed
-      - dependency-name: "org.projectlombok:lombok"
-  - package-ecosystem: "github-actions"
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "daily"
+
+  # Neuer Eintrag für Docker
+  - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "04:30"
-    open-pull-requests-limit: 5
+      interval: "daily"
