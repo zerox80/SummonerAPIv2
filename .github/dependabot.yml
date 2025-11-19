@@ -6,9 +6,10 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "npm"
-    directory: "/frontend"
+    directory: "/"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 50
 
   # Neuer Eintrag für Docker
   - package-ecosystem: "docker"
