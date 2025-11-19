@@ -29,7 +29,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "jsdom": "^24.0.0",
+    "jsdom": "^27.2.0",
     "terser": "^5.44.1",
     "vite": "^5.4.21",
     "vitest": "^4.0.10"
