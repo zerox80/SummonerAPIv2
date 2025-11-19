@@ -15,7 +15,7 @@ RUN npm run build:docker
 RUN ls -la src/main/resources/static/
 
 # ===== Stage 2: Backend Build =====
-FROM maven:3.9-eclipse-temurin-21 AS backend-build
+FROM maven:3-eclipse-temurin-25 AS backend-build
 WORKDIR /app
 
 # Allow toggling tests during build (default: skip tests for faster builds)
