@@ -51,7 +51,7 @@
   gap: clamp(0.85rem, 2vw, 1.2rem);
 }
 
-.match-history__list > .match-card {
+.match-history__list>.match-card {
   width: 100%;
 }
 
@@ -82,7 +82,7 @@
   transition: opacity var(--duration-base) ease;
 }
 
-.match-card > * {
+.match-card>* {
   position: relative;
   z-index: 1;
 }
@@ -142,7 +142,8 @@
   align-items: center;
   gap: clamp(0.5rem, 1.5vw, 0.8rem);
   flex: 1;
-  min-width: 200px; /* Ensure minimum space for name */
+  min-width: 200px;
+  /* Ensure minimum space for name */
   flex-shrink: 0;
 }
 
@@ -161,7 +162,8 @@
   gap: 0.45rem;
   align-items: flex-start;
   flex: 1;
-  min-width: 150px; /* More space for full names */
+  min-width: 150px;
+  /* More space for full names */
   overflow: visible;
 }
 
@@ -340,6 +342,7 @@
     opacity: 0;
     transform: translateY(-12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1019,7 +1022,7 @@
     gap: 0.5rem;
   }
 
-  .match-history__filters > * {
+  .match-history__filters>* {
     width: 100%;
   }
 
@@ -1108,67 +1111,52 @@
   }
 }
 
-@media (max-width: 420px) {
-  .match-card__summary {
-    gap: 0.9rem;
-  }
+.match-card__detail-grid,
+.match-card__stat-grid {
+  grid-template-columns: 1fr;
+}
 
-  .match-card__meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.35rem;
-  }
+.match-card__scoreboard {
+  scroll-snap-type: none;
+}
 
-  .match-card__toggle {
-    display: none;
-  }
+.match-card__team {
+  min-width: 100%;
+  padding: 0.9rem 0.7rem;
+}
 
-  .match-card__detail-grid,
-  .match-card__stat-grid {
-    grid-template-columns: 1fr;
-  }
+.match-player-row {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "champ"
+    "spells"
+    "kda"
+    "items";
+  gap: 0.5rem;
+  padding: 0.6rem 0.5rem;
+}
 
-  .match-card__scoreboard {
-    scroll-snap-type: none;
-  }
+.match-player-row__champion img {
+  width: 42px;
+  height: 42px;
+}
 
-  .match-card__team {
-    min-width: 100%;
-    padding: 0.9rem 0.7rem;
-  }
+.match-player-row__spell {
+  width: 32px;
+  height: 32px;
+}
 
-  .match-player-row {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "champ"
-      "spells"
-      "kda"
-      "items";
-    gap: 0.5rem;
-    padding: 0.6rem 0.5rem;
-  }
+.match-player-row__item,
+.match-player-row__item--trinket {
+  width: 28px;
+  height: 28px;
+}
 
-  .match-player-row__champion img {
-    width: 42px;
-    height: 42px;
-  }
-
-  .match-player-row__spell {
-    width: 32px;
-    height: 32px;
-  }
-
-  .match-player-row__item,
-  .match-player-row__item--trinket {
-    width: 28px;
-    height: 28px;
-  }
-
-  .match-player-row__items {
-    gap: 0.25rem;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
+.match-player-row__items {
+  gap: 0.25rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
 }
 
 @media (max-width: 780px) {
@@ -1198,15 +1186,17 @@
   }
 
   .match-card__meta {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    border-radius: var(--radius-md);
   }
 
   .match-card__stat-group {
     justify-content: stretch;
   }
 
-  .match-card__meta span,
   .match-card__stat {
     width: 100%;
   }
@@ -1284,4 +1274,3 @@
     gap: 0.2rem;
   }
 }
-
