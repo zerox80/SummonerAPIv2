@@ -270,15 +270,18 @@
 
 @media (max-width: 900px) {
   .match-card__summary {
+    display: grid;
     grid-template-columns: 1fr;
     gap: 1.1rem;
   }
 
   .match-card__champion {
+    display: grid;
     grid-template-columns: auto auto;
   }
 
   .match-card__summary-body {
+    display: grid;
     grid-template-columns: 1fr;
   }
 
