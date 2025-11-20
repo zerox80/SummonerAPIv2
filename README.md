@@ -4,8 +4,6 @@
 
 **A modern, high-performance League of Legends statistics and analytics platform**
 
-[![CI](https://github.com/zerox80/SummonerAPIv2/actions/workflows/ci.yml/badge.svg)](https://github.com/zerox80/SummonerAPIv2/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/zerox80/SummonerAPIv2/actions/workflows/codeql.yml/badge.svg)](https://github.com/zerox80/SummonerAPIv2/actions/workflows/codeql.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/projects/jdk/21/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-brightgreen.svg)](https://spring.io/projects/spring-boot)
