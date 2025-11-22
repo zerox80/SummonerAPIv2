@@ -87,7 +87,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
 
     // Konstruktor mit ObjectProvider für optionale Dependencies
     // ObjectProvider ermöglicht null-sichere Injection mit Fallback-Werten
-    public RateLimitingFilter(ObjectProvider<RateLimitProperties> properties, ObjectProvider<MeterRegistry> meterRegistry) {
+    public RateLimitingFilter(ObjectProvider<RateLimitProperties> properties,
+            ObjectProvider<MeterRegistry> meterRegistry) {
         // Versucht RateLimitProperties Bean zu holen
         RateLimitProperties provided = properties.getIfAvailable();
         // Prüft ob Properties vorhanden sind
@@ -109,7 +110,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         this.meterRegistry = meterRegistry.getIfAvailable(SimpleMeterRegistry::new);
     }
 
-    // @PostConstruct: Wird von Spring NACH Konstruktor und Dependency Injection aufgerufen
+    // @PostConstruct: Wird von Spring NACH Konstruktor und Dependency Injection
+    // aufgerufen
     // Initialisiert den Cache und loggt die Konfiguration
     @PostConstruct
     void init() {
@@ -127,7 +129,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         // Holt die konfigurierten URL-Patterns aus den Properties
         List<String> configured = properties.getPaths();
         // Verarbeitet die Patterns: trimmt Whitespace und filtert leere Strings
-        // Ternärer Operator: Falls configured nicht null, verarbeite Stream, sonst leere Liste
+        // Ternärer Operator: Falls configured nicht null, verarbeite Stream, sonst
+        // leere Liste
         this.pathPatterns = configured != null ? configured.stream()
                 // Entfernt führende/nachfolgende Leerzeichen von jedem Pattern
                 .map(String::trim)
@@ -137,8 +140,10 @@ public class RateLimitingFilter extends OncePerRequestFilter {
                 .collect(Collectors.toList()) : List.of();
         // Loggt die vollständige Konfiguration beim Start für Debugging/Auditing
         // Info-Level da dies wichtige Konfigurationsinformationen sind
-        logger.info("RateLimitingFilter initialized: enabled={}, windowMs={}, maxRequests={}, trustProxy={}, cacheMaxIps={}, includeHeaders={}, patterns={}",
-                properties.isEnabled(), properties.getWindowMs(), properties.getMaxRequests(), properties.isTrustProxy(),
+        logger.info(
+                "RateLimitingFilter initialized: enabled={}, windowMs={}, maxRequests={}, trustProxy={}, cacheMaxIps={}, includeHeaders={}, patterns={}",
+                properties.isEnabled(), properties.getWindowMs(), properties.getMaxRequests(),
+                properties.isTrustProxy(),
                 properties.getCacheMaxIps(), properties.isIncludeHeaders(), pathPatterns);
     }
 
@@ -201,7 +206,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         return v;
     }
 
-    // Private Methode ermittelt die echte Client-IP unter Berücksichtigung von Proxies
+    // Private Methode ermittelt die echte Client-IP unter Berücksichtigung von
+    // Proxies
     // SICHERHEIT: Kritisch für Rate-Limiting - falsche IP würde Rate-Limits umgehen
     private String clientIp(HttpServletRequest request) {
         // Prüft ob Proxy-Headern NICHT vertraut werden soll
@@ -214,14 +220,21 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         // Ab hier: trustProxy=true - vertraue Proxy-Headern
         // Holt die direkte Remote-IP (IP des Proxies)
         String remoteAddr = request.getRemoteAddr();
-        // Prüft ob eine Whitelist von erlaubten Proxies konfiguriert ist
-        if (properties.getAllowedProxies() != null && !properties.getAllowedProxies().isEmpty()) {
-            // Prüft ob die Remote-IP auf der Whitelist steht
-            if (!isAllowedProxy(remoteAddr)) {
-                // Remote-IP ist NICHT auf Whitelist - verwende diese IP direkt
-                // SICHERHEIT: Verhindert dass beliebige Clients X-Forwarded-For faken
-                return remoteAddr;
-            }
+
+        // SICHERHEIT: Prüft ob eine Whitelist von erlaubten Proxies konfiguriert ist
+        // Wenn KEINE Whitelist konfiguriert ist, aber trustProxy=true, ist das
+        // unsicher!
+        // Wir fallen dann auf die Remote-IP zurück (Fail Secure)
+        if (properties.getAllowedProxies() == null || properties.getAllowedProxies().isEmpty()) {
+            // Warnung könnte hier geloggt werden
+            return remoteAddr;
+        }
+
+        // Prüft ob die Remote-IP auf der Whitelist steht
+        if (!isAllowedProxy(remoteAddr)) {
+            // Remote-IP ist NICHT auf Whitelist - verwende diese IP direkt
+            // SICHERHEIT: Verhindert dass beliebige Clients X-Forwarded-For faken
+            return remoteAddr;
         }
 
         // Versucht "Forwarded" Header zu lesen (RFC 7239 - moderner Standard)
@@ -258,7 +271,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             // X-Forwarded-For kann mehrere IPs enthalten: "client, proxy1, proxy2"
             // Die ERSTE IP ist die ursprüngliche Client-IP
             int comma = xff.indexOf(',');
-            // Extrahiert erste IP: Falls Komma gefunden, nimm Substring davor, sonst ganzen String
+            // Extrahiert erste IP: Falls Komma gefunden, nimm Substring davor, sonst ganzen
+            // String
             String first = (comma > 0 ? xff.substring(0, comma) : xff).trim();
             // Extrahiert IP (behandelt Quotes, Brackets, Ports)
             return extractIp(first);
@@ -291,8 +305,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     // Hier findet die eigentliche Rate-Limit-Logik statt
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
         // Prüft ob der Request-Pfad Rate-Limiting unterliegt (matched URL-Patterns)
         boolean matched = isRateLimitedPath(request);
         // Prüft ob Rate-Limiting deaktiviert ist ODER Pfad nicht matched
@@ -357,7 +371,8 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             // Content-Type: JSON-Response
             response.setContentType("application/json;charset=UTF-8");
             // JSON-Body mit Fehler und Retry-Information
-            String body = "{\"error\":\"Too Many Requests\",\"retryAfterSeconds\":" + (int) Math.ceil(resetMs / 1000.0) + "}";
+            String body = "{\"error\":\"Too Many Requests\",\"retryAfterSeconds\":" + (int) Math.ceil(resetMs / 1000.0)
+                    + "}";
             // Schreibt JSON-Body in Response
             response.getWriter().write(body);
             try {
