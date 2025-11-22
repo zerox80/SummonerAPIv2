@@ -413,6 +413,9 @@ public class DataDragonService {
             return "ja_JP";
         if (lang.startsWith("ko"))
             return "ko_KR";
+        if (lang.startsWith("zh-TW") || lang.startsWith("zh-HK") || lang.startsWith("zh_TW")
+                || lang.startsWith("zh_HK"))
+            return "zh_TW";
         if (lang.startsWith("zh"))
             return "zh_CN"; // Simplified Chinese
         return defaultLocale;

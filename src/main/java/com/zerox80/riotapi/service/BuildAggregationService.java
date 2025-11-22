@@ -360,7 +360,8 @@ public class BuildAggregationService {
         AtomicInteger pages = new AtomicInteger(0);
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-        BooleanSupplier hasCapacity = () -> summonerIds.size() < maxSummoners;
+        AtomicInteger queueSize = new AtomicInteger(0);
+        BooleanSupplier hasCapacity = () -> queueSize.get() < maxSummoners;
 
         outer: for (String tier : tiers) {
             for (String div : divisions) {
@@ -378,8 +379,9 @@ public class BuildAggregationService {
                                             .filter(StringUtils::hasText)
                                             .forEach(sid -> {
                                                 if (seenSummonerIds.add(sid)) {
-                                                    if (summonerIds.size() < maxSummoners) {
+                                                    if (queueSize.get() < maxSummoners) {
                                                         summonerIds.add(sid);
+                                                        queueSize.incrementAndGet();
                                                     }
                                                 }
                                             });

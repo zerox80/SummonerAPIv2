@@ -53,7 +53,6 @@ import java.util.Locale;
 // Import for list utility functions (e.g., partition)
 import com.zerox80.riotapi.util.ListUtils;
 
-
 /**
  * Service class for Riot API operations and business logic.
  *
@@ -65,7 +64,8 @@ import com.zerox80.riotapi.util.ListUtils;
  * - Champion play count statistics
  * - Summoner search suggestions
  *
- * All methods work asynchronously using CompletableFuture for non-blocking operations.
+ * All methods work asynchronously using CompletableFuture for non-blocking
+ * operations.
  */
 @Service
 public class RiotApiService {
@@ -79,20 +79,18 @@ public class RiotApiService {
     // Service for LP history and LP change calculations
     private final PlayerLpRecordService playerLpRecordService;
 
-
     /**
      * Constructor with dependency injection through Spring.
      *
-     * @param riotApiClient Injected Riot API client
+     * @param riotApiClient         Injected Riot API client
      * @param playerLpRecordService Injected LP record service
      */
     @Autowired
     public RiotApiService(RiotApiClient riotApiClient,
-                          PlayerLpRecordService playerLpRecordService) {
+            PlayerLpRecordService playerLpRecordService) {
         this.riotApiClient = riotApiClient;
         this.playerLpRecordService = playerLpRecordService;
     }
-
 
     /**
      * Retrieves paginated match history for a player.
@@ -114,7 +112,8 @@ public class RiotApiService {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         // Normalization: Set negative start index to 0
-        if (start < 0) start = 0;
+        if (start < 0)
+            start = 0;
 
         // Final variables for lambda usage
         final int from = start;
@@ -134,7 +133,8 @@ public class RiotApiService {
                             .map(this::fetchMatchBatch)
                             .collect(Collectors.toList());
                     // Wait for all batches to complete
-                    CompletableFuture<Void> allDone = CompletableFuture.allOf(batchFutures.toArray(new CompletableFuture[0]));
+                    CompletableFuture<Void> allDone = CompletableFuture
+                            .allOf(batchFutures.toArray(new CompletableFuture[0]));
                     // Transform results after completion
                     return allDone.thenApply(v -> batchFutures.stream()
                             .flatMap(f -> {
@@ -145,17 +145,17 @@ public class RiotApiService {
                             .collect(Collectors.toList()));
                 })
                 .exceptionally(ex -> {
-                    logger.error("Error fetching paged match history for puuid {}: {}", maskPuuid(puuid), ex.getMessage(), ex);
+                    logger.error("Error fetching paged match history for puuid {}: {}", maskPuuid(puuid),
+                            ex.getMessage(), ex);
                     return Collections.<MatchV5Dto>emptyList();
                 });
     }
-
 
     /**
      * Retrieves summoner data by Riot ID (game name + tag line).
      *
      * @param gameName Player's in-game name
-     * @param tagLine Player's tag line (e.g., "EUW", "NA1")
+     * @param tagLine  Player's tag line (e.g., "EUW", "NA1")
      * @return CompletableFuture containing Summoner data, or null if not found
      */
     public CompletableFuture<Summoner> getSummonerByRiotId(String gameName, String tagLine) {
@@ -184,7 +184,8 @@ public class RiotApiService {
                 .thenCompose(account -> {
                     // Check if account exists and has PUUID
                     if (account != null && StringUtils.hasText(account.getPuuid())) {
-                        logger.info("Account found, PUUID: {}. Fetching summoner data...", maskPuuid(account.getPuuid()));
+                        logger.info("Account found, PUUID: {}. Fetching summoner data...",
+                                maskPuuid(account.getPuuid()));
                         // Asynchronous API call to fetch summoner details via PUUID
                         return riotApiClient.getSummonerByPuuid(account.getPuuid())
                                 .thenApply(summoner -> {
@@ -195,21 +196,24 @@ public class RiotApiService {
                                         } else {
                                             // Fallback if game name is missing from account
                                             summoner.setName(normalizedGameName);
-                                            logger.warn("Warning: gameName is missing from AccountDto for PUUID: {}. Using provided gameName for Summoner object.", maskPuuid(account.getPuuid()));
+                                            logger.warn(
+                                                    "Warning: gameName is missing from AccountDto for PUUID: {}. Using provided gameName for Summoner object.",
+                                                    maskPuuid(account.getPuuid()));
                                         }
                                     }
                                     return summoner;
                                 });
                     } else {
-                        logger.info("Account for {}#{} not found or PUUID is missing.", trimmedGameName, trimmedTagLine);
+                        logger.info("Account for {}#{} not found or PUUID is missing.", trimmedGameName,
+                                trimmedTagLine);
                         return CompletableFuture.completedFuture(null);
                     }
                 }).exceptionally(ex -> {
-                    logger.error("Error fetching summoner data for {}#{}: {}", normalizedGameName, normalizedTagLine, ex.getMessage(), ex);
+                    logger.error("Error fetching summoner data for {}#{}: {}", normalizedGameName, normalizedTagLine,
+                            ex.getMessage(), ex);
                     return null;
                 });
     }
-
 
     /**
      * Retrieves ranked league entries for a player by PUUID.
@@ -244,12 +248,11 @@ public class RiotApiService {
                 });
     }
 
-
     /**
      * Retrieves match history for a player.
      * Results are cached to reduce API calls.
      *
-     * @param puuid Player's PUUID
+     * @param puuid           Player's PUUID
      * @param numberOfMatches Number of matches to fetch
      * @return CompletableFuture containing list of matches
      */
@@ -277,7 +280,8 @@ public class RiotApiService {
                     }
                     logger.info("Fetching details for {} matches in batches...", matchIds.size());
 
-                    // Split match IDs into batches of 5 for parallel processing (rate limiting protection)
+                    // Split match IDs into batches of 5 for parallel processing (rate limiting
+                    // protection)
                     List<List<String>> batches = ListUtils.partition(matchIds, 5);
                     // Fetch match details for each batch asynchronously
                     List<CompletableFuture<List<MatchV5Dto>>> batchFutures = batches.stream()
@@ -285,7 +289,8 @@ public class RiotApiService {
                             .collect(Collectors.toList());
 
                     // Wait for all batches to complete
-                    CompletableFuture<Void> allDone = CompletableFuture.allOf(batchFutures.toArray(new CompletableFuture[0]));
+                    CompletableFuture<Void> allDone = CompletableFuture
+                            .allOf(batchFutures.toArray(new CompletableFuture[0]));
                     // Transform results after all batches complete
                     return allDone.thenApply(v -> batchFutures.stream()
                             .flatMap(f -> {
@@ -295,7 +300,8 @@ public class RiotApiService {
                             .filter(java.util.Objects::nonNull)
                             .collect(Collectors.toList()));
                 }).exceptionally(ex -> {
-                    logger.error("Error fetching match history for puuid {}: {}", maskPuuid(puuid), ex.getMessage(), ex);
+                    logger.error("Error fetching match history for puuid {}: {}", maskPuuid(puuid), ex.getMessage(),
+                            ex);
                     return Collections.emptyList();
                 });
     }
@@ -309,26 +315,25 @@ public class RiotApiService {
     private CompletableFuture<List<MatchV5Dto>> fetchMatchBatch(List<String> matchIdBatch) {
         // Stream over all match IDs in the batch
         List<CompletableFuture<MatchV5Dto>> matchDetailFutures = matchIdBatch.stream()
-            .map(matchId -> riotApiClient.getMatchDetails(matchId)
-                .exceptionally(ex -> {
-                    logger.error("Error fetching details for match ID {}: {}", matchId, ex.getMessage(), ex);
-                    return null;
-                }))
-            .collect(Collectors.toList());
+                .map(matchId -> riotApiClient.getMatchDetails(matchId)
+                        .exceptionally(ex -> {
+                            logger.error("Error fetching details for match ID {}: {}", matchId, ex.getMessage(), ex);
+                            return null;
+                        }))
+                .collect(Collectors.toList());
 
         // Wait for all match detail futures to complete
         return CompletableFuture.allOf(matchDetailFutures.toArray(new CompletableFuture[0]))
-            .thenApply(v -> matchDetailFutures.stream()
-                .map(CompletableFuture::join)
-                .filter(java.util.Objects::nonNull)
-                .collect(Collectors.toList()));
+                .thenApply(v -> matchDetailFutures.stream()
+                        .map(CompletableFuture::join)
+                        .filter(java.util.Objects::nonNull)
+                        .collect(Collectors.toList()));
     }
-
 
     /**
      * Calculates champion play count statistics for a player.
      *
-     * @param matches List of matches to analyze
+     * @param matches       List of matches to analyze
      * @param searchedPuuid PUUID of the player to analyze
      * @return Map of champion name to play count, sorted by frequency
      */
@@ -344,7 +349,8 @@ public class RiotApiService {
                 // FlatMap: Create stream of all participants from all matches
                 .flatMap(match -> match.getInfo().getParticipants().stream())
                 // Filter for the searched player (PUUID match) and valid champion name
-                .filter(participant -> participant != null && searchedPuuid.equals(participant.getPuuid()) && StringUtils.hasText(participant.getChampionName()))
+                .filter(participant -> participant != null && searchedPuuid.equals(participant.getPuuid())
+                        && StringUtils.hasText(participant.getChampionName()))
                 // Business logic: Group by champion name and count occurrences
                 .collect(Collectors.groupingBy(ParticipantDto::getChampionName, Collectors.counting()))
                 .entrySet().stream()
@@ -354,18 +360,19 @@ public class RiotApiService {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-
     /**
      * Retrieves summoner suggestions based on search history.
      *
-     * @param partialName Partial search text (may be empty)
+     * @param partialName       Partial search text (may be empty)
      * @param userHistoryDtoMap Search history map
      * @return List of summoner suggestions (max 10)
      */
-    public List<SummonerSuggestionDTO> getSummonerSuggestions(String partialName, Map<String, SummonerSuggestionDTO> userHistoryDtoMap) {
+    public List<SummonerSuggestionDTO> getSummonerSuggestions(String partialName,
+            Map<String, SummonerSuggestionDTO> userHistoryDtoMap) {
         Stream<Map.Entry<String, SummonerSuggestionDTO>> stream;
         // Null-safe: Use provided history or empty map
-        Map<String, SummonerSuggestionDTO> historyToUse = (userHistoryDtoMap != null) ? userHistoryDtoMap : Collections.emptyMap();
+        Map<String, SummonerSuggestionDTO> historyToUse = (userHistoryDtoMap != null) ? userHistoryDtoMap
+                : Collections.emptyMap();
 
         // Check if no search text was entered
         if (!StringUtils.hasText(partialName)) {
@@ -399,18 +406,19 @@ public class RiotApiService {
                 try {
                     // Business logic: Generate icon URL from icon ID via client
                     dto.setProfileIconUrl(riotApiClient.getProfileIconUrl(iconId));
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         });
         return out;
     }
 
-
     /**
-     * Retrieves complete summoner profile data including matches and league entries.
+     * Retrieves complete summoner profile data including matches and league
+     * entries.
      *
      * @param gameName Player's in-game name
-     * @param tagLine Player's tag line
+     * @param tagLine  Player's tag line
      * @return CompletableFuture containing complete profile data
      */
     public CompletableFuture<SummonerProfileData> getSummonerProfileDataAsync(String gameName, String tagLine) {
@@ -420,7 +428,8 @@ public class RiotApiService {
                     // Validation: Check if summoner found and PUUID present
                     if (summoner == null || !StringUtils.hasText(summoner.getPuuid())) {
                         logger.warn("Summoner not found or PUUID is missing for {}#{}", gameName, tagLine);
-                        return CompletableFuture.completedFuture(new SummonerProfileData("Summoner not found or PUUID missing."));
+                        return CompletableFuture
+                                .completedFuture(new SummonerProfileData("Summoner not found or PUUID missing."));
                     }
 
                     // Business logic: Create display name in format Name#Tag
@@ -428,27 +437,28 @@ public class RiotApiService {
                     // Generate profile icon URL
                     String iconUrl = riotApiClient.getProfileIconUrl(summoner.getProfileIconId());
                     // Create suggestion DTO for search history
-                    SummonerSuggestionDTO suggestionDTO = new SummonerSuggestionDTO(displayRiotId, summoner.getProfileIconId(), summoner.getSummonerLevel(), iconUrl);
+                    SummonerSuggestionDTO suggestionDTO = new SummonerSuggestionDTO(displayRiotId,
+                            summoner.getProfileIconId(), summoner.getSummonerLevel(), iconUrl);
 
                     // Fetch league entries (by PUUID) and match history concurrently
-                    CompletableFuture<List<LeagueEntryDTO>> leagueEntriesFuture =
-                            riotApiClient.getLeagueEntriesByPuuid(summoner.getPuuid())
-                                    .thenApply(leagueEntries -> {
-                                        // Check if league data present
-                                        if (leagueEntries != null && !leagueEntries.isEmpty()) {
-                                            Instant now = Instant.now();
-                                            // Database operation: Save LP snapshot for LP tracking
-                                            playerLpRecordService.savePlayerLpRecords(summoner.getPuuid(), leagueEntries, now);
-                                        }
-                                        return leagueEntries;
-                                    })
-                                    .exceptionally(ex -> {
-                                        logger.error("Error fetching league entries for puuid {}: {}",
-                                                summoner.getPuuid(), ex.getMessage(), ex);
-                                        return Collections.emptyList();
-                                    });
-                    // Load fewer matches initially for faster first render; client can request more via pagination
-                    CompletableFuture<List<MatchV5Dto>> matchHistoryFuture = getMatchHistory(summoner.getPuuid(), 10);
+                    CompletableFuture<List<LeagueEntryDTO>> leagueEntriesFuture = riotApiClient
+                            .getLeagueEntriesByPuuid(summoner.getPuuid())
+                            .thenApply(leagueEntries -> {
+                                // Check if league data present
+                                if (leagueEntries != null && !leagueEntries.isEmpty()) {
+                                    Instant now = Instant.now();
+                                    // Database operation: Save LP snapshot for LP tracking
+                                    playerLpRecordService.savePlayerLpRecords(summoner.getPuuid(), leagueEntries, now);
+                                }
+                                return leagueEntries;
+                            })
+                            .exceptionally(ex -> {
+                                logger.error("Error fetching league entries for puuid {}: {}",
+                                        summoner.getPuuid(), ex.getMessage(), ex);
+                                return Collections.emptyList();
+                            });
+                    // Load more matches initially for better statistics
+                    CompletableFuture<List<MatchV5Dto>> matchHistoryFuture = getMatchHistory(summoner.getPuuid(), 50);
 
                     // Combine both parallel futures (league + matches)
                     return CompletableFuture.allOf(leagueEntriesFuture, matchHistoryFuture)
@@ -462,18 +472,21 @@ public class RiotApiService {
                                 playerLpRecordService.calculateAndSetLpChangesForMatches(summoner, matchHistory);
 
                                 // Business logic: Calculate champion statistics
-                                Map<String, Long> championPlayCounts = getChampionPlayCounts(matchHistory, summoner.getPuuid());
+                                Map<String, Long> championPlayCounts = getChampionPlayCounts(matchHistory,
+                                        summoner.getPuuid());
 
                                 // Create complete profile data object
-                                return new SummonerProfileData(summoner, leagueEntries, matchHistory, suggestionDTO, championPlayCounts, iconUrl);
+                                return new SummonerProfileData(summoner, leagueEntries, matchHistory, suggestionDTO,
+                                        championPlayCounts, iconUrl);
                             });
                 })
                 .exceptionally(ex -> {
-                    logger.error("Error building summoner profile data for {}#{}: {}", gameName, tagLine, ex.getMessage(), ex);
-                    return new SummonerProfileData("An error occurred while fetching summoner profile data: " + ex.getMessage());
+                    logger.error("Error building summoner profile data for {}#{}: {}", gameName, tagLine,
+                            ex.getMessage(), ex);
+                    return new SummonerProfileData(
+                            "An error occurred while fetching summoner profile data: " + ex.getMessage());
                 });
     }
-
 
     /**
      * Retrieves summoner data via RSO (Riot Sign-On) Bearer token.
@@ -487,7 +500,8 @@ public class RiotApiService {
             logger.error("Error: bearerToken is empty for RSO summoner request.");
             return CompletableFuture.completedFuture(null);
         }
-        // Asynchronous API call: Fetch summoner data via RSO token (OAuth authentication)
+        // Asynchronous API call: Fetch summoner data via RSO token (OAuth
+        // authentication)
         return riotApiClient.getSummonerMeWithBearer(bearerToken)
                 .exceptionally(ex -> {
                     logger.error("Error fetching RSO summoner via /me: {}", ex.getMessage(), ex);
@@ -503,9 +517,11 @@ public class RiotApiService {
      * @return Masked PUUID string (e.g., "abc123...xyz9")
      */
     private static String maskPuuid(String puuid) {
-        if (puuid == null) return "(null)";
+        if (puuid == null)
+            return "(null)";
         int len = puuid.length();
-        if (len <= 10) return "***";
+        if (len <= 10)
+            return "***";
         return puuid.substring(0, 6) + "..." + puuid.substring(len - 4);
     }
 }
