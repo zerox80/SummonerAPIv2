@@ -405,18 +405,17 @@ public class BuildAggregationService {
         // Resolve to PUUIDs
         List<String> uniqueSummonerIds = new ArrayList<>(summonerIds);
 
-        List<String> puuids = uniqueSummonerIds.stream()
+        List<CompletableFuture<String>> puuidFutures = uniqueSummonerIds.stream()
                 .limit(maxSummoners)
                 .map(id -> riot.getSummonerById(id)
                         .thenApply(s -> s != null ? s.getPuuid() : null)
                         .exceptionally(ex -> null))
-                .map(cf -> {
-                    try {
-                        return cf.join();
-                    } catch (CompletionException ex) {
-                        return null;
-                    }
-                })
+                .collect(Collectors.toList());
+
+        CompletableFuture.allOf(puuidFutures.toArray(new CompletableFuture[0])).join();
+
+        List<String> puuids = puuidFutures.stream()
+                .map(CompletableFuture::join)
                 .filter(StringUtils::hasText)
                 .collect(Collectors.toList());
 

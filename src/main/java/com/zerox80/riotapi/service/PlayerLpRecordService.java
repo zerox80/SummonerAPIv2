@@ -29,7 +29,7 @@ import java.time.Duration;
 // Import for timestamp management
 import java.time.Instant;
 // Import for ArrayList implementation
-import java.util.ArrayList;
+
 // Import for collection utility methods
 import java.util.Collections;
 // Import for HashMap implementation
@@ -45,9 +45,9 @@ import java.util.Objects;
 // Import for set interface
 import java.util.Set;
 
-
 /**
- * Service class for LP (League Points) record management and LP change calculations.
+ * Service class for LP (League Points) record management and LP change
+ * calculations.
  *
  * Stores snapshots of player LP after each match and calculates LP gains/losses
  * by comparing records before and after match timestamps. Supports both SoloQ
@@ -58,11 +58,11 @@ public class PlayerLpRecordService {
 
     // Logger instance for logging in this service
     private static final Logger logger = LoggerFactory.getLogger(PlayerLpRecordService.class);
-    // Constant: Tolerance of 10 minutes for LP record matching (if timestamps slightly differ)
+    // Constant: Tolerance of 10 minutes for LP record matching (if timestamps
+    // slightly differ)
     private static final Duration MATCH_END_TOLERANCE = Duration.ofMinutes(10);
     // Database repository for LP record persistence
     private final PlayerLpRecordRepository playerLpRecordRepository;
-
 
     /**
      * Constructor with repository injection.
@@ -74,7 +74,6 @@ public class PlayerLpRecordService {
         this.playerLpRecordRepository = playerLpRecordRepository;
     }
 
-
     /**
      * Public method to save LP records to database.
      *
@@ -82,9 +81,9 @@ public class PlayerLpRecordService {
      * (SoloQ and Flex). These snapshots are used later to calculate LP changes
      * between matches.
      *
-     * @param puuid Player's PUUID
+     * @param puuid         Player's PUUID
      * @param leagueEntries List of league entries (SoloQ, FlexQ, etc.)
-     * @param timestamp Timestamp of the snapshot
+     * @param timestamp     Timestamp of the snapshot
      */
     @Transactional
     public void savePlayerLpRecords(String puuid, List<LeagueEntryDTO> leagueEntries, Instant timestamp) {
@@ -101,34 +100,37 @@ public class PlayerLpRecordService {
                         ts,
                         entry.getLeaguePoints(),
                         entry.getTier(),
-                        entry.getRank()
-                );
+                        entry.getRank());
                 // Database operation: Save LP record to database
                 playerLpRecordRepository.save(record);
                 // Debug logging for saved record
-                logger.debug("Saved LP record for puuid {}, queue {}: {} LP at {}", maskPuuid(puuid), entry.getQueueType(), entry.getLeaguePoints(), ts);
+                logger.debug("Saved LP record for puuid {}, queue {}: {} LP at {}", maskPuuid(puuid),
+                        entry.getQueueType(), entry.getLeaguePoints(), ts);
             }
         }
     }
 
-
     /**
      * Public method to calculate and assign LP changes to matches (business logic).
      *
-     * For each ranked match, finds the LP record before and after the match end time,
+     * For each ranked match, finds the LP record before and after the match end
+     * time,
      * calculates the difference, and sets the lpChange field in the match info.
-     * Handles edge cases like tier/rank changes (promotions/demotions) and missing records.
+     * Handles edge cases like tier/rank changes (promotions/demotions) and missing
+     * records.
      *
-     * @param summoner The summoner whose matches to process
+     * @param summoner     The summoner whose matches to process
      * @param matchHistory List of matches to calculate LP changes for
      */
     public void calculateAndSetLpChangesForMatches(Summoner summoner, List<MatchV5Dto> matchHistory) {
         // Validation: Check if all required data is present
-        if (summoner == null || !StringUtils.hasText(summoner.getPuuid()) || matchHistory == null || matchHistory.isEmpty()) {
+        if (summoner == null || !StringUtils.hasText(summoner.getPuuid()) || matchHistory == null
+                || matchHistory.isEmpty()) {
             return;
         }
 
-        // Database operation: Preload all relevant LP records from database (performance optimization)
+        // Database operation: Preload all relevant LP records from database
+        // (performance optimization)
         Map<String, List<PlayerLpRecord>> recordsByQueue = preloadRankedRecords(summoner.getPuuid(), matchHistory);
 
         // Iterate over all matches in history
@@ -149,7 +151,8 @@ public class PlayerLpRecordService {
             long endMillis = match.getInfo().getGameEndTimestamp();
             // Validation: Check if timestamp is present
             if (endMillis <= 0L) {
-                logger.debug("Skipping LP change for match {} due to missing/invalid gameEndTimestamp.", safeMatchId(match));
+                logger.debug("Skipping LP change for match {} due to missing/invalid gameEndTimestamp.",
+                        safeMatchId(match));
                 continue;
             }
             // Convert milliseconds to Instant object
@@ -157,10 +160,12 @@ public class PlayerLpRecordService {
 
             try {
                 // Fetch preloaded LP records for this queue
-                List<PlayerLpRecord> records = recordsByQueue.getOrDefault(queueTypeForDbQuery, Collections.emptyList());
+                List<PlayerLpRecord> records = recordsByQueue.getOrDefault(queueTypeForDbQuery,
+                        Collections.emptyList());
                 // Check if LP history is available
                 if (records.isEmpty()) {
-                    logger.debug("No LP history available for puuid {} queue {}.", maskPuuid(summoner.getPuuid()), queueTypeForDbQuery);
+                    logger.debug("No LP history available for puuid {} queue {}.", maskPuuid(summoner.getPuuid()),
+                            queueTypeForDbQuery);
                     continue;
                 }
 
@@ -171,7 +176,8 @@ public class PlayerLpRecordService {
 
                 // Validation: Check if both records were found
                 if (recordBefore == null || recordAfter == null) {
-                    logger.debug("LP records before or after match {} not found for PUUID {} and queue {}. Cannot calculate LP change.",
+                    logger.debug(
+                            "LP records before or after match {} not found for PUUID {} and queue {}. Cannot calculate LP change.",
                             safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery);
                     continue;
                 }
@@ -182,8 +188,10 @@ public class PlayerLpRecordService {
                     Duration gap = Duration.between(recordAfter.getTimestamp(), matchEndTime);
                     // Check if difference exceeds tolerance threshold (>10 minutes)
                     if (gap.compareTo(MATCH_END_TOLERANCE) > 0) {
-                        logger.debug("LP record after match {} for PUUID {} (queue {}) is {} minutes before match end time {} – skipping.",
-                                safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery, gap.toMinutes(), matchEndTime);
+                        logger.debug(
+                                "LP record after match {} for PUUID {} (queue {}) is {} minutes before match end time {} – skipping.",
+                                safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery,
+                                gap.toMinutes(), matchEndTime);
                         continue;
                     }
                 }
@@ -196,8 +204,10 @@ public class PlayerLpRecordService {
                 int lpChange = lpAfter - lpBefore;
 
                 // Check if tier/rank changed (promotion/demotion)
-                if (!Objects.equals(recordBefore.getTier(), recordAfter.getTier()) || !Objects.equals(recordBefore.getRank(), recordAfter.getRank())) {
-                    logger.warn("Tier/Rank changed for match {}. PUUID: {}. Before: {} {} {} LP, After: {} {} {} LP. LP Change calculation might be inaccurate or represent promotion/demotion.",
+                if (!Objects.equals(recordBefore.getTier(), recordAfter.getTier())
+                        || !Objects.equals(recordBefore.getRank(), recordAfter.getRank())) {
+                    logger.warn(
+                            "Tier/Rank changed for match {}. PUUID: {}. Before: {} {} {} LP, After: {} {} {} LP. LP Change calculation might be inaccurate or represent promotion/demotion.",
                             safeMatchId(match), maskPuuid(summoner.getPuuid()),
                             recordBefore.getTier(), recordBefore.getRank(), recordBefore.getLeaguePoints(),
                             recordAfter.getTier(), recordAfter.getRank(), recordAfter.getLeaguePoints());
@@ -210,25 +220,31 @@ public class PlayerLpRecordService {
                 }
             } catch (Exception e) {
                 // Log error for individual match
-                logger.error("Error calculating LP change for match {} PUUID {}: {}", safeMatchId(match), maskPuuid(summoner.getPuuid()), e.getMessage(), e);
+                logger.error("Error calculating LP change for match {} PUUID {}: {}", safeMatchId(match),
+                        maskPuuid(summoner.getPuuid()), e.getMessage(), e);
             }
         }
     }
 
     /**
-     * Private method to preload all relevant LP records from database (performance optimization).
+     * Private method to preload all relevant LP records from database (performance
+     * optimization).
      *
      * Scans match history to determine which queue types are needed, then fetches
-     * all LP records for those queues in bulk. Records are sorted ascending by timestamp
+     * all LP records for those queues in bulk. Records are sorted ascending by
+     * timestamp
      * for efficient binary search.
      *
-     * @param puuid Player's PUUID
+     * @param puuid        Player's PUUID
      * @param matchHistory List of matches to process
      * @return Map of queue type to sorted list of LP records
      */
     private Map<String, List<PlayerLpRecord>> preloadRankedRecords(String puuid, List<MatchV5Dto> matchHistory) {
         // Set to collect all required queue types (no duplicates)
         Set<String> queues = new HashSet<>();
+        long minTs = Long.MAX_VALUE;
+        long maxTs = Long.MIN_VALUE;
+
         // Iterate over all matches
         for (MatchV5Dto match : matchHistory) {
             // Check if match data is present
@@ -241,31 +257,39 @@ public class PlayerLpRecordService {
             if (queue != null) {
                 // Add queue type to set (duplicates automatically ignored)
                 queues.add(queue);
+                long end = match.getInfo().getGameEndTimestamp();
+                if (end > 0) {
+                    if (end < minTs)
+                        minTs = end;
+                    if (end > maxTs)
+                        maxTs = end;
+                }
             }
         }
 
         // Create cache map for LP records per queue
         Map<String, List<PlayerLpRecord>> cache = new HashMap<>();
+
+        if (queues.isEmpty() || minTs == Long.MAX_VALUE) {
+            return cache;
+        }
+
+        // Add buffer (e.g., 24 hours) to ensure we catch records just before/after
+        Instant start = Instant.ofEpochMilli(minTs).minus(Duration.ofHours(24));
+        Instant end = Instant.ofEpochMilli(maxTs).plus(Duration.ofHours(24));
+
         // Iterate over all required queues
         for (String queue : queues) {
             try {
-                // Database operation: Load LP records for PUUID and queue sorted by timestamp descending
-                List<PlayerLpRecord> recordsDesc = playerLpRecordRepository.findByPuuidAndQueueTypeOrderByTimestampDesc(puuid, queue);
-                // Check if records exist
-                if (recordsDesc.isEmpty()) {
-                    // Store empty list in cache
-                    cache.put(queue, Collections.emptyList());
-                } else {
-                    // Create copy of list
-                    List<PlayerLpRecord> ascending = new ArrayList<>(recordsDesc);
-                    // Reverse sorting to ascending (required for binary search)
-                    Collections.reverse(ascending);
-                    // Store ascending sorted list in cache
-                    cache.put(queue, ascending);
-                }
+                // Database operation: Load LP records for PUUID and queue within time range
+                List<PlayerLpRecord> records = playerLpRecordRepository
+                        .findByPuuidAndQueueTypeAndTimestampBetweenOrderByTimestampAsc(puuid, queue, start, end);
+                // Store list in cache
+                cache.put(queue, records);
             } catch (Exception e) {
                 // Log database error
-                logger.error("Failed to preload LP records for puuid {} queue {}: {}", maskPuuid(puuid), queue, e.getMessage(), e);
+                logger.error("Failed to preload LP records for puuid {} queue {}: {}", maskPuuid(puuid), queue,
+                        e.getMessage(), e);
                 // Store empty list on error (fallback)
                 cache.put(queue, Collections.emptyList());
             }
@@ -278,7 +302,8 @@ public class PlayerLpRecordService {
      * Private method to convert queue ID to queue type string.
      *
      * @param queueId The queue identifier (420, 440, etc.)
-     * @return Queue type string (RANKED_SOLO_5x5, RANKED_FLEX_SR) or null for non-ranked
+     * @return Queue type string (RANKED_SOLO_5x5, RANKED_FLEX_SR) or null for
+     *         non-ranked
      */
     private String resolveRankedQueueType(int queueId) {
         // Switch expression for queue ID mapping
@@ -295,7 +320,7 @@ public class PlayerLpRecordService {
      * Uses binary search on a sorted list to efficiently find the most recent
      * LP record that occurred before the given timestamp.
      *
-     * @param records List of LP records sorted by timestamp ascending
+     * @param records   List of LP records sorted by timestamp ascending
      * @param timestamp The timestamp to search for
      * @return Last record before timestamp, or null if none found
      */
@@ -334,7 +359,7 @@ public class PlayerLpRecordService {
      * Uses binary search on a sorted list to efficiently find the earliest
      * LP record that occurred after the given timestamp.
      *
-     * @param records List of LP records sorted by timestamp ascending
+     * @param records   List of LP records sorted by timestamp ascending
      * @param timestamp The timestamp to search for
      * @return First record after timestamp, or null if none found
      */
@@ -378,11 +403,13 @@ public class PlayerLpRecordService {
      */
     private static String maskPuuid(String puuid) {
         // Return "(null)" for null values
-        if (puuid == null) return "(null)";
+        if (puuid == null)
+            return "(null)";
         // Get length of PUUID
         int len = puuid.length();
         // Return "***" for very short PUUIDs (full masking)
-        if (len <= 10) return "***";
+        if (len <= 10)
+            return "***";
         // Mask PUUID: Show first 6 and last 4 characters (e.g., "abc123...xyz9")
         return puuid.substring(0, 6) + "..." + puuid.substring(len - 4);
     }
@@ -400,7 +427,8 @@ public class PlayerLpRecordService {
                 // Return match ID
                 return match.getMetadata().getMatchId();
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         // Return fallback string if match ID not available
         return "(unknown)";
     }
