@@ -83,7 +83,6 @@ import java.util.concurrent.Semaphore;
 // Import for thread-safe integer counter
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 /**
  * Main HTTP client for all communication with the Riot Games API.
  *
@@ -94,7 +93,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * - Comprehensive metrics and logging
  * - Spring Cache integration
  *
- * All methods return CompletableFuture for asynchronous, non-blocking operations.
+ * All methods return CompletableFuture for asynchronous, non-blocking
+ * operations.
  */
 @Component
 public class RiotApiClient {
@@ -102,7 +102,11 @@ public class RiotApiClient {
     // Semaphore limits the number of concurrent outgoing HTTP requests
     // Prevents overloading the Riot API and reaching rate limits
     // final: Value cannot be changed after initialization
+    // Semaphore limits the number of concurrent outgoing HTTP requests
+    // Prevents overloading the Riot API and reaching rate limits
+    // final: Value cannot be changed after initialization
     private final Semaphore outboundLimiter;
+    private final java.util.Queue<CompletableFuture<Void>> waitingRequests = new java.util.concurrent.ConcurrentLinkedQueue<>();
 
     // static final: Class-wide constant, logger for this specific class
     // LoggerFactory.getLogger(): Creates a logger with the class name as category
@@ -160,36 +164,39 @@ public class RiotApiClient {
     private final Map<String, CompletableFuture<MatchV5Dto>> matchDetailsInFlight = new ConcurrentHashMap<>();
 
     // static final: Type token for Jackson to deserialize List<LeagueEntryDTO>
-    // TypeReference: Preserves generic type information at runtime (bypasses type erasure)
+    // TypeReference: Preserves generic type information at runtime (bypasses type
+    // erasure)
     // {} at the end: Anonymous inner class extending TypeReference
-    private static final TypeReference<List<LeagueEntryDTO>> LEAGUE_LIST_TYPE = new TypeReference<>() {};
+    private static final TypeReference<List<LeagueEntryDTO>> LEAGUE_LIST_TYPE = new TypeReference<>() {
+    };
 
     // Type token for deserialization of string lists (match IDs)
-    private static final TypeReference<List<String>> MATCH_ID_LIST_TYPE = new TypeReference<>() {};
+    private static final TypeReference<List<String>> MATCH_ID_LIST_TYPE = new TypeReference<>() {
+    };
 
     /**
      * Constructs the RiotApiClient with all required dependencies.
      *
-     * @param apiKey Riot API key from configuration
-     * @param platformRegion Platform region (e.g., euw1, na1, kr)
-     * @param communityDragonUrl Base URL for Community Dragon CDN
-     * @param userAgent User-Agent header for API requests
-     * @param objectMapper Jackson ObjectMapper for JSON processing
-     * @param meterRegistry Metrics registry for monitoring
-     * @param httpClient HTTP client for making requests
+     * @param apiKey                Riot API key from configuration
+     * @param platformRegion        Platform region (e.g., euw1, na1, kr)
+     * @param communityDragonUrl    Base URL for Community Dragon CDN
+     * @param userAgent             User-Agent header for API requests
+     * @param objectMapper          Jackson ObjectMapper for JSON processing
+     * @param meterRegistry         Metrics registry for monitoring
+     * @param httpClient            HTTP client for making requests
      * @param maxConcurrentOutbound Maximum number of concurrent outbound requests
-     * @param cacheManager Spring cache manager for cache operations
+     * @param cacheManager          Spring cache manager for cache operations
      */
     @Autowired
     public RiotApiClient(@Value("${riot.api.key:}") String apiKey,
-                         @Value("${riot.api.region:euw1}") String platformRegion,
-                         @Value("${riot.api.community-dragon.url:https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons}") String communityDragonUrl,
-                         @Value("${app.user-agent:SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)}") String userAgent,
-                         ObjectMapper objectMapper,
-                         MeterRegistry meterRegistry,
-                         HttpClient httpClient,
-                         @Value("${riot.api.max-concurrent:15}") int maxConcurrentOutbound,
-                         CacheManager cacheManager) {
+            @Value("${riot.api.region:euw1}") String platformRegion,
+            @Value("${riot.api.community-dragon.url:https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons}") String communityDragonUrl,
+            @Value("${app.user-agent:SummonerAPI/2.0 (github.com/zerox80/SummonerAPI)}") String userAgent,
+            ObjectMapper objectMapper,
+            MeterRegistry meterRegistry,
+            HttpClient httpClient,
+            @Value("${riot.api.max-concurrent:15}") int maxConcurrentOutbound,
+            CacheManager cacheManager) {
         this.apiKey = apiKey;
         this.platformRegion = platformRegion.toLowerCase(Locale.ROOT);
         this.regionalRoute = determineRegionalRoute(this.platformRegion);
@@ -197,7 +204,8 @@ public class RiotApiClient {
         this.userAgent = userAgent;
         this.meterRegistry = meterRegistry;
         this.maxConcurrentOutbound = maxConcurrentOutbound > 0 ? maxConcurrentOutbound : 15;
-        // Copy and harden the mapper: Riot APIs use lowerCamelCase; ignore unknown fields
+        // Copy and harden the mapper: Riot APIs use lowerCamelCase; ignore unknown
+        // fields
         this.objectMapper = objectMapper.copy()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
@@ -238,7 +246,9 @@ public class RiotApiClient {
             case "vn2", "ph2", "sg2", "th2", "tw2", "id1":
                 return "sea";
             default:
-                logger.warn("Warning: Unknown platform region '{}' for determining regional route. Defaulting to platform itself.", platform);
+                logger.warn(
+                        "Warning: Unknown platform region '{}' for determining regional route. Defaulting to platform itself.",
+                        platform);
                 return platform;
         }
     }
@@ -246,10 +256,10 @@ public class RiotApiClient {
     /**
      * Sends an async API request and parses the response into a single object.
      *
-     * @param url The full API endpoint URL
+     * @param url           The full API endpoint URL
      * @param responseClass The class to deserialize the response into
-     * @param requestType Description of the request type for logging/metrics
-     * @param <T> The type of the response object
+     * @param requestType   Description of the request type for logging/metrics
+     * @param <T>           The type of the response object
      * @return CompletableFuture containing the parsed response
      */
     private <T> CompletableFuture<T> sendApiRequestAsync(String url, Class<T> responseClass, String requestType) {
@@ -260,13 +270,14 @@ public class RiotApiClient {
     /**
      * Sends an async API request and parses the response into a generic type.
      *
-     * @param url The full API endpoint URL
+     * @param url           The full API endpoint URL
      * @param typeReference TypeReference for generic types (e.g., List<T>)
-     * @param requestType Description of the request type for logging/metrics
-     * @param <T> The type of the response object
+     * @param requestType   Description of the request type for logging/metrics
+     * @param <T>           The type of the response object
      * @return CompletableFuture containing the parsed response
      */
-    private <T> CompletableFuture<T> sendApiRequestAsync(String url, TypeReference<T> typeReference, String requestType) {
+    private <T> CompletableFuture<T> sendApiRequestAsync(String url, TypeReference<T> typeReference,
+            String requestType) {
         return sendRequest(url, requestType)
                 .thenApply(response -> parseResponse(response, typeReference, requestType, url));
     }
@@ -280,7 +291,7 @@ public class RiotApiClient {
     /**
      * Sends an HTTP request with automatic retry logic and instrumentation.
      *
-     * @param url The full API endpoint URL
+     * @param url         The full API endpoint URL
      * @param requestType Description of the request type for logging/metrics
      * @return CompletableFuture containing the HTTP response
      */
@@ -301,14 +312,21 @@ public class RiotApiClient {
                         statusTag = "error";
                     } else {
                         int status = response.statusCode();
-                        if (status == 429) statusTag = "429";
-                        else if (status >= 200 && status < 300) statusTag = "2xx";
-                        else if (status >= 400 && status < 500) statusTag = "4xx";
-                        else if (status >= 500) statusTag = "5xx";
-                        else statusTag = String.valueOf(status);
+                        if (status == 429)
+                            statusTag = "429";
+                        else if (status >= 200 && status < 300)
+                            statusTag = "2xx";
+                        else if (status >= 400 && status < 500)
+                            statusTag = "4xx";
+                        else if (status >= 500)
+                            statusTag = "5xx";
+                        else
+                            statusTag = String.valueOf(status);
                     }
-                    meterRegistry.counter("riotapi.client.requests", "type", requestType, "status", statusTag).increment();
-                    Timer timer = meterRegistry.timer("riotapi.client.latency", "type", requestType, "status", statusTag, "retries", String.valueOf(retries.get()));
+                    meterRegistry.counter("riotapi.client.requests", "type", requestType, "status", statusTag)
+                            .increment();
+                    Timer timer = meterRegistry.timer("riotapi.client.latency", "type", requestType, "status",
+                            statusTag, "retries", String.valueOf(retries.get()));
                     sample.stop(timer);
                 });
     }
@@ -316,12 +334,13 @@ public class RiotApiClient {
     /**
      * Sends an HTTP request with Bearer token authentication (for RSO endpoints).
      *
-     * @param url The full API endpoint URL
+     * @param url         The full API endpoint URL
      * @param requestType Description of the request type for logging/metrics
      * @param bearerToken RSO Bearer token for authentication
      * @return CompletableFuture containing the HTTP response
      */
-    private CompletableFuture<HttpResponse<String>> sendRequestWithBearer(String url, String requestType, String bearerToken) {
+    private CompletableFuture<HttpResponse<String>> sendRequestWithBearer(String url, String requestType,
+            String bearerToken) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("Authorization", "Bearer " + bearerToken)
@@ -338,14 +357,21 @@ public class RiotApiClient {
                         statusTag = "error";
                     } else {
                         int status = response.statusCode();
-                        if (status == 429) statusTag = "429";
-                        else if (status >= 200 && status < 300) statusTag = "2xx";
-                        else if (status >= 400 && status < 500) statusTag = "4xx";
-                        else if (status >= 500) statusTag = "5xx";
-                        else statusTag = String.valueOf(status);
+                        if (status == 429)
+                            statusTag = "429";
+                        else if (status >= 200 && status < 300)
+                            statusTag = "2xx";
+                        else if (status >= 400 && status < 500)
+                            statusTag = "4xx";
+                        else if (status >= 500)
+                            statusTag = "5xx";
+                        else
+                            statusTag = String.valueOf(status);
                     }
-                    meterRegistry.counter("riotapi.client.requests", "type", requestType, "status", statusTag).increment();
-                    Timer timer = meterRegistry.timer("riotapi.client.latency", "type", requestType, "status", statusTag, "retries", String.valueOf(retries.get()));
+                    meterRegistry.counter("riotapi.client.requests", "type", requestType, "status", statusTag)
+                            .increment();
+                    Timer timer = meterRegistry.timer("riotapi.client.latency", "type", requestType, "status",
+                            statusTag, "retries", String.valueOf(retries.get()));
                     sample.stop(timer);
                 });
     }
@@ -354,20 +380,20 @@ public class RiotApiClient {
      * Executes the HTTP request with automatic retry for transient failures.
      * Implements exponential backoff with jitter and respects Retry-After headers.
      *
-     * @param request The HTTP request to send
+     * @param request     The HTTP request to send
      * @param requestType Description of the request type for logging/metrics
-     * @param url The full API endpoint URL
-     * @param attempt Current attempt number (1-based)
-     * @param retries Atomic counter tracking total retry attempts
+     * @param url         The full API endpoint URL
+     * @param attempt     Current attempt number (1-based)
+     * @param retries     Atomic counter tracking total retry attempts
      * @return CompletableFuture containing the HTTP response
      */
-    private CompletableFuture<HttpResponse<String>> sendWithRetryInstrumented(HttpRequest request, String requestType, String url, int attempt, AtomicInteger retries) {
+    private CompletableFuture<HttpResponse<String>> sendWithRetryInstrumented(HttpRequest request, String requestType,
+            String url, int attempt, AtomicInteger retries) {
         return acquirePermitAsync()
                 .thenCompose(v -> httpClient
                         .sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                        .handle((response, throwable) -> new Object[]{response, throwable})
-                        .whenComplete((pair, t) -> outboundLimiter.release())
-                )
+                        .handle((response, throwable) -> new Object[] { response, throwable })
+                        .whenComplete((pair, t) -> releasePermit()))
                 .thenCompose(pair -> {
                     @SuppressWarnings("unchecked")
                     HttpResponse<String> response = (HttpResponse<String>) pair[0];
@@ -380,7 +406,8 @@ public class RiotApiClient {
                                     requestType, url, attempt, MAX_ATTEMPTS, delay.toMillis(), throwable.toString());
                             retries.incrementAndGet();
                             meterRegistry.counter("riotapi.client.retries", "type", requestType).increment();
-                            return delayed(delay).thenCompose(v -> sendWithRetryInstrumented(request, requestType, url, attempt + 1, retries));
+                            return delayed(delay).thenCompose(
+                                    v -> sendWithRetryInstrumented(request, requestType, url, attempt + 1, retries));
                         }
                         return CompletableFuture.failedFuture(throwable);
                     }
@@ -393,7 +420,8 @@ public class RiotApiClient {
                                 requestType, url, status, delay.toMillis(), attempt, MAX_ATTEMPTS);
                         retries.incrementAndGet();
                         meterRegistry.counter("riotapi.client.retries", "type", requestType).increment();
-                        return delayed(delay).thenCompose(v -> sendWithRetryInstrumented(request, requestType, url, attempt + 1, retries));
+                        return delayed(delay).thenCompose(
+                                v -> sendWithRetryInstrumented(request, requestType, url, attempt + 1, retries));
                     }
 
                     return CompletableFuture.completedFuture(response);
@@ -422,8 +450,29 @@ public class RiotApiClient {
         if (outboundLimiter.tryAcquire()) {
             future.complete(null);
         } else {
-            CompletableFuture.delayedExecutor(25, TimeUnit.MILLISECONDS)
-                    .execute(() -> retryAcquire(future));
+            waitingRequests.add(future);
+            // Double check in case a permit was released while we were adding
+            if (outboundLimiter.tryAcquire()) {
+                CompletableFuture<Void> f = waitingRequests.poll();
+                if (f != null) {
+                    f.complete(null);
+                } else {
+                    outboundLimiter.release();
+                }
+            }
+        }
+    }
+
+    private void releasePermit() {
+        outboundLimiter.release();
+        CompletableFuture<Void> next = waitingRequests.poll();
+        if (next != null) {
+            if (outboundLimiter.tryAcquire()) {
+                next.complete(null);
+            } else {
+                // Should not happen if we just released, but race conditions exist
+                waitingRequests.add(next);
+            }
         }
     }
 
@@ -432,11 +481,13 @@ public class RiotApiClient {
      * Supports both delta-seconds and HTTP-date formats per RFC 7231.
      *
      * @param response The HTTP response containing the header
-     * @return Optional containing retry delay in seconds, empty if header missing or invalid
+     * @return Optional containing retry delay in seconds, empty if header missing
+     *         or invalid
      */
     private Optional<Long> parseRetryAfterSeconds(HttpResponse<String> response) {
         return response.headers().firstValue("Retry-After").flatMap(value -> {
-            if (value == null) return Optional.empty();
+            if (value == null)
+                return Optional.empty();
             String raw = value.trim();
             // Case 1: delta-seconds
             try {
@@ -456,9 +507,10 @@ public class RiotApiClient {
 
     /**
      * Computes the backoff delay for retry attempts.
-     * Respects Retry-After header if present, otherwise uses exponential backoff with jitter.
+     * Respects Retry-After header if present, otherwise uses exponential backoff
+     * with jitter.
      *
-     * @param attempt Current attempt number (1-based)
+     * @param attempt           Current attempt number (1-based)
      * @param retryAfterSeconds Optional retry delay from Retry-After header
      * @return Duration to wait before retrying
      */
@@ -478,18 +530,21 @@ public class RiotApiClient {
      * @return CompletableFuture that completes after the delay
      */
     private CompletableFuture<Void> delayed(Duration delay) {
-        return CompletableFuture.supplyAsync(() -> null, CompletableFuture.delayedExecutor(delay.toMillis(), TimeUnit.MILLISECONDS)).thenAccept(v -> {});
+        return CompletableFuture
+                .supplyAsync(() -> null, CompletableFuture.delayedExecutor(delay.toMillis(), TimeUnit.MILLISECONDS))
+                .thenAccept(v -> {
+                });
     }
 
     /**
      * Parses HTTP response body into a single object using class type.
      * Handles 200 OK, 404 Not Found, and error responses.
      *
-     * @param response The HTTP response to parse
+     * @param response      The HTTP response to parse
      * @param responseClass The class to deserialize into
-     * @param requestType Description of the request type for logging
-     * @param url The original request URL for logging
-     * @param <T> The type of the response object
+     * @param requestType   Description of the request type for logging
+     * @param url           The original request URL for logging
+     * @param <T>           The type of the response object
      * @return Parsed object, or null if 404, throws exception on error
      */
     private <T> T parseResponse(HttpResponse<String> response, Class<T> responseClass, String requestType, String url) {
@@ -504,8 +559,10 @@ public class RiotApiClient {
             return null;
         } else {
             String snippet = abbreviate(response.body(), 500);
-            logger.error("API Request Failed ({}): status={} url={} bodySnippet={}", requestType, response.statusCode(), url, snippet);
-            throw new RiotApiRequestException("API request (" + requestType + ") failed with status code: " + response.statusCode());
+            logger.error("API Request Failed ({}): status={} url={} bodySnippet={}", requestType, response.statusCode(),
+                    url, snippet);
+            throw new RiotApiRequestException(
+                    "API request (" + requestType + ") failed with status code: " + response.statusCode());
         }
     }
 
@@ -513,14 +570,15 @@ public class RiotApiClient {
      * Parses HTTP response body into a generic type using TypeReference.
      * Handles 200 OK, 404 Not Found, and error responses.
      *
-     * @param response The HTTP response to parse
+     * @param response      The HTTP response to parse
      * @param typeReference TypeReference for generic types (e.g., List<T>)
-     * @param requestType Description of the request type for logging
-     * @param url The original request URL for logging
-     * @param <T> The type of the response object
+     * @param requestType   Description of the request type for logging
+     * @param url           The original request URL for logging
+     * @param <T>           The type of the response object
      * @return Parsed object, or null if 404, throws exception on error
      */
-    private <T> T parseResponse(HttpResponse<String> response, TypeReference<T> typeReference, String requestType, String url) {
+    private <T> T parseResponse(HttpResponse<String> response, TypeReference<T> typeReference, String requestType,
+            String url) {
         if (response.statusCode() == 200) {
             try {
                 return objectMapper.readValue(response.body(), typeReference);
@@ -532,8 +590,10 @@ public class RiotApiClient {
             return null;
         } else {
             String snippet = abbreviate(response.body(), 500);
-            logger.error("API Request Failed ({}): status={} url={} bodySnippet={}", requestType, response.statusCode(), url, snippet);
-            throw new RiotApiRequestException("API request (" + requestType + ") failed with status code: " + response.statusCode());
+            logger.error("API Request Failed ({}): status={} url={} bodySnippet={}", requestType, response.statusCode(),
+                    url, snippet);
+            throw new RiotApiRequestException(
+                    "API request (" + requestType + ") failed with status code: " + response.statusCode());
         }
     }
 
@@ -542,7 +602,7 @@ public class RiotApiClient {
      * Results are cached to reduce API calls.
      *
      * @param gameName The summoner's game name
-     * @param tagLine The summoner's tag line (e.g., "EUW", "NA1")
+     * @param tagLine  The summoner's tag line (e.g., "EUW", "NA1")
      * @return CompletableFuture containing the AccountDto, or null if not found
      */
     @Cacheable(value = "accounts", key = "T(com.zerox80.riotapi.client.RiotApiClient).accountCacheKey(#gameName, #tagLine)")
@@ -672,7 +732,8 @@ public class RiotApiClient {
         String host = this.regionalRoute + ".api.riotgames.com";
         String path = "/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=" + start + "&count=" + count;
         String url = "https://" + host + path;
-        logger.debug(">>> RiotApiClient (MatchIdsPaged): PUUID [{}], start {}, count {}", maskPuuid(puuid), start, count);
+        logger.debug(">>> RiotApiClient (MatchIdsPaged): PUUID [{}], start {}, count {}", maskPuuid(puuid), start,
+                count);
         String key = puuid + "-" + start + "-" + count;
         CompletableFuture<List<String>> future = coalesce(matchIdsInFlight, key,
                 () -> sendApiRequestAsync(url, MATCH_ID_LIST_TYPE, "MatchIdsPaged")
@@ -703,20 +764,23 @@ public class RiotApiClient {
      * Used for fetching ladder data and LP tracking.
      * Results are cached to reduce API calls.
      *
-     * @param queue Queue type (e.g., "RANKED_SOLO_5x5")
-     * @param tier Tier (e.g., "DIAMOND", "MASTER")
+     * @param queue    Queue type (e.g., "RANKED_SOLO_5x5")
+     * @param tier     Tier (e.g., "DIAMOND", "MASTER")
      * @param division Division (e.g., "I", "II", "III", "IV")
-     * @param page Page number (1-based)
+     * @param page     Page number (1-based)
      * @return CompletableFuture containing list of LeagueEntryDTOs
      */
     @Cacheable(value = "leagueEntries", key = "#queue + '|' + #tier + '|' + #division + '|' + #page")
-    public CompletableFuture<List<LeagueEntryDTO>> getEntriesByQueueTierDivision(String queue, String tier, String division, int page) {
+    public CompletableFuture<List<LeagueEntryDTO>> getEntriesByQueueTierDivision(String queue, String tier,
+            String division, int page) {
         String host = this.platformRegion + ".api.riotgames.com";
-        String path = "/lol/league/v4/entries/" + urlEncode(queue) + "/" + urlEncode(tier) + "/" + urlEncode(division) + "?page=" + page;
+        String path = "/lol/league/v4/entries/" + urlEncode(queue) + "/" + urlEncode(tier) + "/" + urlEncode(division)
+                + "?page=" + page;
         String url = "https://" + host + path;
         logger.debug(">>> RiotApiClient (Entries {} {} {} p{}): {}", queue, tier, division, page, url);
         String cacheKey = queue + "|" + tier + "|" + division + "|" + page;
-        CompletableFuture<List<LeagueEntryDTO>> future = sendApiRequestAsync(url, LEAGUE_LIST_TYPE, "LeagueEntriesByTier");
+        CompletableFuture<List<LeagueEntryDTO>> future = sendApiRequestAsync(url, LEAGUE_LIST_TYPE,
+                "LeagueEntriesByTier");
         return evictOnException(future, "leagueEntries", cacheKey);
     }
 
@@ -758,17 +822,19 @@ public class RiotApiClient {
 
     /**
      * Coalesces multiple concurrent requests for the same resource.
-     * If a request is already in flight for the given key, returns the existing future.
+     * If a request is already in flight for the given key, returns the existing
+     * future.
      * Otherwise, creates a new request and registers it.
      *
      * @param inFlightMap Map tracking in-flight requests
-     * @param key Unique identifier for the request
-     * @param loader Supplier that creates the actual request
-     * @param <K> Type of the key
-     * @param <T> Type of the result
+     * @param key         Unique identifier for the request
+     * @param loader      Supplier that creates the actual request
+     * @param <K>         Type of the key
+     * @param <T>         Type of the result
      * @return CompletableFuture for the result (shared if in flight)
      */
-    private <K, T> CompletableFuture<T> coalesce(Map<K, CompletableFuture<T>> inFlightMap, K key, Supplier<CompletableFuture<T>> loader) {
+    private <K, T> CompletableFuture<T> coalesce(Map<K, CompletableFuture<T>> inFlightMap, K key,
+            Supplier<CompletableFuture<T>> loader) {
         return inFlightMap.computeIfAbsent(key, k -> loader.get()
                 .whenComplete((res, ex) -> inFlightMap.remove(k)));
     }
@@ -781,9 +847,11 @@ public class RiotApiClient {
      * @return Masked PUUID string
      */
     private static String maskPuuid(String puuid) {
-        if (puuid == null) return "(null)";
+        if (puuid == null)
+            return "(null)";
         int len = puuid.length();
-        if (len <= 10) return "***";
+        if (len <= 10)
+            return "***";
         return puuid.substring(0, 6) + "..." + puuid.substring(len - 4);
     }
 
@@ -795,9 +863,11 @@ public class RiotApiClient {
      * @return Masked ID string
      */
     private static String maskId(String id) {
-        if (id == null) return "(null)";
+        if (id == null)
+            return "(null)";
         int len = id.length();
-        if (len <= 8) return "***";
+        if (len <= 8)
+            return "***";
         return id.substring(0, Math.min(4, len)) + "..." + id.substring(len - Math.min(3, len));
     }
 
@@ -805,13 +875,15 @@ public class RiotApiClient {
      * Abbreviates a string to maximum length for logging.
      * Appends ellipsis if truncated.
      *
-     * @param s The string to abbreviate
+     * @param s   The string to abbreviate
      * @param max Maximum length
      * @return Abbreviated string
      */
     private String abbreviate(String s, int max) {
-        if (s == null) return null;
-        if (s.length() <= max) return s;
+        if (s == null)
+            return null;
+        if (s.length() <= max)
+            return s;
         return s.substring(0, max) + "…";
     }
 
@@ -819,10 +891,10 @@ public class RiotApiClient {
      * Evicts cache entry if the future completes with an exception.
      * Ensures failed requests don't poison the cache.
      *
-     * @param future The CompletableFuture to monitor
+     * @param future    The CompletableFuture to monitor
      * @param cacheName Name of the cache to evict from
-     * @param cacheKey Key to evict
-     * @param <T> Type of the future result
+     * @param cacheKey  Key to evict
+     * @param <T>       Type of the future result
      * @return The same future, for chaining
      */
     private <T> CompletableFuture<T> evictOnException(CompletableFuture<T> future, String cacheName, Object cacheKey) {
@@ -852,7 +924,7 @@ public class RiotApiClient {
      * Case-insensitive by converting both parts to lowercase.
      *
      * @param gameName The summoner's game name
-     * @param tagLine The summoner's tag line
+     * @param tagLine  The summoner's tag line
      * @return Normalized cache key
      */
     public static String accountCacheKey(String gameName, String tagLine) {
