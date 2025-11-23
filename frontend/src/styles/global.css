@@ -30,34 +30,6 @@
   --text-muted: rgba(15, 23, 42, 0.48);
   --accent: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
   --accent-solid: #6366f1;
-  --accent-soft: rgba(99, 102, 241, 0.18);
-  --accent-ring: rgba(99, 102, 241, 0.35);
-  --border-subtle: rgba(15, 23, 42, 0.1);
-  --transparent-wash: rgba(255, 255, 255, 0.35);
-}
-
-:root.dark {
-  --bg-body: #050918;
-  --bg-elevated: rgba(13, 19, 43, 0.78);
-  --bg-card: rgba(17, 24, 65, 0.68);
-  background: var(--bg-body);
-  color: var(--text-primary);
-  transition: background var(--duration-base) ease, color var(--duration-base) ease;
-}
-
-body {
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  background-image: radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.12), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(45, 212, 191, 0.1), transparent 40%),
-    radial-gradient(circle at 0% 100%, rgba(14, 165, 233, 0.12), transparent 50%);
-  background-attachment: fixed;
-  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-}
-
-.layout-wide {
-  width: min(var(--max-width-wide), 100%);
-  margin: 0 auto;
   padding: 0 var(--page-gutter);
 }
 
