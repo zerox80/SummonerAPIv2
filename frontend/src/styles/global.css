@@ -55,38 +55,6 @@
 
   .container {
     width: min(var(--max-width-desktop), 100%);
-    margin: 0 auto;
-    padding: 0 var(--page-gutter);
-  }
-
-  .glass-panel {
-    background: var(--bg-card);
-    backdrop-filter: blur(22px) saturate(140%);
-    border-radius: var(--radius-lg);
-    border: var(--border-glass);
-    box-shadow: var(--shadow-sm);
-    transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease;
-  }
-
-  .glass-panel:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .gradient-text {
-    background: var(--accent);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-
-  .badge-soft {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    background: var(--accent-soft);
-    color: var(--accent-solid);
-    padding: 0.4rem 0.75rem;
     border-radius: 999px;
     font-size: 0.85rem;
     font-weight: 600;
