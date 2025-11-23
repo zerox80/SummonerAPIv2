@@ -67,10 +67,67 @@ export default function ChampionBuildOverride({ data }) {
 
             <div className="build-section">
                 <h4 className="build-section-title">Runes</h4>
-                <div className="runes-info">
-                    <span className="rune-primary">{data.runes.primary}</span>
-                    <span className="rune-separator">+</span>
-                    <span className="rune-secondary">{data.runes.secondary}</span>
+                <div className="runes-container">
+                    <div className="rune-tree primary-tree">
+                        <div className="tree-header">
+                            <img
+                                src={`https://ddragon.leagueoflegends.com/cdn/img/${data.runes.primary.icon}`}
+                                alt={data.runes.primary.name}
+                                className="tree-icon"
+                            />
+                            <span className="tree-name">{data.runes.primary.name}</span>
+                        </div>
+                        <div className="runes-list">
+                            {data.runes.primary.perks.map((perk, index) => (
+                                <div key={perk.id} className={`rune-item ${index === 0 ? 'keystone' : ''}`} title={perk.name}>
+                                    <img
+                                        src={`https://ddragon.leagueoflegends.com/cdn/img/${perk.icon}`}
+                                        alt={perk.name}
+                                        className="rune-icon"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="rune-tree secondary-tree">
+                        <div className="tree-header">
+                            <img
+                                src={`https://ddragon.leagueoflegends.com/cdn/img/${data.runes.secondary.icon}`}
+                                alt={data.runes.secondary.name}
+                                className="tree-icon"
+                            />
+                            <span className="tree-name">{data.runes.secondary.name}</span>
+                        </div>
+                        <div className="runes-list">
+                            {data.runes.secondary.perks.map((perk) => (
+                                <div key={perk.id} className="rune-item" title={perk.name}>
+                                    <img
+                                        src={`https://ddragon.leagueoflegends.com/cdn/img/${perk.icon}`}
+                                        alt={perk.name}
+                                        className="rune-icon"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="rune-tree shards-tree">
+                        <div className="tree-header">
+                            <span className="tree-name">Shards</span>
+                        </div>
+                        <div className="runes-list">
+                            {data.runes.shards.map((shard) => (
+                                <div key={shard.id} className="rune-item shard" title={shard.name}>
+                                    <img
+                                        src={`https://ddragon.leagueoflegends.com/cdn/img/${shard.icon}`}
+                                        alt={shard.name}
+                                        className="rune-icon"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

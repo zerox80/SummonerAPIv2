@@ -18,8 +18,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ahri": {
@@ -42,8 +65,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8139, name: "Taste of Blood", icon: "perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Akali": {
@@ -65,8 +111,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Resolve"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Akshan": {
@@ -89,8 +158,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Alistar": {
@@ -113,8 +205,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Sorcery"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8360, name: "Unsealed Spellbook", icon: "perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                    { id: 8306, name: "Hextech Flashtraption", icon: "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ambessa": {
@@ -136,8 +251,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Amumu": {
@@ -161,8 +299,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Anivia": {
@@ -186,8 +347,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Precision"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Annie": {
@@ -210,8 +394,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8224, name: "Axiom Arcanist", icon: "perk-images/Styles/Sorcery/NullifyingOrb/Axiom_Arcanist.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5013, name: "Tenacity", icon: "perk-images/StatMods/StatModsTenacityIcon.png" },
+            ]
         }
     },
     "Aphelios": {
@@ -235,8 +442,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ashe": {
@@ -259,8 +489,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "AurelionSol": {
@@ -282,8 +535,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Aurora": {
@@ -306,8 +582,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8137, name: "Sixth Sense", icon: "perk-images/Styles/Domination/SixthSense/SixthSense.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Azir": {
@@ -330,8 +629,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Bard": {
@@ -354,8 +676,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Inspiration"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8141, name: "Deep Ward", icon: "perk-images/Styles/Domination/DeepWard/DeepWard.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Belveth": {
@@ -378,8 +723,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Blitzcrank": {
@@ -403,8 +771,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Sorcery"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8351, name: "Glacial Augment", icon: "perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                    { id: 8306, name: "Hextech Flashtraption", icon: "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Brand": {
@@ -428,8 +819,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Domination"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Braum": {
@@ -453,8 +867,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Precision"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8465, name: "Guardian", icon: "perk-images/Styles/Resolve/Guardian/Guardian.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Briar": {
@@ -478,8 +915,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Caitlyn": {
@@ -502,8 +962,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Sorcery"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Camille": {
@@ -527,8 +1010,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Cassiopeia": {
@@ -551,8 +1057,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Chogath": {
@@ -576,8 +1105,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                    { id: 8429, name: "Conditioning", icon: "perk-images/Styles/Resolve/Conditioning/Conditioning.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Corki": {
@@ -601,8 +1153,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Darius": {
@@ -625,8 +1200,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Diana": {
@@ -649,8 +1247,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "DrMundo": {
@@ -673,8 +1294,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8021, name: "Fleet Footwork", icon: "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Draven": {
@@ -697,8 +1341,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ekko": {
@@ -722,8 +1389,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Inspiration"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8128, name: "Dark Harvest", icon: "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8137, name: "Sixth Sense", icon: "perk-images/Styles/Domination/SixthSense/SixthSense.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Elise": {
@@ -746,8 +1436,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Precision"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8128, name: "Dark Harvest", icon: "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8137, name: "Sixth Sense", icon: "perk-images/Styles/Domination/SixthSense/SixthSense.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Evelynn": {
@@ -771,8 +1484,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8137, name: "Sixth Sense", icon: "perk-images/Styles/Domination/SixthSense/SixthSense.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ezreal": {
@@ -795,8 +1531,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Fiddlesticks": {
@@ -820,8 +1579,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Domination"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Fiora": {
@@ -844,8 +1626,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Fizz": {
@@ -869,8 +1674,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Galio": {
@@ -893,8 +1721,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Gangplank": {
@@ -918,8 +1769,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Resolve"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Garen": {
@@ -943,8 +1817,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8224, name: "Axiom Arcanist", icon: "perk-images/Styles/Sorcery/NullifyingOrb/Axiom_Arcanist.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Gnar": {
@@ -968,8 +1865,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8021, name: "Fleet Footwork", icon: "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Gragas": {
@@ -993,8 +1913,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Graves": {
@@ -1018,8 +1961,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8021, name: "Fleet Footwork", icon: "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Gwen": {
@@ -1043,8 +2009,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Hecarim": {
@@ -1067,8 +2056,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8232, name: "Waterwalking", icon: "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Heimerdinger": {
@@ -1092,8 +2104,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9101, name: "Absorb Life", icon: "perk-images/Styles/Precision/AbsorbLife/AbsorbLife.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Hwei": {
@@ -1116,8 +2151,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Illaoi": {
@@ -1141,8 +2199,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Precision"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Irelia": {
@@ -1166,8 +2247,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ivern": {
@@ -1191,8 +2295,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Inspiration"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8232, name: "Waterwalking", icon: "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Janna": {
@@ -1215,8 +2342,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Resolve"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8351, name: "Glacial Augment", icon: "perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "JarvanIV": {
@@ -1240,8 +2390,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Jax": {
@@ -1264,8 +2437,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Jayce": {
@@ -1288,8 +2484,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Inspiration"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Jhin": {
@@ -1312,8 +2531,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8021, name: "Fleet Footwork", icon: "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Jinx": {
@@ -1337,8 +2579,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "KSante": {
@@ -1362,8 +2627,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8439, name: "Aftershock", icon: "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Kaisa": {
@@ -1387,8 +2675,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Kalista": {
@@ -1412,8 +2723,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Karma": {
@@ -1437,8 +2771,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Karthus": {
@@ -1460,8 +2817,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Precision"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8128, name: "Dark Harvest", icon: "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8137, name: "Sixth Sense", icon: "perk-images/Styles/Domination/SixthSense/SixthSense.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Kassadin": {
@@ -1483,8 +2863,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Domination"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Katarina": {
@@ -1507,8 +2910,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Precision"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Kayle": {
@@ -1531,8 +2957,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9101, name: "Absorb Life", icon: "perk-images/Styles/Precision/AbsorbLife/AbsorbLife.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Kennen": {
@@ -1556,8 +3005,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Domination"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8139, name: "Taste of Blood", icon: "perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Khazix": {
@@ -1580,8 +3052,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Domination"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Kindred": {
@@ -1604,8 +3099,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Kled": {
@@ -1629,8 +3147,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Precision"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "KogMaw": {
@@ -1654,8 +3195,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Leblanc": {
@@ -1678,8 +3242,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "LeeSin": {
@@ -1701,8 +3288,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Leona": {
@@ -1725,8 +3335,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Precision"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8439, name: "Aftershock", icon: "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Lillia": {
@@ -1748,8 +3381,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Lissandra": {
@@ -1772,8 +3428,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Lucian": {
@@ -1797,8 +3476,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Lulu": {
@@ -1821,8 +3523,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Lux": {
@@ -1846,8 +3571,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8128, name: "Dark Harvest", icon: "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Malphite": {
@@ -1870,8 +3618,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Sorcery"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8429, name: "Conditioning", icon: "perk-images/Styles/Resolve/Conditioning/Conditioning.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Malzahar": {
@@ -1895,8 +3666,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Inspiration"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Maokai": {
@@ -1920,8 +3714,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8439, name: "Aftershock", icon: "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "MasterYi": {
@@ -1944,8 +3761,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Mel": {
@@ -1967,8 +3807,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Milio": {
@@ -1992,8 +3855,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "MissFortune": {
@@ -2017,8 +3903,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Sorcery"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "MonkeyKing": {
@@ -2041,8 +3950,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Mordekaiser": {
@@ -2066,8 +3998,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Morgana": {
@@ -2091,8 +4046,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Sorcery"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8351, name: "Glacial Augment", icon: "perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Naafiri": {
@@ -2116,8 +4094,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Nami": {
@@ -2140,8 +4141,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Nasus": {
@@ -2165,8 +4189,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8021, name: "Fleet Footwork", icon: "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Nautilus": {
@@ -2189,8 +4236,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8439, name: "Aftershock", icon: "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Neeko": {
@@ -2214,8 +4284,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Inspiration"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Nidalee": {
@@ -2238,8 +4331,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8232, name: "Waterwalking", icon: "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Nilah": {
@@ -2262,8 +4378,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Nocturne": {
@@ -2287,8 +4426,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Nunu": {
@@ -2312,8 +4474,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8232, name: "Waterwalking", icon: "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Olaf": {
@@ -2337,8 +4522,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Orianna": {
@@ -2360,8 +4568,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ornn": {
@@ -2384,8 +4615,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Pantheon": {
@@ -2409,8 +4663,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Poppy": {
@@ -2434,8 +4711,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Inspiration"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9923, name: "Hail of Blades", icon: "perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8141, name: "Deep Ward", icon: "perk-images/Styles/Domination/DeepWard/DeepWard.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8306, name: "Hextech Flashtraption", icon: "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Pyke": {
@@ -2459,8 +4759,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Resolve"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9923, name: "Hail of Blades", icon: "perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8141, name: "Deep Ward", icon: "perk-images/Styles/Domination/DeepWard/DeepWard.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Qiyana": {
@@ -2482,8 +4805,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Domination"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Quinn": {
@@ -2507,8 +4853,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Rakan": {
@@ -2532,8 +4901,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Domination"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8465, name: "Guardian", icon: "perk-images/Styles/Resolve/Guardian/Guardian.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8141, name: "Deep Ward", icon: "perk-images/Styles/Domination/DeepWard/DeepWard.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Rammus": {
@@ -2556,8 +4948,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Precision"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8439, name: "Aftershock", icon: "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8429, name: "Conditioning", icon: "perk-images/Styles/Resolve/Conditioning/Conditioning.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "RekSai": {
@@ -2581,8 +4996,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Rell": {
@@ -2606,8 +5044,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8439, name: "Aftershock", icon: "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8306, name: "Hextech Flashtraption", icon: "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Renata": {
@@ -2630,8 +5091,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8465, name: "Guardian", icon: "perk-images/Styles/Resolve/Guardian/Guardian.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Renekton": {
@@ -2654,8 +5138,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Rengar": {
@@ -2678,8 +5185,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Riven": {
@@ -2701,8 +5231,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Rumble": {
@@ -2725,8 +5278,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ryze": {
@@ -2748,8 +5324,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Samira": {
@@ -2772,8 +5371,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Domination"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8135, name: "Treasure Hunter", icon: "perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png" },
+                    { id: 8143, name: "Sudden Impact", icon: "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Sejuani": {
@@ -2797,8 +5419,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Precision"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8439, name: "Aftershock", icon: "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png" },
+                    { id: 8429, name: "Conditioning", icon: "perk-images/Styles/Resolve/Conditioning/Conditioning.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Senna": {
@@ -2822,8 +5467,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Seraphine": {
@@ -2847,8 +5515,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Sorcery"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8465, name: "Guardian", icon: "perk-images/Styles/Resolve/Guardian/Guardian.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Sett": {
@@ -2870,8 +5561,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Shaco": {
@@ -2895,8 +5609,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8224, name: "Axiom Arcanist", icon: "perk-images/Styles/Sorcery/NullifyingOrb/Axiom_Arcanist.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Shen": {
@@ -2920,8 +5657,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Shyvana": {
@@ -2945,8 +5705,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8021, name: "Fleet Footwork", icon: "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Singed": {
@@ -2969,8 +5752,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5013, name: "Tenacity", icon: "perk-images/StatMods/StatModsTenacityIcon.png" },
+            ]
         }
     },
     "Sion": {
@@ -2993,8 +5799,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                    { id: 8429, name: "Conditioning", icon: "perk-images/Styles/Resolve/Conditioning/Conditioning.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Sivir": {
@@ -3017,8 +5846,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Skarner": {
@@ -3042,8 +5894,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8429, name: "Conditioning", icon: "perk-images/Styles/Resolve/Conditioning/Conditioning.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Smolder": {
@@ -3067,8 +5942,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8021, name: "Fleet Footwork", icon: "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Sona": {
@@ -3092,8 +5990,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Soraka": {
@@ -3117,8 +6038,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8224, name: "Axiom Arcanist", icon: "perk-images/Styles/Sorcery/NullifyingOrb/Axiom_Arcanist.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Swain": {
@@ -3142,8 +6086,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Precision"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8128, name: "Dark Harvest", icon: "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8141, name: "Deep Ward", icon: "perk-images/Styles/Domination/DeepWard/DeepWard.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Sylas": {
@@ -3165,8 +6132,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Syndra": {
@@ -3189,8 +6179,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Sorcery"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "TahmKench": {
@@ -3214,8 +6227,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Precision"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Taliyah": {
@@ -3237,8 +6273,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Talon": {
@@ -3260,8 +6319,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8021, name: "Fleet Footwork", icon: "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Taric": {
@@ -3285,8 +6367,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Resolve"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8351, name: "Glacial Augment", icon: "perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Teemo": {
@@ -3310,8 +6415,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9101, name: "Absorb Life", icon: "perk-images/Styles/Precision/AbsorbLife/AbsorbLife.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Thresh": {
@@ -3334,8 +6462,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8465, name: "Guardian", icon: "perk-images/Styles/Resolve/Guardian/Guardian.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Tristana": {
@@ -3359,8 +6510,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Trundle": {
@@ -3384,8 +6558,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Tryndamere": {
@@ -3408,8 +6605,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Precision"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5013, name: "Tenacity", icon: "perk-images/StatMods/StatModsTenacityIcon.png" },
+            ]
         }
     },
     "TwistedFate": {
@@ -3432,8 +6652,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Resolve"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8360, name: "Unsealed Spellbook", icon: "perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png" },
+                    { id: 8242, name: "Unflinching", icon: "perk-images/Styles/Sorcery/Unflinching/Unflinching.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Twitch": {
@@ -3457,8 +6700,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8233, name: "Absolute Focus", icon: "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Udyr": {
@@ -3480,8 +6746,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Urgot": {
@@ -3505,8 +6794,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8005, name: "Press the Attack", icon: "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8410, name: "Approach Velocity", icon: "perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Varus": {
@@ -3530,8 +6842,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Inspiration"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Vayne": {
@@ -3555,8 +6890,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8429, name: "Conditioning", icon: "perk-images/Styles/Resolve/Conditioning/Conditioning.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Veigar": {
@@ -3580,8 +6938,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Sorcery"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5010, name: "Unknown Shard", icon: "" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Velkoz": {
@@ -3604,8 +6985,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8128, name: "Dark Harvest", icon: "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8141, name: "Deep Ward", icon: "perk-images/Styles/Domination/DeepWard/DeepWard.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Vex": {
@@ -3628,8 +7032,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8139, name: "Taste of Blood", icon: "perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Vi": {
@@ -3653,8 +7080,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Viego": {
@@ -3676,8 +7126,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Viktor": {
@@ -3699,8 +7172,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8401, name: "Shield Bash", icon: "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Vladimir": {
@@ -3723,8 +7219,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Precision"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8230, name: "Phase Rush", icon: "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8236, name: "Gathering Storm", icon: "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Volibear": {
@@ -3748,8 +7267,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5013, name: "Tenacity", icon: "perk-images/StatMods/StatModsTenacityIcon.png" },
+            ]
         }
     },
     "Warwick": {
@@ -3773,8 +7315,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Sorcery"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8232, name: "Waterwalking", icon: "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png" },
+                    { id: 8234, name: "Celerity", icon: "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Xayah": {
@@ -3798,8 +7363,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8009, name: "Presence of Mind", icon: "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Xerath": {
@@ -3823,8 +7411,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8128, name: "Dark Harvest", icon: "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png" },
+                    { id: 8106, name: "Ultimate Hunter", icon: "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8224, name: "Axiom Arcanist", icon: "perk-images/Styles/Sorcery/NullifyingOrb/Axiom_Arcanist.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "XinZhao": {
@@ -3847,8 +7458,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8014, name: "Coup de Grace", icon: "perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Yasuo": {
@@ -3872,8 +7506,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Yone": {
@@ -3897,8 +7554,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                    { id: 8473, name: "Bone Plating", icon: "perk-images/Styles/Resolve/BonePlating/BonePlating.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9101, name: "Absorb Life", icon: "perk-images/Styles/Precision/AbsorbLife/AbsorbLife.png" },
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Yorick": {
@@ -3922,8 +7602,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Resolve",
-            secondary: "Inspiration"
+            primary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8437, name: "Grasp of the Undying", icon: "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8446, name: "Demolish", icon: "perk-images/Styles/Resolve/Demolish/Demolish.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Yunara": {
@@ -3947,8 +7650,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8345, name: "Biscuit Delivery", icon: "perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9103, name: "Legend: Bloodline", icon: "perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Yuumi": {
@@ -3971,8 +7697,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Resolve"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                    { id: 8463, name: "Font of Life", icon: "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Zaahen": {
@@ -3994,8 +7743,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8444, name: "Second Wind", icon: "perk-images/Styles/Resolve/SecondWind/SecondWind.png" },
+                    { id: 8453, name: "Revitalize", icon: "perk-images/Styles/Resolve/Revitalize/Revitalize.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Zac": {
@@ -4017,8 +7789,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Inspiration"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8010, name: "Conqueror", icon: "perk-images/Styles/Precision/Conqueror/Conqueror.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8347, name: "Cosmic Insight", icon: "perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Zed": {
@@ -4041,8 +7836,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Inspiration",
-            secondary: "Precision"
+            primary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8369, name: "First Strike", icon: "perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png" },
+                    { id: 8017, name: "Cut Down", icon: "perk-images/Styles/Precision/CutDown/CutDown.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                    { id: 8316, name: "Jack Of All Trades", icon: "perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" },
+                ]
+            },
+            secondary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8321, name: "Cash Back", icon: "perk-images/Styles/Inspiration/CashBack/CashBack2.png" },
+                    { id: 9105, name: "Legend: Haste", icon: "perk-images/Styles/Precision/LegendHaste/LegendHaste.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Zeri": {
@@ -4066,8 +7884,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Precision",
-            secondary: "Resolve"
+            primary: {
+                id: 8000,
+                name: "Precision",
+                icon: "perk-images/Styles/7201_Precision.png",
+                perks: [
+                    { id: 8008, name: "Lethal Tempo", icon: "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" },
+                    { id: 8299, name: "Last Stand", icon: "perk-images/Styles/Sorcery/LastStand/LastStand.png" },
+                    { id: 8429, name: "Conditioning", icon: "perk-images/Styles/Resolve/Conditioning/Conditioning.png" },
+                    { id: 8451, name: "Overgrowth", icon: "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png" },
+                ]
+            },
+            secondary: {
+                id: 8400,
+                name: "Resolve",
+                icon: "perk-images/Styles/7204_Resolve.png",
+                perks: [
+                    { id: 9104, name: "Legend: Alacrity", icon: "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" },
+                    { id: 9111, name: "Triumph", icon: "perk-images/Styles/Precision/Triumph.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Ziggs": {
@@ -4090,8 +7931,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Inspiration"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            secondary: {
+                id: 8300,
+                name: "Inspiration",
+                icon: "perk-images/Styles/7203_Whimsy.png",
+                perks: [
+                    { id: 8304, name: "Magical Footwear", icon: "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" },
+                    { id: 8313, name: "Triple Tonic", icon: "perk-images/Styles/Inspiration/PerfectTiming/AlchemistCabinet.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Zilean": {
@@ -4115,8 +7979,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Domination"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8214, name: "Summon Aery", icon: "perk-images/Styles/Sorcery/SummonAery/SummonAery.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8126, name: "Cheap Shot", icon: "perk-images/Styles/Domination/CheapShot/CheapShot.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8232, name: "Waterwalking", icon: "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png" },
+                ]
+            },
+            shards: [
+                { id: 5007, name: "Ability Haste", icon: "perk-images/StatMods/StatModsCDRScalingIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5001, name: "Health Scaling", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Zoe": {
@@ -4139,8 +8026,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Domination",
-            secondary: "Sorcery"
+            primary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8112, name: "Electrocute", icon: "perk-images/Styles/Domination/Electrocute/Electrocute.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8139, name: "Taste of Blood", icon: "perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png" },
+                    { id: 8140, name: "Grisly Mementos", icon: "perk-images/Styles/Domination/GrislyMementos/GrislyMementos.png" },
+                ]
+            },
+            secondary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                    { id: 8275, name: "Nimbus Cloak", icon: "perk-images/Styles/Sorcery/NimbusCloak/6361.png" },
+                ]
+            },
+            shards: [
+                { id: 5005, name: "Attack Speed", icon: "perk-images/StatMods/StatModsAttackSpeedIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
     "Zyra": {
@@ -4163,8 +8073,31 @@ export const CHAMPION_OVERRIDES = {
             ],
         },
         runes: {
-            primary: "Sorcery",
-            secondary: "Domination"
+            primary: {
+                id: 8200,
+                name: "Sorcery",
+                icon: "perk-images/Styles/7202_Sorcery.png",
+                perks: [
+                    { id: 8229, name: "Arcane Comet", icon: "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png" },
+                    { id: 8105, name: "Relentless Hunter", icon: "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png" },
+                    { id: 8139, name: "Taste of Blood", icon: "perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png" },
+                    { id: 8210, name: "Transcendence", icon: "perk-images/Styles/Sorcery/Transcendence/Transcendence.png" },
+                ]
+            },
+            secondary: {
+                id: 8100,
+                name: "Domination",
+                icon: "perk-images/Styles/7200_Domination.png",
+                perks: [
+                    { id: 8226, name: "Manaflow Band", icon: "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png" },
+                    { id: 8237, name: "Scorch", icon: "perk-images/Styles/Sorcery/Scorch/Scorch.png" },
+                ]
+            },
+            shards: [
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5008, name: "Adaptive Force", icon: "perk-images/StatMods/StatModsAdaptiveForceIcon.png" },
+                { id: 5011, name: "Health", icon: "perk-images/StatMods/StatModsHealthScalingIcon.png" },
+            ]
         }
     },
 };
