@@ -4,7 +4,7 @@ package com.zerox80.riotapi.config;
 // Import für Compression-Konfiguration (GZIP)
 import org.springframework.boot.web.server.Compression;
 // Import für ConfigurableServletWebServerFactory zur Server-Konfiguration
-import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 // Import für WebServerFactoryCustomizer zur Server-Anpassung
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 // Import für @Bean Annotation zum Definieren von Spring-verwalteten Objekten
@@ -29,17 +29,19 @@ import org.springframework.web.servlet.resource.VersionResourceResolver;
 // Import für Duration zur Zeitangabe (Tage, Stunden, etc.)
 import java.time.Duration;
 
-
 // @Configuration: Markiert diese Klasse als Quelle von Bean-Definitionen
 @Configuration
-// implements WebMvcConfigurer: Ermöglicht Anpassung von Spring MVC Konfiguration
+// implements WebMvcConfigurer: Ermöglicht Anpassung von Spring MVC
+// Konfiguration
 public class WebConfig implements WebMvcConfigurer {
 
     /**
      * Konfiguriert Handler für statische Ressourcen (Assets, Favicon).
-     * PERFORMANCE: Setzt aggressive Browser-Caching für Assets zur Bandbreiten-Reduzierung.
+     * PERFORMANCE: Setzt aggressive Browser-Caching für Assets zur
+     * Bandbreiten-Reduzierung.
      *
-     * @param registry ResourceHandlerRegistry zum Registrieren von Resource-Handlern
+     * @param registry ResourceHandlerRegistry zum Registrieren von
+     *                 Resource-Handlern
      */
     // @Override: Überschreibt Methode aus WebMvcConfigurer Interface
     @Override
@@ -81,12 +83,12 @@ public class WebConfig implements WebMvcConfigurer {
      * @return WebServerFactoryCustomizer
      */
     @Bean
-    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> compressionCustomizer() {
+    public WebServerFactoryCustomizer<ConfigurableWebServerFactory> compressionCustomizer() {
         return factory -> {
             Compression compression = new Compression();
             compression.setEnabled(true);
             compression.setMinResponseSize(DataSize.ofKilobytes(1));
-            compression.setMimeTypes(new String[]{
+            compression.setMimeTypes(new String[] {
                     "text/html", "text/xml", "text/plain", "text/css", "text/javascript",
                     "application/javascript", "application/json", "application/xml", "image/svg+xml"
             });
