@@ -84,19 +84,21 @@ import java.util.ArrayList;
 // Import for Duration (represents time duration for cookie expiration)
 import java.time.Duration;
 
-
 // @RestController marks this class as a REST API controller
 @RestController
 /**
  * SummonerController handles all summoner-related API endpoints.
- * Provides functionality for searching summoners, fetching profiles, match history, and suggestions.
- * Implements search history tracking via cookies for autocomplete functionality.
+ * Provides functionality for searching summoners, fetching profiles, match
+ * history, and suggestions.
+ * Implements search history tracking via cookies for autocomplete
+ * functionality.
  */
 public class SummonerController {
 
     // Logger instance for structured log output of this class
     private static final Logger logger = LoggerFactory.getLogger(SummonerController.class);
-    // Service instance for Riot API communication (provided via dependency injection)
+    // Service instance for Riot API communication (provided via dependency
+    // injection)
     private final RiotApiService riotApiService;
     // Service instance for Data Dragon access (champion/item images and data)
     private final DataDragonService dataDragonService;
@@ -113,25 +115,25 @@ public class SummonerController {
     // Maximum number of entries in search history
     private static final int MAX_HISTORY_SIZE = 10;
 
-
     // @Autowired ensures automatic dependency injection by Spring
     @Autowired
     /**
-     * Constructor with dependency injection for all required services and configuration values.
+     * Constructor with dependency injection for all required services and
+     * configuration values.
      *
-     * @param riotApiService Service for Riot API access
-     * @param dataDragonService Service for champion/item data
-     * @param objectMapper JSON mapper for cookie serialization
-     * @param matchesPageSize Page size from config (default: 10)
-     * @param maxMatchesPageSize Max page size (default: 40)
+     * @param riotApiService        Service for Riot API access
+     * @param dataDragonService     Service for champion/item data
+     * @param objectMapper          JSON mapper for cookie serialization
+     * @param matchesPageSize       Page size from config (default: 10)
+     * @param maxMatchesPageSize    Max page size (default: 40)
      * @param maxMatchesStartOffset Max offset (default: 1000)
      */
     public SummonerController(RiotApiService riotApiService,
-                              DataDragonService dataDragonService,
-                              ObjectMapper objectMapper,
-                              @Value("${ui.matches.page-size:10}") int matchesPageSize,
-                              @Value("${ui.matches.max-page-size:40}") int maxMatchesPageSize,
-                              @Value("${ui.matches.max-start-offset:1000}") int maxMatchesStartOffset) {
+            DataDragonService dataDragonService,
+            ObjectMapper objectMapper,
+            @Value("${ui.matches.page-size:10}") int matchesPageSize,
+            @Value("${ui.matches.max-page-size:40}") int maxMatchesPageSize,
+            @Value("${ui.matches.max-start-offset:1000}") int maxMatchesStartOffset) {
         // Assign RiotApiService to instance variable
         this.riotApiService = riotApiService;
         // Assign DataDragonService to instance variable
@@ -148,7 +150,6 @@ public class SummonerController {
         this.maxMatchesStartOffset = Math.max(0, maxMatchesStartOffset);
     }
 
-
     // @GetMapping defines HTTP GET endpoint at /api/matches
     @GetMapping("/api/matches")
     // @ResponseBody ensures automatic JSON serialization of return value
@@ -157,16 +158,17 @@ public class SummonerController {
      * Loads more matches with pagination (asynchronous via CompletableFuture).
      *
      * @param riotId Riot ID in format Name#TAG (required)
-     * @param start Start index for pagination (default: 0)
-     * @param count Number of matches to load (default: 10)
+     * @param start  Start index for pagination (default: 0)
+     * @param count  Number of matches to load (default: 10)
      * @return CompletableFuture with ResponseEntity containing match list or error
      */
     public CompletableFuture<ResponseEntity<?>> getMoreMatches(@RequestParam("riotId") String riotId,
-                                                               @RequestParam(value = "start", defaultValue = "0") int start,
-                                                               @RequestParam(value = "count", defaultValue = "10") int count) {
+            @RequestParam(value = "start", defaultValue = "0") int start,
+            @RequestParam(value = "count", defaultValue = "10") int count) {
         // Trim the Riot ID and remove leading/trailing spaces
         String trimmedRiotId = riotId != null ? riotId.trim() : null;
-        // Validation: check if Riot ID is present and in correct format (must contain #)
+        // Validation: check if Riot ID is present and in correct format (must contain
+        // #)
         if (!StringUtils.hasText(trimmedRiotId) || !trimmedRiotId.contains("#")) {
             // Return 400 Bad Request with error message (no cache)
             return CompletableFuture.completedFuture(ResponseEntity.badRequest()
@@ -199,7 +201,8 @@ public class SummonerController {
             // Return 400 Bad Request if too many matches requested
             return CompletableFuture.completedFuture(ResponseEntity.badRequest()
                     .cacheControl(CacheControl.noStore()) // No browser caching
-                    .body(Map.of("error", "Maximum matches per request is " + maxMatchesPageSize + "."))); // Error with limit
+                    .body(Map.of("error", "Maximum matches per request is " + maxMatchesPageSize + "."))); // Error with
+                                                                                                           // limit
         }
 
         // Sanitize start parameter (minimum 0, no negative values)
@@ -209,7 +212,9 @@ public class SummonerController {
             // Return 400 Bad Request on offset too large
             return CompletableFuture.completedFuture(ResponseEntity.badRequest()
                     .cacheControl(CacheControl.noStore()) // No browser caching
-                    .body(Map.of("error", "Parameter 'start' exceeds allowed offset of " + maxMatchesStartOffset + "."))); // Error message
+                    .body(Map.of("error",
+                            "Parameter 'start' exceeds allowed offset of " + maxMatchesStartOffset + "."))); // Error
+                                                                                                             // message
         }
 
         // Asynchronous call: fetch summoner data by Riot ID
@@ -228,7 +233,8 @@ public class SummonerController {
                             // After successful loading: create response with match list
                             .thenApply(list -> ResponseEntity.ok() // HTTP 200 OK status
                                     .cacheControl(CacheControl.noStore()) // No browser caching (live data)
-                                    .body(list != null ? list : Collections.emptyList())); // Return list (empty if null)
+                                    .body(list != null ? list : Collections.emptyList())); // Return list (empty if
+                                                                                           // null)
                 })
                 // Exception handling for all errors in async chain
                 .exceptionally(ex -> {
@@ -243,18 +249,17 @@ public class SummonerController {
                 });
     }
 
-
     // @GetMapping defines HTTP GET endpoint at /api/summoner-suggestions
     @GetMapping("/api/summoner-suggestions")
     /**
      * Provides summoner search suggestions based on search history and query.
      *
-     * @param query User's search query
+     * @param query   User's search query
      * @param request HTTP request for cookie access
      * @return ResponseEntity with list of suggestions
      */
     public ResponseEntity<List<SummonerSuggestionDTO>> summonerSuggestions(@RequestParam("query") String query,
-                                                                             HttpServletRequest request) {
+            HttpServletRequest request) {
         // Load search history from user's browser cookie
         Map<String, SummonerSuggestionDTO> userHistory = getSearchHistoryFromCookie(request);
         // Get search suggestions from service (combines history + new search)
@@ -264,7 +269,6 @@ public class SummonerController {
                 .cacheControl(CacheControl.noStore()) // No browser caching (live data)
                 .body(list); // List of suggestions as JSON response
     }
-
 
     // @GetMapping defines HTTP GET endpoint at /api/me (for OAuth authentication)
     @GetMapping("/api/me")
@@ -276,13 +280,16 @@ public class SummonerController {
      * @param authorizationHeader Authorization header with Bearer token (optional)
      * @return Callable with ResponseEntity containing summoner data or error
      */
-    public Callable<ResponseEntity<?>> getMySummoner(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        // Validation: check if Authorization header is present and starts with "Bearer "
+    public Callable<ResponseEntity<?>> getMySummoner(
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        // Validation: check if Authorization header is present and starts with "Bearer
+        // "
         if (!StringUtils.hasText(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")) {
             // Return lambda function (Callable) with 401 Unauthorized
             return () -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .cacheControl(CacheControl.noStore()) // No browser caching
-                    .body(Map.of("error", "Missing or invalid Authorization header. Expected 'Bearer <token>'.")); // Error message
+                    .body(Map.of("error", "Missing or invalid Authorization header. Expected 'Bearer <token>'.")); // Error
+                                                                                                                   // message
         }
 
         // Extract Bearer token from Authorization header
@@ -312,44 +319,46 @@ public class SummonerController {
                 return ResponseEntity.ok()
                         .cacheControl(CacheControl.noStore()) // No browser caching (sensitive data)
                         .body(summoner); // Summoner data as JSON response
-            // Catch block for all exceptions during processing
+                // Catch block for all exceptions during processing
             } catch (Exception e) {
                 // Log error with full stack trace
                 logger.error("Error in /api/me endpoint: {}", e.getMessage(), e);
                 // Return 500 Internal Server Error on technical errors
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .cacheControl(CacheControl.noStore()) // No browser caching
-                        .body(Map.of("error", "Internal error while resolving summoner via RSO.")); // Generic error message
+                        .body(Map.of("error", "Internal error while resolving summoner via RSO.")); // Generic error
+                                                                                                    // message
             }
         };
     }
 
-
-    // @GetMapping defines HTTP GET endpoint at /api/profile (main endpoint for player profiles)
+    // @GetMapping defines HTTP GET endpoint at /api/profile (main endpoint for
+    // player profiles)
     @GetMapping("/api/profile")
     /**
      * Fetches a complete summoner profile with all details.
      *
-     * @param riotId Riot ID in format Name#TAG (required)
+     * @param riotId         Riot ID in format Name#TAG (required)
      * @param includeMatches Flag whether to include match history (default: true)
-     * @param request HTTP request for cookie access
-     * @param response HTTP response for setting cookies
-     * @param locale User's language/region setting
+     * @param request        HTTP request for cookie access
+     * @param response       HTTP response for setting cookies
+     * @param locale         User's language/region setting
      * @return ResponseEntity with profile data or error
      */
-    public ResponseEntity<?> getSummonerProfile(@RequestParam("riotId") String riotId,
-                                                @RequestParam(value = "includeMatches", defaultValue = "true") boolean includeMatches,
-                                                HttpServletRequest request,
-                                                HttpServletResponse response,
-                                                Locale locale) {
+    public CompletableFuture<ResponseEntity<?>> getSummonerProfile(@RequestParam("riotId") String riotId,
+            @RequestParam(value = "includeMatches", defaultValue = "true") boolean includeMatches,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Locale locale) {
         // Normalize Riot ID by trimming leading/trailing spaces
         String normalizedRiotId = riotId != null ? riotId.trim() : null;
-        // Validation: check if Riot ID is present and in correct format (must contain #)
+        // Validation: check if Riot ID is present and in correct format (must contain
+        // #)
         if (!StringUtils.hasText(normalizedRiotId) || !normalizedRiotId.contains("#")) {
             // Return 400 Bad Request on invalid format
-            return ResponseEntity.badRequest()
+            return CompletableFuture.completedFuture((ResponseEntity<?>) ResponseEntity.badRequest()
                     .cacheControl(CacheControl.noStore()) // No browser caching
-                    .body(Map.of("error", "Invalid Riot ID. Please use the format Name#TAG.")); // Error message
+                    .body(Map.of("error", "Invalid Riot ID. Please use the format Name#TAG."))); // Error message
         }
 
         // Split Riot ID at # character (maximum 2 parts)
@@ -362,113 +371,105 @@ public class SummonerController {
         // Validation: check if name and tagline are not empty
         if (!StringUtils.hasText(gameName) || !StringUtils.hasText(tagLine)) {
             // Return 400 Bad Request on empty name/tagline
-            return ResponseEntity.badRequest()
+            return CompletableFuture.completedFuture((ResponseEntity<?>) ResponseEntity.badRequest()
                     .cacheControl(CacheControl.noStore()) // No browser caching
-                    .body(Map.of("error", "Invalid Riot ID. Name and Tagline cannot be empty.")); // Error message
+                    .body(Map.of("error", "Invalid Riot ID. Name and Tagline cannot be empty."))); // Error message
         }
 
-        // Try block for exception handling during profile data fetch
-        try {
-            // Asynchronous call: fetch complete profile data (join() blocks until done)
-            SummonerProfileData profileData = riotApiService.getSummonerProfileDataAsync(gameName, tagLine).join();
-            // Validation: check if profile data was found
-            if (profileData == null) {
-                // Return 404 Not Found if summoner doesn't exist
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .cacheControl(CacheControl.noStore()) // No browser caching
-                        .body(Map.of("error", "Summoner not found.")); // Error message
-            }
+        // Asynchronous call: fetch complete profile data
+        return riotApiService.getSummonerProfileDataAsync(gameName, tagLine, includeMatches)
+                .thenApply(profileData -> {
+                    // Validation: check if profile data was found
+                    if (profileData == null) {
+                        // Return 404 Not Found if summoner doesn't exist
+                        return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .cacheControl(CacheControl.noStore()) // No browser caching
+                                .body(Map.of("error", "Summoner not found.")); // Error message
+                    }
 
-            // Validation: check if profile data contains an error (e.g. Riot API error)
-            if (profileData.hasError()) {
-                // Return 200 OK with error message (not a server error, but data error)
-                return ResponseEntity.status(HttpStatus.OK)
-                        .cacheControl(CacheControl.noStore()) // No browser caching
-                        .body(Map.of("error", profileData.errorMessage())); // Error text from profile data
-            }
+                    // Validation: check if profile data contains an error (e.g. Riot API error)
+                    if (profileData.hasError()) {
+                        // Return 404 Not Found (or appropriate error) instead of 200 OK
+                        return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .cacheControl(CacheControl.noStore()) // No browser caching
+                                .body(Map.of("error", profileData.errorMessage())); // Error text from profile data
+                    }
 
-            // Create LinkedHashMap for response payload (preserves order)
-            Map<String, Object> payload = new LinkedHashMap<>();
-            // Add summoner object to payload
-            payload.put("summoner", profileData.summoner());
-            // Add suggestion object (for autocomplete/search history)
-            payload.put("suggestion", profileData.suggestion());
-            // Add league entries (Solo/Duo, Flex, etc.)
-            payload.put("leagueEntries", profileData.leagueEntries());
-            // Add champion play statistics (how often each champion was played)
-            payload.put("championPlayCounts", profileData.championPlayCounts());
-            // Add profile icon URL (player's profile picture)
-            payload.put("profileIconUrl", profileData.profileIconUrl());
-            // Add Riot ID (from suggestion if available, otherwise normalized ID)
-            payload.put("riotId", profileData.suggestion() != null ? profileData.suggestion().getRiotId() : normalizedRiotId);
-            // Add configured match page size
-            payload.put("matchesPageSize", matchesPageSize);
-            // Conditionally add match history (only if includeMatches parameter = true)
-            if (includeMatches) {
-                // Add match history to payload
-                payload.put("matchHistory", profileData.matchHistory());
-            }
+                    // Create LinkedHashMap for response payload (preserves order)
+                    Map<String, Object> payload = new LinkedHashMap<>();
+                    // Add summoner object to payload
+                    payload.put("summoner", profileData.summoner());
+                    // Add suggestion object (for autocomplete/search history)
+                    payload.put("suggestion", profileData.suggestion());
+                    // Add league entries (Solo/Duo, Flex, etc.)
+                    payload.put("leagueEntries", profileData.leagueEntries());
+                    // Add champion play statistics (how often each champion was played)
+                    payload.put("championPlayCounts", profileData.championPlayCounts());
+                    // Add profile icon URL (player's profile picture)
+                    payload.put("profileIconUrl", profileData.profileIconUrl());
+                    // Add Riot ID (from suggestion if available, otherwise normalized ID)
+                    payload.put("riotId",
+                            profileData.suggestion() != null ? profileData.suggestion().getRiotId() : normalizedRiotId);
+                    // Add configured match page size
+                    payload.put("matchesPageSize", matchesPageSize);
+                    // Conditionally add match history (only if includeMatches parameter = true)
+                    if (includeMatches) {
+                        // Add match history to payload
+                        payload.put("matchHistory", profileData.matchHistory());
+                    }
 
-            // Try block for optional loading of Data Dragon base URLs
-            try {
-                // Get image base URLs from Data Dragon service (for champion/item images)
-                Map<String, String> bases = dataDragonService.getImageBases(null);
-                // Validation: only add if base URLs are present
-                if (bases != null && !bases.isEmpty()) {
-                    // Add base URLs to payload
-                    payload.put("bases", bases);
-                }
-            // Catch block for errors loading base URLs (not critical, so only warning)
-            } catch (Exception ex) {
-                // Log warning (not an error since data is optional)
-                logger.warn("Failed to load DDragon base URLs: {}", ex.getMessage());
-            }
-            // Try block for optional loading of champion square URLs
-            try {
-                // Get champion square URLs (champion images mapped by key ID)
-                Map<Integer, String> championSquares = dataDragonService.getChampionKeyToSquareUrl(locale);
-                // Validation: only add if champion URLs are present
-                if (championSquares != null && !championSquares.isEmpty()) {
-                    // Add champion square URLs to payload
-                    payload.put("championSquares", championSquares);
-                }
-            // Catch block for errors loading champion URLs (not critical, so only warning)
-            } catch (Exception ex) {
-                // Log warning (not an error since data is optional)
-                logger.warn("Failed to load champion square URLs: {}", ex.getMessage());
-            }
+                    // Try block for optional loading of Data Dragon base URLs
+                    try {
+                        // Get image base URLs from Data Dragon service (for champion/item images)
+                        Map<String, String> bases = dataDragonService.getImageBases(null);
+                        // Validation: only add if base URLs are present
+                        if (bases != null && !bases.isEmpty()) {
+                            // Add base URLs to payload
+                            payload.put("bases", bases);
+                        }
+                        // Catch block for errors loading base URLs (not critical, so only warning)
+                    } catch (Exception ex) {
+                        // Log warning (not an error since data is optional)
+                        logger.warn("Failed to load DDragon base URLs: {}", ex.getMessage());
+                    }
+                    // Try block for optional loading of champion square URLs
+                    try {
+                        // Get champion square URLs (champion images mapped by key ID)
+                        Map<Integer, String> championSquares = dataDragonService.getChampionKeyToSquareUrl(locale);
+                        // Validation: only add if champion URLs are present
+                        if (championSquares != null && !championSquares.isEmpty()) {
+                            // Add champion square URLs to payload
+                            payload.put("championSquares", championSquares);
+                        }
+                        // Catch block for errors loading champion URLs (not critical, so only warning)
+                    } catch (Exception ex) {
+                        // Log warning (not an error since data is optional)
+                        logger.warn("Failed to load champion square URLs: {}", ex.getMessage());
+                    }
 
-            // Conditionally update search history cookie (only if suggestion is present)
-            if (profileData.suggestion() != null) {
-                // Update search history cookie with current search
-                updateSearchHistoryCookie(request, response, normalizedRiotId, profileData.suggestion());
-            }
+                    // Conditionally update search history cookie (only if suggestion is present)
+                    if (profileData.suggestion() != null) {
+                        // Update search history cookie with current search
+                        updateSearchHistoryCookie(request, response, normalizedRiotId, profileData.suggestion());
+                    }
 
-            // Return complete payload with HTTP 200 OK status
-            return ResponseEntity.ok()
-                    .cacheControl(CacheControl.noStore()) // No browser caching (live data)
-                    .body(payload); // Payload with all profile data as JSON response
-        // Catch block for CompletionException (async errors)
-        } catch (CompletionException ex) {
-            // Extract original exception from CompletionException
-            Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
-            // Log error with Riot ID and full stack trace
-            logger.error("Error processing summoner profile for Riot ID '{}': {}", normalizedRiotId, cause.getMessage(), cause);
-            // Return 500 Internal Server Error on async errors
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .cacheControl(CacheControl.noStore()) // No browser caching
-                    .body(Map.of("error", "Failed to load summoner profile.")); // Generic error message
-        // Catch block for all other unexpected exceptions
-        } catch (Exception ex) {
-            // Log error with Riot ID and full stack trace
-            logger.error("Unexpected error during summoner profile for Riot ID '{}': {}", normalizedRiotId, ex.getMessage(), ex);
-            // Return 500 Internal Server Error on unexpected errors
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .cacheControl(CacheControl.noStore()) // No browser caching
-                    .body(Map.of("error", "Unexpected error while fetching summoner profile.")); // Generic error message
-        }
+                    // Return complete payload with HTTP 200 OK status
+                    return (ResponseEntity<?>) ResponseEntity.ok()
+                            .cacheControl(CacheControl.noStore()) // No browser caching (live data)
+                            .body(payload); // Payload with all profile data as JSON response
+                })
+                .exceptionally(ex -> {
+                    // Extract original exception from CompletionException
+                    Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
+                    // Log error with Riot ID and full stack trace
+                    logger.error("Error processing summoner profile for Riot ID '{}': {}", normalizedRiotId,
+                            cause.getMessage(), cause);
+                    // Return 500 Internal Server Error on async errors
+                    return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .cacheControl(CacheControl.noStore()) // No browser caching
+                            .body(Map.of("error", "Failed to load summoner profile.")); // Generic error message
+                });
     }
-
 
     /**
      * Private helper method to load search history from browser cookie.
@@ -476,6 +477,7 @@ public class SummonerController {
      * @param request HTTP request to access cookies
      * @return Map of search history or empty map if not found
      */
+
     private Map<String, SummonerSuggestionDTO> getSearchHistoryFromCookie(HttpServletRequest request) {
         // Get all cookies from request (null-safe)
         Cookie[] cookies = request != null ? request.getCookies() : null;
@@ -491,8 +493,10 @@ public class SummonerController {
                         // URL-decode cookie value (UTF-8 encoding)
                         String decodedValue = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.name());
                         // Deserialize JSON string back to Map (with TypeReference for generics)
-                        return objectMapper.readValue(decodedValue, new TypeReference<LinkedHashMap<String, SummonerSuggestionDTO>>() {});
-                    // Catch block for I/O and parsing errors
+                        return objectMapper.readValue(decodedValue,
+                                new TypeReference<LinkedHashMap<String, SummonerSuggestionDTO>>() {
+                                });
+                        // Catch block for I/O and parsing errors
                     } catch (IOException | IllegalArgumentException e) {
                         // Log error (cookie might be corrupted)
                         logger.error("Error reading search history cookie: {}", e.getMessage(), e);
@@ -506,19 +510,18 @@ public class SummonerController {
         return new LinkedHashMap<>();
     }
 
-
     /**
      * Private helper method to update search history in browser cookie.
      *
-     * @param request HTTP request for cookie access
-     * @param response HTTP response for setting cookie
-     * @param riotId Riot ID of searched player
+     * @param request       HTTP request for cookie access
+     * @param response      HTTP response for setting cookie
+     * @param riotId        Riot ID of searched player
      * @param suggestionDTO Suggestion object with profile data
      */
     private void updateSearchHistoryCookie(HttpServletRequest request,
-                                           HttpServletResponse response,
-                                           String riotId,
-                                           SummonerSuggestionDTO suggestionDTO) {
+            HttpServletResponse response,
+            String riotId,
+            SummonerSuggestionDTO suggestionDTO) {
         // Normalize Riot ID by trimming leading/trailing spaces
         String normalizedRiotId = riotId != null ? riotId.trim() : null;
         // Validation: check if Riot ID and suggestion object are present
@@ -574,11 +577,11 @@ public class SummonerController {
                     .build(); // Create cookie object
             // Add Set-Cookie header to response
             response.addHeader("Set-Cookie", cookie.toString());
-        // Catch block for serialization and encoding errors
+            // Catch block for serialization and encoding errors
         } catch (IOException e) {
             // Log error (cookie update is not critical)
             logger.error("Error writing search history cookie: " + e.getMessage(), e);
         }
     }
-// End of class
+    // End of class
 }

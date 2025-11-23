@@ -35,14 +35,14 @@ import java.util.Locale;
 // Import for Duration (represents time duration for cache expiration)
 import java.time.Duration;
 
-
 // @RestController marks this class as a REST API controller
 @RestController
 // @RequestMapping defines base path (here: no base path, just root)
 @RequestMapping
 /**
  * ChampionsController handles champion data API endpoints.
- * Provides functionality for fetching champion lists and detailed champion information.
+ * Provides functionality for fetching champion lists and detailed champion
+ * information.
  * Implements caching for improved performance and reduced API calls.
  */
 public class ChampionsController {
@@ -51,7 +51,6 @@ public class ChampionsController {
     private final DataDragonService dataDragonService;
     // Logger instance for structured log output of this class
     private static final Logger log = LoggerFactory.getLogger(ChampionsController.class);
-
 
     /**
      * Constructor with dependency injection for DataDragonService.
@@ -69,7 +68,7 @@ public class ChampionsController {
      * Fetches a list of all champions with basic information.
      *
      * @param localeParam Optional locale parameter from query string
-     * @param locale Fallback locale from Accept-Language header
+     * @param locale      Fallback locale from Accept-Language header
      * @return ResponseEntity with list of champion summaries
      */
     public ResponseEntity<List<ChampionSummary>> apiChampions(
@@ -78,29 +77,29 @@ public class ChampionsController {
         // Try block for exception handling during champion loading
         try {
             // Fetch champion summaries with resolved locale
-            List<ChampionSummary> champions = dataDragonService.getChampionSummaries(resolveLocaleOverride(localeParam, locale));
+            List<ChampionSummary> champions = dataDragonService
+                    .getChampionSummaries(resolveLocaleOverride(localeParam, locale));
             // Create Cache-Control header (30 minutes cache, publicly cacheable)
             CacheControl cc = CacheControl.maxAge(Duration.ofMinutes(30)).cachePublic();
             // Return champion list with HTTP 200 OK and cache headers
             return ResponseEntity.ok().cacheControl(cc).body(champions);
-        // Catch block for all exceptions during loading
+            // Catch block for all exceptions during loading
         } catch (Exception e) {
             // Log warning (not error, for graceful degradation)
             log.warn("/api/champions failed: {}", e.toString());
-            // Graceful degradation: return empty list instead of error (better UX)
-            return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(Collections.emptyList());
+            // Return 500 Internal Server Error instead of masking the issue
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).cacheControl(CacheControl.noStore()).build();
         }
     }
-
 
     // @GetMapping defines HTTP GET endpoint at /api/champions/{id}
     @GetMapping("/api/champions/{id}")
     /**
      * Fetches detailed information for a specific champion.
      *
-     * @param id Champion ID from URL path (e.g. "Ahri")
+     * @param id          Champion ID from URL path (e.g. "Ahri")
      * @param localeParam Optional locale parameter from query string
-     * @param locale Fallback locale from Accept-Language header
+     * @param locale      Fallback locale from Accept-Language header
      * @return ResponseEntity with champion details or 404 if not found
      */
     public ResponseEntity<ChampionDetail> apiChampion(
@@ -112,28 +111,31 @@ public class ChampionsController {
             // Fetch champion details with resolved locale
             ChampionDetail detail = dataDragonService.getChampionDetail(id, resolveLocaleOverride(localeParam, locale));
             // Validation: check if champion was found
-            if (detail == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found if champion doesn't exist
+            if (detail == null)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found if champion doesn't exist
             // Create Cache-Control header (30 minutes cache, publicly cacheable)
             CacheControl cc = CacheControl.maxAge(Duration.ofMinutes(30)).cachePublic();
             // Return champion details with HTTP 200 OK and cache headers
             return ResponseEntity.ok().cacheControl(cc).body(detail);
-        // Catch block for all exceptions during loading
+            // Catch block for all exceptions during loading
+        } catch (java.io.IOException e) {
+            // Return 404 Not Found if the resource is missing (e.g. file not found)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).cacheControl(CacheControl.noStore()).build();
         } catch (Exception e) {
             // Return 500 Internal Server Error on technical errors
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).cacheControl(CacheControl.noStore()).build();
         }
     }
 
-
     /**
      * Private helper method to resolve locale parameter with fallback.
      *
      * @param localeParam Locale parameter from query string (optional)
-     * @param fallback Fallback locale if parameter is missing/invalid
+     * @param fallback    Fallback locale if parameter is missing/invalid
      * @return Resolved Locale object
      */
     private Locale resolveLocaleOverride(String localeParam,
-                                        Locale fallback) {
+            Locale fallback) {
         // Validation: check if locale parameter is empty or missing
         if (localeParam == null || localeParam.isBlank()) {
             // Return fallback locale when parameter is missing
@@ -143,7 +145,7 @@ public class ChampionsController {
         try {
             // Convert locale string to Locale object (replaces _ with -)
             return Locale.forLanguageTag(localeParam.replace('_', '-'));
-        // Catch block for invalid locale strings
+            // Catch block for invalid locale strings
         } catch (Exception ignored) {
             // Return fallback locale on parsing error
             return fallback;

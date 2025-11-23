@@ -106,7 +106,7 @@ public class RiotApiClient {
     // Prevents overloading the Riot API and reaching rate limits
     // final: Value cannot be changed after initialization
     private final Semaphore outboundLimiter;
-    private final java.util.Queue<CompletableFuture<Void>> waitingRequests = new java.util.concurrent.ConcurrentLinkedQueue<>();
+    private final java.util.Deque<CompletableFuture<Void>> waitingRequests = new java.util.concurrent.ConcurrentLinkedDeque<>();
 
     // static final: Class-wide constant, logger for this specific class
     // LoggerFactory.getLogger(): Creates a logger with the class name as category
@@ -471,7 +471,8 @@ public class RiotApiClient {
                 next.complete(null);
             } else {
                 // Should not happen if we just released, but race conditions exist
-                waitingRequests.add(next);
+                // Push back to the front to maintain fairness
+                waitingRequests.addFirst(next);
             }
         }
     }

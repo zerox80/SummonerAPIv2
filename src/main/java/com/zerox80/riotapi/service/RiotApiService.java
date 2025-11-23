@@ -143,11 +143,6 @@ public class RiotApiService {
                             })
                             .filter(java.util.Objects::nonNull)
                             .collect(Collectors.toList()));
-                })
-                .exceptionally(ex -> {
-                    logger.error("Error fetching paged match history for puuid {}: {}", maskPuuid(puuid),
-                            ex.getMessage(), ex);
-                    return Collections.<MatchV5Dto>emptyList();
                 });
     }
 
@@ -421,7 +416,8 @@ public class RiotApiService {
      * @param tagLine  Player's tag line
      * @return CompletableFuture containing complete profile data
      */
-    public CompletableFuture<SummonerProfileData> getSummonerProfileDataAsync(String gameName, String tagLine) {
+    public CompletableFuture<SummonerProfileData> getSummonerProfileDataAsync(String gameName, String tagLine,
+            boolean includeMatches) {
         // Asynchronous call: First fetch basic summoner data
         return getSummonerByRiotId(gameName, tagLine)
                 .thenCompose(summoner -> {
@@ -457,23 +453,29 @@ public class RiotApiService {
                                         summoner.getPuuid(), ex.getMessage(), ex);
                                 return Collections.emptyList();
                             });
-                    // Load more matches initially for better statistics
-                    CompletableFuture<List<MatchV5Dto>> matchHistoryFuture = getMatchHistory(summoner.getPuuid(), 50);
+                    // Load more matches initially for better statistics (only if requested)
+                    CompletableFuture<List<MatchV5Dto>> matchHistoryFuture = includeMatches
+                            ? getMatchHistory(summoner.getPuuid(), 50)
+                            : CompletableFuture.completedFuture(Collections.emptyList());
 
                     // Combine both parallel futures (league + matches)
                     return CompletableFuture.allOf(leagueEntriesFuture, matchHistoryFuture)
                             .thenApply(v -> {
                                 // Extract league results (blocking but safe)
                                 List<LeagueEntryDTO> leagueEntries = leagueEntriesFuture.join();
-                                // Extract match results (blocking but safe)
-                                List<MatchV5Dto> matchHistory = matchHistoryFuture.join();
+                                List<MatchV5Dto> matchHistory = Collections.emptyList();
+                                Map<String, Long> championPlayCounts = Collections.emptyMap();
 
-                                // Business logic: Calculate LP changes for each match based on saved LP records
-                                playerLpRecordService.calculateAndSetLpChangesForMatches(summoner, matchHistory);
+                                if (includeMatches) {
+                                    // Extract match results (blocking but safe)
+                                    matchHistory = matchHistoryFuture.join();
 
-                                // Business logic: Calculate champion statistics
-                                Map<String, Long> championPlayCounts = getChampionPlayCounts(matchHistory,
-                                        summoner.getPuuid());
+                                    // Business logic: Calculate LP changes for each match based on saved LP records
+                                    playerLpRecordService.calculateAndSetLpChangesForMatches(summoner, matchHistory);
+
+                                    // Business logic: Calculate champion statistics
+                                    championPlayCounts = getChampionPlayCounts(matchHistory, summoner.getPuuid());
+                                }
 
                                 // Create complete profile data object
                                 return new SummonerProfileData(summoner, leagueEntries, matchHistory, suggestionDTO,

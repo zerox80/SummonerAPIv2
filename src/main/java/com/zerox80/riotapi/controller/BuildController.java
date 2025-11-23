@@ -72,8 +72,11 @@ public class BuildController {
             Locale locale) {
         // Load champion build from service (filters by champion, queue, and role)
         ChampionBuildDto dto = agg.loadBuild(id, queueId, role, locale);
-        // Return build DTO with HTTP 200 OK status
-        return ResponseEntity.ok(dto); // Build data as JSON response
+        // Return build DTO with HTTP 200 OK status, or 404 if not found
+        if (dto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dto);
     }
 
     // @PostMapping defines HTTP POST endpoint at /api/champions/{id}/aggregate

@@ -183,13 +183,13 @@ public class PlayerLpRecordService {
                 }
 
                 // Check if "after" record is actually after match end
-                if (!recordAfter.getTimestamp().isAfter(matchEndTime)) {
+                if (recordAfter.getTimestamp().isAfter(matchEndTime)) {
                     // Calculate time difference
-                    Duration gap = Duration.between(recordAfter.getTimestamp(), matchEndTime);
+                    Duration gap = Duration.between(matchEndTime, recordAfter.getTimestamp());
                     // Check if difference exceeds tolerance threshold (>10 minutes)
                     if (gap.compareTo(MATCH_END_TOLERANCE) > 0) {
                         logger.debug(
-                                "LP record after match {} for PUUID {} (queue {}) is {} minutes before match end time {} – skipping.",
+                                "LP record after match {} for PUUID {} (queue {}) is {} minutes after match end time {} – skipping.",
                                 safeMatchId(match), maskPuuid(summoner.getPuuid()), queueTypeForDbQuery,
                                 gap.toMinutes(), matchEndTime);
                         continue;
