@@ -51,10 +51,16 @@ function enrichChampions(championPlayCounts, matches, summoner, championSquares,
     const avgKda = total > 0 ? (kdaSum / total).toFixed(2) : '0.00';
 
     // Construct image URL
+    // Construct image URL
     let imageUrl = '';
     if (championSquares && championSquares[champ.championName]) {
-      const version = bases?.version || 'latest'; // Fallback if version missing
+      // If we have the full image object from DataDragon
+      const version = bases?.version || '15.20.1';
       imageUrl = `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championSquares[champ.championName].image.full}`;
+    } else {
+      // Fallback to standard DDragon path if mapping is missing
+      const version = bases?.version || '15.20.1';
+      imageUrl = `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champ.championName}.png`;
     }
 
     return {
