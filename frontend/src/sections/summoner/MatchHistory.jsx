@@ -416,10 +416,10 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
                                     />
                                   ) : null}
                                 </div>
-                                <div className="match-player-row__cs">
-                                  <span className="score">{playerCs}</span>
-                                  <span className="label">CS</span>
-                                </div>
+                              </div>
+                              <div className="match-player-row__cs">
+                                <span className="score">{playerCs}</span>
+                                <span className="label">CS</span>
                               </div>
                             </div>
                           );
