@@ -1,8066 +1,4170 @@
-export const CHAMPION_OVERRIDES = {
+export const championOverrides = {
     "Aatrox": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3074",
-                                "name": "Ravenous Hydra"
-                        },
-                        {
-                                "id": "6630",
-                                "name": "Goredrinker"
-                        },
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3161", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "6699", name: "Item" },
+            ],
+            situational: [
+                { id: "6694", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "6333", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Ahri": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Tempest"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        },
-                        {
-                                "id": "3102",
-                                "name": "Banshee's Veil"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3118", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4628", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Akali": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3152",
-                                "name": "Hextech Rocketbelt"
-                        },
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        },
-                        {
-                                "id": "3100",
-                                "name": "Lich Bane"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "4646", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Domination",
+            secondary: "Resolve"
         }
-},
+    },
     "Akshan": {
-        "role": "Marksman",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6671",
-                                "name": "Galeforce"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        },
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3153",
-                                "name": "Blade of the Ruined King"
-                        },
-                        {
-                                "id": "3046",
-                                "name": "Phantom Dancer"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3087", name: "Item" },
+                { id: "3010", name: "Item" },
+                { id: "6676", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3094", name: "Item" },
+                { id: "6673", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Domination"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Alistar": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3110",
-                                "name": "Frozen Heart"
-                        },
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3869", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3107", name: "Item" },
+            ],
+            situational: [
+                { id: "3190", name: "Item" },
+                { id: "3050", name: "Item" },
+                { id: "3109", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Sorcery"
         }
-},
+    },
+    "Ambessa": {
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
+        ],
+        items: {
+            core: [
+                { id: "6692", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3161", name: "Item" },
+            ],
+            situational: [
+                { id: "6333", name: "Item" },
+                { id: "3156", name: "Item" },
+                { id: "3053", name: "Item" },
+            ],
+        },
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
+        }
+    },
     "Amumu": {
-        "role": "Tank",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerSmite",
-                        "name": "Smite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6662",
-                                "name": "Iceborn Gauntlet"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "8020",
-                                "name": "Abyssal Mask"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6653", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "3068", name: "Item" },
+            ],
+            situational: [
+                { id: "8020", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3110", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Domination"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Anivia": {
-        "role": "Mage",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6657",
-                                "name": "Rod of Ages"
-                        },
-                        {
-                                "id": "3003",
-                                "name": "Archangel's Staff"
-                        },
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        },
-                        {
-                                "id": "6653",
-                                "name": "Liandry's Torment"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6657", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "3003", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "6653", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3137", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Precision"
+        runes: {
+            primary: "Domination",
+            secondary: "Precision"
         }
-},
+    },
     "Annie": {
-        "role": "Mage",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6653",
-                                "name": "Liandry's Anguish"
-                        },
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3116",
-                                "name": "Rylai's Crystal Scepter"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3118", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4646", name: "Item" },
+            ],
+            situational: [
+                { id: "4645", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Aphelios": {
-        "role": "Marksman",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6671",
-                                "name": "Galeforce"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        },
-                        {
-                                "id": "3004",
-                                "name": "Manamune"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6676", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "6673", name: "Item" },
+                { id: "3085", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Fleet Footwork",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Ashe": {
-        "role": "Marksman",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3085",
-                                "name": "Runaan's Hurricane"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3153",
-                                "name": "Blade of the Ruined King"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        },
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3006", name: "Item" },
+                { id: "6672", name: "Item" },
+                { id: "3046", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3139", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Lethal Tempo",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "AurelionSol": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3116", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "6653", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Aurora": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6655", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+                { id: "3157", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Azir": {
-        "role": "Mage",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6653",
-                                "name": "Liandry's Anguish"
-                        },
-                        {
-                                "id": "3115",
-                                "name": "Nashor's Tooth"
-                        },
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        },
-                        {
-                                "id": "3102",
-                                "name": "Banshee's Veil"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3115", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3135", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Bard": {
-        "role": "Support",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3877", name: "Item" },
+                { id: "3742", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "3107", name: "Item" },
+                { id: "6653", name: "Item" },
+                { id: "3190", name: "Item" },
+                { id: "3091", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Domination",
+            secondary: "Inspiration"
         }
-},
+    },
     "Belveth": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6672", name: "Item" },
+                { id: "6631", name: "Item" },
+                { id: "3111", name: "Item" },
+            ],
+            situational: [
+                { id: "3091", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3302", name: "Item" },
+                { id: "6665", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Blitzcrank": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3869", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3107", name: "Item" },
+            ],
+            situational: [
+                { id: "3190", name: "Item" },
+                { id: "3110", name: "Item" },
+                { id: "3050", name: "Item" },
+                { id: "2065", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Sorcery"
         }
-},
+    },
     "Brand": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3871", name: "Item" },
+                { id: "3116", name: "Item" },
+                { id: "3020", name: "Item" },
+            ],
+            situational: [
+                { id: "6653", name: "Item" },
+                { id: "2503", name: "Item" },
+                { id: "3118", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Domination"
         }
-},
+    },
     "Braum": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3876", name: "Item" },
+                { id: "3190", name: "Item" },
+                { id: "3047", name: "Item" },
+            ],
+            situational: [
+                { id: "3107", name: "Item" },
+                { id: "3109", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "3110", name: "Item" },
+                { id: "4643", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Precision"
         }
-},
+    },
     "Briar": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3153", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3071", name: "Item" },
+            ],
+            situational: [
+                { id: "6333", name: "Item" },
+                { id: "6610", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "2501", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Caitlyn": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6676", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "3094", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Sorcery"
         }
-},
+    },
     "Camille": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerTeleport", name: "Teleport" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3074", name: "Item" },
+            ],
+            situational: [
+                { id: "3161", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "6609", name: "Item" },
+                { id: "2504", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Cassiopeia": {
-        "role": "Mage",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6657", name: "Item" },
+                { id: "3003", name: "Item" },
+                { id: "3116", name: "Item" },
+            ],
+            situational: [
+                { id: "6653", name: "Item" },
+                { id: "4629", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Chogath": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3152", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "4633", name: "Item" },
+            ],
+            situational: [
+                { id: "2502", name: "Item" },
+                { id: "3742", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "4401", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Corki": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3004", name: "Item" },
+            ],
+            situational: [
+                { id: "6676", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Darius": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHaste", name: "Ghost" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3047", name: "Item" },
+                { id: "6631", name: "Item" },
+                { id: "3053", name: "Item" },
+            ],
+            situational: [
+                { id: "3742", name: "Item" },
+                { id: "4401", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Diana": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6653", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "4633", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "DrMundo": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3084", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3742", name: "Item" },
+            ],
+            situational: [
+                { id: "3065", name: "Item" },
+                { id: "3748", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "2501", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Draven": {
-        "role": "Marksman",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3072", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "3036", name: "Item" },
+                { id: "6676", name: "Item" },
+                { id: "3094", name: "Item" },
+                { id: "6673", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Ekko": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3115", name: "Item" },
+                { id: "3100", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3152", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Domination",
+            secondary: "Inspiration"
         }
-},
+    },
     "Elise": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3020", name: "Item" },
+                { id: "4646", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Domination",
+            secondary: "Precision"
         }
-},
+    },
     "Evelynn": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3020", name: "Item" },
+                { id: "3100", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "4646", name: "Item" },
+                { id: "3135", name: "Item" },
+                { id: "3102", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Ezreal": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3004", name: "Item" },
+            ],
+            situational: [
+                { id: "3161", name: "Item" },
+                { id: "6694", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3156", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Fiddlesticks": {
-        "role": "Support",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3152", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3102", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Domination"
         }
-},
+    },
     "Fiora": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3074", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3078", name: "Item" },
+            ],
+            situational: [
+                { id: "6333", name: "Item" },
+                { id: "3181", name: "Item" },
+                { id: "3161", name: "Item" },
+                { id: "3156", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Fizz": {
-        "role": "Assassin",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3100", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "4646", name: "Item" },
+                { id: "3135", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Galio": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6664", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "4633", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Gangplank": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "6676", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "6673", name: "Item" },
+                { id: "6701", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Resolve"
         }
-},
+    },
     "Garen": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3006", name: "Item" },
+                { id: "6631", name: "Item" },
+                { id: "3046", name: "Item" },
+            ],
+            situational: [
+                { id: "3161", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3742", name: "Item" },
+                { id: "6333", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Gnar": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3047", name: "Item" },
+                { id: "3078", name: "Item" },
+                { id: "3071", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "3091", name: "Item" },
+                { id: "3143", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "6665", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Gragas": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6657", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "4629", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Graves": {
-        "role": "Marksman",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3142", name: "Item" },
+                { id: "6676", name: "Item" },
+                { id: "3036", name: "Item" },
+            ],
+            situational: [
+                { id: "6673", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "3156", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Gwen": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3115", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4633", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Hecarim": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerHaste", name: "Ghost" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3158", name: "Item" },
+                { id: "3161", name: "Item" },
+                { id: "3071", name: "Item" },
+            ],
+            situational: [
+                { id: "6333", name: "Item" },
+                { id: "6694", name: "Item" },
+                { id: "3156", name: "Item" },
+                { id: "3053", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Heimerdinger": {
-        "role": "Support",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerExhaust", name: "Exhaust" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "6653", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Hwei": {
-        "role": "Support",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "6653", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3157", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Illaoi": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3071", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "6610", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "6662", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Resolve",
+            secondary: "Precision"
         }
-},
+    },
     "Irelia": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3153", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3181", name: "Item" },
+            ],
+            situational: [
+                { id: "3091", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3110", name: "Item" },
+                { id: "6610", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Ivern": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3158", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "6617", name: "Item" },
+                { id: "3504", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "2065", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Inspiration"
         }
-},
+    },
     "Janna": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "6617", name: "Item" },
+            ],
+            situational: [
+                { id: "3107", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "3222", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Resolve"
         }
-},
+    },
     "JarvanIV": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6698", name: "Item" },
+                { id: "6696", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "3110", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "6694", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Jax": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "6610", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3091", name: "Item" },
+                { id: "3110", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Jayce": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3142", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3004", name: "Item" },
+            ],
+            situational: [
+                { id: "6694", name: "Item" },
+                { id: "3814", name: "Item" },
+                { id: "3161", name: "Item" },
+                { id: "6701", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Inspiration"
         }
-},
+    },
     "Jhin": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3009", name: "Item" },
+                { id: "3142", name: "Item" },
+                { id: "3094", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Jinx": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3032", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "3085", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "6673", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "KSante": {
-        "role": "Tank",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6662", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "2502", name: "Item" },
+            ],
+            situational: [
+                { id: "6665", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "2504", name: "Item" },
+                { id: "3143", name: "Item" },
+                { id: "3110", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Kaisa": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6672", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3124", name: "Item" },
+            ],
+            situational: [
+                { id: "3115", name: "Item" },
+                { id: "3046", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3302", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Kalista": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3006", name: "Item" },
+                { id: "3153", name: "Item" },
+                { id: "3124", name: "Item" },
+            ],
+            situational: [
+                { id: "3302", name: "Item" },
+                { id: "3091", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3085", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Karma": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "6617", name: "Item" },
+            ],
+            situational: [
+                { id: "3107", name: "Item" },
+                { id: "3222", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "2065", name: "Item" },
+                { id: "3504", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Karthus": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Domination",
+            secondary: "Precision"
         }
-},
+    },
     "Kassadin": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6657", name: "Item" },
+                { id: "3118", name: "Item" },
+                { id: "3003", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Domination"
         }
-},
+    },
     "Katarina": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3100", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "4645", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Domination",
+            secondary: "Precision"
         }
-},
+    },
     "Kayle": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3009", name: "Item" },
+                { id: "3115", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
+            situational: [
+                { id: "3100", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3135", name: "Item" },
+                { id: "3116", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
-    "Kayn": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
-        ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
-        },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
-        }
-},
+    },
     "Kennen": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3152", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3135", name: "Item" },
+                { id: "3102", name: "Item" },
+                { id: "3137", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Domination"
         }
-},
+    },
     "Khazix": {
-        "role": "Assassin",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3142", name: "Item" },
+                { id: "6701", name: "Item" },
+                { id: "3814", name: "Item" },
+            ],
+            situational: [
+                { id: "6694", name: "Item" },
+                { id: "6698", name: "Item" },
+                { id: "6695", name: "Item" },
+                { id: "3156", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Domination"
         }
-},
+    },
     "Kindred": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "6676", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3094", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Kled": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3748", name: "Item" },
+                { id: "3181", name: "Item" },
+                { id: "2501", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "3071", name: "Item" },
+                { id: "6610", name: "Item" },
+                { id: "3143", name: "Item" },
+                { id: "6676", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Resolve",
+            secondary: "Precision"
         }
-},
+    },
     "KogMaw": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3006", name: "Item" },
+                { id: "3124", name: "Item" },
+                { id: "3085", name: "Item" },
+            ],
+            situational: [
+                { id: "3091", name: "Item" },
+                { id: "3302", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "6672", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Leblanc": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6655", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3102", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "LeeSin": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6692", name: "Item" },
+                { id: "6610", name: "Item" },
+                { id: "3111", name: "Item" },
+            ],
+            situational: [
+                { id: "3071", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3053", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Leona": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3877", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3190", name: "Item" },
+            ],
+            situational: [
+                { id: "3107", name: "Item" },
+                { id: "3109", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "3110", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Precision"
         }
-},
+    },
     "Lillia": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6653", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "4633", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Lissandra": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3118", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Lucian": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3508", name: "Item" },
+                { id: "6675", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "3071", name: "Item" },
+                { id: "3094", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Lulu": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "3504", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "6617", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "2065", name: "Item" },
+                { id: "3190", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Lux": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3871", name: "Item" },
+                { id: "6655", name: "Item" },
+                { id: "3020", name: "Item" },
+            ],
+            situational: [
+                { id: "4646", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Malphite": {
-        "role": "Tank",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3047", name: "Item" },
+                { id: "3068", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
+            situational: [
+                { id: "3110", name: "Item" },
+                { id: "2504", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "2502", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Sorcery"
         }
-},
+    },
     "Malzahar": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "6653", name: "Item" },
+            ],
+            situational: [
+                { id: "3116", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Inspiration"
         }
-},
+    },
     "Maokai": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3876", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3002", name: "Item" },
+            ],
+            situational: [
+                { id: "3190", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "2502", name: "Item" },
+                { id: "4643", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "MasterYi": {
-        "role": "Assassin",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6672", name: "Item" },
+                { id: "3124", name: "Item" },
+                { id: "3073", name: "Item" },
+            ],
+            situational: [
+                { id: "3153", name: "Item" },
+                { id: "3091", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3748", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
+    "Mel": {
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
+        ],
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "4628", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3157", name: "Item" },
+            ],
+        },
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
+        }
+    },
     "Milio": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "6620", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "6617", name: "Item" },
+                { id: "3504", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "2065", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "MissFortune": {
-        "role": "Marksman",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3072", name: "Item" },
+                { id: "6676", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "3036", name: "Item" },
+                { id: "6694", name: "Item" },
+                { id: "3814", name: "Item" },
+                { id: "3094", name: "Item" },
+                { id: "6673", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Sorcery"
         }
-},
+    },
     "MonkeyKing": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "6610", name: "Item" },
+            ],
+            situational: [
+                { id: "3071", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "6698", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Mordekaiser": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3116", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "4633", name: "Item" },
+            ],
+            situational: [
+                { id: "6653", name: "Item" },
+                { id: "3073", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "6665", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Morgana": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3871", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "6653", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "4628", name: "Item" },
+                { id: "3165", name: "Item" },
+                { id: "3137", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Sorcery"
         }
-},
+    },
     "Naafiri": {
-        "role": "Assassin",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6698", name: "Item" },
+                { id: "6696", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "6694", name: "Item" },
+                { id: "3161", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3814", name: "Item" },
+                { id: "3156", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Nami": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "4005", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "6617", name: "Item" },
+                { id: "3504", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "2065", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Nasus": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHaste", name: "Ghost" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3158", name: "Item" },
+                { id: "3078", name: "Item" },
+                { id: "3110", name: "Item" },
+            ],
+            situational: [
+                { id: "3065", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "3742", name: "Item" },
+                { id: "6610", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Nautilus": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3869", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3107", name: "Item" },
+            ],
+            situational: [
+                { id: "3190", name: "Item" },
+                { id: "3109", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "2504", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Neeko": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3869", name: "Item" },
+                { id: "3152", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3110", name: "Item" },
+                { id: "4646", name: "Item" },
+                { id: "3102", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Inspiration"
         }
-},
+    },
     "Nidalee": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3100", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Nilah": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6676", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "3036", name: "Item" },
+            ],
+            situational: [
+                { id: "6673", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Nocturne": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6631", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3073", name: "Item" },
+            ],
+            situational: [
+                { id: "3071", name: "Item" },
+                { id: "6696", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3814", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Nunu": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6653", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "2504", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "3110", name: "Item" },
+                { id: "3157", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Olaf": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHaste", name: "Ghost" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6631", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "6333", name: "Item" },
+            ],
+            situational: [
+                { id: "6610", name: "Item" },
+                { id: "3156", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3073", name: "Item" },
+                { id: "2501", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Orianna": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4628", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Ornn": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3068", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
+            situational: [
+                { id: "6665", name: "Item" },
+                { id: "2502", name: "Item" },
+                { id: "3143", name: "Item" },
+                { id: "3110", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Pantheon": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3877", name: "Item" },
+                { id: "3010", name: "Item" },
+                { id: "6610", name: "Item" },
+            ],
+            situational: [
+                { id: "3071", name: "Item" },
+                { id: "6692", name: "Item" },
+                { id: "3153", name: "Item" },
+                { id: "3142", name: "Item" },
+                { id: "6333", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Poppy": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3877", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3742", name: "Item" },
+            ],
+            situational: [
+                { id: "3190", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "4401", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "2502", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Domination",
+            secondary: "Inspiration"
         }
-},
+    },
     "Pyke": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3869", name: "Item" },
+                { id: "3010", name: "Item" },
+                { id: "3179", name: "Item" },
+            ],
+            situational: [
+                { id: "3814", name: "Item" },
+                { id: "3142", name: "Item" },
+                { id: "6701", name: "Item" },
+                { id: "4643", name: "Item" },
+                { id: "6696", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Domination",
+            secondary: "Resolve"
         }
-},
+    },
     "Qiyana": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6698", name: "Item" },
+                { id: "6696", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "3814", name: "Item" },
+                { id: "6694", name: "Item" },
+                { id: "6695", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Domination"
         }
-},
+    },
     "Quinn": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3010", name: "Item" },
+                { id: "6698", name: "Item" },
+                { id: "3814", name: "Item" },
+            ],
+            situational: [
+                { id: "6676", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "6695", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Rakan": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3869", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3107", name: "Item" },
+            ],
+            situational: [
+                { id: "3190", name: "Item" },
+                { id: "3050", name: "Item" },
+                { id: "3109", name: "Item" },
+                { id: "2065", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Domination"
         }
-},
+    },
     "Rammus": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerHaste", name: "Ghost" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3047", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "3742", name: "Item" },
+            ],
+            situational: [
+                { id: "6665", name: "Item" },
+                { id: "2502", name: "Item" },
+                { id: "3143", name: "Item" },
+                { id: "8020", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Precision"
         }
-},
+    },
     "RekSai": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6631", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3161", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3071", name: "Item" },
+                { id: "6610", name: "Item" },
+                { id: "3143", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Rell": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3869", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3107", name: "Item" },
+            ],
+            situational: [
+                { id: "3050", name: "Item" },
+                { id: "3190", name: "Item" },
+                { id: "3109", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "4643", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Renata": {
-        "role": "Support",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3876", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3107", name: "Item" },
+            ],
+            situational: [
+                { id: "3190", name: "Item" },
+                { id: "4005", name: "Item" },
+                { id: "2065", name: "Item" },
+                { id: "3109", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Renekton": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6692", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3071", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3161", name: "Item" },
+                { id: "3143", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Rengar": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3142", name: "Item" },
+                { id: "6698", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "3814", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "6701", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Riven": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6696", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "6610", name: "Item" },
+            ],
+            situational: [
+                { id: "6333", name: "Item" },
+                { id: "6694", name: "Item" },
+                { id: "3156", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Rumble": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6653", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "8010", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Ryze": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6657", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "3003", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Samira": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6676", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "3036", name: "Item" },
+            ],
+            situational: [
+                { id: "6673", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3139", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Domination"
         }
-},
+    },
     "Sejuani": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3084", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "2502", name: "Item" },
+            ],
+            situational: [
+                { id: "3075", name: "Item" },
+                { id: "2504", name: "Item" },
+                { id: "3110", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "3068", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Precision"
         }
-},
+    },
     "Senna": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3877", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3071", name: "Item" },
+            ],
+            situational: [
+                { id: "3094", name: "Item" },
+                { id: "6617", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "3107", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Seraphine": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "6617", name: "Item" },
+                { id: "3222", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "3504", name: "Item" },
+                { id: "3165", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Sorcery"
         }
-},
+    },
     "Sett": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6631", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "2501", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "3083", name: "Item" },
+                { id: "3161", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Shaco": {
-        "role": "Assassin",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerSmite", name: "Smite" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "6653", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "6673", name: "Item" },
+                { id: "6699", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Shen": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3748", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3084", name: "Item" },
+            ],
+            situational: [
+                { id: "2502", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "2504", name: "Item" },
+                { id: "6664", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Shyvana": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3161", name: "Item" },
+                { id: "6653", name: "Item" },
+                { id: "3020", name: "Item" },
+            ],
+            situational: [
+                { id: "4633", name: "Item" },
+                { id: "3050", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Singed": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3009", name: "Item" },
+                { id: "3116", name: "Item" },
+                { id: "6653", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "4633", name: "Item" },
+                { id: "3742", name: "Item" },
+                { id: "6665", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Sion": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6664", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "2502", name: "Item" },
+            ],
+            situational: [
+                { id: "3748", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "2501", name: "Item" },
+                { id: "6665", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Sivir": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3032", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "6675", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Skarner": {
-        "role": "Tank",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3084", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "2502", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "2501", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Smolder": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3508", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3161", name: "Item" },
+            ],
+            situational: [
+                { id: "3094", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "6673", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Sona": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3877", name: "Item" },
+                { id: "6620", name: "Item" },
+                { id: "3009", name: "Item" },
+            ],
+            situational: [
+                { id: "6617", name: "Item" },
+                { id: "3003", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "6616", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Soraka": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "6617", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "3107", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "3504", name: "Item" },
+                { id: "4643", name: "Item" },
+                { id: "3190", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Swain": {
-        "role": "Support",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3871", name: "Item" },
+                { id: "3116", name: "Item" },
+                { id: "3020", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "6653", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "3165", name: "Item" },
+                { id: "2502", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Domination",
+            secondary: "Precision"
         }
-},
+    },
     "Sylas": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3152", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Syndra": {
-        "role": "Mage",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "4629", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Sorcery"
         }
-},
+    },
     "TahmKench": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3876", name: "Item" },
+                { id: "3084", name: "Item" },
+                { id: "3111", name: "Item" },
+            ],
+            situational: [
+                { id: "2502", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "4633", name: "Item" },
+                { id: "3083", name: "Item" },
+                { id: "3110", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Precision"
         }
-},
+    },
     "Taliyah": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3158", name: "Item" },
+                { id: "3003", name: "Item" },
+                { id: "3116", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Talon": {
-        "role": "Assassin",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3142", name: "Item" },
+                { id: "6696", name: "Item" },
+                { id: "3158", name: "Item" },
+            ],
+            situational: [
+                { id: "3814", name: "Item" },
+                { id: "6701", name: "Item" },
+                { id: "6694", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Taric": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3190", name: "Item" },
+            ],
+            situational: [
+                { id: "3119", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "3109", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "4643", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Resolve"
         }
-},
+    },
     "Teemo": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3020", name: "Item" },
+                { id: "6653", name: "Item" },
+                { id: "3118", name: "Item" },
+            ],
+            situational: [
+                { id: "4645", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+                { id: "3165", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Thresh": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3109",
-                                "name": "Knight's Vow"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3050",
-                                "name": "Zeke's Convergence"
-                        },
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3193",
-                                "name": "Gargoyle Stoneplate"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3876", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3190", name: "Item" },
+            ],
+            situational: [
+                { id: "3107", name: "Item" },
+                { id: "3109", name: "Item" },
+                { id: "3050", name: "Item" },
+                { id: "4643", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Aftershock",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
     "Tristana": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3032", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "6675", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3139", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Trundle": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3742", name: "Item" },
+            ],
+            situational: [
+                { id: "3065", name: "Item" },
+                { id: "3748", name: "Item" },
+                { id: "3075", name: "Item" },
+                { id: "3143", name: "Item" },
+                { id: "3153", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Tryndamere": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6698", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3036", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3153", name: "Item" },
+                { id: "6694", name: "Item" },
+                { id: "3139", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Resolve",
+            secondary: "Precision"
         }
-},
+    },
     "TwistedFate": {
-        "role": "Mage",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6657", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3100", name: "Item" },
+            ],
+            situational: [
+                { id: "3094", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Resolve"
         }
-},
+    },
     "Twitch": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3032", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3031", name: "Item" },
+            ],
+            situational: [
+                { id: "3085", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Udyr": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6653", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3742", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "2502", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Urgot": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3071", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3053", name: "Item" },
+            ],
+            situational: [
+                { id: "6665", name: "Item" },
+                { id: "2501", name: "Item" },
+                { id: "3742", name: "Item" },
+                { id: "3748", name: "Item" },
+                { id: "2504", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Varus": {
-        "role": "Marksman",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3142", name: "Item" },
+                { id: "3009", name: "Item" },
+                { id: "3004", name: "Item" },
+            ],
+            situational: [
+                { id: "3814", name: "Item" },
+                { id: "3302", name: "Item" },
+                { id: "6694", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "6701", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Inspiration"
         }
-},
+    },
     "Vayne": {
-        "role": "Marksman",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3153", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3124", name: "Item" },
+            ],
+            situational: [
+                { id: "3302", name: "Item" },
+                { id: "3073", name: "Item" },
+                { id: "6665", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3091", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Veigar": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6657", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "3003", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "3137", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3102", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Sorcery"
         }
-},
+    },
     "Velkoz": {
-        "role": "Support",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3871", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4628", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Vex": {
-        "role": "Mage",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6655", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3137", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Vi": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6610", name: "Item" },
+                { id: "3111", name: "Item" },
+                { id: "3071", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3156", name: "Item" },
+                { id: "6692", name: "Item" },
+                { id: "6695", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Viego": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6672", name: "Item" },
+                { id: "6676", name: "Item" },
+                { id: "6673", name: "Item" },
+            ],
+            situational: [
+                { id: "3036", name: "Item" },
+                { id: "3031", name: "Item" },
+                { id: "6333", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Viktor": {
-        "role": "Mage",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "2503", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
+            situational: [
+                { id: "3157", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
     "Vladimir": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHaste", name: "Ghost" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3158", name: "Item" },
+                { id: "4628", name: "Item" },
+                { id: "3089", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "4633", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Precision"
         }
-},
+    },
     "Volibear": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6657", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "6675", name: "Item" },
+            ],
+            situational: [
+                { id: "3065", name: "Item" },
+                { id: "4629", name: "Item" },
+                { id: "2502", name: "Item" },
+                { id: "4633", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Warwick": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6631", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3153", name: "Item" },
+            ],
+            situational: [
+                { id: "3075", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "6665", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Sorcery"
         }
-},
+    },
     "Xayah": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3508", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "6675", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3139", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Xerath": {
-        "role": "Support",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6655", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "4628", name: "Item" },
+                { id: "3135", name: "Item" },
+                { id: "4646", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "XinZhao": {
-        "role": "Fighter",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6610", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "3071", name: "Item" },
+            ],
+            situational: [
+                { id: "3053", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3156", name: "Item" },
+                { id: "3065", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Yasuo": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3006", name: "Item" },
+                { id: "3153", name: "Item" },
+                { id: "6673", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3139", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Yone": {
-        "role": "Fighter",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3006", name: "Item" },
+                { id: "3153", name: "Item" },
+                { id: "6673", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "6333", name: "Item" },
+                { id: "3091", name: "Item" },
+                { id: "6665", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Yorick": {
-        "role": "Fighter",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6610",
-                                "name": "Sundered Sky"
-                        },
-                        {
-                                "id": "3047",
-                                "name": "Plated Steelcaps"
-                        },
-                        {
-                                "id": "3071",
-                                "name": "Black Cleaver"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3053",
-                                "name": "Sterak's Gage"
-                        },
-                        {
-                                "id": "6333",
-                                "name": "Death's Dance"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3047", name: "Item" },
+                { id: "3078", name: "Item" },
+                { id: "3161", name: "Item" },
+            ],
+            situational: [
+                { id: "6694", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "3065", name: "Item" },
+                { id: "4401", name: "Item" },
+                { id: "6609", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Conqueror",
-                "secondary": "Precision"
+        runes: {
+            primary: "Resolve",
+            secondary: "Inspiration"
         }
-},
+    },
+    "Yunara": {
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
+        ],
+        items: {
+            core: [
+                { id: "6672", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3046", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "6673", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3033", name: "Item" },
+                { id: "3072", name: "Item" },
+            ],
+        },
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
+        }
+    },
     "Yuumi": {
-        "role": "Support",
-        "difficulty": "Low",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerExhaust", name: "Exhaust" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3870", name: "Item" },
+                { id: "3504", name: "Item" },
+                { id: "6617", name: "Item" },
+            ],
+            situational: [
+                { id: "3222", name: "Item" },
+                { id: "6621", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "3041", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Resolve"
         }
-},
+    },
+    "Zaahen": {
+        role: "top",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
+        ],
+        items: {
+            core: [
+                { id: "3078", name: "Item" },
+                { id: "3047", name: "Item" },
+                { id: "6610", name: "Item" },
+            ],
+            situational: [
+                { id: "6333", name: "Item" },
+                { id: "3053", name: "Item" },
+                { id: "2501", name: "Item" },
+            ],
+        },
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
+        }
+    },
     "Zac": {
-        "role": "Tank",
-        "difficulty": "High",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "jungle",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerSmite", name: "Smite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3084",
-                                "name": "Heartsteel"
-                        },
-                        {
-                                "id": "3111",
-                                "name": "Mercury's Treads"
-                        },
-                        {
-                                "id": "3068",
-                                "name": "Sunfire Aegis"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3075",
-                                "name": "Thornmail"
-                        },
-                        {
-                                "id": "3065",
-                                "name": "Spirit Visage"
-                        },
-                        {
-                                "id": "6665",
-                                "name": "Jak'Sho, The Protean"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3068", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "3065", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "2502", name: "Item" },
+                { id: "3075", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Grasp of the Undying",
-                "secondary": "Resolve"
+        runes: {
+            primary: "Precision",
+            secondary: "Inspiration"
         }
-},
+    },
     "Zed": {
-        "role": "Assassin",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "3142",
-                                "name": "Youmuu's Ghostblade"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "6699",
-                                "name": "Voltaic Cyclosword"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3814",
-                                "name": "Edge of Night"
-                        },
-                        {
-                                "id": "6694",
-                                "name": "Serylda's Grudge"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6692", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "6699", name: "Item" },
+            ],
+            situational: [
+                { id: "6694", name: "Item" },
+                { id: "3814", name: "Item" },
+                { id: "6696", name: "Item" },
+                { id: "3161", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Domination"
+        runes: {
+            primary: "Inspiration",
+            secondary: "Precision"
         }
-},
+    },
     "Zeri": {
-        "role": "Marksman",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerHeal",
-                        "name": "Heal"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerBarrier", name: "Barrier" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6672",
-                                "name": "Kraken Slayer"
-                        },
-                        {
-                                "id": "3006",
-                                "name": "Berserker's Greaves"
-                        },
-                        {
-                                "id": "3031",
-                                "name": "Infinity Edge"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3036",
-                                "name": "Lord Dominik's Regards"
-                        },
-                        {
-                                "id": "3072",
-                                "name": "Bloodthirster"
-                        },
-                        {
-                                "id": "3026",
-                                "name": "Guardian Angel"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3032", name: "Item" },
+                { id: "3006", name: "Item" },
+                { id: "3085", name: "Item" },
+            ],
+            situational: [
+                { id: "3031", name: "Item" },
+                { id: "6673", name: "Item" },
+                { id: "3036", name: "Item" },
+                { id: "3072", name: "Item" },
+                { id: "3073", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Press the Attack",
-                "secondary": "Precision"
+        runes: {
+            primary: "Precision",
+            secondary: "Resolve"
         }
-},
+    },
     "Ziggs": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "adc",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerTeleport", name: "Teleport" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "6655", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "4628", name: "Item" },
+            ],
+            situational: [
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3041", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Inspiration"
         }
-},
+    },
     "Zilean": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerHeal", name: "Heal" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3876", name: "Item" },
+                { id: "3158", name: "Item" },
+                { id: "2065", name: "Item" },
+            ],
+            situational: [
+                { id: "4005", name: "Item" },
+                { id: "3190", name: "Item" },
+                { id: "3107", name: "Item" },
+                { id: "4629", name: "Item" },
+                { id: "4643", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Domination"
         }
-},
+    },
     "Zoe": {
-        "role": "Mage",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerTeleport",
-                        "name": "Teleport"
-                }
+        role: "mid",
+        spells: [
+            { id: "SummonerFlash", name: "Flash" },
+            { id: "SummonerDot", name: "Ignite" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6655",
-                                "name": "Luden's Companion"
-                        },
-                        {
-                                "id": "3020",
-                                "name": "Sorcerer's Shoes"
-                        },
-                        {
-                                "id": "4645",
-                                "name": "Shadowflame"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3157",
-                                "name": "Zhonya's Hourglass"
-                        },
-                        {
-                                "id": "3089",
-                                "name": "Rabadon's Deathcap"
-                        },
-                        {
-                                "id": "3135",
-                                "name": "Void Staff"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3020", name: "Item" },
+                { id: "6655", name: "Item" },
+                { id: "3100", name: "Item" },
+            ],
+            situational: [
+                { id: "3041", name: "Item" },
+                { id: "3089", name: "Item" },
+                { id: "4645", name: "Item" },
+                { id: "3135", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Electrocute",
-                "secondary": "Sorcery"
+        runes: {
+            primary: "Domination",
+            secondary: "Sorcery"
         }
-},
+    },
     "Zyra": {
-        "role": "Support",
-        "difficulty": "Moderate",
-        "spells": [
-                {
-                        "id": "SummonerFlash",
-                        "name": "Flash"
-                },
-                {
-                        "id": "SummonerIgnite",
-                        "name": "Ignite"
-                }
+        role: "support",
+        spells: [
+            { id: "SummonerExhaust", name: "Exhaust" },
+            { id: "SummonerFlash", name: "Flash" },
         ],
-        "items": {
-                "core": [
-                        {
-                                "id": "6617",
-                                "name": "Moonstone Renewer"
-                        },
-                        {
-                                "id": "3158",
-                                "name": "Ionian Boots of Lucidity"
-                        },
-                        {
-                                "id": "3504",
-                                "name": "Ardent Censer"
-                        }
-                ],
-                "situational": [
-                        {
-                                "id": "3190",
-                                "name": "Locket of the Iron Solari"
-                        },
-                        {
-                                "id": "3107",
-                                "name": "Redemption"
-                        },
-                        {
-                                "id": "3222",
-                                "name": "Mikael's Blessing"
-                        }
-                ]
+        items: {
+            core: [
+                { id: "3871", name: "Item" },
+                { id: "3020", name: "Item" },
+                { id: "6653", name: "Item" },
+            ],
+            situational: [
+                { id: "3116", name: "Item" },
+                { id: "3157", name: "Item" },
+                { id: "3165", name: "Item" },
+                { id: "4645", name: "Item" },
+            ],
         },
-        "runes": {
-                "primary": "Summon Aery",
-                "secondary": "Inspiration"
+        runes: {
+            primary: "Sorcery",
+            secondary: "Domination"
         }
-}
+    },
 };
