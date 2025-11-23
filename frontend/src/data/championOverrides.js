@@ -1,4 +1,4 @@
-export const championOverrides = {
+export const CHAMPION_OVERRIDES = {
     "Aatrox": {
         role: "top",
         spells: [
