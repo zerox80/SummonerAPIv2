@@ -363,34 +363,6 @@
 
 .match-card__team-body {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-/* Player Row */
-.match-player-row {
-  display: grid;
-  grid-template-columns: 110px auto 60px 1fr auto;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.02);
-  transition: background 0.2s;
-}
-
-.match-player-row:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.match-player-row.is-self {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.match-player-row__champion {
-  display: flex;
-  align-items: center;
   gap: 0.75rem;
 }
 
