@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/champions/champion-build-override.css';
+import '../../styles/champions/champion-build-override.css';
 
 const SPELL_ICONS = {
     "Flash": "http://ddragon.leagueoflegends.com/cdn/14.19.1/img/spell/SummonerFlash.png",
