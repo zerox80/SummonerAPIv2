@@ -4,7 +4,7 @@ import Tag from '../../components/Tag.jsx';
 import '../../styles/summoner/top-champions.css';
 
 function enrichChampions(championPlayCounts, matches, summoner, championSquares, bases) {
-  if (!championPlayCounts || !matches || !summoner) return [];
+  if (!Array.isArray(championPlayCounts) || !Array.isArray(matches) || !summoner) return [];
 
   return championPlayCounts.map((champ) => {
     const champMatches = matches.filter((m) => {
@@ -54,7 +54,7 @@ export default function TopChampions({ championPlayCounts, matches, summoner, ch
     [championPlayCounts, matches, summoner, championSquares, bases]
   );
 
-  if (!enrichedChampions || enrichedChampions.length === 0) {
+  if (!Array.isArray(enrichedChampions) || enrichedChampions.length === 0) {
     return (
       <section className="top-champions glass-panel">
         <div className="top-champions__empty">

@@ -47,7 +47,7 @@ function classifyWinrate(winrate) {
 
 
 export default function RankedOverview({ entries, bases }) {
-  if (!entries || entries.length === 0) {
+  if (!Array.isArray(entries) || entries.length === 0) {
     return (
       <section className="ranked-overview glass-panel">
         <div className="ranked-overview__empty">
