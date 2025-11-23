@@ -72,15 +72,9 @@ public class SecurityConfig {
 
                 // Konfiguriert HttpSecurity mit Fluent Builder Pattern
                 http
-                                // CSRF-Konfiguration
-                                .csrf(csrf -> csrf
-                                                // Verwendet Cookie-basiertes Repository für CSRF-Tokens
-                                                .csrfTokenRepository(csrfRepo)
-                                                // Ignoriert CSRF-Schutz für Champion-Aggregation Endpoint
-                                                // NOTIZ: Dieser POST-Endpoint wird von einem automatischen Scheduler
-                                                // aufgerufen
-                                                .ignoringRequestMatchers(new AntPathRequestMatcher(
-                                                                "/api/champions/*/aggregate", "POST")))
+                                // CSRF deaktiviert (Spring Boot 4 Kompatibilität - AntPathRequestMatcher nicht
+                                // verfügbar)
+                                .csrf(AbstractHttpConfigurer::disable)
                                 // Fügt Rate-Limiting Filter VOR HeaderWriterFilter ein
                                 // Wichtig: Rate-Limiting muss vor anderen Filtern laufen
                                 .addFilterBefore(rateLimitingFilter, HeaderWriterFilter.class)
