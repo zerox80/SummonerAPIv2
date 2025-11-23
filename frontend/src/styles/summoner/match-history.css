@@ -1,146 +1,163 @@
+/* Match History Container */
 .match-history {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  /* Ensure font is applied */
-}
-
-.match-history__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 1rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.match-history__header h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 0.25rem 0 0;
-}
-
-.match-history__filters {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.match-history__list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.match-history__empty {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: rgba(255, 255, 255, 0.4);
+/* Match Card */
+.match-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  transition: all 0.2s ease;
 }
 
-.match-history__empty p {
-  font-size: 1.25rem;
+.match-card:hover {
+  border-color: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-.match-card.is-win {
+.match-card.is-victory {
   border-left: 4px solid #10b981;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0) 100%);
 }
 
-.match-card.is-loss {
+.match-card.is-defeat {
   border-left: 4px solid #ef4444;
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0) 100%);
 }
 
+/* Summary Section */
 .match-card__summary {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 120px 1fr auto;
   align-items: center;
   padding: 1rem 1.5rem;
   gap: 1.5rem;
   cursor: pointer;
 }
 
-/* Champion & Outcome */
-.match-card__champion {
+.match-card__main-info {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
+.match-card__champion {
+  position: relative;
+}
+
 .match-card__champion img {
   width: 48px;
   height: 48px;
-  border-radius: 8px;
-  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.match-card__level {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: #1e293b;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 1px 4px;
+  border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.match-card__champion-meta {
+.match-card__info {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.match-card__champion-name {
+.match-card__result {
   font-weight: 700;
-  color: #fff;
-  font-size: 1rem;
-}
-
-/* Summary Body */
-.match-card__summary-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.match-card__meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.match-card__queue {
-  font-weight: 600;
-  color: #fff;
-}
-
-.match-card__separator {
-  opacity: 0.3;
-}
-
-.match-card__stat-group {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.match-card__stat {
-  display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
-}
-
-.match-card__stat .label {
-  font-size: 0.75rem;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
 }
 
-.match-card__stat .value {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #e2e8f0;
+.match-card.is-victory .match-card__result {
+  color: #10b981;
 }
 
-.match-card__stat .sub {
+.match-card.is-defeat .match-card__result {
+  color: #ef4444;
+}
+
+.match-card__duration {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.5);
-  margin-left: 0.2rem;
+}
+
+/* KDA & Stats */
+.match-card__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.match-card__kda {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.match-card__kda-ratio {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.match-card__kda-ratio span {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Items */
+.match-card__items-preview {
+  display: flex;
+  gap: 2px;
+}
+
+.match-card__item-preview {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.match-card__item-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Meta Info */
+.match-card__meta-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  text-align: right;
+}
+
+.match-card__mode {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.match-card__date {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* Toggle Chevron */
@@ -299,7 +316,21 @@
 
 .match-card__detail-stat .value {
   font-size: 0.9rem;
-  gap: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Scoreboard */
+.match-card__scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.match-card__team {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .match-card__team-header {
@@ -339,10 +370,10 @@
 /* Player Row */
 .match-player-row {
   display: grid;
-  grid-template-columns: 120px auto 70px 1fr auto;
+  grid-template-columns: 110px auto 60px 1fr auto;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem;
+  gap: 0.35rem;
+  padding: 0.25rem;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.02);
   transition: background 0.2s;
@@ -478,7 +509,6 @@
 }
 
 /* Responsive */
-/* Responsive */
 @media (max-width: 1024px) {
   .match-card__scoreboard {
     grid-template-columns: 1fr;
@@ -560,8 +590,10 @@
     grid-area: champ;
   }
 
-  .match-card__summary-body {
+  .match-card__meta-info {
     grid-area: meta;
+    align-items: flex-start;
+    text-align: left;
   }
 
   .match-card__toggle {
