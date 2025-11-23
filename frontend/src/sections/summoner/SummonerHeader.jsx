@@ -39,10 +39,7 @@ export default function SummonerHeader({ profile, derived }) {
             <p className="label">Account Region</p>
             <p className="value">{profile?.summoner?.region ? profile.summoner.region.toUpperCase() : '—'}</p>
           </div>
-          <div>
-            <p className="label">Overall W/L</p>
-            <p className="value">{derived.totalWins}W / {derived.totalLosses}L</p>
-          </div>
+
           <div>
             <p className="label">Avg KDA</p>
             <p className="value">{derived.avgKda}</p>
@@ -79,8 +76,7 @@ SummonerHeader.propTypes = {
     primaryRole: PropTypes.string
   }),
   derived: PropTypes.shape({
-    totalWins: PropTypes.number,
-    totalLosses: PropTypes.number,
+
     avgKda: PropTypes.string,
     kdaRatio: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     avgCsPerMin: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
