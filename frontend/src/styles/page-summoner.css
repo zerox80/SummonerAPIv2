@@ -12,24 +12,6 @@
   margin-inline: auto;
 }
 
-.summoner-page__main {
-  display: grid;
-  gap: clamp(1.15rem, 3vw, 1.8rem);
-  min-width: 0;
-}
-
-.summoner-page__aside {
-  display: grid;
-  gap: clamp(1.1rem, 3vw, 1.6rem);
-  align-content: start;
-  min-width: 0;
-  z-index: 1;
-}
-
-.summoner-page__aside>* {
-  min-width: 0;
-}
-
 @media (min-width: 1350px) {
   .summoner-page__grid {
     grid-template-columns: minmax(0, 1fr) clamp(320px, 24vw, 420px);
