@@ -1,0 +1,99 @@
+.champion-build-override {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background: rgba(20, 20, 30, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+}
+
+.build-section-title {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.spells-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.spell-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spell-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.spell-name {
+  font-size: 0.75rem;
+  color: #e0e0e0;
+}
+
+.items-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.item-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 80px;
+}
+
+.item-icon-wrapper {
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.item-icon-wrapper:hover {
+  transform: translateY(-4px);
+}
+
+.item-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.3); /* Gold tint */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.item-name {
+  font-size: 0.75rem;
+  text-align: center;
+  color: #ccc;
+  line-height: 1.2;
+}
+
+.runes-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+.rune-primary {
+    color: #d4af37; /* Gold-ish */
+}
+
+.rune-secondary {
+    color: #a0a0a0;
+}
