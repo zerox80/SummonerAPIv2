@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width="1203" height="851" alt="image" src="https://github.com/user-attachments/assets/e893494c-886f-49be-948f-d387ac8602a3" />
+<img width="1642" height="700" alt="image" src="https://github.com/user-attachments/assets/97808ebe-2a9b-47b1-868a-35bb4b5df19f" />
 
 **A modern, high-performance League of Legends statistics and analytics platform**
 
