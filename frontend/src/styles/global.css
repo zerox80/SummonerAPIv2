@@ -40,34 +40,6 @@
   --bg-body: #050918;
   --bg-elevated: rgba(13, 19, 43, 0.78);
   --bg-card: rgba(17, 24, 65, 0.68);
-  --bg-card-strong: rgba(24, 34, 84, 0.82);
-  --text-primary: rgba(241, 245, 255, 0.98);
-  --text-secondary: rgba(226, 232, 255, 0.75);
-  --text-muted: rgba(191, 202, 255, 0.55);
-  --accent: linear-gradient(135deg, #6366f1 0%, #38bdf8 50%, #22d3ee 100%);
-  --accent-solid: #6366f1;
-  --accent-soft: rgba(99, 102, 241, 0.22);
-  --accent-ring: rgba(59, 130, 246, 0.42);
-  --border-subtle: rgba(148, 163, 255, 0.12);
-  --transparent-wash: rgba(13, 23, 55, 0.45);
-}
-
-/* Slight global "zoom out" via font scaling (affects rem-based sizes) */
-html {
-  font-size: clamp(15px, 0.9vw + 13px, 16px);
-  scrollbar-gutter: stable;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
   background: var(--bg-body);
   color: var(--text-primary);
   transition: background var(--duration-base) ease, color var(--duration-base) ease;
