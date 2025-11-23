@@ -62,7 +62,7 @@ services:
       UI_MATCHES_MAX_PAGE_SIZE: ${UI_MATCHES_MAX_PAGE_SIZE:-40}
       UI_MATCHES_MAX_START_OFFSET: ${UI_MATCHES_MAX_START_OFFSET:-1000}
     ports:
-      - "${APP_HTTP_PORT:-8080}:8080"
+      - "127.0.0.1:${APP_HTTP_PORT:-8080}:8080"
     restart: unless-stopped
 
 volumes:
