@@ -143,5 +143,3 @@ temp/
 
 # U.GG Scraper and temporary data files
 scripts/scrape_ugg_builds.py
-temp_ugg.html
-ugg_data.json
