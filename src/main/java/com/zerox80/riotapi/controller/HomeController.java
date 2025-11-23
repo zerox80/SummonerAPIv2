@@ -45,7 +45,8 @@ public class HomeController {
     // Catch-all mapping for SPA routes (enables F5/refresh on client-side routes)
     // This forwards all non-API, non-static requests to index.html
     // Necessary for SPA routing to work correctly when accessing routes directly
-    @GetMapping(value = "/{path:[^\\.]*}", produces = MediaType.TEXT_HTML_VALUE)
+    // Updated to support deep paths (e.g. /champions/Anivia)
+    @GetMapping(value = { "/{path:[^\\.]*}", "/**/{path:[^\\.]*}" }, produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody
     /**
      * Serves the index.html file for all SPA routes.
