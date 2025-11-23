@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import ThemeToggle from './ThemeToggle.jsx';
 import '../styles/bottom-navigation.css';
 
 // Icons - using simple SVG components
@@ -58,7 +57,7 @@ const BottomNavigation = ({ currentSection, onSearchClick }) => {
       </button>
 
       <div className="bottom-nav__item">
-        <ThemeToggle />
+        {/* ThemeToggle removed */}
       </div>
     </nav>
   );

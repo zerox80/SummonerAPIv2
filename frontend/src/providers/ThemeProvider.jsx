@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const ThemeContext = createContext({
   mode: 'dark',
-  toggle: () => {}
+  toggle: () => { }
 });
 
 const STORAGE_KEY = 'summonerapi-theme';
@@ -24,28 +24,18 @@ function getInitialMode() {
 
 
 export default function ThemeProvider({ children }) {
-  const [mode, setMode] = useState(getInitialMode);
+  const [mode] = useState('dark');
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
-    root.classList.add(mode);
-    window.localStorage.setItem(STORAGE_KEY, mode);
-  }, [mode]);
-
-  useEffect(() => {
-    const media = window.matchMedia(MEDIA_QUERY);
-    const handler = (event) => {
-      setMode(event.matches ? 'dark' : 'light');
-    };
-    media.addEventListener('change', handler);
-    return () => media.removeEventListener('change', handler);
+    root.classList.add('dark');
   }, []);
 
   const value = useMemo(() => ({
-    mode,
-    toggle: () => setMode((prev) => (prev === 'dark' ? 'light' : 'dark'))
-  }), [mode]);
+    mode: 'dark',
+    toggle: () => { } // No-op
+  }), []);
 
   return (
     <ThemeContext.Provider value={value}>

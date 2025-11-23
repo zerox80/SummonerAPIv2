@@ -1,8 +1,6 @@
-
 import PropTypes from 'prop-types';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useMemo, useState, useEffect } from 'react';
-import ThemeToggle from '../components/ThemeToggle.jsx';
 import BrandMark from '../components/BrandMark.jsx';
 import HamburgerMenu from '../components/HamburgerMenu.jsx';
 import MobileNavigation from '../components/MobileNavigation.jsx';
@@ -23,7 +21,7 @@ const NAV_LINKS = [
 export default function ShellLayout({ children }) {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isMobile, isTablet, isTouch } = useMobileDetection();
+  const { isMobile } = useMobileDetection();
 
   // Close mobile menu when switching to desktop
   useEffect(() => {
@@ -116,7 +114,7 @@ export default function ShellLayout({ children }) {
           </nav>
           <div className="app-shell__actions">
             {activeLabel && <span className="app-shell__context gradient-text">{activeLabel}</span>}
-            <ThemeToggle />
+            {/* ThemeToggle removed */}
           </div>
         </div>
       </header>
