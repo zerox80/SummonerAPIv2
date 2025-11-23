@@ -53,7 +53,10 @@
 }
 
 /* Slight global "zoom out" via font scaling (affects rem-based sizes) */
-html { font-size: clamp(15px, 0.9vw + 13px, 16px); }
+html {
+  font-size: clamp(15px, 0.9vw + 13px, 16px);
+  scrollbar-gutter: stable;
+}
 
 * {
   box-sizing: border-box;
@@ -285,15 +288,18 @@ textarea {
   0% {
     box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.35);
   }
+
   70% {
     box-shadow: 0 0 0 12px rgba(99, 102, 241, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
   }
 }
 
 @media (max-width: 960px) {
+
   .layout-wide,
   .layout-desktop {
     width: 92vw;
