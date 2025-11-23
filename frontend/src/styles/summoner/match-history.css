@@ -299,20 +299,6 @@
 
 .match-card__detail-stat .value {
   font-size: 0.9rem;
-  font-weight: 600;
-  color: #fff;
-}
-
-/* Scoreboard */
-.match-card__scoreboard {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-.match-card__team {
-  display: flex;
-  flex-direction: column;
   gap: 0.75rem;
 }
 
