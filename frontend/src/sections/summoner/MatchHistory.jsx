@@ -341,10 +341,8 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
                       className={`match-card__team ${team.teamId === participant.teamId ? 'is-ally' : 'is-enemy'}`}
                     >
                       <div className="match-card__team-header">
-                        <div>
-                          <p className="match-card__team-label">{team.teamId === 100 ? 'Blue Team' : 'Red Team'}</p>
-                          <span className="match-card__team-result">{team.won ? 'Victory' : 'Defeat'} · {team.totalKills} Kills</span>
-                        </div>
+                        <p className="match-card__team-label">{team.teamId === 100 ? 'Blue Team' : 'Red Team'}</p>
+                        <span className="match-card__team-result">{team.won ? 'Victory' : 'Defeat'} · {team.totalKills} Kills</span>
                       </div>
                       <div className="match-card__team-body">
                         {team.players.map((player) => {

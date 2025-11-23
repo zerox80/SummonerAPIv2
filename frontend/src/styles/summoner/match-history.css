@@ -382,21 +382,6 @@
 }
 
 .match-card__team {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.match-card__team-header {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.match-card__team-label {
-  font-size: 0.85rem;
-  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0;
@@ -646,13 +631,247 @@
   }
 
   .match-card__meta-info {
-    grid-area: meta;
-    align-items: flex-start;
-    text-align: left;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .match-card__toggle {
-    grid-area: toggle;
-    justify-self: end;
+  .match-player-row__identity {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
-}
+
+  .match-player-row__identity .name {
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+  }
+
+  .match-player-row__identity .name--link:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .match-player-row__identity .role {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .match-player-row__spells {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .match-player-row__spell {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .match-player-row__spell img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .match-player-row__kda {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .match-player-row__kda .score {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .match-player-row__kda .ratio {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .match-player-row__items {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .match-player-row__item {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .match-player-row__item.is-empty {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .match-player-row__item img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .match-player-row__item--trinket {
+    border-radius: 50%;
+    margin-left: 4px;
+  }
+
+  .match-player-row__cs {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 40px;
+  }
+
+  .match-player-row__cs .score {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .match-player-row__cs .label {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .match-card__scoreboard {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .match-card__detail-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .match-card__summary {
+      grid-template-columns: auto 1fr auto;
+      gap: 0.75rem;
+      padding: 1rem;
+    }
+
+    .match-card__main-info {
+      gap: 0.75rem;
+    }
+
+    .match-card__champion img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .match-card__stat-group {
+      display: none;
+      /* Hide detailed stats on very small screens to save space */
+    }
+
+    .match-card__meta {
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+    }
+
+    .match-player-row {
+      display: flex;
+      /* Switch to flex for easier wrapping on mobile */
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    .match-player-row__champion {
+      flex: 1 1 auto;
+      min-width: 120px;
+    }
+
+    .match-player-row__kda {
+      flex: 0 0 auto;
+      flex-direction: row;
+      gap: 0.5rem;
+      align-items: baseline;
+    }
+
+    .match-player-row__items {
+      display: none;
+      /* Hide items on mobile to reduce clutter */
+    }
+
+    .match-player-row__cs,
+    .match-player-row__spells {
+      display: none;
+      /* Hide secondary details on mobile */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .match-card__summary {
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "champ meta"
+        "champ toggle";
+    }
+
+    .match-card__champion {
+      grid-area: champ;
+    }
+
+    .match-card__meta-info {
+      grid-area: meta;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .match-card__toggle {
+      grid-area: toggle;
+      justify-self: end;
+    }
+  }
+
+  /* Desktop Mirroring for Enemy Team */
+  @media (min-width: 1025px) {
+    .match-card__team.is-enemy .match-card__team-header {
+      flex-direction: row-reverse;
+    }
+
+    .match-card__team.is-enemy .match-player-row {
+      grid-template-columns: auto 1fr 60px auto 110px;
+    }
+
+    .match-card__team.is-enemy .match-player-row__champion {
+      order: 5;
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+
+    .match-card__team.is-enemy .match-player-row__identity {
+      align-items: flex-end;
+    }
+
+    .match-card__team.is-enemy .match-player-row__spells {
+      order: 4;
+    }
+
+    .match-card__team.is-enemy .match-player-row__kda {
+      order: 3;
+    }
+
+    .match-card__team.is-enemy .match-player-row__items {
+      order: 2;
+      justify-content: flex-end;
+    }
+
+    .match-card__team.is-enemy .match-player-row__cs {
+      order: 1;
+      align-items: flex-start;
+    }
+  }
