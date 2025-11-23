@@ -134,7 +134,7 @@ export const CHAMPION_OVERRIDES = {
             ],
             situational: [
                 { id: "3111", name: "Mercury's Treads" },
-                { id: "3001", name: "Abyssal Mask" },
+                { id: "8020", name: "Abyssal Mask" },
                 { id: "3193", name: "Gargoyle Stoneplate" }
             ]
         },
@@ -159,7 +159,7 @@ export const CHAMPION_OVERRIDES = {
             situational: [
                 { id: "3089", name: "Rabadon's Deathcap" },
                 { id: "3135", name: "Void Staff" },
-                { id: "3151", name: "Liandry's Torment" }
+                { id: "6653", name: "Liandry's Torment" }
             ]
         },
         runes: {
