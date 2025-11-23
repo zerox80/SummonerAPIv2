@@ -17,17 +17,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 // Import für SecurityFilterChain - definiert Security-Filter-Kette
 import org.springframework.security.web.SecurityFilterChain;
-// Import für CookieCsrfTokenRepository - speichert CSRF-Token in Cookie
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 // Import für HeaderWriterFilter - filtert und schreibt Security-Header
 import org.springframework.security.web.header.HeaderWriterFilter;
 // Import für ReferrerPolicyHeaderWriter - setzt Referrer-Policy Header
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 // Import für StaticHeadersWriter - schreibt statische HTTP-Header
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
-// Import für RequestMatcher - matched Request-Pfade
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 // Import für ForwardedHeaderFilter - verarbeitet X-Forwarded-* Header
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
@@ -63,13 +58,6 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http, RateLimitingFilter rateLimitingFilter)
                         throws Exception {
-                // Erstellt Cookie-basiertes CSRF-Token-Repository
-                // SICHERHEIT: Schützt gegen Cross-Site Request Forgery Angriffe
-                CookieCsrfTokenRepository csrfRepo = new CookieCsrfTokenRepository();
-                // Setzt HttpOnly-Flag auf CSRF-Cookie
-                // SICHERHEIT: JavaScript kann Cookie nicht auslesen (XSS-Schutz)
-                csrfRepo.setCookieHttpOnly(true);
-
                 // Konfiguriert HttpSecurity mit Fluent Builder Pattern
                 http
                                 // CSRF deaktiviert (Spring Boot 4 Kompatibilität - AntPathRequestMatcher nicht
