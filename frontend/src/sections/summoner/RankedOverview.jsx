@@ -82,33 +82,29 @@ export default function RankedOverview({ entries, bases }) {
   return (
     <section className="ranked-overview glass-panel">
       <header className="ranked-overview__header">
-        <div className="ranked-overview__title">
-          <p className="badge-soft">Ranked Snapshot</p>
-          <h3>Competitive Performance</h3>
-          <p>Track your ladder position across queues at a glance.</p>
+        <div className="ranked-overview__title-group">
+          <span className="badge-soft">Ranked Season</span>
+          <h3>Competitive Overview</h3>
         </div>
-        <ul className="ranked-overview__metrics" aria-label="Ranked overview metrics">
-          <li className="ranked-overview__metric">
-            <span className="ranked-overview__metric-label">Highest Rank</span>
-            <span className="ranked-overview__metric-value">{highestRankLabel}</span>
-          </li>
-          <li className="ranked-overview__metric">
-            <span className="ranked-overview__metric-label">Total Games</span>
-            <span className="ranked-overview__metric-value">{totalGames}</span>
-          </li>
-          <li className="ranked-overview__metric">
-            <span className="ranked-overview__metric-label">Overall WR</span>
-            <span className={`ranked-overview__metric-value ranked-overview__metric-value--${winrateClass}`}>
+        <div className="ranked-overview__global-stats">
+          <div className="global-stat">
+            <span className="label">Peak Rank</span>
+            <span className="value">{highestRankLabel}</span>
+          </div>
+          <div className="global-stat">
+            <span className="label">Total Games</span>
+            <span className="value">{totalGames}</span>
+          </div>
+          <div className="global-stat">
+            <span className="label">Win Rate</span>
+            <span className={`value value--${winrateClass}`}>
               {totalGames > 0 ? `${overallWinrate}%` : '—'}
             </span>
-          </li>
-          <li className="ranked-overview__metric">
-            <span className="ranked-overview__metric-label">Queues Tracked</span>
-            <span className="ranked-overview__metric-value">{entries.length}</span>
-          </li>
-        </ul>
+          </div>
+        </div>
       </header>
-      <div className="ranked-overview__list">
+
+      <div className="ranked-overview__grid">
         {entries.map((entry) => {
           const crest = crestForTier(entry.tier);
           const extension = crest === 'emerald' ? 'svg' : 'png';
@@ -120,50 +116,63 @@ export default function RankedOverview({ entries, bases }) {
 
           return (
             <article key={`${entry.queueType}-${entry.tier}-${entry.rank}`} className="ranked-card">
-              <div className="ranked-card__row">
-                <div className="ranked-card__heading">
-                  <div className="ranked-card__crest">
-                    <img src={icon} alt={`${entry.tier} Crest`} loading="lazy" />
-                  </div>
-                  <div className="ranked-card__content">
-                    <span className="ranked-card__queue">{queueLabel}</span>
-                    <p className="ranked-card__rank">{formatRank(entry.tier, entry.rank, entry.leaguePoints)}</p>
-                  </div>
-                </div>
-                <span className={`ranked-card__indicator ranked-card__indicator--${entryWinrateClass}`}>
-                  {formatWinrate(entry.wins, entry.losses)}
-                </span>
-              </div>
-              <div className="ranked-card__meta">
-                <div>
-                  <span className="ranked-card__label">Games</span>
-                  <span className="ranked-card__value">{gamesPlayed}</span>
-                </div>
-                <div>
-                  <span className="ranked-card__label">Wins</span>
-                  <span className="ranked-card__value">{entry.wins ?? 0}</span>
-                </div>
-                <div>
-                  <span className="ranked-card__label">Losses</span>
-                  <span className="ranked-card__value">{entry.losses ?? 0}</span>
-                </div>
-                <div>
-                  <span className="ranked-card__label">Current LP</span>
-                  <span className="ranked-card__value">{`${entry.leaguePoints ?? 0} LP`}</span>
+              <div className="ranked-card__visual">
+                <div className="ranked-card__crest-container">
+                  <img src={icon} alt={`${entry.tier} Crest`} loading="lazy" className="ranked-card__crest-img" />
+                  <div className="ranked-card__crest-glow" style={{ backgroundColor: getTierColor(entry.tier) }} />
                 </div>
               </div>
-              {(entry.lpGain != null || entry.lpLoss != null) && (
-                <div className="ranked-card__lp">
-                  {entry.lpGain != null && <span className="positive">+{entry.lpGain} LP last win</span>}
-                  {entry.lpLoss != null && <span className="negative">-{entry.lpLoss} LP last loss</span>}
+
+              <div className="ranked-card__info">
+                <div className="ranked-card__header">
+                  <span className="ranked-card__queue">{queueLabel}</span>
+                  <div className={`ranked-card__winrate tag-${entryWinrateClass}`}>
+                    {entryWinrate}% WR
+                  </div>
                 </div>
-              )}
+
+                <h4 className="ranked-card__rank-title">
+                  {entry.tier} {entry.rank}
+                </h4>
+                <span className="ranked-card__lp-value">{entry.leaguePoints} LP</span>
+
+                <div className="ranked-card__stats-row">
+                  <div className="stat-item">
+                    <span className="stat-val">{entry.wins}</span>
+                    <span className="stat-lbl">W</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-val">{entry.losses}</span>
+                    <span className="stat-lbl">L</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-val">{gamesPlayed}</span>
+                    <span className="stat-lbl">Games</span>
+                  </div>
+                </div>
+              </div>
             </article>
           );
         })}
       </div>
     </section>
   );
+}
+
+function getTierColor(tier) {
+  const colors = {
+    IRON: '#a19bd9',
+    BRONZE: '#cd7f32',
+    SILVER: '#c0c0c0',
+    GOLD: '#ffd700',
+    PLATINUM: '#00ced1',
+    EMERALD: '#50c878',
+    DIAMOND: '#b9f2ff',
+    MASTER: '#ff00ff',
+    GRANDMASTER: '#ff4500',
+    CHALLENGER: '#f0e68c'
+  };
+  return colors[tier?.toUpperCase()] || '#ffffff';
 }
 
 RankedOverview.propTypes = {

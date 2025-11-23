@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import SegmentedControl from '../../components/SegmentedControl.jsx';
 import Tag from '../../components/Tag.jsx';

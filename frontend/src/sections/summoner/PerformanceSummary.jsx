@@ -66,12 +66,10 @@ export default function PerformanceSummary({ derived, matches, summoner, range =
 
   const rangeSummary = useMemo(() => {
     if (activeRange === 'all') {
-      return 'Showing all recorded matches';
+      return 'All matches';
     }
-    return `Showing the last ${activeRange} matches`;
+    return `Last ${activeRange} matches`;
   }, [activeRange]);
-
-  const rangeQualifier = activeRange === 'all' ? 'All matches' : `Last ${activeRange}`;
 
   const winSpark = timeline.map((entry) => (entry.win ? 1 : -1));
   const kdaSpark = timeline.map((entry) => Number(entry.kda.toFixed(2)) || 0);
@@ -84,9 +82,9 @@ export default function PerformanceSummary({ derived, matches, summoner, range =
   return (
     <section className="performance-summary glass-panel">
       <header className="performance-summary__header">
-        <div>
-          <p className="badge-soft">Performance Insights</p>
-          <h3>Your recent matches</h3>
+        <div className="performance-summary__title-group">
+          <span className="badge-soft">Analytics</span>
+          <h3>Performance Insights</h3>
           <p className="performance-summary__description">{rangeSummary}</p>
         </div>
         <div className="performance-summary__controls">
@@ -99,29 +97,29 @@ export default function PerformanceSummary({ derived, matches, summoner, range =
         <MetricTile
           label="Win Rate"
           value={`${derived.winRate}%`}
-          secondary={`${derived.totalWins} Wins · ${derived.totalLosses} Losses · ${rangeQualifier}`}
+          secondary={`${derived.totalWins}W - ${derived.totalLosses}L`}
           icon="🏆"
           emphasize
           trend={<Sparkline data={winSpark} color="rgba(34,197,94,0.8)" />}
         />
         <MetricTile
-          label="KDA"
-          value={derived.avgKda}
-          secondary={`${derived.kdaRatio === 'Perfect' ? 'Perfect KDA' : `${derived.kdaRatio}:1`} · ${derived.avgCsPerMin || 0} CS/min`}
+          label="KDA Ratio"
+          value={derived.kdaRatio === 'Perfect' ? 'Perfect' : derived.kdaRatio}
+          secondary={`${derived.avgKda} Avg`}
           icon="⚔️"
           trend={<Sparkline data={kdaSpark} color="rgba(236,72,153,0.8)" />}
         />
         <MetricTile
-          label="Damage"
+          label="Avg Damage"
           value={derived.avgDamage.toLocaleString()}
-          secondary={`${derived.avgGold.toLocaleString()} Gold per game`}
+          secondary="To Champions"
           icon="🔥"
           trend={<Sparkline data={damageSpark} color="rgba(99,102,241,0.85)" />}
         />
         <MetricTile
           label="Vision & KP"
           value={`${derived.avgVision} VS`}
-          secondary={`Kill Participation ${derived.killParticipation}%`}
+          secondary={`${derived.killParticipation}% KP`}
           icon="👁️"
           trend={timeline.length > 0 ? <Sparkline data={timeline.map((entry) => entry.cs)} color="rgba(45,212,191,0.85)" /> : null}
         />
@@ -129,25 +127,33 @@ export default function PerformanceSummary({ derived, matches, summoner, range =
 
       {lastMatch && lastParticipant && (
         <div className="performance-summary__last">
-          <div>
-            <span className={`performance-summary__last-result ${lastParticipant.win ? 'is-win' : 'is-loss'}`}>
-              {lastParticipant.win ? 'Win' : 'Loss'}
-            </span>
-            <h4>{formatQueueById(lastMatch.info.queueId)}</h4>
-            <p>
-              Played {relativeGameTime(lastMatch.info.gameEndTimestamp || lastMatch.info.gameCreation)} · Duration {formatDuration(Math.round((lastMatch.info.gameDuration || 0) / 1000))}
-            </p>
+          <div className="last-match-header">
+            <span className="last-match-label">Latest Match</span>
+            <span className="last-match-time">{relativeGameTime(lastMatch.info.gameEndTimestamp || lastMatch.info.gameCreation)}</span>
           </div>
-          <div className="performance-summary__last-meta">
-            <Tag tone="info">{roleLabel(lastRole)}</Tag>
-            <Tag tone={lastParticipant.win ? 'success' : 'danger'}>
-              {lastParticipant.kills}/{lastParticipant.deaths}/{lastParticipant.assists}
-            </Tag>
-            {typeof lastMatch.info.lpChange === 'number' && (
-              <Tag tone={lastMatch.info.lpChange >= 0 ? 'success' : 'danger'}>
-                {lastMatch.info.lpChange >= 0 ? '+' : ''}{lastMatch.info.lpChange} LP
-              </Tag>
-            )}
+
+          <div className="last-match-content">
+            <div className="last-match-info">
+              <span className={`last-match-result ${lastParticipant.win ? 'is-win' : 'is-loss'}`}>
+                {lastParticipant.win ? 'Victory' : 'Defeat'}
+              </span>
+              <div className="last-match-details">
+                <span className="queue-name">{formatQueueById(lastMatch.info.queueId)}</span>
+                <span className="duration">{formatDuration(Math.round((lastMatch.info.gameDuration || 0) / 1000))}</span>
+              </div>
+            </div>
+
+            <div className="last-match-stats">
+              <Tag tone="info">{roleLabel(lastRole)}</Tag>
+              <div className="kda-tag">
+                <span className="kda-val">{lastParticipant.kills}/{lastParticipant.deaths}/{lastParticipant.assists}</span>
+              </div>
+              {typeof lastMatch.info.lpChange === 'number' && (
+                <Tag tone={lastMatch.info.lpChange >= 0 ? 'success' : 'danger'}>
+                  {lastMatch.info.lpChange >= 0 ? '+' : ''}{lastMatch.info.lpChange} LP
+                </Tag>
+              )}
+            </div>
           </div>
         </div>
       )}

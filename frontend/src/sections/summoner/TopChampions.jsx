@@ -1,89 +1,65 @@
-
-
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Tag from '../../components/Tag.jsx';
 import '../../styles/summoner/top-champions.css';
 
+function enrichChampions(championPlayCounts, matches, summoner, championSquares, bases) {
+  if (!championPlayCounts || !matches || !summoner) return [];
 
-function resolveChampionImage(championSquares, championBase, championName, championId) {
-  if (!championName) return null;
-  const byName = championSquares?.[championName];
-  if (byName) return byName;
-  const idKey = championId != null ? String(championId) : null;
-  if (idKey && championSquares?.[idKey]) return championSquares[idKey];
-  return `${championBase}${championName}.png`;
-}
-
-
-export default function TopChampions({ championPlayCounts, matches, summoner, championSquares, bases, range }) {
-  const enrichedChampions = useMemo(() => {
-    if (!championPlayCounts || !matches || !summoner) return [];
-    
-    // Filter matches based on range (same logic as derived stats in SummonerPage)
-    const targetCount = range === 'all' ? matches.length : Number(range);
-    const filteredMatches = matches.slice(0, targetCount);
-    
-    const championBase = bases?.champSquare
-      || (bases?.img ? `${bases.img}champion/` : 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/champion/');
-
-    const result = Object.entries(championPlayCounts).map(([championName, playCount]) => {
-      const championMatches = filteredMatches.filter((match) => {
-        if (!match?.info?.participants) return false;
-        const participant = match.info.participants.find((p) => p?.puuid === summoner.puuid);
-        return participant && participant.championName === championName;
-      });
-
-      let wins = 0;
-      let losses = 0;
-      let kills = 0;
-      let deaths = 0;
-      let assists = 0;
-
-      championMatches.forEach((match) => {
-        const participant = match.info.participants.find((p) => p?.puuid === summoner.puuid);
-        if (participant) {
-          if (participant.win) wins += 1; else losses += 1;
-          kills += participant.kills || 0;
-          deaths += participant.deaths || 0;
-          assists += participant.assists || 0;
-        }
-      });
-
-      const totalGames = wins + losses;
-      const winrate = totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
-      const avgKda = totalGames > 0 ? ((kills + assists) / Math.max(deaths, 1)).toFixed(2) : '0.00';
-      const sampleParticipant = championMatches[0]?.info?.participants?.find((p) => p?.puuid === summoner.puuid);
-      const imageUrl = resolveChampionImage(
-        championSquares,
-        championBase,
-        championName,
-        sampleParticipant?.championId
-      );
-
-      return {
-        name: championName,
-        playCount,
-        wins,
-        losses,
-        winrate,
-        avgKda,
-        imageUrl
-      };
+  return championPlayCounts.map((champ) => {
+    const champMatches = matches.filter((m) => {
+      const p = m.info.participants.find((part) => part.puuid === summoner.puuid);
+      return p && p.championName === champ.championName;
     });
 
-    return result.sort((a, b) => b.playCount - a.playCount).slice(0, 6);
-  }, [championPlayCounts, matches, summoner, championSquares, range]);
+    const wins = champMatches.filter((m) => {
+      const p = m.info.participants.find((part) => part.puuid === summoner.puuid);
+      return p.win;
+    }).length;
 
-  if (enrichedChampions.length === 0) {
+    const total = champMatches.length;
+    const losses = total - wins;
+    const winrate = total > 0 ? Math.round((wins / total) * 100) : 0;
+
+    const kdaSum = champMatches.reduce((acc, m) => {
+      const p = m.info.participants.find((part) => part.puuid === summoner.puuid);
+      const kda = p.deaths === 0 ? p.kills + p.assists : (p.kills + p.assists) / p.deaths;
+      return acc + kda;
+    }, 0);
+
+    const avgKda = total > 0 ? (kdaSum / total).toFixed(2) : '0.00';
+
+    // Construct image URL
+    let imageUrl = '';
+    if (championSquares && championSquares[champ.championName]) {
+      const version = bases?.version || 'latest'; // Fallback if version missing
+      imageUrl = `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championSquares[champ.championName].image.full}`;
+    }
+
+    return {
+      name: champ.championName,
+      playCount: champ.count,
+      wins,
+      losses,
+      winrate,
+      avgKda,
+      imageUrl
+    };
+  });
+}
+
+export default function TopChampions({ championPlayCounts, matches, summoner, championSquares, bases, range }) {
+  const enrichedChampions = useMemo(
+    () => enrichChampions(championPlayCounts, matches, summoner, championSquares, bases),
+    [championPlayCounts, matches, summoner, championSquares, bases]
+  );
+
+  if (!enrichedChampions || enrichedChampions.length === 0) {
     return (
       <section className="top-champions glass-panel">
-        <header className="top-champions__header">
-          <p className="badge-soft">Champion Pool</p>
-          <h3>Your Top Champions</h3>
-        </header>
         <div className="top-champions__empty">
-          <p>No champion data yet</p>
+          <p>No Champion Data</p>
+          <span>Play more games to see your top champions.</span>
         </div>
       </section>
     );
@@ -92,25 +68,39 @@ export default function TopChampions({ championPlayCounts, matches, summoner, ch
   return (
     <section className="top-champions glass-panel">
       <header className="top-champions__header">
-        <p className="badge-soft">Champion Pool</p>
-        <h3>Your Top Champions</h3>
-        <p className="top-champions__subtitle">Your most played champs with performance insights</p>
+        <span className="badge-soft">Mastery</span>
+        <h3>Top Champions</h3>
+        <p className="top-champions__subtitle">Most played in the last {range === 'all' ? 'recorded' : range} matches</p>
       </header>
+
       <div className="top-champions__grid">
         {enrichedChampions.map((champ) => (
           <article key={champ.name} className="champion-card">
-            <div className="champion-card__media">
-              <img src={champ.imageUrl} alt={champ.name} loading="lazy" />
-            </div>
-            <div className="champion-card__content">
-              <h4>{champ.name}</h4>
-              <div className="champion-card__stats">
-                <span>{champ.playCount} games</span>
-                <Tag tone={champ.winrate >= 50 ? 'success' : 'danger'}>{champ.winrate}% WR</Tag>
+            <div className="champion-card__visual">
+              <div className="champion-card__image-wrapper">
+                <img src={champ.imageUrl} alt={champ.name} loading="lazy" />
+                <div className="champion-card__glow" />
               </div>
-              <div className="champion-card__meta">
-                <span>KDA: {champ.avgKda}</span>
-                <span>{champ.wins}W / {champ.losses}L</span>
+              <div className="champion-card__rank-badge">{champ.playCount}</div>
+            </div>
+
+            <div className="champion-card__content">
+              <div className="champion-card__head">
+                <h4>{champ.name}</h4>
+                <span className={`winrate-badge ${champ.winrate >= 50 ? 'positive' : 'negative'}`}>
+                  {champ.winrate}% WR
+                </span>
+              </div>
+
+              <div className="champion-card__stats">
+                <div className="stat-row">
+                  <span className="label">KDA</span>
+                  <span className="value">{champ.avgKda}</span>
+                </div>
+                <div className="stat-row">
+                  <span className="label">Record</span>
+                  <span className="value">{champ.wins}W - {champ.losses}L</span>
+                </div>
               </div>
             </div>
           </article>
@@ -121,12 +111,10 @@ export default function TopChampions({ championPlayCounts, matches, summoner, ch
 }
 
 TopChampions.propTypes = {
-  championPlayCounts: PropTypes.object,
-  matches: PropTypes.arrayOf(PropTypes.object),
-  summoner: PropTypes.shape({
-    puuid: PropTypes.string
-  }),
+  championPlayCounts: PropTypes.array,
+  matches: PropTypes.array,
+  summoner: PropTypes.object,
   championSquares: PropTypes.object,
   bases: PropTypes.object,
-  range: PropTypes.string
+  range: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };

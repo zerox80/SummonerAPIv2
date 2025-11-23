@@ -1,74 +1,63 @@
 .metric-tile {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
   position: relative;
-  padding: 1.4rem 1.6rem;
-  border-radius: var(--radius-md);
-  background: var(--bg-card-strong);
-  border: var(--border-glass);
-  box-shadow: var(--shadow-sm);
-  display: grid;
-  gap: 0.55rem;
-  min-height: 140px;
   overflow: hidden;
-  transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease;
-}
-
-.metric-tile::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 120% -20%, rgba(99, 102, 241, 0.18), transparent 60%);
-  opacity: 0;
-  transition: opacity var(--duration-base) ease;
-  pointer-events: none;
 }
 
 .metric-tile:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.3);
 }
 
-.metric-tile:hover::after {
-  opacity: 1;
+.metric-tile--emphasize {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .metric-tile__header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
 }
 
 .metric-tile__label {
-  font-size: 0.82rem;
-  letter-spacing: 0.12em;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  color: rgba(148, 163, 255, 0.7);
   font-weight: 600;
 }
 
 .metric-tile__icon {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
+  opacity: 0.8;
 }
 
 .metric-tile__value {
-  font-size: clamp(1.9rem, 2.5vw, 2.4rem);
+  font-size: 1.75rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
 }
 
 .metric-tile__secondary {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1rem;
 }
 
 .metric-tile__trend {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--accent-solid);
-}
-
-.metric-tile--emphasize {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.22), rgba(236, 72, 153, 0.18));
-  border: 1px solid rgba(99, 102, 241, 0.35);
+  margin-top: auto;
+  height: 40px;
+  opacity: 0.8;
 }
