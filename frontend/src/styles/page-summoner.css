@@ -23,9 +23,12 @@
   gap: clamp(1.1rem, 3vw, 1.6rem);
   align-content: start;
   min-width: 0;
+  position: sticky;
+  top: 2rem;
+  align-self: start;
 }
 
-.summoner-page__aside > * {
+.summoner-page__aside>* {
   min-width: 0;
 }
 
