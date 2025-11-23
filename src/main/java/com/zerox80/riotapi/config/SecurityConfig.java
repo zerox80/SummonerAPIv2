@@ -110,8 +110,10 @@ public class SecurityConfig {
                                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                                                 // Erlaubt Endpoints mit manueller Authentifizierung
                                                 .requestMatchers("/api/me", "/api/champions/*/aggregate").permitAll()
-                                                // Verweigert alle anderen Requests (Secure by Default)
-                                                .anyRequest().denyAll())
+                                                // Erlaubt alle anderen Requests (für SPA-Routing)
+                                                // SPA-Routen wie /champions/Cassiopeia werden vom HomeController
+                                                // behandelt
+                                                .anyRequest().permitAll())
                                 // Deaktiviert HTTP Basic Authentication (nicht benötigt)
                                 .httpBasic(AbstractHttpConfigurer::disable)
                                 // Deaktiviert Form-basiertes Login (keine Login-Seite)

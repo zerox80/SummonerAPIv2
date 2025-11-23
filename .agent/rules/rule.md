@@ -2,4 +2,4 @@
 trigger: manual
 ---
 
-Don't run cargo, npm, mvnw3 commands
+Don't run cargo, npm, mvnw, python commands

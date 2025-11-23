@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 @Controller
 /**
  * HomeController handles the application's home page.
- * Serves the index.html file for the root path.
+ * Serves the index.html file for the root path and all SPA routes.
  * Acts as the entry point for the single-page application.
  */
 public class HomeController {
@@ -40,5 +40,24 @@ public class HomeController {
     public Resource index() {
         // Return index.html file from classpath (static folder)
         return new ClassPathResource("static/index.html"); // Spring automatically serves the file
+    }
+
+    // Catch-all mapping for SPA routes (enables F5/refresh on client-side routes)
+    // This forwards all non-API, non-static requests to index.html
+    // Necessary for SPA routing to work correctly when accessing routes directly
+    @GetMapping(value = "/{path:[^\\.]*}", produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody
+    /**
+     * Serves the index.html file for all SPA routes.
+     * This allows client-side routing (e.g., /champions/Cassiopeia) to work
+     * when the page is refreshed or accessed directly via URL.
+     *
+     * The regex pattern [^\.]* matches any path that doesn't contain a dot,
+     * which excludes static files like .js, .css, .png, etc.
+     *
+     * @return Resource containing the index.html file
+     */
+    public Resource forward() {
+        return new ClassPathResource("static/index.html");
     }
 }
