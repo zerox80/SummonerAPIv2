@@ -4,9 +4,26 @@ import Tag from '../../components/Tag.jsx';
 import '../../styles/summoner/top-champions.css';
 
 function enrichChampions(championPlayCounts, matches, summoner, championSquares, bases) {
-  if (!Array.isArray(championPlayCounts) || !Array.isArray(matches) || !summoner) return [];
+  if (!Array.isArray(matches) || !summoner) return [];
 
-  return championPlayCounts.map((champ) => {
+  let sourceCounts = championPlayCounts;
+
+  // Fallback: Calculate from matches if backend data is missing
+  if (!Array.isArray(sourceCounts) || sourceCounts.length === 0) {
+    const counts = {};
+    matches.forEach((m) => {
+      const p = m.info.participants.find((part) => part.puuid === summoner.puuid);
+      if (p) {
+        counts[p.championName] = (counts[p.championName] || 0) + 1;
+      }
+    });
+    sourceCounts = Object.entries(counts)
+      .map(([name, count]) => ({ championName: name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  }
+
+  return sourceCounts.map((champ) => {
     const champMatches = matches.filter((m) => {
       const p = m.info.participants.find((part) => part.puuid === summoner.puuid);
       return p && p.championName === champ.championName;
@@ -18,6 +35,10 @@ function enrichChampions(championPlayCounts, matches, summoner, championSquares,
     }).length;
 
     const total = champMatches.length;
+    // If we derived counts from matches, total should match count. 
+    // If using backend data, total might differ if matches array is partial.
+    // We use the calculated total from available matches for consistency in stats.
+
     const losses = total - wins;
     const winrate = total > 0 ? Math.round((wins / total) * 100) : 0;
 
@@ -38,14 +59,14 @@ function enrichChampions(championPlayCounts, matches, summoner, championSquares,
 
     return {
       name: champ.championName,
-      playCount: champ.count,
+      playCount: total > 0 ? total : champ.count, // Prefer local count if available
       wins,
       losses,
       winrate,
       avgKda,
       imageUrl
     };
-  });
+  }).filter(c => c.playCount > 0); // Only show champions we actually have data for
 }
 
 export default function TopChampions({ championPlayCounts, matches, summoner, championSquares, bases, range }) {
