@@ -30,7 +30,7 @@ COPY src ./src
 # Copy built frontend assets from static directory
 COPY --from=frontend-build /app/src/main/resources/static/ ./src/main/resources/static/
 
-RUN mvn -q -T 5 -DskipTests=${SKIP_TESTS} clean package
+RUN mvn -q -T 5 -Dmaven.test.skip=${SKIP_TESTS} clean package
 
 # ===== Stage 3: Runtime =====
 FROM eclipse-temurin:25-jre
