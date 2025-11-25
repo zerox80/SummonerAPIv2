@@ -1,3 +1,14 @@
+/* Scoreboard */
+.match-card__scoreboard {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.match-card__team {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .match-card__team-header {
