@@ -391,7 +391,6 @@ export default function MatchHistory({ matches, summoner, filters, onFiltersChan
                               </div>
                               <div className="match-player-row__kda">
                                 <span className="score">{player.kills}/{player.deaths}/{player.assists}</span>
-                                <span className="ratio">{formatKDA(player.kills, player.deaths, player.assists)}</span>
                               </div>
                               <div className="match-player-row__items">
                                 {playerItems.map((itemId, index) => (
