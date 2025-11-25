@@ -411,20 +411,6 @@
   color: #ef4444;
 }
 
-.match-card__team-result {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.match-card__team-body {}
-
-.match-player-row__item {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .match-player-row__item.is-empty {
