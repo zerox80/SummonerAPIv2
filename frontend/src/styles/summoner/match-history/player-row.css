@@ -1,7 +1,7 @@
 /* Player Row */
 .match-player-row {
     display: grid;
-    grid-template-columns: 75px auto 60px 1fr auto;
+    grid-template-columns: 1fr auto 70px auto auto;
     align-items: center;
     gap: 0.2rem;
     padding: 0.3rem 0.4rem;
