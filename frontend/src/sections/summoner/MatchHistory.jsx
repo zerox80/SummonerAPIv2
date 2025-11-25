@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SegmentedControl from '../../components/SegmentedControl.jsx';
 import Tag from '../../components/Tag.jsx';
 import { formatDuration, relativeGameTime, formatQueueById, formatKDA, roleLabel } from '../../utils/formatters.js';
-import '../../styles/summoner/match-history.css';
+import '../../styles/summoner/match-history/index.css';
 
 const DEFAULT_DDRAGON_VERSION = '15.20.1';
 const DEFAULT_CHAMPION_BASE = `https://ddragon.leagueoflegends.com/cdn/${DEFAULT_DDRAGON_VERSION}/img/champion/`;

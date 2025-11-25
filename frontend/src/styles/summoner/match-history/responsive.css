@@ -1,0 +1,93 @@
+/* Responsive */
+@media (max-width: 1024px) {
+    .match-card__scoreboard {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .match-card__detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .match-card__summary {
+        grid-template-columns: auto 1fr auto;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+
+    .match-card__main-info {
+        gap: 0.75rem;
+    }
+
+    .match-card__champion img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .match-card__stat-group {
+        display: none;
+        /* Hide detailed stats on very small screens to save space */
+    }
+
+    .match-card__meta {
+        flex-wrap: wrap;
+        font-size: 0.75rem;
+    }
+
+    .match-player-row {
+        display: flex;
+        /* Switch to flex for easier wrapping on mobile */
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .match-player-row__champion {
+        flex: 1 1 auto;
+        min-width: 120px;
+    }
+
+    .match-player-row__kda {
+        flex: 0 0 auto;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: baseline;
+    }
+
+    .match-player-row__items {
+        display: none;
+        /* Hide items on mobile to reduce clutter */
+    }
+
+    .match-player-row__cs,
+    .match-player-row__spells {
+        display: none;
+        /* Hide secondary details on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .match-card__summary {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+            "champ meta"
+            "champ toggle";
+    }
+
+    .match-card__champion {
+        grid-area: champ;
+    }
+
+    .match-card__meta-info {
+        grid-area: meta;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .match-card__toggle {
+        grid-area: toggle;
+        justify-self: end;
+    }
+}

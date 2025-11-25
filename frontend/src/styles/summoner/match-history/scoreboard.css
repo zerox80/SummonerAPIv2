@@ -1,0 +1,47 @@
+/* Scoreboard */
+.match-card__scoreboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.match-card__team {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.match-card__team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.match-card__team-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.match-card__team.is-ally .match-card__team-label {
+    color: #10b981;
+}
+
+.match-card__team.is-enemy .match-card__team-label {
+    color: #ef4444;
+}
+
+.match-card__team-result {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.match-card__team-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
