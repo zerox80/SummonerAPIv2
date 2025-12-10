@@ -86,7 +86,7 @@ public class CspNonceFilter extends OncePerRequestFilter {
                 // script-src - allows scripts from own domain, with nonce, and from trusted
                 // CDNs
                 // 'nonce-...' - only scripts with this nonce will execute (XSS protection)
-                "script-src 'self' 'nonce-" + nonce + "' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;",
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;",
                 // style-src - allows CSS from own domain and trusted CDNs
                 "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;",
                 // Restrict external images to known Riot/CommunityDragon hosts; local assets
