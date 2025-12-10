@@ -19,11 +19,13 @@ import java.security.SecureRandom;
 // Import for Base64 encoding of the nonce
 import java.util.Base64;
 
-
 /**
- * CspNonceFilter generates and injects a cryptographically secure nonce for each HTTP request.
- * The nonce is used in Content Security Policy (CSP) headers to allow specific inline scripts
- * while preventing XSS attacks. This filter extends OncePerRequestFilter to ensure it runs
+ * CspNonceFilter generates and injects a cryptographically secure nonce for
+ * each HTTP request.
+ * The nonce is used in Content Security Policy (CSP) headers to allow specific
+ * inline scripts
+ * while preventing XSS attacks. This filter extends OncePerRequestFilter to
+ * ensure it runs
  * exactly once per request.
  */
 public class CspNonceFilter extends OncePerRequestFilter {
@@ -33,7 +35,8 @@ public class CspNonceFilter extends OncePerRequestFilter {
 
     /**
      * Generates a cryptographically secure nonce string.
-     * Uses 16 bytes (128 bits) of randomness, which provides sufficient security against brute-force attacks.
+     * Uses 16 bytes (128 bits) of randomness, which provides sufficient security
+     * against brute-force attacks.
      *
      * @return Base64-encoded nonce string
      */
@@ -49,18 +52,19 @@ public class CspNonceFilter extends OncePerRequestFilter {
 
     /**
      * Main filter method executed for each HTTP request.
-     * Generates a unique nonce, makes it available to views, and injects it into the CSP header.
+     * Generates a unique nonce, makes it available to views, and injects it into
+     * the CSP header.
      *
-     * @param request The incoming HTTP request
-     * @param response The outgoing HTTP response
+     * @param request     The incoming HTTP request
+     * @param response    The outgoing HTTP response
      * @param filterChain The chain of remaining filters to execute
      * @throws ServletException If servlet processing error occurs
-     * @throws IOException If I/O error occurs during filtering
+     * @throws IOException      If I/O error occurs during filtering
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
         // Generate new unique nonce for this request
         // Each request gets its own nonce (important for security)
         String nonce = generateNonce();
@@ -76,22 +80,24 @@ public class CspNonceFilter extends OncePerRequestFilter {
                 "base-uri 'self';",
                 // object-src 'none' - no <object>/<embed> tags allowed (Flash, etc.)
                 "object-src 'none';",
-                // frame-ancestors 'self' - page can only be embedded in own frames (clickjacking protection)
+                // frame-ancestors 'self' - page can only be embedded in own frames
+                // (clickjacking protection)
                 "frame-ancestors 'self';",
-                // script-src - allows scripts from own domain, with nonce, and from trusted CDNs
+                // script-src - allows scripts from own domain, with nonce, and from trusted
+                // CDNs
                 // 'nonce-...' - only scripts with this nonce will execute (XSS protection)
                 "script-src 'self' 'nonce-" + nonce + "' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;",
                 // style-src - allows CSS from own domain and trusted CDNs
-                "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;",
-                // Restrict external images to known Riot/CommunityDragon hosts; local assets served from 'self'
+                "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;",
+                // Restrict external images to known Riot/CommunityDragon hosts; local assets
+                // served from 'self'
                 // img-src - allows images from own domain, data URLs, and Riot CDNs
                 // data: - allows inline data URLs (e.g., data:image/png;base64,...)
                 "img-src 'self' data: https://raw.communitydragon.org https://ddragon.leagueoflegends.com;",
                 // font-src - allows fonts from own domain and Google Fonts
                 "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;",
                 // connect-src - allows AJAX/Fetch requests to own domain and CDNs
-                "connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com;"
-        );
+                "connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com;");
 
         // Replace/ensure the CSP header in the response
         response.setHeader("Content-Security-Policy", policy);
