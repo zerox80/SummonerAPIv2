@@ -82,6 +82,7 @@ textarea {
 
 .container {
   width: min(var(--max-width-desktop), 100%);
+  margin-inline: auto;
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 600;
