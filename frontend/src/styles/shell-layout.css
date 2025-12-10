@@ -110,7 +110,10 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-bottom: 60px; /* Space for bottom navigation */
+  padding-bottom: 60px;
+  /* Space for bottom navigation */
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* Compact Mobile Header */
@@ -209,7 +212,8 @@
   }
 
   .mobile-app-shell {
-    padding-bottom: 50px; /* Smaller bottom nav in landscape */
+    padding-bottom: 50px;
+    /* Smaller bottom nav in landscape */
   }
 
   .mobile-main {
@@ -226,6 +230,7 @@
 
 /* Hide desktop elements on mobile */
 @media (max-width: 767px) {
+
   .app-shell__nav,
   .app-shell__context {
     display: none;
@@ -235,16 +240,19 @@
 /* Enhance touch targets on mobile */
 @media (hover: none) and (pointer: coarse) {
   .mobile-header {
-    min-height: 60px; /* Larger touch target */
+    min-height: 60px;
+    /* Larger touch target */
   }
 
   .mobile-content {
-    padding: 0 1rem; /* More spacing for thumbs */
+    padding: 0 1rem;
+    /* More spacing for thumbs */
   }
 }
 
 /* Performance optimizations for mobile */
 @media (max-width: 767px) {
+
   .mobile-header,
   .mobile-main,
   .mobile-footer {
