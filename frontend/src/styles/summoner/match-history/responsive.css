@@ -38,10 +38,10 @@
 
     .match-player-row {
         display: flex;
-        /* Switch to flex for easier wrapping on mobile */
         flex-wrap: wrap;
         gap: 0.5rem;
         padding: 0.75rem;
+        align-items: center;
     }
 
     .match-player-row__champion {
@@ -49,22 +49,33 @@
         min-width: 120px;
     }
 
+    .match-player-row__spells {
+        display: flex;
+        flex-direction: row;
+        gap: 2px;
+    }
+
     .match-player-row__kda {
         flex: 0 0 auto;
         flex-direction: row;
         gap: 0.5rem;
         align-items: baseline;
+        margin-left: auto;
     }
 
     .match-player-row__items {
-        display: none;
-        /* Hide items on mobile to reduce clutter */
+        display: flex;
+        flex: 1 1 100%;
+        width: 100%;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        gap: 2px;
     }
 
-    .match-player-row__cs,
-    .match-player-row__spells {
+    .match-player-row__cs {
         display: none;
-        /* Hide secondary details on mobile */
+        /* Keep hiding CS on mobile to save space, items are more important */
     }
 }
 
