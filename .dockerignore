@@ -7,5 +7,6 @@ node_modules
 # Unused assets and folders (exclude from image)
 /mavi.jpg
 /riot api/
-/src/main/resources/static/mavi.*
-/src/main/resources/static/ui/**
+backend/target
+/backend/src/main/resources/static/mavi.*
+/backend/src/main/resources/static/ui/**

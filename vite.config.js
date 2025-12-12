@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react()],
   envDir: '../',
   build: {
-    outDir: '../src/main/resources/static',
+    outDir: '../backend/src/main/resources/static',
     emptyOutDir: true,
     sourcemap: !isProduction,
     minify: isProduction ? 'terser' : false,

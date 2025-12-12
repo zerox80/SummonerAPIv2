@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build:docker
 
 # Debug: list build output
-RUN ls -la src/main/resources/static/
+RUN ls -la backend/src/main/resources/static/
 
 # ===== Stage 2: Backend Build =====
 FROM maven:3-eclipse-temurin-25 AS backend-build
@@ -22,13 +22,13 @@ WORKDIR /app
 ARG SKIP_TESTS=true
 
 # Use BuildKit cache for Maven repo to accelerate builds across runs
-COPY pom.xml .
+COPY backend/pom.xml .
 RUN mvn -q -T 5 -e -DskipTests dependency:go-offline
 
-COPY src ./src
+COPY backend/src ./src
 
 # Copy built frontend assets from static directory
-COPY --from=frontend-build /app/src/main/resources/static/ ./src/main/resources/static/
+COPY --from=frontend-build /app/backend/src/main/resources/static/ ./src/main/resources/static/
 
 RUN mvn -q -T 5 -Dmaven.test.skip=${SKIP_TESTS} clean package
 
