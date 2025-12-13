@@ -31,7 +31,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "jsdom": "^27.3.0",
     "terser": "^5.44.1",
-    "vite": "^7.2.6",
+    "vite": "^7.2.7",
     "vitest": "^4.0.15"
   },
   "engines": {
