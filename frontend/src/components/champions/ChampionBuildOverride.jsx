@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import '../../styles/champions/champion-build-override.css';
 
 const DDRAGON_VERSION = import.meta.env.VITE_DDRAGON_VERSION || '14.19.1';
@@ -5,8 +7,10 @@ const DDRAGON_CDN = 'https://ddragon.leagueoflegends.com/cdn';
 const SPELL_IMAGE_BASE = `${DDRAGON_CDN}/${DDRAGON_VERSION}/img/spell/`;
 const ITEM_IMAGE_BASE = `${DDRAGON_CDN}/${DDRAGON_VERSION}/img/item/`;
 const CDN_IMG_BASE = `${DDRAGON_CDN}/img/`;
+const DEFAULT_SPELL_FALLBACK = `${SPELL_IMAGE_BASE}SummonerFlash.png`;
 const TRANSPARENT_PIXEL =
     'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+const EMPTY_ARRAY = Object.freeze([]);
 
 const SPELL_KEYS_BY_NAME = {
     Flash: 'SummonerFlash',
@@ -55,24 +59,27 @@ function getCdnImgUrl(path) {
     return `${CDN_IMG_BASE}${path.replace(/^\/+/, '')}`;
 }
 
-function withFallback(fallbackSrc) {
-    return (event) => {
-        if (!fallbackSrc) return;
-        // Prevent infinite onError loops.
-        event.currentTarget.onerror = null;
-        event.currentTarget.src = fallbackSrc;
-    };
+function handleImgError(event) {
+    const img = event.currentTarget;
+    const fallbackSrc = img?.dataset?.fallback;
+
+    if (!fallbackSrc) return;
+    // Prevent infinite onError loops.
+    img.onerror = null;
+    img.src = fallbackSrc;
 }
 
-export default function ChampionBuildOverride({ data }) {
+function ChampionBuildOverride({ data }) {
     if (!data) return null;
 
-    const spells = Array.isArray(data.spells) ? data.spells : [];
-    const coreItems = Array.isArray(data?.items?.core) ? data.items.core : [];
-    const situationalItems = Array.isArray(data?.items?.situational) ? data.items.situational : [];
+    const spells = Array.isArray(data.spells) ? data.spells : EMPTY_ARRAY;
+    const coreItems = Array.isArray(data?.items?.core) ? data.items.core : EMPTY_ARRAY;
+    const situationalItems = Array.isArray(data?.items?.situational) ? data.items.situational : EMPTY_ARRAY;
     const primaryRunes = data?.runes?.primary || null;
     const secondaryRunes = data?.runes?.secondary || null;
-    const shards = Array.isArray(data?.runes?.shards) ? data.runes.shards : [];
+    const shards = Array.isArray(data?.runes?.shards) ? data.runes.shards : EMPTY_ARRAY;
+    const primaryPerks = Array.isArray(primaryRunes?.perks) ? primaryRunes.perks : EMPTY_ARRAY;
+    const secondaryPerks = Array.isArray(secondaryRunes?.perks) ? secondaryRunes.perks : EMPTY_ARRAY;
 
     return (
         <div className="champion-build-override glass-panel">
@@ -81,15 +88,17 @@ export default function ChampionBuildOverride({ data }) {
                 <div className="spells-row">
                     {spells.map((spell, index) => (
                         <div
-                            key={`${spell?.id || spell?.name || 'spell'}-${index}`}
+                            key={`spell-${spell?.id ?? spell?.name ?? index}`}
                             className="spell-item"
                             title={spell?.name || ''}
                         >
                             <img
-                                src={getSpellIcon(spell) || `${SPELL_IMAGE_BASE}SummonerFlash.png`}
-                                onError={withFallback(`${SPELL_IMAGE_BASE}SummonerFlash.png`)}
+                                src={getSpellIcon(spell) || DEFAULT_SPELL_FALLBACK}
+                                data-fallback={DEFAULT_SPELL_FALLBACK}
+                                onError={handleImgError}
                                 alt={spell?.name || 'Summoner spell'}
                                 className="spell-icon"
+                                decoding="async"
                             />
                             <span className="spell-name">{spell?.name || '—'}</span>
                         </div>
@@ -101,14 +110,17 @@ export default function ChampionBuildOverride({ data }) {
                 <h4 className="build-section-title">Core Items</h4>
                 <div className="items-row">
                     {coreItems.map((item, index) => (
-                        <div key={`${item?.id || item?.name || 'item'}-${index}`} className="item-card">
+                        <div key={`item-${item?.id ?? item?.name ?? index}`} className="item-card">
                             <div className="item-icon-wrapper">
                                 <img
                                     src={getItemIcon(item?.id) || TRANSPARENT_PIXEL}
-                                    onError={withFallback(TRANSPARENT_PIXEL)}
+                                    data-fallback={TRANSPARENT_PIXEL}
+                                    onError={handleImgError}
                                     alt={item?.name || 'Item'}
                                     className="item-icon"
                                     loading="lazy"
+                                    decoding="async"
+                                    fetchPriority="low"
                                 />
                             </div>
                             <span className="item-name">{item?.name || item?.id || '—'}</span>
@@ -121,14 +133,17 @@ export default function ChampionBuildOverride({ data }) {
                 <h4 className="build-section-title">Situational</h4>
                 <div className="items-row">
                     {situationalItems.map((item, index) => (
-                        <div key={`${item?.id || item?.name || 'item'}-${index}`} className="item-card">
+                        <div key={`item-${item?.id ?? item?.name ?? index}`} className="item-card">
                             <div className="item-icon-wrapper">
                                 <img
                                     src={getItemIcon(item?.id) || TRANSPARENT_PIXEL}
-                                    onError={withFallback(TRANSPARENT_PIXEL)}
+                                    data-fallback={TRANSPARENT_PIXEL}
+                                    onError={handleImgError}
                                     alt={item?.name || 'Item'}
                                     className="item-icon"
                                     loading="lazy"
+                                    decoding="async"
+                                    fetchPriority="low"
                                 />
                             </div>
                             <span className="item-name">{item?.name || item?.id || '—'}</span>
@@ -144,24 +159,32 @@ export default function ChampionBuildOverride({ data }) {
                         <div className="tree-header">
                             <img
                                 src={getCdnImgUrl(primaryRunes?.icon) || TRANSPARENT_PIXEL}
-                                onError={withFallback(TRANSPARENT_PIXEL)}
+                                data-fallback={TRANSPARENT_PIXEL}
+                                onError={handleImgError}
                                 alt={primaryRunes?.name || 'Primary'}
                                 className="tree-icon"
+                                loading="lazy"
+                                decoding="async"
+                                fetchPriority="low"
                             />
                             <span className="tree-name">{primaryRunes?.name || '—'}</span>
                         </div>
                         <div className="runes-list">
-                            {(Array.isArray(primaryRunes?.perks) ? primaryRunes.perks : []).map((perk, index) => (
+                            {primaryPerks.map((perk, index) => (
                                 <div
-                                    key={`${perk?.id || 'perk'}-${index}`}
+                                    key={`perk-${perk?.id ?? perk?.name ?? index}`}
                                     className={`rune-item ${index === 0 ? 'keystone' : ''}`}
                                     title={perk?.name || ''}
                                 >
                                     <img
                                         src={getCdnImgUrl(perk?.icon) || TRANSPARENT_PIXEL}
-                                        onError={withFallback(TRANSPARENT_PIXEL)}
+                                        data-fallback={TRANSPARENT_PIXEL}
+                                        onError={handleImgError}
                                         alt={perk?.name || 'Rune'}
                                         className="rune-icon"
+                                        loading="lazy"
+                                        decoding="async"
+                                        fetchPriority="low"
                                     />
                                 </div>
                             ))}
@@ -172,20 +195,32 @@ export default function ChampionBuildOverride({ data }) {
                         <div className="tree-header">
                             <img
                                 src={getCdnImgUrl(secondaryRunes?.icon) || TRANSPARENT_PIXEL}
-                                onError={withFallback(TRANSPARENT_PIXEL)}
+                                data-fallback={TRANSPARENT_PIXEL}
+                                onError={handleImgError}
                                 alt={secondaryRunes?.name || 'Secondary'}
                                 className="tree-icon"
+                                loading="lazy"
+                                decoding="async"
+                                fetchPriority="low"
                             />
                             <span className="tree-name">{secondaryRunes?.name || '—'}</span>
                         </div>
                         <div className="runes-list">
-                            {(Array.isArray(secondaryRunes?.perks) ? secondaryRunes.perks : []).map((perk, index) => (
-                                <div key={`${perk?.id || 'perk'}-${index}`} className="rune-item" title={perk?.name || ''}>
+                            {secondaryPerks.map((perk, index) => (
+                                <div
+                                    key={`perk-${perk?.id ?? perk?.name ?? index}`}
+                                    className="rune-item"
+                                    title={perk?.name || ''}
+                                >
                                     <img
                                         src={getCdnImgUrl(perk?.icon) || TRANSPARENT_PIXEL}
-                                        onError={withFallback(TRANSPARENT_PIXEL)}
+                                        data-fallback={TRANSPARENT_PIXEL}
+                                        onError={handleImgError}
                                         alt={perk?.name || 'Rune'}
                                         className="rune-icon"
+                                        loading="lazy"
+                                        decoding="async"
+                                        fetchPriority="low"
                                     />
                                 </div>
                             ))}
@@ -199,15 +234,19 @@ export default function ChampionBuildOverride({ data }) {
                         <div className="runes-list">
                             {shards.map((shard, index) => (
                                 <div
-                                    key={`${shard?.id || 'shard'}-${index}`}
+                                    key={`shard-${shard?.id ?? shard?.name ?? index}`}
                                     className="rune-item shard"
                                     title={shard?.name || ''}
                                 >
                                     <img
                                         src={getCdnImgUrl(shard?.icon) || TRANSPARENT_PIXEL}
-                                        onError={withFallback(TRANSPARENT_PIXEL)}
+                                        data-fallback={TRANSPARENT_PIXEL}
+                                        onError={handleImgError}
                                         alt={shard?.name || 'Shard'}
                                         className="rune-icon"
+                                        loading="lazy"
+                                        decoding="async"
+                                        fetchPriority="low"
                                     />
                                 </div>
                             ))}
@@ -218,3 +257,5 @@ export default function ChampionBuildOverride({ data }) {
         </div>
     );
 }
+
+export default memo(ChampionBuildOverride);
