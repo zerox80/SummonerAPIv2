@@ -458,7 +458,7 @@ public class DataDragonService {
                 c.path("tags").forEach(t -> tags.add(t.asText()));
             }
             String imageFull = c.path("image").path("full").asText("");
-            list.add(new ChampionSummary(id, name, title, tags, imageFull));
+            list.add(new ChampionSummary(id, name, title, tags, imageFull, version));
         }
         // Sort by name
         return list.stream()

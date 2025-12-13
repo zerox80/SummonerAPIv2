@@ -562,8 +562,8 @@ public class SummonerController {
                 String forwardedProto = request.getHeader("X-Forwarded-Proto");
                 // Validation: check if header is present
                 if (StringUtils.hasText(forwardedProto)) {
-                    // Set secure = true if proxy uses HTTPS
-                    secure = forwardedProto.trim().equalsIgnoreCase("https");
+                    // Set secure = true if proxy uses HTTPS (take first entry if multiple)
+                    secure = forwardedProto.split(",")[0].trim().equalsIgnoreCase("https");
                 }
             }
 
