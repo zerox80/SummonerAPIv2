@@ -124,7 +124,7 @@ export default function ChampionsPage() {
                 {champions.map((champion) => (
                   <Link key={champion.id} to={`/champions/${champion.id}`} className="champion-card" aria-label={`Open details for ${champion.name}`}>
                     <div className="champion-card__image">
-                      <img src={`https://ddragon.leagueoflegends.com/cdn/${champion.version || '14.19.1'}/img/champion/${champion.imageFull}`} alt={champion.name} loading="lazy" />
+                      <img src={`https://ddragon.leagueoflegends.com/cdn/${champion.version}/img/champion/${champion.imageFull}`} alt={champion.name} loading="lazy" />
                     </div>
                     <div className="champion-card__content">
                       <h3>{champion.name}</h3>

@@ -1914,7 +1914,12 @@ public class DataDragonService {
      * callers can use to construct sprite URLs without duplicating string
      * concatenation logic.
      */
-    @Cacheable(cacheNames = "ddragonImageBases", key = "#version == null || #version.isBlank() ? 'latest' : #version")
+    /**
+     * Returns a map containing base CDN URLs (versioned image roots, CDN host,
+     * etc.) that
+     * callers can use to construct sprite URLs without duplicating string
+     * concatenation logic.
+     */
     public Map<String, String> getImageBases(String version) {
         String requested = version;
         boolean needsResolve = requested == null || requested.isBlank() || "latest".equalsIgnoreCase(requested);
@@ -1931,15 +1936,22 @@ public class DataDragonService {
         if (ver == null || ver.isBlank() || "latest".equalsIgnoreCase(ver)) {
             ver = getLatestVersion();
         }
+        // Update volatile tracking
         lastKnownVersion = ver;
+        // Delegate to cached method with resolved version
+        return self().getImageBasesCached(ver);
+    }
+
+    @Cacheable(cacheNames = "ddragonImageBases", key = "#version")
+    public Map<String, String> getImageBasesCached(String version) {
         Map<String, String> map = new LinkedHashMap<>();
-        map.put("version", ver);
+        map.put("version", version);
         map.put("cdn", DDRAGON_BASE + "/cdn/");
-        map.put("img", DDRAGON_BASE + "/cdn/" + ver + "/img/");
-        map.put("champSquare", DDRAGON_BASE + "/cdn/" + ver + "/img/champion/");
-        map.put("item", DDRAGON_BASE + "/cdn/" + ver + "/img/item/");
-        map.put("spell", DDRAGON_BASE + "/cdn/" + ver + "/img/spell/");
-        map.put("passive", DDRAGON_BASE + "/cdn/" + ver + "/img/passive/");
+        map.put("img", DDRAGON_BASE + "/cdn/" + version + "/img/");
+        map.put("champSquare", DDRAGON_BASE + "/cdn/" + version + "/img/champion/");
+        map.put("item", DDRAGON_BASE + "/cdn/" + version + "/img/item/");
+        map.put("spell", DDRAGON_BASE + "/cdn/" + version + "/img/spell/");
+        map.put("passive", DDRAGON_BASE + "/cdn/" + version + "/img/passive/");
         map.put("splash", DDRAGON_BASE + "/cdn/img/champion/splash/");
         // Ranked emblems from CommunityDragon static assets (CDN-only)
         map.put("rankedMiniCrest",
