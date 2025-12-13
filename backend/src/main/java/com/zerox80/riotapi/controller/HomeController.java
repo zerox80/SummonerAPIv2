@@ -14,11 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 // Import for ResponseBody annotation (converts return value directly to response)
 import org.springframework.web.bind.annotation.ResponseBody;
 
-// Import for IOException (thrown on I/O errors)
-import java.io.IOException;
-// Import for StandardCharsets (provides UTF-8 character encoding)
-import java.nio.charset.StandardCharsets;
-
 // @Controller marks this class as an MVC controller (not REST)
 @Controller
 /**
@@ -46,7 +41,10 @@ public class HomeController {
     // This forwards all non-API, non-static requests to index.html
     // Necessary for SPA routing to work correctly when accessing routes directly
     // Updated to support deep paths (e.g. /champions/Anivia)
-    @GetMapping(value = { "/{path:[^\\.]*}", "/**/{path:[^\\.]*}" }, produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = {
+            "/{path:(?!(?:api|assets|actuator|swagger-ui|v3)$)[^\\.]*}",
+            "/{path:(?!(?:api|assets|actuator|swagger-ui|v3)$)[^\\.]*}/**"
+    }, produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody
     /**
      * Serves the index.html file for all SPA routes.
