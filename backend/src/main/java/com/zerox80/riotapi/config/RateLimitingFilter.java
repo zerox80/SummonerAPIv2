@@ -217,19 +217,18 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             return request.getRemoteAddr();
         }
 
-        // Ab hier: trustProxy=true - vertraue Proxy-Headern
+        // Ab hier: trustProxy=true - proxy header werden nur ausgewertet, wenn der
+        // Remote-Hop in einer expliziten Allowlist steht (rate.limit.allowed-proxies)
         // Holt die direkte Remote-IP (IP des Proxies)
         String remoteAddr = request.getRemoteAddr();
 
-        // SICHERHEIT: Prüft ob eine Whitelist von erlaubten Proxies konfiguriert ist
-        // Wenn allowedProxies NICHT leer ist, werden Proxy-Header nur von diesen IPs
-        // akzeptiert.
-        // Wenn allowedProxies leer ist, akzeptieren wir Proxy-Header von jedem Hop
-        // (bewusstes Verhalten bei trustProxy=true).
-        if (properties.getAllowedProxies() != null && !properties.getAllowedProxies().isEmpty()
-                && !isAllowedProxy(remoteAddr)) {
-            // Remote-IP ist NICHT auf Whitelist - verwende diese IP direkt
-            // SICHERHEIT: Verhindert dass beliebige Clients X-Forwarded-For faken
+        // SECURITY: Ohne Allowlist keine Proxy-Header akzeptieren (sonst IP-Spoofing möglich)
+        if (properties.getAllowedProxies() == null || properties.getAllowedProxies().isEmpty()) {
+            return remoteAddr;
+        }
+        // Remote-IP ist NICHT auf Whitelist - verwende diese IP direkt
+        // SICHERHEIT: Verhindert dass beliebige Clients X-Forwarded-For faken
+        if (!isAllowedProxy(remoteAddr)) {
             return remoteAddr;
         }
 

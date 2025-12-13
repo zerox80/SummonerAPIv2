@@ -2,12 +2,9 @@ import { memo } from 'react';
 
 import '../../styles/champions/champion-build-override.css';
 
-const DDRAGON_VERSION = import.meta.env.VITE_DDRAGON_VERSION || '14.19.1';
 const DDRAGON_CDN = 'https://ddragon.leagueoflegends.com/cdn';
-const SPELL_IMAGE_BASE = `${DDRAGON_CDN}/${DDRAGON_VERSION}/img/spell/`;
-const ITEM_IMAGE_BASE = `${DDRAGON_CDN}/${DDRAGON_VERSION}/img/item/`;
+const DEFAULT_DDRAGON_VERSION = import.meta.env.VITE_DDRAGON_VERSION;
 const CDN_IMG_BASE = `${DDRAGON_CDN}/img/`;
-const DEFAULT_SPELL_FALLBACK = `${SPELL_IMAGE_BASE}SummonerFlash.png`;
 const TRANSPARENT_PIXEL =
     'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 const EMPTY_ARRAY = Object.freeze([]);
@@ -36,7 +33,11 @@ const SPELL_KEYS_BY_ID = {
     21: 'SummonerBarrier'
 };
 
-function getSpellIcon(spell) {
+function getSpellIcon(spell, version = DEFAULT_DDRAGON_VERSION) {
+    // Riot's DDragon summoner spell images are versioned; require an explicit version.
+    // Prefer passing a version from the champion detail API; fall back to VITE_DDRAGON_VERSION.
+    if (!version) return null;
+
     const rawId = spell?.id;
     const key =
         (typeof rawId === 'string' && rawId.trim() ? rawId.trim() : null) ||
@@ -44,12 +45,12 @@ function getSpellIcon(spell) {
         SPELL_KEYS_BY_NAME[spell?.name];
 
     if (!key) return null;
-    return `${SPELL_IMAGE_BASE}${key}.png`;
+    return `${DDRAGON_CDN}/${version}/img/spell/${key}.png`;
 }
 
-function getItemIcon(id) {
-    if (!id) return null;
-    return `${ITEM_IMAGE_BASE}${id}.png`;
+function getItemIcon(id, version = DEFAULT_DDRAGON_VERSION) {
+    if (!id || !version) return null;
+    return `${DDRAGON_CDN}/${version}/img/item/${id}.png`;
 }
 
 function getCdnImgUrl(path) {
@@ -69,8 +70,11 @@ function handleImgError(event) {
     img.src = fallbackSrc;
 }
 
-function ChampionBuildOverride({ data }) {
+function ChampionBuildOverride({ data, ddragonVersion }) {
     if (!data) return null;
+
+    const version = ddragonVersion || DEFAULT_DDRAGON_VERSION || null;
+    const defaultSpellFallback = version ? `${DDRAGON_CDN}/${version}/img/spell/SummonerFlash.png` : TRANSPARENT_PIXEL;
 
     const spells = Array.isArray(data.spells) ? data.spells : EMPTY_ARRAY;
     const coreItems = Array.isArray(data?.items?.core) ? data.items.core : EMPTY_ARRAY;
@@ -93,8 +97,8 @@ function ChampionBuildOverride({ data }) {
                             title={spell?.name || ''}
                         >
                             <img
-                                src={getSpellIcon(spell) || DEFAULT_SPELL_FALLBACK}
-                                data-fallback={DEFAULT_SPELL_FALLBACK}
+                                src={getSpellIcon(spell, version) || defaultSpellFallback}
+                                data-fallback={defaultSpellFallback}
                                 onError={handleImgError}
                                 alt={spell?.name || 'Summoner spell'}
                                 className="spell-icon"
@@ -113,7 +117,7 @@ function ChampionBuildOverride({ data }) {
                         <div key={`item-${item?.id ?? item?.name ?? index}`} className="item-card">
                             <div className="item-icon-wrapper">
                                 <img
-                                    src={getItemIcon(item?.id) || TRANSPARENT_PIXEL}
+                                    src={getItemIcon(item?.id, version) || TRANSPARENT_PIXEL}
                                     data-fallback={TRANSPARENT_PIXEL}
                                     onError={handleImgError}
                                     alt={item?.name || 'Item'}
@@ -136,7 +140,7 @@ function ChampionBuildOverride({ data }) {
                         <div key={`item-${item?.id ?? item?.name ?? index}`} className="item-card">
                             <div className="item-icon-wrapper">
                                 <img
-                                    src={getItemIcon(item?.id) || TRANSPARENT_PIXEL}
+                                    src={getItemIcon(item?.id, version) || TRANSPARENT_PIXEL}
                                     data-fallback={TRANSPARENT_PIXEL}
                                     onError={handleImgError}
                                     alt={item?.name || 'Item'}

@@ -106,7 +106,6 @@ public class RiotApiClient {
     // Prevents overloading the Riot API and reaching rate limits
     // final: Value cannot be changed after initialization
     private final Semaphore outboundLimiter;
-    private final java.util.Deque<CompletableFuture<Void>> waitingRequests = new java.util.concurrent.ConcurrentLinkedDeque<>();
 
     // static final: Class-wide constant, logger for this specific class
     // LoggerFactory.getLogger(): Creates a logger with the class name as category
@@ -287,6 +286,8 @@ public class RiotApiClient {
 
     // Base backoff duration for exponential retry
     private static final Duration BASE_BACKOFF = Duration.ofSeconds(2);
+    // Polling interval for acquiring semaphore permits without blocking threads
+    private static final Duration PERMIT_POLL_INTERVAL = Duration.ofMillis(25);
 
     /**
      * Sends an HTTP request with automatic retry logic and instrumentation.
@@ -436,45 +437,29 @@ public class RiotApiClient {
      */
     private CompletableFuture<Void> acquirePermitAsync() {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        retryAcquire(future);
+        tryAcquirePermitOrSchedule(future);
         return future;
     }
 
     /**
-     * Recursively tries to acquire a semaphore permit with polling.
-     * Retries every 25ms if permit is not available.
+     * Tries to acquire a semaphore permit; if unavailable, schedules a retry.
      *
      * @param future The future to complete when permit is acquired
      */
-    private void retryAcquire(CompletableFuture<Void> future) {
+    private void tryAcquirePermitOrSchedule(CompletableFuture<Void> future) {
+        if (future.isDone()) {
+            return;
+        }
         if (outboundLimiter.tryAcquire()) {
             future.complete(null);
-        } else {
-            waitingRequests.add(future);
-            // Double check in case a permit was released while we were adding
-            if (outboundLimiter.tryAcquire()) {
-                CompletableFuture<Void> f = waitingRequests.poll();
-                if (f != null) {
-                    f.complete(null);
-                } else {
-                    outboundLimiter.release();
-                }
-            }
+            return;
         }
+        CompletableFuture.delayedExecutor(PERMIT_POLL_INTERVAL.toMillis(), TimeUnit.MILLISECONDS)
+                .execute(() -> tryAcquirePermitOrSchedule(future));
     }
 
     private void releasePermit() {
         outboundLimiter.release();
-        CompletableFuture<Void> next = waitingRequests.poll();
-        if (next != null) {
-            if (outboundLimiter.tryAcquire()) {
-                next.complete(null);
-            } else {
-                // Should not happen if we just released, but race conditions exist
-                // Push back to the front to maintain fairness
-                waitingRequests.addFirst(next);
-            }
-        }
     }
 
     /**

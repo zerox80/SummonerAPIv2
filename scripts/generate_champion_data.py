@@ -420,7 +420,11 @@ TEMPLATES = {
 def generate_overrides():
     print("Fetching champion data...")
     try:
-        with urllib.request.urlopen("https://ddragon.leagueoflegends.com/cdn/14.19.1/data/en_US/champion.json") as url:
+        with urllib.request.urlopen("https://ddragon.leagueoflegends.com/api/versions.json") as url:
+            versions = json.loads(url.read().decode())
+            latest_version = versions[0] if versions else "14.19.1"
+
+        with urllib.request.urlopen(f"https://ddragon.leagueoflegends.com/cdn/{latest_version}/data/en_US/champion.json") as url:
             data = json.loads(url.read().decode())
             champions = data['data']
     except Exception as e:

@@ -19,6 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         "rate.limit.max-requests=2",
         "rate.limit.paths=/api/**",
         "rate.limit.trust-proxy=true",
+        // Only honor proxy headers when the remote hop is allowlisted
+        "rate.limit.allowed-proxies=127.0.0.1",
         // Ensure tests do not require external DB or migrations
         "spring.flyway.enabled=false",
         "spring.datasource.url=jdbc:h2:mem:rlimitproxy;DB_CLOSE_DELAY=-1;MODE=PostgreSQL",

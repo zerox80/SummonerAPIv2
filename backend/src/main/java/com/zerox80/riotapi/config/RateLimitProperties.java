@@ -61,8 +61,8 @@ public class RateLimitProperties {
     private boolean includeHeaders = true;
 
     // List of trusted proxy IP addresses
-    // Empty = all proxies are accepted (if trustProxy=true)
-    // With values = only these proxy IPs may set X-Forwarded-For
+    // Empty = do not honor proxy headers (even if trustProxy=true)
+    // With values = only these proxy IPs may set Forwarded/X-Forwarded-For
     // SECURITY: Prevents IP spoofing through client-side header manipulation
     private List<String> allowedProxies = new ArrayList<>();
 

@@ -18,6 +18,8 @@ public class ChampionDetail {
     // The champion's unique identifier key (e.g., "Anivia" for Anivia)
     private final String id;        // e.g., "Anivia"
 
+    // The Data Dragon version (e.g., "14.19.1") used for image URLs
+    private final String version;
 
     // The champion's display name (e.g., "Anivia")
     private final String name;      // e.g., "Anivia"
@@ -50,6 +52,7 @@ public class ChampionDetail {
      * Constructs a complete champion detail model with all information.
      *
      * @param id The champion's unique identifier
+     * @param version The Data Dragon version
      * @param name The champion's display name
      * @param title The champion's title
      * @param lore The champion's background story
@@ -58,10 +61,11 @@ public class ChampionDetail {
      * @param passive The passive ability information
      * @param spells List of active abilities (Q, W, E, R)
      */
-    public ChampionDetail(String id, String name, String title, String lore,
+    public ChampionDetail(String id, String version, String name, String title, String lore,
                           List<String> tags, String imageFull, PassiveSummary passive,
                           List<SpellSummary> spells) {
         this.id = id;
+        this.version = version;
         this.name = name;
         this.title = title;
         this.lore = lore;
@@ -77,6 +81,13 @@ public class ChampionDetail {
      * @return The champion ID
      */
     public String getId() { return id; }
+
+    /**
+     * Gets the Data Dragon version.
+     *
+     * @return The version string
+     */
+    public String getVersion() { return version; }
 
     /**
      * Gets the champion's display name.

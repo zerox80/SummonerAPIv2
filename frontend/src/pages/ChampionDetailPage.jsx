@@ -1,7 +1,6 @@
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import SegmentedControl from '../components/SegmentedControl.jsx';
-import ChampionHero from '../components/champions/ChampionHero.jsx';
 import AbilityList from '../components/champions/AbilityList.jsx';
 import BuildItemsTable from '../components/champions/BuildItemsTable.jsx';
 import BuildRunesTable from '../components/champions/BuildRunesTable.jsx';
@@ -295,7 +294,7 @@ export default function ChampionDetailPage() {
 
                 <div className="champion-detail__build-content">
                   {overrideData ? (
-                    <ChampionBuildOverride data={overrideData} />
+                    <ChampionBuildOverride data={overrideData} ddragonVersion={champion.version} />
                   ) : (
                     <>
                       {buildView === 'items' && (
@@ -335,7 +334,7 @@ export default function ChampionDetailPage() {
                       <h3>{curatedBuild.title}</h3>
                     </div>
                   </div>
-                  <CuratedItemGroups title={null} groups={curatedBuild.groups} />
+                  <CuratedItemGroups title={null} groups={curatedBuild.groups} ddragonVersion={champion.version} />
                 </section>
               )}
             </div>
@@ -350,7 +349,12 @@ export default function ChampionDetailPage() {
                     <h3>Ability Overview</h3>
                   </div>
                 </div>
-                <AbilityList passive={abilities.passive} spells={abilities.spells} showHeader={false} />
+                <AbilityList
+                  passive={abilities.passive}
+                  spells={abilities.spells}
+                  ddragonVersion={champion.version}
+                  showHeader={false}
+                />
               </section>
             </div>
           )}

@@ -25,7 +25,7 @@ export function filterChampions(champions, { search = '', role = 'ALL', sort = '
   }
 
   if (sort === 'alpha') {
-    list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    list = [...list].sort((a, b) => (a?.name || '').localeCompare(b?.name || ''));
   } else if (sort === 'roles') {
     list = [...list].sort((a, b) => (a.tags?.[0] || '').localeCompare(b.tags?.[0] || ''));
   }

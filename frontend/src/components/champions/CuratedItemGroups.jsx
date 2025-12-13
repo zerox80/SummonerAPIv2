@@ -2,11 +2,14 @@
 import PropTypes from 'prop-types';
 import '../../styles/champions/champion-curated-build.css';
 
-const ITEM_IMAGE_BASE = 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/item/';
+const COMMUNITY_DRAGON_ITEM_ICON_BASE =
+  'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/items';
 
 
-function CuratedItemIcon({ id, name, count }) {
-  const src = `${ITEM_IMAGE_BASE}${id}.png`;
+function CuratedItemIcon({ id, name, count, ddragonVersion }) {
+  const src = ddragonVersion
+    ? `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/item/${id}.png`
+    : `${COMMUNITY_DRAGON_ITEM_ICON_BASE}/${id}.png`;
   return (
     <div className="curated-build__item-icon" title={name}>
       <img src={src} alt={name} loading="lazy" />
@@ -18,11 +21,12 @@ function CuratedItemIcon({ id, name, count }) {
 CuratedItemIcon.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  count: PropTypes.number
+  count: PropTypes.number,
+  ddragonVersion: PropTypes.string
 };
 
 
-export default function CuratedItemGroups({ title, groups }) {
+export default function CuratedItemGroups({ title, groups, ddragonVersion }) {
   return (
     <section className="curated-build glass-panel">
       <header className="curated-build__header">
@@ -39,7 +43,7 @@ export default function CuratedItemGroups({ title, groups }) {
             <div className="curated-build__items">
               {group.items.map((item, index) => (
                 <div key={`${item.id}-${index}`} className="curated-build__item-wrapper">
-                  <CuratedItemIcon id={item.id} name={item.name} count={item.count} />
+                  <CuratedItemIcon id={item.id} name={item.name} count={item.count} ddragonVersion={ddragonVersion} />
                   <span className="curated-build__item-label">{item.name}</span>
                   {group.sequence && index < group.items.length - 1 && (
                     <span className="curated-build__item-arrow" aria-hidden="true">➜</span>
@@ -56,6 +60,7 @@ export default function CuratedItemGroups({ title, groups }) {
 
 CuratedItemGroups.propTypes = {
   title: PropTypes.string,
+  ddragonVersion: PropTypes.string,
   groups: PropTypes.arrayOf(PropTypes.shape({
     key: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,

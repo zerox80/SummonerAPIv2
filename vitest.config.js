@@ -6,11 +6,11 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: ['./src/test/setup.js']
+    setupFiles: ['./backend/src/test/setup.js']
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src/main/resources/static/js')
+      '@': resolve(__dirname, 'frontend/src')
     }
   }
 })

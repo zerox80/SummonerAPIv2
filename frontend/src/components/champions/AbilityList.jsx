@@ -25,7 +25,7 @@ AbilityDescription.propTypes = {
 };
 
 
-export default function AbilityList({ passive, spells, showHeader = true }) {
+export default function AbilityList({ passive, spells, ddragonVersion, showHeader = true }) {
   const [expandedAbilities, setExpandedAbilities] = useState(() => new Set());
 
   
@@ -89,7 +89,13 @@ export default function AbilityList({ passive, spells, showHeader = true }) {
         {passive && (
           <article className="ability-card ability-card--passive">
             <div className="ability-card__icon">
-              <img src={`https://ddragon.leagueoflegends.com/cdn/14.19.1/img/passive/${passive.imageFull}`} alt={passive.name} loading="lazy" />
+              {ddragonVersion && passive.imageFull && (
+                <img
+                  src={`https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/passive/${passive.imageFull}`}
+                  alt={passive.name}
+                  loading="lazy"
+                />
+              )}
             </div>
             <div className="ability-card__content">
               <div className="ability-card__meta">
@@ -103,7 +109,13 @@ export default function AbilityList({ passive, spells, showHeader = true }) {
         {spells?.map((spell, index) => (
           <article key={spell.id} className="ability-card">
             <div className="ability-card__icon">
-              <img src={`https://ddragon.leagueoflegends.com/cdn/14.19.1/img/spell/${spell.imageFull}`} alt={spell.name} loading="lazy" />
+              {ddragonVersion && spell.imageFull && (
+                <img
+                  src={`https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/spell/${spell.imageFull}`}
+                  alt={spell.name}
+                  loading="lazy"
+                />
+              )}
             </div>
             <div className="ability-card__content">
               <div className="ability-card__meta">
@@ -165,5 +177,6 @@ AbilityList.propTypes = {
     scaling: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.string)
   })),
+  ddragonVersion: PropTypes.string,
   showHeader: PropTypes.bool
 };

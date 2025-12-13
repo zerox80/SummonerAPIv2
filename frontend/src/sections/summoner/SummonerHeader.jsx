@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { capitalize } from '../../utils/formatters.js';
 import '../../styles/summoner/summoner-header.css';
 
+const COMMUNITY_DRAGON_PROFILE_ICON_BASE =
+  'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons';
 
 function buildTagline(riotId) {
   if (!riotId || !riotId.includes('#')) return riotId || '';
@@ -15,10 +17,8 @@ function buildTagline(riotId) {
 export default function SummonerHeader({ profile, derived }) {
   const riotId = profile?.riotId || profile?.suggestion?.riotId || profile?.summoner?.name;
   const tagline = buildTagline(riotId);
-  const iconSrc = profile?.profileIconUrl
-    || (profile?.suggestion?.profileIconId != null
-      ? `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/profileicon/${profile.suggestion.profileIconId}.png`
-      : 'https://ddragon.leagueoflegends.com/cdn/14.19.1/img/profileicon/0.png');
+  const iconId = profile?.suggestion?.profileIconId ?? 0;
+  const iconSrc = profile?.profileIconUrl || `${COMMUNITY_DRAGON_PROFILE_ICON_BASE}/${iconId}.jpg`;
   const level = profile?.summoner?.summonerLevel || profile?.suggestion?.summonerLevel;
 
   // Fallback for region if missing, or format it nicely

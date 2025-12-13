@@ -514,7 +514,7 @@ public class DataDragonService {
             applyChampionSpecificTooltipOverrides(id, local.localeTag, local.spells);
             // Prefer curated lore if available, otherwise use DDragon lore
             String curatedLore = (local.lore != null && !local.lore.isBlank()) ? local.lore : lore;
-            return new ChampionDetail(id, name, title, curatedLore, tags, imageFull,
+            return new ChampionDetail(id, version, name, title, curatedLore, tags, imageFull,
                     local.passive, local.spells == null ? java.util.Collections.emptyList() : local.spells);
         }
 
@@ -537,12 +537,12 @@ public class DataDragonService {
                 && (generated.passive != null || (generated.spells != null && !generated.spells.isEmpty()))) {
             applyChampionSpecificTooltipOverrides(id, generated.localeTag, generated.spells);
             String finalLore = selectPreferredString(local != null ? local.lore : null, lore);
-            return new ChampionDetail(id, name, title, finalLore, tags, imageFull,
+            return new ChampionDetail(id, version, name, title, finalLore, tags, imageFull,
                     generated.passive, generated.spells == null ? java.util.Collections.emptyList() : generated.spells);
         }
 
         // Default: lore only (no passive, no spells)
-        return new ChampionDetail(id, name, title, lore, tags, imageFull, null, java.util.Collections.emptyList());
+        return new ChampionDetail(id, version, name, title, lore, tags, imageFull, null, java.util.Collections.emptyList());
     }
 
     /**

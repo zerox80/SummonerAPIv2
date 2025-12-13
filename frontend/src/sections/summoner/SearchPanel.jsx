@@ -12,6 +12,9 @@ const PLACEHOLDER_IDS = [
   'G2 Caps#1323'
 ];
 
+const COMMUNITY_DRAGON_PROFILE_ICON_BASE =
+  'https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons';
+
 
 export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) {
   const [input, setInput] = useState(initialValue);
@@ -99,7 +102,7 @@ export default function SearchPanel({ onSubmit, initialValue = '', isLoading }) 
               >
                 <span className="summoner-search__suggestion-icon" aria-hidden>
                   <img
-                    src={item.profileIconUrl || `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/profileicon/${item.profileIconId}.png`}
+                    src={item.profileIconUrl || `${COMMUNITY_DRAGON_PROFILE_ICON_BASE}/${item.profileIconId ?? 0}.jpg`}
                     alt="Profile icon"
                     loading="lazy"
                   />
