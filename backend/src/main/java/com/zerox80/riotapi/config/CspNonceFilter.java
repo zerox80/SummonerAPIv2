@@ -47,7 +47,18 @@ public class CspNonceFilter extends OncePerRequestFilter {
         // Each call produces different, unpredictable values
         SECURE_RANDOM.nextBytes(bytes);
         // Convert bytes to Base64 string (URL-safe, readable)
-        return Base64.getEncoder().encodeToString(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    private static boolean isSwaggerUiRequest(HttpServletRequest request) {
+        if (request == null) {
+            return false;
+        }
+        String path = request.getRequestURI();
+        if (path == null) {
+            return false;
+        }
+        return path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.equals("/swagger-ui.html");
     }
 
     /**
@@ -72,7 +83,15 @@ public class CspNonceFilter extends OncePerRequestFilter {
         // Templates can access it with ${cspNonce} for inline scripts
         request.setAttribute("cspNonce", nonce);
 
+        boolean relaxedForDocs = isSwaggerUiRequest(request);
+
         // Construct CSP (Content Security Policy) with the actual nonce value
+        String scriptSrc = relaxedForDocs
+                ? String.format(
+                        "script-src 'self' 'nonce-%s' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;",
+                        nonce)
+                : String.format("script-src 'self' 'nonce-%s' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;",
+                        nonce);
         String policy = String.join(" ",
                 // default-src 'self' - default source only from own domain
                 "default-src 'self';",
@@ -86,7 +105,7 @@ public class CspNonceFilter extends OncePerRequestFilter {
                 // script-src - allows scripts from own domain, with nonce, and from trusted
                 // CDNs
                 // 'nonce-...' - only scripts with this nonce will execute (XSS protection)
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;",
+                scriptSrc,
                 // style-src - allows CSS from own domain and trusted CDNs
                 "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;",
                 // Restrict external images to known Riot/CommunityDragon hosts; local assets

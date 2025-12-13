@@ -11,6 +11,8 @@ import com.zerox80.riotapi.model.MatchV5Dto;
 import com.zerox80.riotapi.model.SummonerSuggestionDTO;
 // Import for Riot API Service (communicates with Riot Games API)
 import com.zerox80.riotapi.service.RiotApiService;
+// Import for Riot API client (for configured region/platform)
+import com.zerox80.riotapi.client.RiotApiClient;
 // Import for Data Dragon Service (loads champion and item data)
 import com.zerox80.riotapi.service.DataDragonService;
 // Import for Summoner profile data (aggregates various game data)
@@ -100,6 +102,8 @@ public class SummonerController {
     // Service instance for Riot API communication (provided via dependency
     // injection)
     private final RiotApiService riotApiService;
+    // Riot API client for configured platform region
+    private final RiotApiClient riotApiClient;
     // Service instance for Data Dragon access (champion/item images and data)
     private final DataDragonService dataDragonService;
     // ObjectMapper for JSON serialization/deserialization of cookie data
@@ -122,6 +126,7 @@ public class SummonerController {
      * configuration values.
      *
      * @param riotApiService        Service for Riot API access
+     * @param riotApiClient         Riot API client for platform region
      * @param dataDragonService     Service for champion/item data
      * @param objectMapper          JSON mapper for cookie serialization
      * @param matchesPageSize       Page size from config (default: 10)
@@ -129,6 +134,7 @@ public class SummonerController {
      * @param maxMatchesStartOffset Max offset (default: 1000)
      */
     public SummonerController(RiotApiService riotApiService,
+            RiotApiClient riotApiClient,
             DataDragonService dataDragonService,
             ObjectMapper objectMapper,
             @Value("${ui.matches.page-size:10}") int matchesPageSize,
@@ -136,6 +142,8 @@ public class SummonerController {
             @Value("${ui.matches.max-start-offset:1000}") int maxMatchesStartOffset) {
         // Assign RiotApiService to instance variable
         this.riotApiService = riotApiService;
+        // Assign RiotApiClient to instance variable
+        this.riotApiClient = riotApiClient;
         // Assign DataDragonService to instance variable
         this.dataDragonService = dataDragonService;
         // Assign ObjectMapper to instance variable
@@ -410,6 +418,9 @@ public class SummonerController {
                     // Add Riot ID (from suggestion if available, otherwise normalized ID)
                     payload.put("riotId",
                             profileData.suggestion() != null ? profileData.suggestion().getRiotId() : normalizedRiotId);
+                    // Add configured platform region (e.g., euw1, na1)
+                    payload.put("platformRegion",
+                            riotApiClient != null ? riotApiClient.getPlatformRegion() : null);
                     // Add configured match page size
                     payload.put("matchesPageSize", matchesPageSize);
                     // Conditionally add match history (only if includeMatches parameter = true)

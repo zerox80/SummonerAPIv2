@@ -13,7 +13,7 @@ function buildTagline(riotId) {
 
 
 export default function SummonerHeader({ profile, derived }) {
-  const riotId = profile?.suggestion?.riotId || profile?.summoner?.name;
+  const riotId = profile?.riotId || profile?.suggestion?.riotId || profile?.summoner?.name;
   const tagline = buildTagline(riotId);
   const iconSrc = profile?.profileIconUrl
     || (profile?.suggestion?.profileIconId != null
@@ -22,7 +22,7 @@ export default function SummonerHeader({ profile, derived }) {
   const level = profile?.summoner?.summonerLevel || profile?.suggestion?.summonerLevel;
 
   // Fallback for region if missing, or format it nicely
-  const region = profile?.summoner?.region?.toUpperCase() || 'EUW'; // Defaulting to EUW if missing as a safe fallback for now, or could be dynamic
+  const region = profile?.platformRegion ? profile.platformRegion.toUpperCase() : 'EUW1';
 
   return (
     <section className="summoner-header glass-panel">
@@ -83,6 +83,8 @@ SummonerHeader.propTypes = {
   profile: PropTypes.shape({
     summoner: PropTypes.object,
     suggestion: PropTypes.object,
+    riotId: PropTypes.string,
+    platformRegion: PropTypes.string,
     profileIconUrl: PropTypes.string,
     primaryRole: PropTypes.string
   }),

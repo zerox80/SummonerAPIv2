@@ -78,6 +78,8 @@ export default function PerformanceSummary({ derived, matches, summoner, range =
   const lastMatch = matches?.[0];
   const lastParticipant = lastMatch?.info?.participants?.find((p) => p?.puuid === summoner?.puuid);
   const lastRole = lastParticipant?.teamPosition;
+  const lastRawDuration = lastMatch?.info?.gameDuration || lastMatch?.info?.gameDurationSeconds || 0;
+  const lastDurationSeconds = lastRawDuration > 10000 ? Math.round(lastRawDuration / 1000) : Math.round(lastRawDuration);
 
   return (
     <section className="performance-summary glass-panel">
@@ -139,7 +141,7 @@ export default function PerformanceSummary({ derived, matches, summoner, range =
               </span>
               <div className="last-match-details">
                 <span className="queue-name">{formatQueueById(lastMatch.info.queueId)}</span>
-                <span className="duration">{formatDuration(Math.round((lastMatch.info.gameDuration || 0) / 1000))}</span>
+                <span className="duration">{formatDuration(lastDurationSeconds)}</span>
               </div>
             </div>
 

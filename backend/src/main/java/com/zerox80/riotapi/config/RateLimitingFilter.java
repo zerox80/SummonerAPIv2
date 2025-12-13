@@ -222,16 +222,12 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         String remoteAddr = request.getRemoteAddr();
 
         // SICHERHEIT: Prüft ob eine Whitelist von erlaubten Proxies konfiguriert ist
-        // Wenn KEINE Whitelist konfiguriert ist, aber trustProxy=true, ist das
-        // unsicher!
-        // Wir fallen dann auf die Remote-IP zurück (Fail Secure)
-        if (properties.getAllowedProxies() == null || properties.getAllowedProxies().isEmpty()) {
-            // Warnung könnte hier geloggt werden
-            return remoteAddr;
-        }
-
-        // Prüft ob die Remote-IP auf der Whitelist steht
-        if (!isAllowedProxy(remoteAddr)) {
+        // Wenn allowedProxies NICHT leer ist, werden Proxy-Header nur von diesen IPs
+        // akzeptiert.
+        // Wenn allowedProxies leer ist, akzeptieren wir Proxy-Header von jedem Hop
+        // (bewusstes Verhalten bei trustProxy=true).
+        if (properties.getAllowedProxies() != null && !properties.getAllowedProxies().isEmpty()
+                && !isAllowedProxy(remoteAddr)) {
             // Remote-IP ist NICHT auf Whitelist - verwende diese IP direkt
             // SICHERHEIT: Verhindert dass beliebige Clients X-Forwarded-For faken
             return remoteAddr;

@@ -10,7 +10,7 @@ export default defineConfig({
   envDir: '../',
   build: {
     outDir: '../backend/src/main/resources/static',
-    emptyOutDir: true,
+    emptyOutDir: false,
     sourcemap: !isProduction,
     minify: isProduction ? 'terser' : false,
     rollupOptions: {
