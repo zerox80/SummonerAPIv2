@@ -2,4 +2,4 @@
 trigger: manual
 ---
 
-Don't run cargo, npm, mvnw, python, mvn commands
+Do not run the code. Do not test the code.

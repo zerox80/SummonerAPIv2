@@ -3,6 +3,7 @@
 import { Link } from 'react-router-dom';
 import { useChampions } from '../hooks/useChampions.js';
 import SegmentedControl from '../components/SegmentedControl.jsx';
+import { EmptyState } from '../components/LoadState.jsx';
 import '../styles/champions/champions-page.css';
 
 const ROLE_OPTIONS = [
@@ -75,8 +76,31 @@ export default function ChampionsPage() {
       </section>
 
       <section className="champions-grid-section glass-panel">
-        {isLoading && <p className="champions-state">Loading champions ...</p>}
-        {isError && <p className="champions-state error">{error?.message || 'Failed to load champions.'}</p>}
+        {isLoading && (
+          <div className="champions-grid">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="champion-card champion-card--skeleton" aria-hidden="true">
+                <div className="champion-card__image" />
+                <div className="champion-card__content">
+                  <div className="champion-card__skeleton-line" style={{ width: '70%', height: '1.2rem' }} />
+                  <div className="champion-card__skeleton-line" style={{ width: '40%', height: '0.9rem' }} />
+                  <div className="champion-card__tags" style={{ marginTop: '0.75rem' }}>
+                    <div className="champion-card__skeleton-line" style={{ width: '3rem', height: '1.2rem', borderRadius: '4px' }} />
+                    <div className="champion-card__skeleton-line" style={{ width: '3rem', height: '1.2rem', borderRadius: '4px' }} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        {isError && (
+          <div className="champions-state error">
+            <p>{error?.message || 'Failed to load champions.'}</p>
+            <button onClick={() => window.location.reload()} className="cta-button" style={{ marginTop: '1rem' }}>
+              Try Again
+            </button>
+          </div>
+        )}
 
         {!isLoading && !isError && (
           <>
@@ -115,7 +139,12 @@ export default function ChampionsPage() {
                 ))}
               </div>
             ) : (
-              <p className="champions-state">No champions match your filters.</p>
+              <div className="champions-state">
+                <EmptyState
+                  title="No champions found"
+                  description="We couldn't find any champions matching your criteria. Try different filters or search terms."
+                />
+              </div>
             )}
           </>
         )}
